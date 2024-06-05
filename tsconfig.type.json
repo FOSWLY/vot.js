@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    // Enable latest features
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "allowJs": false,
+
+    // Bundler mode
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
+    "allowSyntheticDefaultImports": true,
+    // "verbatimModuleSyntax": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+
+    // Best practices
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Some stricter flags (disabled by default)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+
+    "rootDir": "src"
+  },
+  "exclude": [
+    "./dist",
+    "./tests",
+    "./typebox-gen.ts",
+    "./examples",
+    "node_modules",
+    "./build.ts"
+  ],
+  "outDir": "./dist"
+}
