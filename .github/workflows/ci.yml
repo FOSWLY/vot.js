@@ -18,6 +18,9 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+
       - name: Install packages 🔧
         run: bun install
 
