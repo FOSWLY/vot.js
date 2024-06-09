@@ -66,7 +66,7 @@ async function getVideoID(
       }
 
       return (
-        url.pathname.match(/(?:watch|embed|shorts)\/([^/]+)/)?.[1] ||
+        url.pathname.match(/(?:watch|embed|shorts|live)\/([^/]+)/)?.[1] ||
         url.searchParams.get("v")
       );
     case VideoService.vk: {

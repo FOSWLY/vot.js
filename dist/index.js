@@ -4017,7 +4017,7 @@ async function getVideoID(service, videoURL) {
         url.search = `?v=${url.pathname.replace("/", "")}`;
         url.pathname = "/watch";
       }
-      return url.pathname.match(/(?:watch|embed|shorts)\/([^/]+)/)?.[1] || url.searchParams.get("v");
+      return url.pathname.match(/(?:watch|embed|shorts|live)\/([^/]+)/)?.[1] || url.searchParams.get("v");
     case VideoService.vk: {
       const pathID = url.pathname.match(/^\/video-?[0-9]{8,9}_[0-9]{9}$/);
       const paramZ = url.searchParams.get("z");
