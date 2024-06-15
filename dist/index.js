@@ -4188,13 +4188,10 @@ class NormalizeError extends Error {
 
 // src/client.ts
 class VOTJSError extends Error {
-  data;
-  constructor(message, data) {
+  constructor(message) {
     super(message);
-    this.data = data;
     this.name = "VOTJSError";
     this.message = message;
-    this.data = data;
   }
 }
 
@@ -4270,25 +4267,16 @@ class VOTClient {
       ...headers
     });
     if (!res.success) {
-      throw new VOTJSError("Failed to request video translation", {
-        raw: true,
-        msg: "requestTranslationFailed"
-      });
+      throw new VOTJSError("Failed to request video translation");
     }
     const translateResponse = yandexProtobuf.decodeTranslationResponse(res.data);
     switch (translateResponse.status) {
       case VideoTranslationStatus.FAILED:
-        throw new VOTJSError("Yandex couldn't translate video", {
-          raw: false,
-          msg: translateResponse.message
-        });
+        throw new VOTJSError("Yandex couldn't translate video");
       case VideoTranslationStatus.FINISHED:
       case VideoTranslationStatus.PART_CONTENT:
         if (!translateResponse.url) {
-          throw new VOTJSError("Audio link wasn't received from Yandex response", {
-            raw: false,
-            msg: translateResponse.message
-          });
+          throw new VOTJSError("Audio link wasn't received from Yandex response");
         }
         return {
           translated: true,
@@ -4308,10 +4296,7 @@ class VOTClient {
         };
     }
     console.error("[vot.js] Unknown response", translateResponse);
-    throw new VOTJSError("Unknown response from Yandex", {
-      raw: true,
-      msg: "receivedUnknownResponse"
-    });
+    throw new VOTJSError("Unknown response from Yandex");
   }
   async getSubtitles({
     url,
@@ -4325,10 +4310,7 @@ class VOTClient {
       ...headers
     });
     if (!res.success) {
-      throw new VOTJSError("Failed to request video subtitles", {
-        raw: true,
-        msg: "requestSubtitlesFailed"
-      });
+      throw new VOTJSError("Failed to request video subtitles");
     }
     return yandexProtobuf.decodeSubtitlesResponse(res.data);
   }
@@ -4340,10 +4322,7 @@ class VOTClient {
       ...headers
     });
     if (!res.success) {
-      throw new VOTJSError("Failed to request stream ping", {
-        raw: true,
-        msg: "requestStreamPingFailed"
-      });
+      throw new VOTJSError("Failed to request stream ping");
     }
     return true;
   }
@@ -4360,10 +4339,7 @@ class VOTClient {
       ...headers
     });
     if (!res.success) {
-      throw new VOTJSError("Failed to request stream translation", {
-        raw: true,
-        msg: "requestTranslationFailed"
-      });
+      throw new VOTJSError("Failed to request stream translation");
     }
     const translateResponse = yandexProtobuf.decodeStreamResponse(res.data);
     const interval = translateResponse.interval;
@@ -4384,10 +4360,7 @@ class VOTClient {
       }
     }
     console.error("[vot.js] Unknown response", translateResponse);
-    throw new VOTJSError("Unknown response from Yandex", {
-      raw: true,
-      msg: "receivedUnknownResponse"
-    });
+    throw new VOTJSError("Unknown response from Yandex");
   }
 }
 
