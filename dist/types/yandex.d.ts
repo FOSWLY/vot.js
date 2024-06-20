@@ -41,7 +41,9 @@ export declare enum VideoService {
     weverse = "weverse",
     newgrounds = "newgrounds",
     egghead = "egghead",
-    youku = "youku"
+    youku = "youku",
+    kodik = "kodik",
+    patreon = "patreon"
 }
 export type ServiceConf = {
     host: VideoService;

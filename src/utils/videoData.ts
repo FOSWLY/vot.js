@@ -1,16 +1,19 @@
 import sites from "../config/sites";
 import { ServiceConf, VideoService } from "../types/yandex";
-import { VideoHelper } from "./helpers";
+import * as Kodik from "../types/helpers/kodik";
+import VideoHelper from "./helper";
+import { fetchWithTimeout } from "./utils";
+import { VideoData } from "../types/client";
 
-class NormalizeError extends Error {
+class VideoDataError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "NormalizeError";
+    this.name = "VideoDataError";
     this.message = message;
   }
 }
 
-function getService(videoUrl: string) {
+export function getService(videoUrl: string) {
   if (videoUrl.startsWith("file://")) return false;
 
   let enteredURL: URL;
@@ -49,7 +52,7 @@ function getService(videoUrl: string) {
   });
 }
 
-async function getVideoID(
+export async function getVideoID(
   service: ServiceConf,
   videoURL: string,
 ): Promise<string | null | undefined> {
@@ -70,7 +73,9 @@ async function getVideoID(
         url.searchParams.get("v")
       );
     case VideoService.vk: {
-      const pathID = url.pathname.match(/^\/video-?[0-9]{8,9}_[0-9]{9}$/);
+      const pathID = url.pathname.match(
+        /^\/(video|clip)-?[0-9]{8,9}_[0-9]{9}$/,
+      );
       const paramZ = url.searchParams.get("z");
       const paramOID = url.searchParams.get("oid");
       const paramID = url.searchParams.get("id");
@@ -97,7 +102,7 @@ async function getVideoID(
       } else if (isClipsDomain) {
         const pathname = url.pathname.slice(1);
         const isEmbed = pathname === "embed";
-        const res = await fetch(
+        const res = await fetchWithTimeout(
           `https://clips.twitch.tv/${
             isEmbed ? url.searchParams.get("clip") : url.pathname.slice(1)
           }`,
@@ -218,8 +223,7 @@ async function getVideoID(
       return url.pathname.match(/\/file\/d\/([^/]+)/)?.[1];
     case VideoService.bannedvideo: {
       const videoId = url.searchParams.get("id");
-      const res = await fetch(`${service.url}${videoId}`);
-
+      const res = await fetchWithTimeout(`${service.url}${videoId}`);
       const content = await res.text();
 
       // get og:video from meta
@@ -227,21 +231,26 @@ async function getVideoID(
         /https:\/\/download.assets.video\/videos\/([^.]+).mp4/,
       )?.[0];
     }
-    case VideoService.weverse: {
-      const postId = url.pathname.match(/([^/]+)\/(live|media)\/([^/]+)/)?.[3];
-      if (!postId) {
-        return undefined;
-      }
-
-      const result = await VideoHelper.weverse.getVideoData(postId);
-      return result ? result.url : undefined;
-    }
+    case VideoService.weverse:
+      return url.pathname.match(/([^/]+)\/(live|media)\/([^/]+)/)?.[3];
     case VideoService.newgrounds:
       return url.pathname.match(/([^/]+)\/(view)\/([^/]+)/)?.[0];
     case VideoService.egghead:
       return url.pathname.slice(1);
     case VideoService.youku:
       return url.pathname.match(/v_show\/id_[\w=]+/)?.[0];
+    case VideoService.kodik:
+      return url.pathname.match(
+        /\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/,
+      )?.[0] as Kodik.Path;
+    case VideoService.patreon: {
+      const fullPostId = url.pathname.match(/posts\/([^/]+)/)?.[1];
+      if (!fullPostId) {
+        return undefined;
+      }
+
+      return fullPostId.replace(/[^\d.]/g, "");
+    }
     case VideoService.custom:
       return url.pathname + url.search;
     default:
@@ -249,28 +258,52 @@ async function getVideoID(
   }
 }
 
-async function normalize(url: string): Promise<string> {
+export async function getVideoData(url: string): Promise<VideoData> {
   const service = getService(url);
   if (!service) {
-    throw new NormalizeError(`URL: "${url}" is unknown service`);
+    throw new VideoDataError(`URL: "${url}" is unknown service`);
   }
 
   let videoId = await getVideoID(service, url);
   if (!videoId) {
-    throw new NormalizeError(`Entered unsupported link: "${url}"`);
+    throw new VideoDataError(`Entered unsupported link: "${url}"`);
   }
 
-  if ([VideoService.peertube].includes(service.host)) {
+  if (service.host === VideoService.peertube) {
     service.url = new URL(url).origin; // set the url of the current site for peertube and directlink
   }
 
-  return [
-    VideoService.weverse,
-    VideoService.bannedvideo,
-    VideoService.custom,
-  ].includes(service.host)
-    ? videoId
-    : `${service.url}${videoId}`;
-}
+  if ([VideoService.custom, VideoService.bannedvideo].includes(service.host)) {
+    return {
+      url: videoId,
+      videoId,
+      duration: undefined,
+    };
+  }
 
-export { normalize };
+  if (
+    ![VideoService.weverse, VideoService.kodik, VideoService.patreon].includes(
+      service.host,
+    )
+  ) {
+    return {
+      url: service.url + videoId,
+      videoId,
+      duration: undefined,
+    };
+  }
+
+  const result =
+    await VideoHelper[service.host as VideoService.weverse].getVideoData(
+      videoId,
+    );
+  if (!result) {
+    throw new VideoDataError(`Failed to get video raw url for ${service.host}`);
+  }
+
+  return {
+    url: result.url,
+    videoId,
+    duration: result.duration,
+  };
+}

@@ -1,4 +1,4 @@
-import { normalize } from "../dist";
+import { VideoData } from "../dist";
 import VOTClient, { VOTWorkerClient } from "../dist/client";
 
 const client = new VOTClient();
@@ -54,12 +54,12 @@ let subs = await client.getSubtitles({
 console.log(subs);
 
 // translate weverse (read README.md for understand)
-const normalizedLink = await normalize(
-  "https://weverse.io/redvelvet/media/4-139332911",
-);
+const videoLink = (
+  await VideoData.getVideoData("https://weverse.io/redvelvet/media/4-139332911")
+)?.url;
 
 response = await client.translateVideo({
-  url: normalizedLink,
+  url: videoLink,
 });
 
 console.log(response);

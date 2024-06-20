@@ -5,13 +5,19 @@ export type FetchFunction = (
   init?: any,
 ) => Promise<Response>;
 
-export type NormalizeFunction = (url: string) => Promise<string>;
+export type VideoData = {
+  url: string;
+  videoId: string;
+  duration: number | null | undefined;
+};
+
+export type GetVideoDataFunction = (url: string) => Promise<VideoData>;
 
 export type VOTOpts = {
   host?: string;
   fetchFn?: FetchFunction; // e.g. GM_fetch, ofetch.native and etc
   fetchOpts?: Record<string, unknown>; // e.g. { dispatcher: ... }
-  normalizeFn?: NormalizeFunction;
+  getVideoDataFn?: GetVideoDataFunction;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
 };

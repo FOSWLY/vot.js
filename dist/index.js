@@ -1296,6 +1296,289 @@ var require_index_minimal = __commonJS((exports) => {
   configure();
 });
 
+// node_modules/dom-parser/dist/lib/Node.js
+var require_Node = __commonJS((exports) => {
+  var searchElements = function(root, conditionFn) {
+    if (root.nodeType === NodeType.text) {
+      return [];
+    }
+    return root.childNodes.reduce((accumulator, childNode) => {
+      if (childNode.nodeType !== NodeType.text && conditionFn(childNode)) {
+        return [...accumulator, childNode, ...searchElements(childNode, conditionFn)];
+      }
+      return [...accumulator, ...searchElements(childNode, conditionFn)];
+    }, []);
+  };
+  var searchElement = function(root, conditionFn) {
+    for (let i = 0, l = root.childNodes.length;i < l; i++) {
+      const childNode = root.childNodes[i];
+      if (conditionFn(childNode)) {
+        return childNode;
+      }
+      const node = searchElement(childNode, conditionFn);
+      if (node) {
+        return node;
+      }
+    }
+    return null;
+  };
+  var stringifyAttributes = function(attributes) {
+    return attributes.map((elem) => elem.name + (elem.value ? `="${elem.value}"` : "")).join(" ");
+  };
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.Node = exports.NodeType = undefined;
+  var NodeType;
+  (function(NodeType2) {
+    NodeType2[NodeType2["element"] = 1] = "element";
+    NodeType2[NodeType2["text"] = 3] = "text";
+  })(NodeType || (exports.NodeType = NodeType = {}));
+
+  class Node {
+    constructor({ nodeType, namespace, selfCloseTag, text, nodeName, childNodes, parentNode, attributes }) {
+      this.namespace = namespace || null;
+      this.nodeType = nodeType;
+      this.isSelfCloseTag = Boolean(selfCloseTag);
+      this.text = text || null;
+      this.nodeName = nodeType === NodeType.element ? nodeName : "#text";
+      this.childNodes = childNodes || [];
+      this.parentNode = parentNode;
+      this.attributes = attributes || [];
+    }
+    get firstChild() {
+      return this.childNodes[0] || null;
+    }
+    get lastChild() {
+      return this.childNodes[this.childNodes.length - 1] || null;
+    }
+    get innerHTML() {
+      return this.childNodes.reduce((html, node) => html + (node.nodeType === NodeType.text ? node.text : node.outerHTML), "");
+    }
+    get outerHTML() {
+      if (this.nodeType === NodeType.text) {
+        return this.textContent;
+      }
+      const attributesString = stringifyAttributes(this.attributes);
+      const openTag = `<${this.nodeName}${attributesString.length ? " " : ""}${attributesString}${this.isSelfCloseTag ? "/" : ""}>`;
+      if (this.isSelfCloseTag) {
+        return openTag;
+      }
+      const childs = this.childNodes.map((child) => child.outerHTML).join("");
+      const closeTag = `</${this.nodeName}>`;
+      return [openTag, childs, closeTag].join("");
+    }
+    get textContent() {
+      if (this.nodeType === NodeType.text) {
+        return this.text;
+      }
+      return this.childNodes.map((node) => node.textContent).join("").replace(/\x20+/g, " ");
+    }
+    getAttribute(name) {
+      const attribute = this.attributes.find((a) => a.name === name);
+      return attribute ? attribute.value : null;
+    }
+    getElementsByTagName(tagName) {
+      return searchElements(this, (elem) => elem.nodeName.toUpperCase() === tagName.toUpperCase());
+    }
+    getElementsByClassName(className) {
+      const expr = new RegExp(`^(.*?\\s)?${className}(\\s.*?)?\$`);
+      return searchElements(this, (node) => Boolean(node.attributes.length && expr.test(node.getAttribute("class") || "")));
+    }
+    getElementsByName(name) {
+      return searchElements(this, (node) => Boolean(node.attributes.length && node.getAttribute("name") === name));
+    }
+    getElementById(id) {
+      return searchElement(this, (node) => Boolean(node.attributes.length && node.getAttribute("id") === id));
+    }
+  }
+  exports.Node = Node;
+  Node.ELEMENT_NODE = NodeType.element;
+  Node.TEXT_NODE = NodeType.text;
+});
+
+// node_modules/dom-parser/dist/lib/NodeAttribute.js
+var require_NodeAttribute = __commonJS((exports) => {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.NodeAttribute = undefined;
+
+  class NodeAttribute {
+    constructor({ name, value }) {
+      this.name = name;
+      this.value = value;
+    }
+  }
+  exports.NodeAttribute = NodeAttribute;
+});
+
+// node_modules/dom-parser/dist/lib/Dom.js
+var require_Dom = __commonJS((exports) => {
+  var find = function(html, conditionFn, onlyFirst = false) {
+    const generator = domGenerator(html);
+    const result = [];
+    for (const node of generator) {
+      if (node && conditionFn(node)) {
+        result.push(node);
+        if (onlyFirst) {
+          return result;
+        }
+      }
+    }
+    return result;
+  };
+  function* domGenerator(html) {
+    const tags = getAllTags(html);
+    let cursor = null;
+    for (let i = 0, l = tags.length;i < l; i++) {
+      const tag = tags[i];
+      const node = createNode(tag, cursor);
+      cursor = node || cursor;
+      if (isElementComposed(cursor, tag)) {
+        yield cursor;
+        cursor = cursor.parentNode;
+      }
+    }
+    while (cursor) {
+      yield cursor;
+      cursor = cursor.parentNode;
+    }
+  }
+  var isElementComposed = function(element, tag) {
+    if (!tag) {
+      return false;
+    }
+    const isCloseTag = closeTagExp.test(tag);
+    const [, nodeName] = tag.match(nodeNameExp) || [];
+    const isElementClosedByTag = isCloseTag && element.nodeName === nodeName;
+    return isElementClosedByTag || element.isSelfCloseTag || element.nodeType === Node_1.NodeType.text;
+  };
+  var getAllTags = function(html) {
+    return html.match(tagRegExp) || [];
+  };
+  var createNode = function(tag, parentNode) {
+    const isTextNode = textNodeExp.test(tag);
+    const isStartTag = startTagExp.test(tag);
+    if (isTextNode) {
+      return createTextNode(tag, parentNode);
+    }
+    if (isStartTag) {
+      return createElementNode(tag, parentNode);
+    }
+    return null;
+  };
+  var createElementNode = function(tag, parentNode) {
+    var _a;
+    const [, nodeName, namespace] = tag.match(nodeNameExp) || [];
+    const selfCloseTag = selfCloseTagExp.test(tag) || noClosingTagsExp.test(nodeName);
+    const attributes = parseAttributes(tag);
+    const elementNode = new Node_1.Node({
+      nodeType: Node_1.NodeType.element,
+      nodeName,
+      namespace,
+      attributes,
+      childNodes: [],
+      parentNode,
+      selfCloseTag
+    });
+    (_a = parentNode === null || parentNode === undefined ? undefined : parentNode.childNodes) === null || _a === undefined || _a.push(elementNode);
+    return elementNode;
+  };
+  var parseAttributes = function(tag) {
+    return (tag.match(attrRegExp) || []).map((attributeString) => {
+      splitAttrRegExp.lastIndex = 0;
+      const exec = splitAttrRegExp.exec(attributeString) || [];
+      const [, name = "", value = ""] = exec;
+      return new NodeAttribute_1.NodeAttribute({
+        name: name.trim(),
+        value: value.trim().replace(attributeQuotesExp, "")
+      });
+    });
+  };
+  var createTextNode = function(text, parentNode) {
+    var _a;
+    const textNode = new Node_1.Node({
+      nodeType: Node_1.NodeType.text,
+      nodeName: "#text",
+      text,
+      parentNode
+    });
+    (_a = parentNode === null || parentNode === undefined ? undefined : parentNode.childNodes) === null || _a === undefined || _a.push(textNode);
+    return textNode;
+  };
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.Dom = undefined;
+  var Node_1 = require_Node();
+  var NodeAttribute_1 = require_NodeAttribute();
+  var tagRegExp = /(<\/?(?:[a-z][a-z0-9]*:)?[a-z][a-z0-9-_.]*?[a-z0-9]*\s*(?:\s+[a-z0-9-_:]+(?:=(?:(?:'[\s\S]*?')|(?:"[\s\S]*?")))?)*\s*\/?>)|([^<]|<(?![a-z/]))*/gi;
+  var attrRegExp = /\s[a-z0-9-_:]+\b(\s*=\s*('|")[\s\S]*?\2)?/gi;
+  var splitAttrRegExp = /(\s[a-z0-9-_:]+\b\s*)(?:=(\s*('|")[\s\S]*?\3))?/gi;
+  var startTagExp = /^<[a-z]/;
+  var selfCloseTagExp = /\/>$/;
+  var closeTagExp = /^<\//;
+  var textNodeExp = /^[^<]/;
+  var nodeNameExp = /<\/?((?:([a-z][a-z0-9]*):)?(?:[a-z](?:[a-z0-9-_.]*[a-z0-9])?))/i;
+  var attributeQuotesExp = /^('|")|('|")$/g;
+  var noClosingTagsExp = /^(?:area|base|br|col|command|embed|hr|img|input|link|meta|param|source)/i;
+
+  class Dom {
+    constructor(rawHTML) {
+      this.rawHTML = rawHTML;
+    }
+    find(conditionFn, findFirst) {
+      const result = find(this.rawHTML, conditionFn, findFirst);
+      return findFirst ? result[0] || null : result;
+    }
+    getElementsByClassName(className) {
+      const expr = new RegExp(`^(.*?\\s)?${className}(\\s.*?)?\$`);
+      return this.find((node) => Boolean(node.attributes.length && expr.test(node.getAttribute("class") || "")));
+    }
+    getElementsByTagName(tagName) {
+      return this.find((node) => node.nodeName.toUpperCase() === tagName.toUpperCase());
+    }
+    getElementById(id) {
+      return this.find((node) => node.getAttribute("id") === id, true);
+    }
+    getElementsByName(name) {
+      return this.find((node) => node.getAttribute("name") === name);
+    }
+    getElementsByAttribute(attributeName, attributeValue) {
+      return this.find((node) => node.getAttribute(attributeName) === attributeValue);
+    }
+  }
+  exports.Dom = Dom;
+});
+
+// node_modules/dom-parser/dist/index.js
+var require_dist = __commonJS((exports) => {
+  var parseFromString = function(html) {
+    return new Dom_1.Dom(html);
+  };
+  var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === undefined)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() {
+        return m[k];
+      } };
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === undefined)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = exports && exports.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.parseFromString = undefined;
+  var Dom_1 = require_Dom();
+  exports.parseFromString = parseFromString;
+  __exportStar(require_Dom(), exports);
+  __exportStar(require_Node(), exports);
+});
+
 // src/protos/yandex.ts
 var exports_yandex = {};
 __export(exports_yandex, {
@@ -3574,6 +3857,8 @@ var VideoService;
   VideoService2["newgrounds"] = "newgrounds";
   VideoService2["egghead"] = "egghead";
   VideoService2["youku"] = "youku";
+  VideoService2["kodik"] = "kodik";
+  VideoService2["patreon"] = "patreon";
 })(VideoService || (VideoService = {}));
 var VideoTranslationStatus;
 (function(VideoTranslationStatus2) {
@@ -3584,6 +3869,26 @@ var VideoTranslationStatus;
   VideoTranslationStatus2[VideoTranslationStatus2["PART_CONTENT"] = 5] = "PART_CONTENT";
   VideoTranslationStatus2[VideoTranslationStatus2["LONG_WAITING_2"] = 6] = "LONG_WAITING_2";
 })(VideoTranslationStatus || (VideoTranslationStatus = {}));
+
+// src/utils/videoData.ts
+var exports_videoData = {};
+__export(exports_videoData, {
+  getVideoID: () => {
+    {
+      return getVideoID;
+    }
+  },
+  getVideoData: () => {
+    {
+      return getVideoData;
+    }
+  },
+  getService: () => {
+    {
+      return getService;
+    }
+  }
+});
 
 // src/config/alternativeUrls.ts
 var sitesInvidious = [
@@ -3823,13 +4128,51 @@ var sites_default = [
     match: /^v.youku.com$/
   },
   {
+    host: VideoService.kodik,
+    url: "stub",
+    match: /^kodik.(info|biz|cc)$/
+  },
+  {
+    host: VideoService.patreon,
+    url: "stub",
+    match: /^(www.)?patreon.com$/
+  },
+  {
     host: VideoService.custom,
     url: "stub",
     match: (url) => /([^.]+).mp4/.test(url.pathname)
   }
 ];
 
-// src/utils/helpers.ts
+// src/utils/helper.ts
+var exports_helper = {};
+__export(exports_helper, {
+  default: () => {
+    {
+      return VideoHelper;
+    }
+  }
+});
+var import_dom_parser = __toESM(require_dist(), 1);
+
+// src/utils/utils.ts
+async function fetchWithTimeout(url, options = {
+  headers: {
+    "User-Agent": config_default.userAgent
+  }
+}) {
+  const { timeout = 3000 } = options;
+  const controller = new AbortController;
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(url, {
+    ...options,
+    signal: controller.signal
+  });
+  clearTimeout(id);
+  return response;
+}
+
+// src/utils/helper.ts
 class VideoHelperError extends Error {
   constructor(message) {
     super(message);
@@ -3839,18 +4182,18 @@ class VideoHelperError extends Error {
 }
 
 class VideoHelper {
-  static mailru = new class {
+  static [VideoService.mailru] = new class {
     async getVideoData(videoId) {
       try {
-        const res = await fetch(`https://my.mail.ru/+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`);
+        const res = await fetchWithTimeout(`https://my.mail.ru/+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`);
         return await res.json();
       } catch (err) {
-        console.error("Failed to get mail.ru video info", err);
+        console.error("Failed to get mail.ru video info", err.message);
         return;
       }
     }
   };
-  static weverse = new class {
+  static [VideoService.weverse] = new class {
     API_ORIGIN = "https://global.apis.naver.com/weverse/wevweb";
     API_APP_ID = "be4d79eb8fc7bd008ee82c8ec4ff6fd4";
     API_HMAC_KEY = "1b9cb6378d959b45714bec49971ade22e6e24e42";
@@ -3885,14 +4228,14 @@ class VideoHelper {
         fieldSet: "postForPreview",
         ...this.getURLData()
       });
-      const hash = await this.createHash(pathname);
       try {
-        const res = await fetch(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
+        const hash = await this.createHash(pathname);
+        const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
           headers: this.HEADERS
         });
         return await res.json();
       } catch (err) {
-        console.error(err);
+        console.error(`Failed to get weverse post preview by postId: ${postId}`, err.message);
         return false;
       }
     }
@@ -3901,22 +4244,22 @@ class VideoHelper {
         gcc: "RU",
         ...this.getURLData()
       });
-      const hash = await this.createHash(pathname);
       try {
-        const res = await fetch(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
+        const hash = await this.createHash(pathname);
+        const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
           method: "POST",
           headers: this.HEADERS
         });
         return await res.json();
       } catch (err) {
-        console.error(err);
+        console.error(`Failed to get weverse InKey by videoId: ${videoId}`, err.message);
         return false;
       }
     }
     async getVideoInfo(infraVideoId, inkey, serviceId) {
       const timestamp = Date.now();
       try {
-        const res = await fetch(`https://global.apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${infraVideoId}?` + new URLSearchParams({
+        const res = await fetchWithTimeout(`https://global.apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${infraVideoId}?` + new URLSearchParams({
           key: inkey,
           sid: serviceId,
           nonce: timestamp.toString(),
@@ -3938,7 +4281,7 @@ class VideoHelper {
         });
         return await res.json();
       } catch (err) {
-        console.error(err);
+        console.error(`Failed to get weverse video info (infraVideoId: ${infraVideoId}, inkey: ${inkey}, serviceId: ${serviceId}`, err.message);
         return false;
       }
     }
@@ -3972,10 +4315,136 @@ class VideoHelper {
       };
     }
   };
+  static [VideoService.kodik] = new class {
+    API_ORIGIN = "https://kodik.biz";
+    async getSecureData(videoPath) {
+      try {
+        const url = this.API_ORIGIN + videoPath;
+        const res = await fetchWithTimeout(url, {
+          headers: {
+            "User-Agent": config_default.userAgent,
+            Origin: this.API_ORIGIN,
+            Referer: this.API_ORIGIN
+          }
+        });
+        const content = await res.text();
+        const [videoType, videoId, hash] = videoPath.split("/").filter((a) => a);
+        let doc = import_dom_parser.parseFromString(content);
+        const secureScript = Array.from(doc.getElementsByTagName("script")).filter((s) => s.innerHTML.includes(`videoId = "${videoId}"`));
+        if (!secureScript.length) {
+          throw new VideoHelperError("Failed to find secure script");
+        }
+        const secureContent = secureScript[0].textContent.trim().match(/'{[^']+}'/)?.[0];
+        if (!secureContent) {
+          throw new VideoHelperError("Secure json wasn't found in secure script");
+        }
+        const secureJSON = JSON.parse(secureContent.replaceAll("'", ""));
+        return {
+          videoType,
+          videoId,
+          hash,
+          ...secureJSON
+        };
+      } catch (err) {
+        console.error(`Failed to get kodik secure data by videoPath: ${videoPath}.`, err.message);
+        return false;
+      }
+    }
+    async getFtor(secureData) {
+      const {
+        videoType,
+        videoId: id,
+        hash,
+        d,
+        d_sign,
+        pd,
+        pd_sign,
+        ref,
+        ref_sign
+      } = secureData;
+      try {
+        const res = await fetchWithTimeout(this.API_ORIGIN + "/ftor", {
+          method: "POST",
+          headers: {
+            "User-Agent": config_default.userAgent,
+            Origin: this.API_ORIGIN,
+            Referer: `${this.API_ORIGIN}/${videoType}/${id}/${hash}/360p`
+          },
+          body: new URLSearchParams({
+            d,
+            d_sign,
+            pd,
+            pd_sign,
+            ref: decodeURIComponent(ref),
+            ref_sign,
+            bad_user: "false",
+            cdn_is_working: "true",
+            info: "{}",
+            type: videoType,
+            hash,
+            id
+          })
+        });
+        return await res.json();
+      } catch (err) {
+        console.error(`Failed to get kodik video data (type: ${videoType}, id: ${id}, hash: ${hash})`, err.message);
+        return false;
+      }
+    }
+    decryptUrl(encryptedUrl) {
+      const decryptedUrl = atob(encryptedUrl.replace(/[a-zA-Z]/g, function(e) {
+        const charCode = e.charCodeAt(0) + 13;
+        return String.fromCharCode((e <= "Z" ? 90 : 122) >= charCode ? charCode : charCode - 26);
+      }));
+      return "https:" + decryptedUrl;
+    }
+    async getVideoData(videoPath) {
+      const secureData = await this.getSecureData(videoPath);
+      if (!secureData) {
+        return;
+      }
+      const videoData = await this.getFtor(secureData);
+      if (!videoData) {
+        return;
+      }
+      const videoDataLinks = Object.entries(videoData.links[videoData.default.toString()]);
+      const videoLink = videoDataLinks.find(([_, data]) => data.type === "application/x-mpegURL")?.[1];
+      if (!videoLink) {
+        return;
+      }
+      return {
+        url: this.decryptUrl(videoLink.src)
+      };
+    }
+  };
+  static [VideoService.patreon] = new class {
+    async getPosts(postId) {
+      try {
+        const res = await fetchWithTimeout(`https://www.patreon.com/api/posts/${postId}?json-api-use-default-includes=false`);
+        return await res.json();
+      } catch (err) {
+        console.error(`Failed to get patreon posts by postId: ${postId}.`, err.message);
+        return false;
+      }
+    }
+    async getVideoData(postId) {
+      const postData = await this.getPosts(postId);
+      if (!postData) {
+        return;
+      }
+      const postFileUrl = postData.data.attributes.post_file.url;
+      if (!postFileUrl) {
+        return;
+      }
+      return {
+        url: postFileUrl
+      };
+    }
+  };
 }
 
-// src/utils/normalize.ts
-var getService = function(videoUrl) {
+// src/utils/videoData.ts
+function getService(videoUrl) {
   if (videoUrl.startsWith("file://"))
     return false;
   let enteredURL;
@@ -4004,7 +4473,7 @@ var getService = function(videoUrl) {
   return sites_default.find((e) => {
     return (Array.isArray(e.match) ? e.match.some(isMathes) : isMathes(e.match)) && e.host && e.url;
   });
-};
+}
 async function getVideoID(service, videoURL) {
   const url = new URL(videoURL);
   switch (service.host) {
@@ -4019,7 +4488,7 @@ async function getVideoID(service, videoURL) {
       }
       return url.pathname.match(/(?:watch|embed|shorts|live)\/([^/]+)/)?.[1] || url.searchParams.get("v");
     case VideoService.vk: {
-      const pathID = url.pathname.match(/^\/video-?[0-9]{8,9}_[0-9]{9}$/);
+      const pathID = url.pathname.match(/^\/(video|clip)-?[0-9]{8,9}_[0-9]{9}$/);
       const paramZ = url.searchParams.get("z");
       const paramOID = url.searchParams.get("oid");
       const paramID = url.searchParams.get("id");
@@ -4045,7 +4514,7 @@ async function getVideoID(service, videoURL) {
       } else if (isClipsDomain) {
         const pathname = url.pathname.slice(1);
         const isEmbed = pathname === "embed";
-        const res = await fetch(`https://clips.twitch.tv/${isEmbed ? url.searchParams.get("clip") : url.pathname.slice(1)}`, {
+        const res = await fetchWithTimeout(`https://clips.twitch.tv/${isEmbed ? url.searchParams.get("clip") : url.pathname.slice(1)}`, {
           headers: {
             "User-Agent": "Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
           }
@@ -4135,53 +4604,74 @@ async function getVideoID(service, videoURL) {
       return url.pathname.match(/\/file\/d\/([^/]+)/)?.[1];
     case VideoService.bannedvideo: {
       const videoId = url.searchParams.get("id");
-      const res = await fetch(`${service.url}${videoId}`);
+      const res = await fetchWithTimeout(`${service.url}${videoId}`);
       const content = await res.text();
       return content.match(/https:\/\/download.assets.video\/videos\/([^.]+).mp4/)?.[0];
     }
-    case VideoService.weverse: {
-      const postId = url.pathname.match(/([^/]+)\/(live|media)\/([^/]+)/)?.[3];
-      if (!postId) {
-        return;
-      }
-      const result = await VideoHelper.weverse.getVideoData(postId);
-      return result ? result.url : undefined;
-    }
+    case VideoService.weverse:
+      return url.pathname.match(/([^/]+)\/(live|media)\/([^/]+)/)?.[3];
     case VideoService.newgrounds:
       return url.pathname.match(/([^/]+)\/(view)\/([^/]+)/)?.[0];
     case VideoService.egghead:
       return url.pathname.slice(1);
     case VideoService.youku:
       return url.pathname.match(/v_show\/id_[\w=]+/)?.[0];
+    case VideoService.kodik:
+      return url.pathname.match(/\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/)?.[0];
+    case VideoService.patreon: {
+      const fullPostId = url.pathname.match(/posts\/([^/]+)/)?.[1];
+      if (!fullPostId) {
+        return;
+      }
+      return fullPostId.replace(/[^\d.]/g, "");
+    }
     case VideoService.custom:
       return url.pathname + url.search;
     default:
       return;
   }
 }
-async function normalize(url) {
+async function getVideoData(url) {
   const service = getService(url);
   if (!service) {
-    throw new NormalizeError(`URL: "${url}" is unknown service`);
+    throw new VideoDataError(`URL: "${url}" is unknown service`);
   }
   let videoId = await getVideoID(service, url);
   if (!videoId) {
-    throw new NormalizeError(`Entered unsupported link: "${url}"`);
+    throw new VideoDataError(`Entered unsupported link: "${url}"`);
   }
-  if ([VideoService.peertube].includes(service.host)) {
+  if (service.host === VideoService.peertube) {
     service.url = new URL(url).origin;
   }
-  return [
-    VideoService.weverse,
-    VideoService.bannedvideo,
-    VideoService.custom
-  ].includes(service.host) ? videoId : `${service.url}${videoId}`;
+  if ([VideoService.custom, VideoService.bannedvideo].includes(service.host)) {
+    return {
+      url: videoId,
+      videoId,
+      duration: undefined
+    };
+  }
+  if (![VideoService.weverse, VideoService.kodik, VideoService.patreon].includes(service.host)) {
+    return {
+      url: service.url + videoId,
+      videoId,
+      duration: undefined
+    };
+  }
+  const result = await VideoHelper[service.host].getVideoData(videoId);
+  if (!result) {
+    throw new VideoDataError(`Failed to get video raw url for ${service.host}`);
+  }
+  return {
+    url: result.url,
+    videoId,
+    duration: result.duration
+  };
 }
 
-class NormalizeError extends Error {
+class VideoDataError extends Error {
   constructor(message) {
     super(message);
-    this.name = "NormalizeError";
+    this.name = "VideoDataError";
     this.message = message;
   }
 }
@@ -4199,7 +4689,7 @@ class VOTClient {
   host;
   fetch;
   fetchOpts;
-  normalize;
+  getVideoDataFn;
   requestLang;
   responseLang;
   userAgent = config_default.userAgent;
@@ -4216,14 +4706,14 @@ class VOTClient {
     host = config_default.host,
     fetchFn = fetch,
     fetchOpts = {},
-    normalizeFn = normalize,
+    getVideoDataFn = getVideoData,
     requestLang = "en",
     responseLang = "ru"
   } = {}) {
     this.host = host;
     this.fetch = fetchFn;
     this.fetchOpts = fetchOpts;
-    this.normalize = normalizeFn;
+    this.getVideoDataFn = getVideoDataFn;
     this.requestLang = requestLang;
     this.responseLang = responseLang;
   }
@@ -4260,7 +4750,8 @@ class VOTClient {
     translationHelp = null,
     headers = {}
   }) {
-    const body = yandexProtobuf.encodeTranslationRequest(await this.normalize(url), duration, requestLang, responseLang, translationHelp);
+    const { url: videoUrl, duration: videoDuration } = await this.getVideoDataFn(url);
+    const body = yandexProtobuf.encodeTranslationRequest(videoUrl, videoDuration ?? duration, requestLang, responseLang, translationHelp);
     const res = await this.request("/video-translation/translate", body, {
       "Vtrans-Signature": await getSignature(body),
       "Sec-Vtrans-Token": getUUID(false),
@@ -4303,7 +4794,8 @@ class VOTClient {
     requestLang = this.requestLang,
     headers = {}
   }) {
-    const body = yandexProtobuf.encodeSubtitlesRequest(await this.normalize(url), requestLang);
+    const { url: videoUrl } = await this.getVideoDataFn(url);
+    const body = yandexProtobuf.encodeSubtitlesRequest(videoUrl, requestLang);
     const res = await this.request("/video-subtitles/get-subtitles", body, {
       "Vsubs-Signature": await getSignature(body),
       "Sec-Vsubs-Token": getUUID(false),
@@ -4332,7 +4824,8 @@ class VOTClient {
     responseLang = this.responseLang,
     headers = {}
   }) {
-    const body = yandexProtobuf.encodeStreamRequest(await this.normalize(url), requestLang, responseLang);
+    const { url: videoUrl } = await this.getVideoDataFn(url);
+    const body = yandexProtobuf.encodeStreamRequest(videoUrl, requestLang, responseLang);
     const res = await this.request("/stream-translation/translate-stream", body, {
       "Vtrans-Signature": await getSignature(body),
       "Sec-Vtrans-Token": getUUID(false),
@@ -4407,14 +4900,14 @@ var exports_mailru = {};
 var exports_weverse = {};
 export {
   yandexProtobuf,
-  normalize,
   getUUID,
   getSignature,
   VOTClient as default,
   exports_yandex2 as YandexType,
   exports_yandex as YandexProtobufType,
   exports_weverse as WeverseType,
-  VideoHelper,
+  exports_helper as VideoHelper,
+  exports_videoData as VideoData,
   VOTWorkerClient,
   exports_mailru as MailRuType,
   exports_client as ClientType

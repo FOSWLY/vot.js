@@ -6,6 +6,6 @@ export * as YandexProtobufType from "./protos/yandex";
 export * as MailRuType from "./types/helpers/mailru";
 export * as WeverseType from "./types/helpers/weverse";
 export { getSignature, getUUID } from "./secure";
-export { normalize } from "./utils/normalize";
-export { VideoHelper } from "./utils/helpers";
+export * as VideoData from "./utils/videoData";
+export * as VideoHelper from "./utils/helper";
 //# sourceMappingURL=index.d.ts.map

@@ -10,15 +10,26 @@ Type.Never(),
 Type.Never()
 ]), Type.Optional(Type.Any())], Type.Promise(Type.Never()))
 
-export type NormalizeFunction = Static<typeof NormalizeFunction>
-export const NormalizeFunction = Type.Function([Type.String()], Type.Promise(Type.String()))
+export type VideoData = Static<typeof VideoData>
+export const VideoData = Type.Object({
+url: Type.String(),
+videoId: Type.String(),
+duration: Type.Union([
+Type.Number(),
+Type.Null(),
+Type.Undefined()
+])
+})
+
+export type GetVideoDataFunction = Static<typeof GetVideoDataFunction>
+export const GetVideoDataFunction = Type.Function([Type.String()], Type.Promise(VideoData))
 
 export type VOTOpts = Static<typeof VOTOpts>
 export const VOTOpts = Type.Object({
 host: Type.Optional(Type.String()),
 fetchFn: Type.Optional(FetchFunction),
 fetchOpts: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
-normalizeFn: Type.Optional(NormalizeFunction),
+getVideoDataFn: Type.Optional(GetVideoDataFunction),
 requestLang: Type.Optional(RequestLang),
 responseLang: Type.Optional(ResponseLang)
 })

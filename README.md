@@ -47,7 +47,7 @@ You can see more code examples [here](https://github.com/FOSWLY/vot.js/examples)
 
 1. The library can't translate videos longer than 4 hours
 2. To translate udemy, coursera, coursehunter and other sites that have authorization, you must create your own handlers and translate only the link to the mp4 file to the library
-3. For weverse, before translating, you must normalize the link yourself (use normalize from /utils/helpers.ts) and then pass the normalized link for translation. Otherwise, you will receive an infinity translation due to the fact that weverse returns a link with a random access key
+3. For weverse, before translating, you must normalize the link yourself (use getVideoData from /utils/helpers.ts) and then pass the normalized link for translation. Otherwise, you will receive an infinity translation due to the fact that weverse returns a link with a random access key
 
 ## Build
 

@@ -69,6 +69,7 @@
   "type": "module",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "dom-parser": "^1.1.5",
     "protobufjs": "^7.3.0"
   }
 }

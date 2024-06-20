@@ -21,7 +21,7 @@
 <a id="md:limitations" class="tsd-anchor"></a><h2><a href="#md:limitations">Limitations</a></h2><ol>
 <li>The library can&#39;t translate videos longer than 4 hours</li>
 <li>To translate udemy, coursera, coursehunter and other sites that have authorization, you must create your own handlers and translate only the link to the mp4 file to the library</li>
-<li>For weverse, before translating, you must normalize the link yourself (use normalize from /utils/helpers.ts) and then pass the normalized link for translation. Otherwise, you will receive an infinity translation due to the fact that weverse returns a link with a random access key</li>
+<li>For weverse, before translating, you must normalize the link yourself (use getVideoData from /utils/helpers.ts) and then pass the normalized link for translation. Otherwise, you will receive an infinity translation due to the fact that weverse returns a link with a random access key</li>
 </ol>
 <a id="md:build" class="tsd-anchor"></a><h2><a href="#md:build">Build</a></h2><p>To build, you must have:</p>
 <ul>

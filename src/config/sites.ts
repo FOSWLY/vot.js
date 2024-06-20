@@ -174,6 +174,16 @@ export default [
     match: /^v.youku.com$/,
   },
   {
+    host: VideoService.kodik,
+    url: "stub", // This is a stub. Final url is set in getVideoData function
+    match: /^kodik.(info|biz|cc)$/,
+  },
+  {
+    host: VideoService.patreon,
+    url: "stub", // This is a stub. Final url is set in getVideoData function
+    match: /^(www.)?patreon.com$/,
+  },
+  {
     host: VideoService.custom,
     url: "stub", // This is a stub. The present value is set using origin url
     match: (url: URL) => /([^.]+).mp4/.test(url.pathname),

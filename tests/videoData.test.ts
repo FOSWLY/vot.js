@@ -1,5 +1,9 @@
 import { describe, test, expect } from "bun:test";
-import { normalize } from "../src/utils/normalize";
+import { getVideoData } from "../src/utils/videoData";
+
+const normalize = async (url: string) => {
+  return (await getVideoData(url))?.url;
+};
 
 describe("youtube", () => {
   const expected = "https://youtu.be/LK6nLR1bzpI";
@@ -362,4 +366,27 @@ test("youku", async () => {
 test("custom", async () => {
   const expected = "https://s3.toil.cc/vot/video.mp4";
   expect(await normalize(expected)).toEqual(expected);
+});
+
+describe("kodik", async () => {
+  test("seria", async () => {
+    expect(
+      await normalize(
+        "https://kodik.info/seria/864861/1f1f70ee75bbb2f1806e90db27ec151b/720p?translations=false&min_age=18",
+      ),
+    ).toEndWith(".mp4:hls:manifest.m3u8");
+  });
+  test("video", async () => {
+    expect(
+      await normalize(
+        "https://kodik.biz/video/9935/313bc89421b094f6f374cc7420e00ad1/720p?translations=false&min_age=16",
+      ),
+    ).toEndWith(".mp4:hls:manifest.m3u8");
+  });
+});
+
+test("patreon", async () => {
+  expect(
+    await normalize("https://www.patreon.com/posts/choose-your-66310078"),
+  ).toStartWith("https://stream.mux.com");
 });

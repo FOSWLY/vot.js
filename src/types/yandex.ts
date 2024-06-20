@@ -59,6 +59,8 @@ export enum VideoService {
   newgrounds = "newgrounds",
   egghead = "egghead",
   youku = "youku",
+  kodik = "kodik",
+  patreon = "patreon",
 }
 
 export type ServiceConf = {

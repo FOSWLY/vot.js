@@ -1,7 +1,11 @@
 import config from "./config/config";
 import { yandexProtobuf } from "./protobuf";
 import { getSignature, getUUID } from "./secure";
-import type { VOTOpts, FetchFunction, NormalizeFunction } from "./types/client";
+import type {
+  VOTOpts,
+  FetchFunction,
+  GetVideoDataFunction,
+} from "./types/client";
 import type {
   VideoTranslationOpts,
   VideoTranslationResponse,
@@ -14,7 +18,7 @@ import type {
   StreamTranslationObject,
 } from "./types/yandex";
 import { VideoTranslationStatus } from "./types/yandex";
-import { normalize } from "./utils/normalize";
+import { getVideoData } from "./utils/videoData";
 
 class VOTJSError extends Error {
   constructor(message: string) {
@@ -28,7 +32,7 @@ export default class VOTClient {
   host!: string;
   fetch!: FetchFunction;
   fetchOpts!: Record<string, unknown>;
-  normalize!: NormalizeFunction;
+  getVideoDataFn!: GetVideoDataFunction;
 
   // default langs
   requestLang!: RequestLang;
@@ -53,14 +57,14 @@ export default class VOTClient {
     host = config.host,
     fetchFn = fetch,
     fetchOpts = {},
-    normalizeFn = normalize,
+    getVideoDataFn = getVideoData,
     requestLang = "en",
     responseLang = "ru",
   }: VOTOpts = {}) {
     this.host = host;
     this.fetch = fetchFn;
     this.fetchOpts = fetchOpts;
-    this.normalize = normalizeFn;
+    this.getVideoDataFn = getVideoDataFn;
     this.requestLang = requestLang;
     this.responseLang = responseLang;
   }
@@ -104,9 +108,12 @@ export default class VOTClient {
     translationHelp = null,
     headers = {},
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
+    const { url: videoUrl, duration: videoDuration } =
+      await this.getVideoDataFn(url);
+    // добавить проверку на m3u8
     const body = yandexProtobuf.encodeTranslationRequest(
-      await this.normalize(url),
-      duration,
+      videoUrl,
+      videoDuration ?? duration,
       requestLang,
       responseLang,
       translationHelp,
@@ -185,10 +192,8 @@ export default class VOTClient {
     requestLang = this.requestLang,
     headers = {},
   }: VideoSubtitlesOpts) {
-    const body = yandexProtobuf.encodeSubtitlesRequest(
-      await this.normalize(url),
-      requestLang,
-    );
+    const { url: videoUrl } = await this.getVideoDataFn(url);
+    const body = yandexProtobuf.encodeSubtitlesRequest(videoUrl, requestLang);
 
     const res = await this.request("/video-subtitles/get-subtitles", body, {
       "Vsubs-Signature": await getSignature(body),
@@ -226,8 +231,9 @@ export default class VOTClient {
     responseLang = this.responseLang,
     headers = {},
   }: StreamTranslationOpts): Promise<StreamTranslationResponse> {
+    const { url: videoUrl } = await this.getVideoDataFn(url);
     const body = yandexProtobuf.encodeStreamRequest(
-      await this.normalize(url),
+      videoUrl,
       requestLang,
       responseLang,
     );

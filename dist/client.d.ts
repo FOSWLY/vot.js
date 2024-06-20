@@ -1,15 +1,15 @@
-import type { VOTOpts, FetchFunction, NormalizeFunction } from "./types/client";
+import type { VOTOpts, FetchFunction, GetVideoDataFunction } from "./types/client";
 import type { VideoTranslationOpts, VideoTranslationResponse, RequestLang, ResponseLang, VideoSubtitlesOpts, StreamPingOptions, StreamTranslationOpts, StreamTranslationResponse } from "./types/yandex";
 export default class VOTClient {
     host: string;
     fetch: FetchFunction;
     fetchOpts: Record<string, unknown>;
-    normalize: NormalizeFunction;
+    getVideoDataFn: GetVideoDataFunction;
     requestLang: RequestLang;
     responseLang: ResponseLang;
     userAgent: string;
     headers: Record<string, string>;
-    constructor({ host, fetchFn, fetchOpts, normalizeFn, requestLang, responseLang, }?: VOTOpts);
+    constructor({ host, fetchFn, fetchOpts, getVideoDataFn, requestLang, responseLang, }?: VOTOpts);
     request(path: string, body: Uint8Array, headers?: Record<string, string>): Promise<{
         success: boolean;
         data: ArrayBuffer;

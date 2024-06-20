@@ -1,10 +1,13 @@
 import * as MailRu from "../types/helpers/mailru";
 import * as Weverse from "../types/helpers/weverse";
-export declare class VideoHelper {
-    static mailru: {
+import * as Kodik from "../types/helpers/kodik";
+import * as Patreon from "../types/helpers/patreon";
+import { VideoService } from "../types/yandex";
+export default class VideoHelper {
+    static [VideoService.mailru]: {
         getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined>;
     };
-    static weverse: {
+    static [VideoService.weverse]: {
         API_ORIGIN: string;
         API_APP_ID: string;
         API_HMAC_KEY: string;
@@ -33,5 +36,20 @@ export declare class VideoHelper {
             duration: number;
         } | undefined>;
     };
+    static [VideoService.kodik]: {
+        API_ORIGIN: string;
+        getSecureData(videoPath: Kodik.Path): Promise<Kodik.SecureData | false>;
+        getFtor(secureData: Kodik.SecureData): Promise<Kodik.VideoData | false>;
+        decryptUrl(encryptedUrl: string): string;
+        getVideoData(videoPath: Kodik.Path): Promise<{
+            url: string;
+        } | undefined>;
+    };
+    static [VideoService.patreon]: {
+        getPosts(postId: number | string): Promise<Patreon.PostsResponse | false>;
+        getVideoData(postId: string | number): Promise<{
+            url: string;
+        } | undefined>;
+    };
 }
-//# sourceMappingURL=helpers.d.ts.map
+//# sourceMappingURL=helper.d.ts.map

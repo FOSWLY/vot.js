@@ -37,7 +37,7 @@ Type.Literal("en"),
 Type.Literal("kk")
 ])
 
-export enum EnumVideoService { custom = "custom", directlink = custom, youtube = "youtube", piped = "piped", invidious = "invidious", vk = "vk", nine_gag = "nine_gag", gag = nine_gag, twitch = "twitch", proxitok = "proxitok", tiktok = "tiktok", vimeo = "vimeo", xvideos = "xvideos", pornhub = "pornhub", twitter = "twitter", rumble = "rumble", facebook = "facebook", rutube = "rutube", coub = "coub", bilibili = "bilibili", mail_ru = "mailru", mailru = mail_ru, bitchute = "bitchute", eporner = "eporner", peertube = "peertube", dailymotion = "dailymotion", trovo = "trovo", yandexdisk = "yandexdisk", ok_ru = "okru", okru = ok_ru, googledrive = "googledrive", bannedvideo = "bannedvideo", weverse = "weverse", newgrounds = "newgrounds", egghead = "egghead", youku = "youku" }
+export enum EnumVideoService { custom = "custom", directlink = custom, youtube = "youtube", piped = "piped", invidious = "invidious", vk = "vk", nine_gag = "nine_gag", gag = nine_gag, twitch = "twitch", proxitok = "proxitok", tiktok = "tiktok", vimeo = "vimeo", xvideos = "xvideos", pornhub = "pornhub", twitter = "twitter", rumble = "rumble", facebook = "facebook", rutube = "rutube", coub = "coub", bilibili = "bilibili", mail_ru = "mailru", mailru = mail_ru, bitchute = "bitchute", eporner = "eporner", peertube = "peertube", dailymotion = "dailymotion", trovo = "trovo", yandexdisk = "yandexdisk", ok_ru = "okru", okru = ok_ru, googledrive = "googledrive", bannedvideo = "bannedvideo", weverse = "weverse", newgrounds = "newgrounds", egghead = "egghead", youku = "youku", kodik = "kodik", patreon = "patreon" }
 
 export type VideoService = Static<typeof VideoService>
 export const VideoService = Type.Enum(EnumVideoService)
