@@ -22,15 +22,14 @@ export async function getSignature(body: Uint8Array) {
 }
 
 // yandex uuid
-export function getUUID(isLower: boolean) {
-  const randomBytes = crypto.getRandomValues(new Uint8Array(31));
-  let byteIndex = 0;
-  const uuid = (([1e7] as unknown as string) + 1e3 + 4e3 + 8e3 + 1e11).replace(
-    /[018]/g,
-    (match: any) =>
-      (match ^ (randomBytes[byteIndex++] & (15 >> (match / 4)))).toString(16),
-  );
-  return isLower ? uuid : uuid.toUpperCase();
+export function getUUID() {
+  const hexDigits = "0123456789ABCDEF";
+  let uuid = "";
+  for (let i = 0; i < 32; i++) {
+    const randomDigit = Math.floor(Math.random() * 16);
+    uuid += hexDigits[randomDigit];
+  }
+  return uuid;
 }
 
 // hmac sha1 for weverse

@@ -9,7 +9,7 @@ import {
   YandexSessionRequest,
   YandexSessionResponse,
 } from "./protos/yandex";
-import type { TranslationHelp } from "./types/yandex";
+import type { SessionModule, TranslationHelp } from "./types/yandex";
 
 // Export the encoding and decoding functions
 export const yandexProtobuf = {
@@ -32,7 +32,7 @@ export const yandexProtobuf = {
       responseLanguage: responseLang,
       unknown2: 0,
       unknown3: 1,
-      bypassCache: true,
+      bypassCache: false,
     }).finish();
   },
   decodeTranslationResponse(response: ArrayBuffer) {
@@ -62,7 +62,7 @@ export const yandexProtobuf = {
   decodeStreamResponse(response: ArrayBuffer) {
     return StreamTranslationResponse.decode(new Uint8Array(response));
   },
-  encodeYandexSessionRequest(uuid: string, module: string) {
+  encodeYandexSessionRequest(uuid: string, module: SessionModule) {
     return YandexSessionRequest.encode({
       uuid,
       module,

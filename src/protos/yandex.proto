@@ -92,6 +92,6 @@ message YandexSessionRequest {
 }
 
 message YandexSessionResponse {
-  string sign = 1;
+  string secretKey = 1;
   int32 expires = 2;
 }

@@ -161,7 +161,7 @@ export interface YandexSessionRequest {
 }
 
 export interface YandexSessionResponse {
-  sign: string;
+  secretKey: string;
   expires: number;
 }
 
@@ -1354,13 +1354,13 @@ export const YandexSessionRequest = {
 };
 
 function createBaseYandexSessionResponse(): YandexSessionResponse {
-  return { sign: "", expires: 0 };
+  return { secretKey: "", expires: 0 };
 }
 
 export const YandexSessionResponse = {
   encode(message: YandexSessionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sign !== "") {
-      writer.uint32(10).string(message.sign);
+    if (message.secretKey !== "") {
+      writer.uint32(10).string(message.secretKey);
     }
     if (message.expires !== 0) {
       writer.uint32(16).int32(message.expires);
@@ -1380,7 +1380,7 @@ export const YandexSessionResponse = {
             break;
           }
 
-          message.sign = reader.string();
+          message.secretKey = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -1400,15 +1400,15 @@ export const YandexSessionResponse = {
 
   fromJSON(object: any): YandexSessionResponse {
     return {
-      sign: isSet(object.sign) ? globalThis.String(object.sign) : "",
+      secretKey: isSet(object.secretKey) ? globalThis.String(object.secretKey) : "",
       expires: isSet(object.expires) ? globalThis.Number(object.expires) : 0,
     };
   },
 
   toJSON(message: YandexSessionResponse): unknown {
     const obj: any = {};
-    if (message.sign !== "") {
-      obj.sign = message.sign;
+    if (message.secretKey !== "") {
+      obj.secretKey = message.secretKey;
     }
     if (message.expires !== 0) {
       obj.expires = Math.round(message.expires);
@@ -1421,7 +1421,7 @@ export const YandexSessionResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<YandexSessionResponse>, I>>(object: I): YandexSessionResponse {
     const message = createBaseYandexSessionResponse();
-    message.sign = object.sign ?? "";
+    message.secretKey = object.secretKey ?? "";
     message.expires = object.expires ?? 0;
     return message;
   },

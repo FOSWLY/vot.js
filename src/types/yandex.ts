@@ -1,5 +1,8 @@
+export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
+export type SessionModule = "video-translation" | "summarization";
+
 export type TranslationHelp = {
-  target: "video_file_url" | "subtitles_file_url";
+  target: TranslationHelpTarget;
   targetUrl: string;
 };
 
@@ -129,6 +132,7 @@ export type TranslatedStreamTranslationResponse = {
   translated: true;
   interval: number;
   result: StreamTranslationObject;
+  pingId: number;
 };
 
 export type WaitingStreamTranslationResponse = {
