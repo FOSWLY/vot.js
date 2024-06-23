@@ -74,13 +74,13 @@ bun build:bun
 
 Если вы хотите собрать библиотеку, обновив proto файлы, то вам необходимо установить protoc 3+ и добавить его в Path.
 
-Linux (возможно, на MacOS, тоже, сработает):
+Сборка из под Linux (возможно, на MacOS, тоже, сработает):
 
 ```bash
 bun rebuild:linux
 ```
 
-Windows:
+Сборка из под Windows:
 
 ```bash
 bun rebuild:win
@@ -106,13 +106,13 @@ bun build:typebox
 
 Вы можете воспользоваться данным вариантом сборки, если вы хотите, только, преобразовать `.proto` файл в `.ts` (это не обновит файл в папке /dist):
 
-Linux (возможно, на MacOS, тоже, сработает):
+Сборка из под Linux (возможно, на MacOS, тоже, сработает):
 
 ```bash
 bun build:proto-linux
 ```
 
-Windows:
+Сборка из под Windows:
 
 ```bash
 bun build:proto-win
