@@ -1,12 +1,21 @@
 import { Type, Static } from '@sinclair/typebox'
 
 
-export type TranslationHelp = Static<typeof TranslationHelp>
-export const TranslationHelp = Type.Object({
-target: Type.Union([
+export type TranslationHelpTarget = Static<typeof TranslationHelpTarget>
+export const TranslationHelpTarget = Type.Union([
 Type.Literal("video_file_url"),
 Type.Literal("subtitles_file_url")
-]),
+])
+
+export type SessionModule = Static<typeof SessionModule>
+export const SessionModule = Type.Union([
+Type.Literal("video-translation"),
+Type.Literal("summarization")
+])
+
+export type TranslationHelp = Static<typeof TranslationHelp>
+export const TranslationHelp = Type.Object({
+target: TranslationHelpTarget,
 targetUrl: Type.String()
 })
 
@@ -117,7 +126,8 @@ export type TranslatedStreamTranslationResponse = Static<typeof TranslatedStream
 export const TranslatedStreamTranslationResponse = Type.Object({
 translated: Type.Literal(true),
 interval: Type.Number(),
-result: StreamTranslationObject
+result: StreamTranslationObject,
+pingId: Type.Number()
 })
 
 export type WaitingStreamTranslationResponse = Static<typeof WaitingStreamTranslationResponse>

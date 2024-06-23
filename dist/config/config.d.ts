@@ -1,6 +1,7 @@
 declare const _default: {
     host: string;
     userAgent: string;
+    componentVersion: string;
     hmac: string;
     defaultDuration: number;
 };

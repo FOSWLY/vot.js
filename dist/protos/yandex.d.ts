@@ -103,7 +103,7 @@ export interface YandexSessionRequest {
     module: string;
 }
 export interface YandexSessionResponse {
-    sign: string;
+    secretKey: string;
     expires: number;
 }
 export declare const VideoTranslationHelpObject: {
@@ -552,17 +552,17 @@ export declare const YandexSessionResponse: {
     fromJSON(object: any): YandexSessionResponse;
     toJSON(message: YandexSessionResponse): unknown;
     create<I extends {
-        sign?: string | undefined;
+        secretKey?: string | undefined;
         expires?: number | undefined;
     } & {
-        sign?: string | undefined;
+        secretKey?: string | undefined;
         expires?: number | undefined;
     } & { [K in Exclude<keyof I, keyof YandexSessionResponse>]: never; }>(base?: I): YandexSessionResponse;
     fromPartial<I_1 extends {
-        sign?: string | undefined;
+        secretKey?: string | undefined;
         expires?: number | undefined;
     } & {
-        sign?: string | undefined;
+        secretKey?: string | undefined;
         expires?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof YandexSessionResponse>]: never; }>(object: I_1): YandexSessionResponse;
 };

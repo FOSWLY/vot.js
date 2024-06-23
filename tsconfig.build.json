@@ -13,7 +13,7 @@
     // "verbatimModuleSyntax": true,
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
 
     // Best practices
     "strict": true,
@@ -33,7 +33,7 @@
     "./typebox-gen.ts",
     "./examples",
     "node_modules",
-    "./build.ts"
+    "./build-min.ts"
   ],
   "outDir": "./dist"
 }
