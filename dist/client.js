@@ -2,6 +2,7 @@ import config from "./config/config";
 import { yandexProtobuf } from "./protobuf";
 import { getSignature, getUUID } from "./secure";
 import { VideoTranslationStatus } from "./types/yandex";
+import { getTimestamp } from "./utils/utils";
 import { getVideoData } from "./utils/videoData";
 class VOTJSError extends Error {
     data;
@@ -21,6 +22,8 @@ export default class VOTClient {
     fetch;
     fetchOpts;
     getVideoDataFn;
+    // sessions
+    sessions = {};
     // default langs
     requestLang;
     responseLang;
@@ -77,12 +80,27 @@ export default class VOTClient {
             };
         }
     }
+    async getSession(module) {
+        const timestamp = getTimestamp();
+        const session = this.sessions[module];
+        if (session && session.timestamp + session.expires > timestamp) {
+            return session;
+        }
+        const { secretKey, expires, uuid } = await this.createSession(module);
+        this.sessions[module] = {
+            secretKey,
+            expires,
+            timestamp,
+            uuid,
+        };
+        return this.sessions[module];
+    }
     /**
      * @includeExample examples/basic.ts:4-11,21-37,55-65
      */
     async translateVideo({ url, duration = config.defaultDuration, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
         const { url: videoUrl, duration: videoDuration } = await this.getVideoDataFn(url);
-        const { secretKey, uuid } = await this.createSession("video-translation");
+        const { secretKey, uuid } = await this.getSession("video-translation");
         // добавить проверку на m3u8
         const body = yandexProtobuf.encodeTranslationRequest(videoUrl, videoDuration ?? duration, requestLang, responseLang, translationHelp);
         const sign = await getSignature(body);
@@ -153,7 +171,7 @@ export default class VOTClient {
      */
     async getSubtitles({ url, requestLang = this.requestLang, headers = {}, }) {
         const { url: videoUrl } = await this.getVideoDataFn(url);
-        const { secretKey, uuid } = await this.createSession("video-translation");
+        const { secretKey, uuid } = await this.getSession("video-translation");
         const body = yandexProtobuf.encodeSubtitlesRequest(videoUrl, requestLang);
         const sign = await getSignature(body);
         const pathname = "/video-subtitles/get-subtitles";
@@ -172,7 +190,7 @@ export default class VOTClient {
      * @includeExample examples/stream.ts:7-44
      */
     async pingStream({ pingId, headers = {} }) {
-        const { secretKey, uuid } = await this.createSession("video-translation");
+        const { secretKey, uuid } = await this.getSession("video-translation");
         const body = yandexProtobuf.encodeStreamPingRequest(pingId);
         const sign = await getSignature(body);
         const pathname = "/stream-translation/ping-stream";
@@ -193,7 +211,7 @@ export default class VOTClient {
      */
     async translateStream({ url, requestLang = this.requestLang, responseLang = this.responseLang, headers = {}, }) {
         const { url: videoUrl } = await this.getVideoDataFn(url);
-        const { secretKey, uuid } = await this.createSession("video-translation");
+        const { secretKey, uuid } = await this.getSession("video-translation");
         const body = yandexProtobuf.encodeStreamRequest(videoUrl, requestLang, responseLang);
         const sign = await getSignature(body);
         const pathname = "/stream-translation/translate-stream";

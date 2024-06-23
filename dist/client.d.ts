@@ -1,4 +1,4 @@
-import type { VOTOpts, FetchFunction, GetVideoDataFunction } from "./types/client";
+import type { VOTOpts, FetchFunction, GetVideoDataFunction, ClientSession, VOTSessions } from "./types/client";
 import type { VideoTranslationOpts, VideoTranslationResponse, RequestLang, ResponseLang, VideoSubtitlesOpts, StreamPingOptions, StreamTranslationOpts, StreamTranslationResponse, SessionModule } from "./types/yandex";
 export default class VOTClient {
     host: string;
@@ -9,6 +9,7 @@ export default class VOTClient {
     fetch: FetchFunction;
     fetchOpts: Record<string, unknown>;
     getVideoDataFn: GetVideoDataFunction;
+    sessions: VOTSessions;
     requestLang: RequestLang;
     responseLang: ResponseLang;
     userAgent: string;
@@ -26,6 +27,7 @@ export default class VOTClient {
         success: boolean;
         data: null;
     }>;
+    getSession(module: SessionModule): Promise<ClientSession>;
     /**
      * @includeExample examples/basic.ts:4-11,21-37,55-65
      */

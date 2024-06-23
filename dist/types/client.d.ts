@@ -1,4 +1,4 @@
-import { RequestLang, ResponseLang } from "./yandex";
+import { RequestLang, ResponseLang, SessionModule } from "./yandex";
 export type FetchFunction = (input: string | URL | Request, init?: any) => Promise<Response>;
 export type VideoData = {
     url: string;
@@ -13,5 +13,14 @@ export type VOTOpts = {
     getVideoDataFn?: GetVideoDataFunction;
     requestLang?: RequestLang;
     responseLang?: ResponseLang;
+};
+export type ClientSession = {
+    expires: number;
+    timestamp: number;
+    uuid: string;
+    secretKey: string;
+};
+export type VOTSessions = {
+    [K in SessionModule]?: ClientSession;
 };
 //# sourceMappingURL=client.d.ts.map

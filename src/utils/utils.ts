@@ -22,3 +22,7 @@ export async function fetchWithTimeout(
 
   return response;
 }
+
+export function getTimestamp() {
+  return Math.floor(Date.now() / 1000);
+}

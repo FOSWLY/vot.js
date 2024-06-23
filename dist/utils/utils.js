@@ -14,3 +14,6 @@ export async function fetchWithTimeout(url, options = {
     clearTimeout(id);
     return response;
 }
+export function getTimestamp() {
+    return Math.floor(Date.now() / 1000);
+}

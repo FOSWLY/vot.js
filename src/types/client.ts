@@ -1,4 +1,4 @@
-import { RequestLang, ResponseLang } from "./yandex";
+import { RequestLang, ResponseLang, SessionModule } from "./yandex";
 
 export type FetchFunction = (
   input: string | URL | Request,
@@ -20,4 +20,15 @@ export type VOTOpts = {
   getVideoDataFn?: GetVideoDataFunction;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
+};
+
+export type ClientSession = {
+  expires: number; // seconds lifetime from response (e.g. 3600)
+  timestamp: number; // received in time (unix seconds)
+  uuid: string;
+  secretKey: string;
+};
+
+export type VOTSessions = {
+  [K in SessionModule]?: ClientSession;
 };

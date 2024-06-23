@@ -1,4 +1,4 @@
-import { RequestLang, ResponseLang } from "./yandex";
+import { RequestLang, ResponseLang, SessionModule } from "./yandex";
 
 import { Type, Static } from '@sinclair/typebox'
 
@@ -33,3 +33,14 @@ getVideoDataFn: Type.Optional(GetVideoDataFunction),
 requestLang: Type.Optional(RequestLang),
 responseLang: Type.Optional(ResponseLang)
 })
+
+export type ClientSession = Static<typeof ClientSession>
+export const ClientSession = Type.Object({
+expires: Type.Number(),
+timestamp: Type.Number(),
+uuid: Type.String(),
+secretKey: Type.String()
+})
+
+export type VOTSessions = Static<typeof VOTSessions>
+export const VOTSessions = Type.Mapped(SessionModule, K => Type.Optional(ClientSession))
