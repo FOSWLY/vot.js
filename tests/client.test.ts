@@ -52,7 +52,7 @@ test("Get subtitles", async () => {
     url: "https://youtu.be/LK6nLR1bzpI",
     requestLang: "ru",
   });
-  console.log(response);
+  // console.log(response);
 
   expect(response.waiting).toEqual(false);
 });
