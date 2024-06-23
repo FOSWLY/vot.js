@@ -19,7 +19,7 @@ response = await client.translateVideo({
 
 console.log(response);
 
-// link + translationHelp
+// link + translationHelp (just for example, this is an unsupported domain)
 response = await client.translateVideo({
   url: "https://s3.toil.cc/vot/video",
   translationHelp: [

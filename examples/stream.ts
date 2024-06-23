@@ -1,9 +1,20 @@
 import VOTClient from "../dist";
+import {
+  StreamTranslationResponse,
+  WaitingStreamTranslationResponse,
+} from "../dist/types/yandex";
 
 const client = new VOTClient();
 
-let response: any;
+let response: StreamTranslationResponse;
 let inter: Timer;
+
+function isAbortedWaitingStream(
+  response: StreamTranslationResponse,
+): response is WaitingStreamTranslationResponse {
+  return !!(response as WaitingStreamTranslationResponse).message;
+}
+
 let fn = async () => {
   response = await client.translateStream({
     url: "https://youtu.be/nA9UZF-SZoQ",
@@ -18,15 +29,16 @@ let fn = async () => {
     return;
   }
 
+  if (isAbortedWaitingStream(response)) {
+    console.log(`Stream translation aborted! Message: ${response.message}`);
+    return;
+  }
+
   client.pingStream({
     pingId: response.pingId,
   });
 
-  console.log(
-    response.interval === 0
-      ? response.message
-      : `Success! URL: ${response.result.url}`,
-  );
+  console.log(`Success! URL: ${response.result.url}`);
 };
 
 inter = setTimeout(fn, 10000);

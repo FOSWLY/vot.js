@@ -22,6 +22,9 @@
     "oxlint": "^0.4.2",
     "ts-proto": "^1.176.1",
     "typedoc": "^0.25.13",
+    "typedoc-plugin-include-example": "^1.2.0",
+    "typedoc-plugin-inline-sources": "^1.0.2",
+    "typedoc-plugin-rename-defaults": "^0.7.1",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
@@ -56,10 +59,11 @@
   "license": "MIT",
   "scripts": {
     "test": "bun test",
-    "build:declaration": "tsc --project tsconfig.type.json --outdir ./dist",
+    "build:declaration": "tsc --project tsconfig.build.json --emitDeclarationOnly --outdir ./dist",
+    "build:default": "tsc --project tsconfig.build.json --outdir ./dist",
     "build:typebox": "bun run typebox-gen.ts",
-    "build:doc": "typedoc --options typedoc.json --tsconfig tsconfig.type.json",
-    "build:bun": "bun run build.ts && bun build:declaration && bun build:typebox && bun build:doc",
+    "build:doc": "typedoc --options typedoc.json --tsconfig tsconfig.build.json",
+    "build:bun": "bun build:default && bun build:typebox && bun build:doc",
     "build:proto-linux": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto",
     "build:proto-win": "protoc --plugin=protoc-gen-ts_proto=\".\\node_modules\\.bin\\protoc-gen-ts_proto.exe\" --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto",
     "rebuild:win": "bun build:proto-win && bun build:bun",

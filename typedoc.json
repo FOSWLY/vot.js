@@ -1,5 +1,10 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["./src/index.ts"],
-  "out": "docs"
+  "out": "docs",
+  "plugin": [
+    "typedoc-plugin-rename-defaults",
+    "typedoc-plugin-include-example",
+    "typedoc-plugin-inline-sources"
+  ]
 }
