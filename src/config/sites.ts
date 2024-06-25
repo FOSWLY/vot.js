@@ -174,6 +174,11 @@ export default [
     match: /^v.youku.com$/,
   },
   {
+    host: VideoService.archive,
+    url: "https://archive.org/details/",
+    match: /^archive.org$/,
+  },
+  {
     host: VideoService.kodik,
     url: "stub", // This is a stub. Final url is set in getVideoData function
     match: /^kodik.(info|biz|cc)$/,

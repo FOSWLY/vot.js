@@ -36,6 +36,7 @@ export var VideoService;
     VideoService["newgrounds"] = "newgrounds";
     VideoService["egghead"] = "egghead";
     VideoService["youku"] = "youku";
+    VideoService["archive"] = "archive";
     VideoService["kodik"] = "kodik";
     VideoService["patreon"] = "patreon";
 })(VideoService || (VideoService = {}));

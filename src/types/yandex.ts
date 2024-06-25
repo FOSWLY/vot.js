@@ -62,6 +62,7 @@ export enum VideoService {
   newgrounds = "newgrounds",
   egghead = "egghead",
   youku = "youku",
+  archive = "archive",
   kodik = "kodik",
   patreon = "patreon",
 }

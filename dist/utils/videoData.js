@@ -200,6 +200,8 @@ export async function getVideoID(service, videoURL) {
             return url.pathname.slice(1);
         case VideoService.youku:
             return url.pathname.match(/v_show\/id_[\w=]+/)?.[0];
+        case VideoService.archive:
+            return url.pathname.match(/(details|embed)\/([^/]+)/)?.[2];
         case VideoService.kodik:
             return url.pathname.match(/\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/)?.[0];
         case VideoService.patreon: {
