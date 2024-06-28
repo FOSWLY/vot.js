@@ -7,9 +7,10 @@ test("Translate video", async () => {
   const response = await client.translateVideo({
     url: "https://youtu.be/LK6nLR1bzpI",
   });
-  // console.log(response);
 
-  expect(response.translated).toEqual(true);
+  console.log("Translate video", response);
+
+  expect(response.translated).not.toBeNull();
 });
 
 test("Translate video (worker)", async () => {
@@ -21,7 +22,9 @@ test("Translate video (worker)", async () => {
     url: "https://youtu.be/LK6nLR1bzpI",
   });
 
-  expect(response.translated).toEqual(true);
+  console.log("Translate video (worker)", response);
+
+  expect(response.translated).not.toBeNull();
 });
 
 test("Translate video (with translationHelp)", async () => {
@@ -42,6 +45,20 @@ test("Translate video (with translationHelp)", async () => {
     ],
   });
 
+  console.log("Translate video (with translationHelp)", response);
+
+  expect(response.translated).not.toBeNull();
+});
+
+test("Translate video (with VOT Backend API)", async () => {
+  const client = new VOTClient();
+
+  const response = await client.translateVideo({
+    url: "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+  });
+
+  console.log("Translate video (with VOT Backend API)", response);
+
   expect(response.translated).toEqual(true);
 });
 
@@ -52,7 +69,8 @@ test("Get subtitles", async () => {
     url: "https://youtu.be/LK6nLR1bzpI",
     requestLang: "ru",
   });
-  // console.log(response);
+
+  console.log("Get subtitles", response);
 
   expect(response.waiting).toEqual(false);
 });

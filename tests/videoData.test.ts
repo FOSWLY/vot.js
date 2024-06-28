@@ -390,3 +390,11 @@ test("patreon", async () => {
     await normalize("https://www.patreon.com/posts/choose-your-66310078"),
   ).toStartWith("https://stream.mux.com");
 });
+
+test("reddit", async () => {
+  expect(
+    await normalize(
+      "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+    ),
+  ).toStartWith("https://v.redd.it/l0wpsygl8tpc1/HLSPlaylist.m3u8");
+});
