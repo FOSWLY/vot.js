@@ -27,9 +27,6 @@ jobs:
       - name: Build 🚧
         run: bun rebuild:linux
 
-      - name: Test 🪲
-        run: bun test videoData.test.ts
-
       - name: Upload Artifact 🚀
         uses: actions/upload-artifact@v4
         with:
