@@ -67,7 +67,7 @@ export default [
   {
     host: VideoService.xvideos,
     url: "https://www.xvideos.com/",
-    match: /^(www.)?xvideos.com$/,
+    match: /^(www.)?(xvideos|xv-ru).com$/,
   },
   {
     host: VideoService.pornhub,
@@ -149,13 +149,15 @@ export default [
 
   {
     host: VideoService.bannedvideo,
-    url: "https://madmaxworld.tv/watch?id=", // madmaxworld.tv for bypass cloudflare uam on /watch page
+    url: "https://madmaxworld.tv/watch?id=", // madmaxworld.tv for bypass cloudflare UAM on /watch page
     match: /^(www.)?banned.video|madmaxworld.tv$/,
+    rawResult: true,
   },
   {
     host: VideoService.weverse,
     url: "https://weverse.io/",
     match: /^weverse.io$/,
+    needExtraData: true,
   },
   {
     host: VideoService.newgrounds,
@@ -180,17 +182,26 @@ export default [
   },
   {
     host: VideoService.kodik,
-    url: "stub", // This is a stub. Final url is set in getVideoData function
+    url: "stub",
     match: /^kodik.(info|biz|cc)$/,
+    needExtraData: true,
   },
   {
     host: VideoService.patreon,
-    url: "stub", // This is a stub. Final url is set in getVideoData function
+    url: "stub",
     match: /^(www.)?patreon.com$/,
+    needExtraData: true,
+  },
+  {
+    host: VideoService.reddit,
+    url: "stub",
+    match: /^(www.)?reddit.com$/,
+    needExtraData: true,
   },
   {
     host: VideoService.custom,
-    url: "stub", // This is a stub. The present value is set using origin url
+    url: "stub",
     match: (url: URL) => /([^.]+).mp4/.test(url.pathname),
+    rawResult: true,
   },
 ] as ServiceConf[];
