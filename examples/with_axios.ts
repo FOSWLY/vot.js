@@ -1,5 +1,6 @@
 import VOTClient from "../dist/client";
 import axios from "axios";
+import { ClientResponse } from "../dist/types/client";
 
 // https://github.com/axios/axios
 const client = new (class AxiosVOTClient extends VOTClient {
@@ -7,7 +8,7 @@ const client = new (class AxiosVOTClient extends VOTClient {
     path: string,
     body: Uint8Array,
     headers: Record<string, string> = {},
-  ) {
+  ): Promise<ClientResponse> {
     try {
       const res = await axios({
         url: `https://${this.host}${path}`,
