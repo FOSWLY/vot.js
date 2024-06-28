@@ -65,12 +65,15 @@ export enum VideoService {
   archive = "archive",
   kodik = "kodik",
   patreon = "patreon",
+  reddit = "reddit",
 }
 
 export type ServiceConf = {
   host: VideoService;
   url?: string;
   match?: any;
+  rawResult?: true;
+  needExtraData?: true;
 };
 
 export enum VideoTranslationStatus {
@@ -95,11 +98,13 @@ export type TranslatedVideoTranslationResponse = {
   translated: true;
   url: string;
   remainingTime: number;
+  message?: string;
 };
 
 export type WaitingVideoTranslationResponse = {
   translated: false;
   remainingTime: number;
+  message?: string;
 };
 
 export type VideoTranslationResponse =
