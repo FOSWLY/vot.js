@@ -46,7 +46,7 @@ Type.Literal("en"),
 Type.Literal("kk")
 ])
 
-export enum EnumVideoService { custom = "custom", directlink = custom, youtube = "youtube", piped = "piped", invidious = "invidious", vk = "vk", nine_gag = "nine_gag", gag = nine_gag, twitch = "twitch", proxitok = "proxitok", tiktok = "tiktok", vimeo = "vimeo", xvideos = "xvideos", pornhub = "pornhub", twitter = "twitter", rumble = "rumble", facebook = "facebook", rutube = "rutube", coub = "coub", bilibili = "bilibili", mail_ru = "mailru", mailru = mail_ru, bitchute = "bitchute", eporner = "eporner", peertube = "peertube", dailymotion = "dailymotion", trovo = "trovo", yandexdisk = "yandexdisk", ok_ru = "okru", okru = ok_ru, googledrive = "googledrive", bannedvideo = "bannedvideo", weverse = "weverse", newgrounds = "newgrounds", egghead = "egghead", youku = "youku", archive = "archive", kodik = "kodik", patreon = "patreon" }
+export enum EnumVideoService { custom = "custom", directlink = custom, youtube = "youtube", piped = "piped", invidious = "invidious", vk = "vk", nine_gag = "nine_gag", gag = nine_gag, twitch = "twitch", proxitok = "proxitok", tiktok = "tiktok", vimeo = "vimeo", xvideos = "xvideos", pornhub = "pornhub", twitter = "twitter", rumble = "rumble", facebook = "facebook", rutube = "rutube", coub = "coub", bilibili = "bilibili", mail_ru = "mailru", mailru = mail_ru, bitchute = "bitchute", eporner = "eporner", peertube = "peertube", dailymotion = "dailymotion", trovo = "trovo", yandexdisk = "yandexdisk", ok_ru = "okru", okru = ok_ru, googledrive = "googledrive", bannedvideo = "bannedvideo", weverse = "weverse", newgrounds = "newgrounds", egghead = "egghead", youku = "youku", archive = "archive", kodik = "kodik", patreon = "patreon", reddit = "reddit" }
 
 export type VideoService = Static<typeof VideoService>
 export const VideoService = Type.Enum(EnumVideoService)
@@ -55,7 +55,9 @@ export type ServiceConf = Static<typeof ServiceConf>
 export const ServiceConf = Type.Object({
 host: VideoService,
 url: Type.Optional(Type.String()),
-match: Type.Optional(Type.Any())
+match: Type.Optional(Type.Any()),
+rawResult: Type.Optional(Type.Literal(true)),
+needExtraData: Type.Optional(Type.Literal(true))
 })
 
 export enum EnumVideoTranslationStatus { FAILED = 0, FINISHED = 1, WAITING = 2, LONG_WAITING = 3, PART_CONTENT = 5, LONG_WAITING_2 = 6 }
@@ -80,13 +82,15 @@ export type TranslatedVideoTranslationResponse = Static<typeof TranslatedVideoTr
 export const TranslatedVideoTranslationResponse = Type.Object({
 translated: Type.Literal(true),
 url: Type.String(),
-remainingTime: Type.Number()
+remainingTime: Type.Number(),
+message: Type.Optional(Type.String())
 })
 
 export type WaitingVideoTranslationResponse = Static<typeof WaitingVideoTranslationResponse>
 export const WaitingVideoTranslationResponse = Type.Object({
 translated: Type.Literal(false),
-remainingTime: Type.Number()
+remainingTime: Type.Number(),
+message: Type.Optional(Type.String())
 })
 
 export type VideoTranslationResponse = Static<typeof VideoTranslationResponse>

@@ -1,5 +1,6 @@
 declare const _default: {
     host: string;
+    hostVOT: string;
     userAgent: string;
     componentVersion: string;
     hmac: string;

@@ -50,6 +50,11 @@ export declare class PatreonHelper {
         url: string;
     } | undefined>;
 }
+export declare class RedditHelper {
+    getVideoData(videoId: string): Promise<{
+        url: string;
+    } | undefined>;
+}
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -62,5 +67,7 @@ export default class VideoHelper {
     static [VideoService.kodik]: KodikHelper;
     /** @source */
     static [VideoService.patreon]: PatreonHelper;
+    /** @source */
+    static [VideoService.reddit]: RedditHelper;
 }
 //# sourceMappingURL=helper.d.ts.map

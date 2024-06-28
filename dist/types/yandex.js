@@ -39,6 +39,7 @@ export var VideoService;
     VideoService["archive"] = "archive";
     VideoService["kodik"] = "kodik";
     VideoService["patreon"] = "patreon";
+    VideoService["reddit"] = "reddit";
 })(VideoService || (VideoService = {}));
 export var VideoTranslationStatus;
 (function (VideoTranslationStatus) {

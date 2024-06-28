@@ -280,6 +280,22 @@ export class PatreonHelper {
         };
     }
 }
+export class RedditHelper {
+    async getVideoData(videoId) {
+        const res = await fetchWithTimeout(`https://www.reddit.com/r/${videoId}`);
+        const content = await res.text();
+        // get m3u8 from player
+        const contentUrl = content
+            .match(/https:\/\/v\.redd\.it\/([^/]+)\/HLSPlaylist\.m3u8\?([^"]+)/)?.[0]
+            ?.replaceAll("&amp;", "&");
+        if (!contentUrl) {
+            return undefined;
+        }
+        return {
+            url: decodeURIComponent(contentUrl),
+        };
+    }
+}
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -292,4 +308,6 @@ export default class VideoHelper {
     static [VideoService.kodik] = new KodikHelper();
     /** @source */
     static [VideoService.patreon] = new PatreonHelper();
+    /** @source */
+    static [VideoService.reddit] = new RedditHelper();
 }

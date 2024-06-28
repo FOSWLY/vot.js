@@ -4,6 +4,7 @@ export { default, VOTWorkerClient } from "./client";
 
 export * as ClientType from "./types/client";
 export * as YandexType from "./types/yandex";
+export * as VOTBackendType from "./types/vot";
 export * as YandexProtobufType from "./protos/yandex";
 
 export * as MailRuType from "./types/helpers/mailru";

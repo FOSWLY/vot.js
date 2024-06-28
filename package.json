@@ -9,21 +9,21 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "devDependencies": {
-    "@sinclair/typebox-codegen": "^0.10.2",
+    "@sinclair/typebox-codegen": "^0.10.3",
     "@types/bun": "latest",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
-    "eslint": "^9.2.0",
-    "eslint-plugin-oxlint": "^0.4.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
+    "eslint": "^9.5.0",
+    "eslint-plugin-oxlint": "^0.5.0",
     "eslint-plugin-sonarjs": "^1.0.3",
     "husky": "^9.0.11",
-    "oxlint": "^0.4.2",
-    "ts-proto": "^1.176.1",
-    "typedoc": "^0.26.2",
+    "oxlint": "^0.5.0",
+    "ts-proto": "^1.180.0",
+    "typedoc": "0.25.13",
     "typedoc-plugin-include-example": "^1.2.0",
     "typedoc-plugin-inline-sources": "^1.0.2",
     "typedoc-plugin-rename-defaults": "^0.7.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -72,6 +72,6 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "dom-parser": "^1.1.5",
-    "protobufjs": "^7.3.0"
+    "protobufjs": "^7.3.2"
   }
 }

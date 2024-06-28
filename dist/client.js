@@ -1,9 +1,11 @@
 import config from "./config/config";
+import { version } from "../package.json";
 import { yandexProtobuf } from "./protobuf";
 import { getSignature, getUUID } from "./secure";
 import { VideoTranslationStatus } from "./types/yandex";
-import { getTimestamp } from "./utils/utils";
+import { fetchWithTimeout, getTimestamp } from "./utils/utils";
 import { getVideoData } from "./utils/videoData";
+import { convertService } from "./utils/vot";
 class VOTJSError extends Error {
     data;
     constructor(message, data = undefined) {
@@ -15,6 +17,9 @@ class VOTJSError extends Error {
 }
 export default class VOTClient {
     host;
+    hostVOT;
+    schema;
+    schemaVOT;
     /**
      * If you don't want to use the classic fetch
      * @includeExample examples/with_ofetch.ts:1-13
@@ -29,6 +34,19 @@ export default class VOTClient {
     responseLang;
     userAgent = config.userAgent;
     componentVersion = config.componentVersion;
+    paths = {
+        videoTranslation: "/video-translation/translate",
+    };
+    /**
+     * Media with this format use VOT Backend API
+     * Not all video files in .mpd format are currently supported!
+     *
+     * @source
+     */
+    customFormatRE = /\.(m3u8|m4(a|v)|mpd)/; //
+    /**
+     * Headers for interacting with Yandex API
+     */
     headers = {
         "User-Agent": this.userAgent,
         Accept: "application/x-protobuf",
@@ -42,31 +60,73 @@ export default class VOTClient {
         // "sec-ch-ua-mobile": null,
         // "sec-ch-ua-platform": null,
     };
-    constructor({ host = config.host, fetchFn = fetch, fetchOpts = {}, getVideoDataFn = getVideoData, requestLang = "en", responseLang = "ru", } = {}) {
-        this.host = host;
+    /**
+     * Headers for interacting with VOT Backend API
+     */
+    headersVOT = {
+        "User-Agent": `vot-cli/${version}`,
+        "Content-Type": "application/json",
+        Pragma: "no-cache",
+        "Cache-Control": "no-cache",
+    };
+    constructor({ host = config.host, hostVOT = config.hostVOT, fetchFn = fetchWithTimeout, fetchOpts = {}, getVideoDataFn = getVideoData, requestLang = "en", responseLang = "ru", } = {}) {
+        const schema = host.match(/(http(s)?):\/\//)?.[1];
+        this.host = schema ? host.replace(`${schema}://`, "") : host;
+        this.schema = schema ?? "https";
+        const schemaVOT = hostVOT.match(/(http(s)?):\/\//)?.[1];
+        this.hostVOT = schemaVOT ? hostVOT.replace(`${schemaVOT}://`, "") : hostVOT;
+        this.schemaVOT = schemaVOT ?? "https";
         this.fetch = fetchFn;
         this.fetchOpts = fetchOpts;
         this.getVideoDataFn = getVideoDataFn;
         this.requestLang = requestLang;
         this.responseLang = responseLang;
     }
-    /**
-     * The standard method for requesting the Yandex API, if necessary, you can override how it is done in the example
-     * @includeExample examples/with_axios.ts:4-41
-     */
-    async request(path, body, headers = {}) {
-        const options = {
+    getOpts(body, headers = {}) {
+        return {
             method: "POST",
             headers: {
                 ...this.headers,
                 ...headers,
             },
-            body: new Blob([body]),
+            body,
             ...this.fetchOpts,
         };
+    }
+    /**
+     * The standard method for requesting the Yandex API, if necessary, you can override how it is done in the example
+     * @includeExample examples/with_axios.ts:4-41
+     */
+    async request(path, body, headers = {}) {
+        const options = this.getOpts(new Blob([body]), headers);
         try {
-            const res = await this.fetch(`https://${this.host}${path}`, options);
+            const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
             const data = await res.arrayBuffer();
+            return {
+                success: res.status === 200,
+                data,
+            };
+        }
+        catch (err) {
+            console.error("[vot.js]", err.message);
+            return {
+                success: false,
+                data: null,
+            };
+        }
+    }
+    /**
+     * The standard method for requesting the VOT Backend API
+     */
+    async requestVOT(path, body, headers = {}) {
+        const options = this.getOpts(JSON.stringify(body), {
+            ...this.headersVOT,
+            ...headers,
+        });
+        try {
+            console.log(`${this.schemaVOT}://${this.hostVOT}${path}`);
+            const res = await this.fetch(`${this.schemaVOT}://${this.hostVOT}${path}`, options);
+            const data = (await res.json());
             return {
                 success: res.status === 200,
                 data,
@@ -95,31 +155,23 @@ export default class VOTClient {
         };
         return this.sessions[module];
     }
-    /**
-     * @includeExample examples/basic.ts:4-11,21-37,55-65
-     */
-    async translateVideo({ url, duration = config.defaultDuration, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
-        const { url: videoUrl, duration: videoDuration } = await this.getVideoDataFn(url);
+    async translateVideoYAImpl({ url, duration = config.defaultDuration, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
         const { secretKey, uuid } = await this.getSession("video-translation");
-        // добавить проверку на m3u8
-        const body = yandexProtobuf.encodeTranslationRequest(videoUrl, videoDuration ?? duration, requestLang, responseLang, translationHelp);
+        const body = yandexProtobuf.encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp);
         const sign = await getSignature(body);
-        const pathname = "/video-translation/translate";
-        const res = await this.request(pathname, body, {
+        const res = await this.request(this.paths.videoTranslation, body, {
             "Vtrans-Signature": sign,
             "Sec-Vtrans-Sk": secretKey,
-            "Sec-Vtrans-Token": `${sign}:${uuid}:${pathname}:${this.componentVersion}`,
-            // версию в теории можно получить из https://api.browser.yandex.ru/update-info/browser/yandex/win-yandex.rss?partner=exp_new_identity_2&version=24.6.0.1874&custo=yes&reason=browser_updater
-            // "Sec-Vtrans-Token": getUUID(),
+            "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.videoTranslation}:${this.componentVersion}`,
             ...headers,
         });
         if (!res.success) {
             throw new VOTJSError("Failed to request video translation", res);
         }
-        const translateResponse = yandexProtobuf.decodeTranslationResponse(res.data);
-        switch (translateResponse.status) {
+        const translationData = yandexProtobuf.decodeTranslationResponse(res.data);
+        switch (translationData.status) {
             case VideoTranslationStatus.FAILED:
-                throw new VOTJSError("Yandex couldn't translate video", translateResponse);
+                throw new VOTJSError("Yandex couldn't translate video", translationData);
             case VideoTranslationStatus.FINISHED:
             case VideoTranslationStatus.PART_CONTENT:
                 /*
@@ -129,18 +181,18 @@ export default class VOTClient {
                     в котором будет возвращено полное аудио перевода и статус FINISHED.
                     Если включена часть видео без перевода, то пишет "Эта часть видео еще не переведена"
                 */
-                if (!translateResponse.url) {
-                    throw new VOTJSError("Audio link wasn't received from Yandex response", translateResponse);
+                if (!translationData.url) {
+                    throw new VOTJSError("Audio link wasn't received from Yandex response", translationData);
                 }
                 return {
                     translated: true,
-                    url: translateResponse.url,
-                    remainingTime: translateResponse.remainingTime ?? -1,
+                    url: translationData.url,
+                    remainingTime: translationData.remainingTime ?? -1,
                 };
             case VideoTranslationStatus.WAITING:
                 return {
                     translated: false,
-                    remainingTime: translateResponse.remainingTime,
+                    remainingTime: translationData.remainingTime,
                 };
             case VideoTranslationStatus.LONG_WAITING:
             case VideoTranslationStatus.LONG_WAITING_2:
@@ -160,17 +212,77 @@ export default class VOTClient {
                 */
                 return {
                     translated: false,
-                    remainingTime: translateResponse.remainingTime ?? -1,
+                    remainingTime: translationData.remainingTime ?? -1,
                 };
         }
-        console.error("[vot.js] Unknown response", translateResponse);
-        throw new VOTJSError("Unknown response from Yandex", translateResponse);
+        console.error("[vot.js] Unknown response", translationData);
+        throw new VOTJSError("Unknown response from Yandex", translationData);
+    }
+    async translateVideoVOTImpl({ url, videoId, service, requestLang = this.requestLang, responseLang = this.responseLang, headers = {}, }) {
+        const res = await this.requestVOT(this.paths.videoTranslation, {
+            provider: "yandex",
+            service: convertService(service),
+            videoId,
+            fromLang: requestLang,
+            toLang: responseLang,
+            rawVideo: url,
+        }, headers);
+        if (!res.success) {
+            throw new VOTJSError("Failed to request video translation", res);
+        }
+        const translationData = res.data;
+        switch (translationData.status) {
+            case "failed":
+                throw new VOTJSError("Yandex couldn't translate video", translationData);
+            case "success":
+                if (!translationData.translatedUrl) {
+                    throw new VOTJSError("Audio link wasn't received from VOT response", translationData);
+                }
+                return {
+                    translated: true,
+                    url: translationData.translatedUrl,
+                    remainingTime: -1,
+                };
+            case "waiting":
+                return {
+                    translated: false,
+                    remainingTime: translationData.remainingTime,
+                    message: translationData.message,
+                };
+        }
+    }
+    /**
+     * @includeExample examples/basic.ts:4-11,21-37,55-65
+     */
+    async translateVideo({ url, duration = config.defaultDuration, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
+        const { url: videoUrl, videoId, host, duration: videoDuration, } = await this.getVideoDataFn(url);
+        const isCustomFormat = videoUrl.match(this.customFormatRE);
+        return isCustomFormat
+            ? await this.translateVideoVOTImpl({
+                url: videoUrl,
+                videoId,
+                service: host,
+                requestLang,
+                responseLang,
+                headers,
+            })
+            : await this.translateVideoYAImpl({
+                url: videoUrl,
+                duration: videoDuration ?? duration,
+                requestLang,
+                responseLang,
+                translationHelp,
+                headers,
+            });
     }
     /**
      * @includeExample examples/basic.ts:4-5,48-54
      */
     async getSubtitles({ url, requestLang = this.requestLang, headers = {}, }) {
         const { url: videoUrl } = await this.getVideoDataFn(url);
+        if (videoUrl.match(this.customFormatRE)) {
+            throw new VOTJSError("Unsupported video URL for getting subtitles");
+        }
         const { secretKey, uuid } = await this.getSession("video-translation");
         const body = yandexProtobuf.encodeSubtitlesRequest(videoUrl, requestLang);
         const sign = await getSignature(body);
@@ -211,6 +323,9 @@ export default class VOTClient {
      */
     async translateStream({ url, requestLang = this.requestLang, responseLang = this.responseLang, headers = {}, }) {
         const { url: videoUrl } = await this.getVideoDataFn(url);
+        if (videoUrl.match(this.customFormatRE)) {
+            throw new VOTJSError("Unsupported video URL for getting stream translation");
+        }
         const { secretKey, uuid } = await this.getSession("video-translation");
         const body = yandexProtobuf.encodeStreamRequest(videoUrl, requestLang, responseLang);
         const sign = await getSignature(body);
@@ -266,22 +381,17 @@ export default class VOTClient {
 }
 export class VOTWorkerClient extends VOTClient {
     async request(path, body, headers = {}) {
-        const options = {
-            method: "POST",
+        const options = this.getOpts(JSON.stringify({
             headers: {
-                "Content-Type": "application/json",
+                ...this.headers,
+                ...headers,
             },
-            body: JSON.stringify({
-                headers: {
-                    ...this.headers,
-                    ...headers,
-                },
-                body: Array.from(body),
-            }),
-            ...this.fetchOpts,
-        };
+            body: Array.from(body),
+        }), {
+            "Content-Type": "application/json",
+        });
         try {
-            const res = await this.fetch(`https://${this.host}${path}`, options);
+            const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
             const data = await res.arrayBuffer();
             return {
                 success: res.status === 200,

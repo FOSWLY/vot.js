@@ -20,11 +20,9 @@ export function getService(videoUrl) {
         console.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
         return false;
     }
-    if (enteredURL.pathname.endsWith(".mp4")) {
-        return {
-            host: VideoService.custom,
-        };
-    }
+    // if (enteredURL.pathname.endsWith(".mp4")) {
+    //   return sites.find((site) => site.host === VideoService.custom);
+    // }
     const hostname = enteredURL.hostname;
     const isMathes = (match) => {
         if (match instanceof RegExp) {
@@ -211,6 +209,8 @@ export async function getVideoID(service, videoURL) {
             }
             return fullPostId.replace(/[^\d.]/g, "");
         }
+        case VideoService.reddit:
+            return url.pathname.match(/\/r\/(([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+))/)?.[1];
         case VideoService.custom:
             return url.pathname + url.search;
         default:
@@ -229,17 +229,19 @@ export async function getVideoData(url) {
     if (service.host === VideoService.peertube) {
         service.url = new URL(url).origin; // set the url of the current site for peertube and directlink
     }
-    if ([VideoService.custom, VideoService.bannedvideo].includes(service.host)) {
+    if (service.rawResult) {
         return {
             url: videoId,
             videoId,
+            host: service.host,
             duration: undefined,
         };
     }
-    if (![VideoService.weverse, VideoService.kodik, VideoService.patreon].includes(service.host)) {
+    if (!service.needExtraData) {
         return {
             url: service.url + videoId,
             videoId,
+            host: service.host,
             duration: undefined,
         };
     }
@@ -250,6 +252,7 @@ export async function getVideoData(url) {
     return {
         url: result.url,
         videoId,
+        host: service.host,
         duration: result.duration,
     };
 }
