@@ -67,13 +67,11 @@ export async function getVideoID(
       }
 
       return (
-        url.pathname.match(/(?:watch|embed|shorts|live)\/([^/]+)/)?.[1] ||
+        /(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ||
         url.searchParams.get("v")
       );
     case VideoService.vk: {
-      const pathID = url.pathname.match(
-        /^\/(video|clip)-?[0-9]{8,9}_[0-9]{9}$/,
-      );
+      const pathID = /^\/(video|clip)-?[0-9]{8,9}_[0-9]{9}$/.exec(url.pathname);
       const paramZ = url.searchParams.get("z");
       const paramOID = url.searchParams.get("oid");
       const paramID = url.searchParams.get("id");
@@ -89,12 +87,12 @@ export async function getVideoID(
     }
     case VideoService.nine_gag:
     case VideoService.gag:
-      return url.pathname.match(/gag\/([^/]+)/)?.[1];
+      return /gag\/([^/]+)/.exec(url.pathname)?.[1];
     case VideoService.twitch: {
-      const clipPath = url.pathname.match(/([^/]+)\/(?:clip)\/([^/]+)/);
+      const clipPath = /([^/]+)\/(?:clip)\/([^/]+)/.exec(url.pathname);
       const isClipsDomain = /^clips\.twitch\.tv$/.test(url.hostname);
       if (/^m\.twitch\.tv$/.test(url.hostname)) {
-        return url.href.match(/videos\/([^/]+)/)?.[0] || url.pathname.slice(1);
+        return /videos\/([^/]+)/.exec(url.href)?.[0] || url.pathname.slice(1);
       } else if (/^player\.twitch\.tv$/.test(url.hostname)) {
         return `videos/${url.searchParams.get("video")}`;
       } else if (isClipsDomain) {
@@ -130,40 +128,40 @@ export async function getVideoID(
         return clipPath[0];
       }
 
-      return url.pathname.match(/(?:videos)\/([^/]+)/)?.[0];
+      return /(?:videos)\/([^/]+)/.exec(url.pathname)?.[0];
     }
     case VideoService.proxitok:
     case VideoService.tiktok:
-      return url.pathname.match(/([^/]+)\/video\/([^/]+)/)?.[0];
+      return /([^/]+)\/video\/([^/]+)/.exec(url.pathname)?.[0];
     case VideoService.vimeo: {
       const appId = url.searchParams.get("app_id");
       const videoId =
-        url.pathname.match(/[^/]+\/[^/]+$/)?.[0] ||
-        url.pathname.match(/[^/]+$/)?.[0];
+        /[^/]+\/[^/]+$/.exec(url.pathname)?.[0] ||
+        /[^/]+$/.exec(url.pathname)?.[0];
 
       return appId ? `${videoId}?app_id=${appId}` : videoId;
     }
     case VideoService.xvideos:
-      return url.pathname.match(/[^/]+\/[^/]+$/)?.[0];
+      return /[^/]+\/[^/]+$/.exec(url.pathname)?.[0];
     case VideoService.pornhub:
       return (
         url.searchParams.get("viewkey") ||
-        url.pathname.match(/embed\/([^/]+)/)?.[1]
+        /embed\/([^/]+)/.exec(url.pathname)?.[1]
       );
     case VideoService.twitter:
-      return url.pathname.match(/status\/([^/]+)/)?.[1];
+      return /status\/([^/]+)/.exec(url.pathname)?.[1];
     case VideoService.rumble:
     case VideoService.facebook:
       return url.pathname.slice(1);
     case VideoService.rutube:
-      return url.pathname.match(/(?:video|embed)\/([^/]+)/)?.[1];
+      return /(?:video|embed)\/([^/]+)/.exec(url.pathname)?.[1];
     case VideoService.bilibili: {
       const bvid = url.searchParams.get("bvid");
       if (bvid) {
         return bvid;
       }
 
-      let vid = url.pathname.match(/video\/([^/]+)/)?.[1];
+      let vid = /video\/([^/]+)/.exec(url.pathname)?.[1];
       if (vid && url.searchParams.get("p") !== null) {
         vid += `/?p=${url.searchParams.get("p")}`;
       }
@@ -175,7 +173,7 @@ export async function getVideoID(
         return pathname.slice(1);
       }
 
-      const videoId = pathname.match(/video\/embed\/([^/]+)/)?.[1];
+      const videoId = /video\/embed\/([^/]+)/.exec(pathname)?.[1];
       if (!videoId) {
         return null;
       }
@@ -188,16 +186,16 @@ export async function getVideoID(
       return videoData.meta.url.replace("//my.mail.ru/", "");
     }
     case VideoService.bitchute:
-      return url.pathname.match(/(video|embed)\/([^/]+)/)?.[2];
+      return /(video|embed)\/([^/]+)/.exec(url.pathname)?.[2];
     case VideoService.eporner:
       // ! LINK SHOULD BE LIKE THIS eporner.com/video-XXXXXXXXX/isdfsd-dfjsdfjsdf-dsfsdf-dsfsda-dsad-ddsd
-      return url.pathname.match(/video-([^/]+)\/([^/]+)/)?.[0];
+      return /video-([^/]+)\/([^/]+)/.exec(url.pathname)?.[0];
     case VideoService.peertube:
-      return url.pathname.match(/\/w\/([^/]+)/)?.[0];
+      return /\/w\/([^/]+)/.exec(url.pathname)?.[0];
     case VideoService.dailymotion: {
       return url.hostname === "dai.ly"
         ? url.pathname.slice(1)
-        : url.pathname.match(/video\/([^/]+)/)?.[1];
+        : /video\/([^/]+)/.exec(url.pathname)?.[1];
     }
     case VideoService.trovo: {
       const vid = url.searchParams.get("vid");
@@ -205,7 +203,7 @@ export async function getVideoID(
         return null;
       }
 
-      const path = url.pathname.match(/([^/]+)\/([\d]+)/)?.[0];
+      const path = /([^/]+)\/([\d]+)/.exec(url.pathname)?.[0];
       if (!path) {
         return null;
       }
@@ -213,38 +211,38 @@ export async function getVideoID(
       return `${path}?vid=${vid}`;
     }
     case VideoService.yandexdisk:
-      return url.pathname.match(/\/i\/([^/]+)/)?.[1];
+      return /\/i\/([^/]+)/.exec(url.pathname)?.[1];
     case VideoService.okru: {
-      return url.pathname.match(/\/video\/(\d+)/)?.[1];
+      return /\/video\/(\d+)/.exec(url.pathname)?.[1];
     }
     case VideoService.googledrive:
-      return url.pathname.match(/\/file\/d\/([^/]+)/)?.[1];
+      return /\/file\/d\/([^/]+)/.exec(url.pathname)?.[1];
     case VideoService.bannedvideo: {
       const videoId = url.searchParams.get("id");
       const res = await fetchWithTimeout(`${service.url}${videoId}`);
       const content = await res.text();
 
       // get og:video from meta
-      return content.match(
-        /https:\/\/download.assets.video\/videos\/([^.]+).mp4/,
+      return /https:\/\/download.assets.video\/videos\/([^.]+).mp4/.exec(
+        content,
       )?.[0];
     }
     case VideoService.weverse:
-      return url.pathname.match(/([^/]+)\/(live|media)\/([^/]+)/)?.[3];
+      return /([^/]+)\/(live|media)\/([^/]+)/.exec(url.pathname)?.[3];
     case VideoService.newgrounds:
-      return url.pathname.match(/([^/]+)\/(view)\/([^/]+)/)?.[0];
+      return /([^/]+)\/(view)\/([^/]+)/.exec(url.pathname)?.[0];
     case VideoService.egghead:
       return url.pathname.slice(1);
     case VideoService.youku:
-      return url.pathname.match(/v_show\/id_[\w=]+/)?.[0];
+      return /v_show\/id_[\w=]+/.exec(url.pathname)?.[0];
     case VideoService.archive:
-      return url.pathname.match(/(details|embed)\/([^/]+)/)?.[2];
+      return /(details|embed)\/([^/]+)/.exec(url.pathname)?.[2];
     case VideoService.kodik:
-      return url.pathname.match(
-        /\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/,
+      return /\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/.exec(
+        url.pathname,
       )?.[0] as Kodik.Path;
     case VideoService.patreon: {
-      const fullPostId = url.pathname.match(/posts\/([^/]+)/)?.[1];
+      const fullPostId = /posts\/([^/]+)/.exec(url.pathname)?.[1];
       if (!fullPostId) {
         return undefined;
       }
@@ -252,8 +250,8 @@ export async function getVideoID(
       return fullPostId.replace(/[^\d.]/g, "");
     }
     case VideoService.reddit:
-      return url.pathname.match(
-        /\/r\/(([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+))/,
+      return /\/r\/(([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+))/.exec(
+        url.pathname,
       )?.[1];
     case VideoService.custom:
       return url.pathname + url.search;
