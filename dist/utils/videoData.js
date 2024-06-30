@@ -57,7 +57,7 @@ export async function getVideoID(service, videoURL) {
             return (/(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ||
                 url.searchParams.get("v"));
         case VideoService.vk: {
-            const pathID = /^\/(video|clip)-?[0-9]{8,9}_[0-9]{9}$/.exec(url.pathname);
+            const pathID = /^\/(video|clip)-?\d{8,9}_\d{9}$/.exec(url.pathname);
             const paramZ = url.searchParams.get("z");
             const paramOID = url.searchParams.get("oid");
             const paramID = url.searchParams.get("id");
@@ -95,7 +95,7 @@ export async function getVideoID(service, videoURL) {
                 });
                 const content = await res.text();
                 // get creator.url from schema
-                const channelLink = content.match(/"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/);
+                const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(content);
                 if (!channelLink) {
                     return null;
                 }

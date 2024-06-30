@@ -116,12 +116,11 @@ export default class VOTClient {
     requestLang = "en",
     responseLang = "ru",
   }: VOTOpts = {}) {
-    const schema = host.match(/(http(s)?):\/\//)?.[1] as URLSchema | undefined;
+    const schemaRe = /(http(s)?):\/\//;
+    const schema = schemaRe.exec(host)?.[1] as URLSchema | undefined;
     this.host = schema ? host.replace(`${schema}://`, "") : host;
     this.schema = schema ?? "https";
-    const schemaVOT = hostVOT.match(/(http(s)?):\/\//)?.[1] as
-      | URLSchema
-      | undefined;
+    const schemaVOT = schemaRe.exec(hostVOT)?.[1] as URLSchema | undefined;
     this.hostVOT = schemaVOT ? hostVOT.replace(`${schemaVOT}://`, "") : hostVOT;
     this.schemaVOT = schemaVOT ?? "https";
     this.fetch = fetchFn;
@@ -388,7 +387,7 @@ export default class VOTClient {
       duration: videoDuration,
     } = await this.getVideoDataFn(url);
 
-    const isCustomFormat = videoUrl.match(this.customFormatRE);
+    const isCustomFormat = this.customFormatRE.exec(videoUrl);
     return isCustomFormat
       ? await this.translateVideoVOTImpl({
           url: videoUrl,
@@ -417,7 +416,7 @@ export default class VOTClient {
     headers = {},
   }: VideoSubtitlesOpts) {
     const { url: videoUrl } = await this.getVideoDataFn(url);
-    if (videoUrl.match(this.customFormatRE)) {
+    if (this.customFormatRE.exec(videoUrl)) {
       throw new VOTJSError("Unsupported video URL for getting subtitles");
     }
 
@@ -475,7 +474,7 @@ export default class VOTClient {
     headers = {},
   }: StreamTranslationOpts): Promise<StreamTranslationResponse> {
     const { url: videoUrl } = await this.getVideoDataFn(url);
-    if (videoUrl.match(this.customFormatRE)) {
+    if (this.customFormatRE.exec(videoUrl)) {
       throw new VOTJSError(
         "Unsupported video URL for getting stream translation",
       );

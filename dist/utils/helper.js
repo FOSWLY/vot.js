@@ -173,9 +173,7 @@ export class KodikHelper {
             if (!secureScript.length) {
                 throw new VideoHelperError("Failed to find secure script");
             }
-            const secureContent = secureScript[0].textContent
-                .trim()
-                .match(/'{[^']+}'/)?.[0];
+            const secureContent = /'{[^']+}'/.exec(secureScript[0].textContent.trim())?.[0];
             if (!secureContent) {
                 throw new VideoHelperError("Secure json wasn't found in secure script");
             }
@@ -285,8 +283,8 @@ export class RedditHelper {
         const res = await fetchWithTimeout(`https://www.reddit.com/r/${videoId}`);
         const content = await res.text();
         // get m3u8 from player
-        const contentUrl = content
-            .match(/https:\/\/v\.redd\.it\/([^/]+)\/HLSPlaylist\.m3u8\?([^"]+)/)?.[0]
+        const contentUrl = /https:\/\/v\.redd\.it\/([^/]+)\/HLSPlaylist\.m3u8\?([^"]+)/
+            .exec(content)?.[0]
             ?.replaceAll("&amp;", "&");
         if (!contentUrl) {
             return undefined;
