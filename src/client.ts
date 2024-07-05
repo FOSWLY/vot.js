@@ -304,6 +304,7 @@ export default class VOTClient {
             remainingTime в этом случае залагивает и долгое время весит на одном и том же числе (обычно ~60-65).
             В среднем перевод с этим статусом занимает более 10 минут. Вероятнее всего, чтобы так не происходило нужно делать 1 запрос с bypassCache=true,
             а следующие с bypassCache=false, либо убирать firstRequest=true, но это, только, догадки
+            UPD: Заметил, что Яндекс в этом случае загружает видео/аудио с ютуба в webm, а после отправляет в protobuf через PUT /translate-video/audio
         */
         return {
           translated: false,
