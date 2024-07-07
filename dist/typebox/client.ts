@@ -44,7 +44,8 @@ fetchFn: Type.Optional(FetchFunction),
 fetchOpts: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
 getVideoDataFn: Type.Optional(GetVideoDataFunction),
 requestLang: Type.Optional(RequestLang),
-responseLang: Type.Optional(ResponseLang)
+responseLang: Type.Optional(ResponseLang),
+headers: Type.Optional(Type.Record(Type.String(), Type.String()))
 })
 
 export type ClientSession = Static<typeof ClientSession>

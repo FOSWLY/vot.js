@@ -1,4 +1,4 @@
-import { RequestLang, ResponseLang, SessionModule, VideoService } from "./yandex";
+import { RequestLang, ResponseLang, SessionModule, VideoService } from "./yandex.js";
 export type FetchFunction = (input: string | URL | Request, init?: any) => Promise<Response>;
 export type URLSchema = "http" | "https";
 export type VideoData = {
@@ -16,6 +16,7 @@ export type VOTOpts = {
     getVideoDataFn?: GetVideoDataFunction;
     requestLang?: RequestLang;
     responseLang?: ResponseLang;
+    headers?: Record<string, string>;
 };
 export type ClientSession = {
     expires: number;

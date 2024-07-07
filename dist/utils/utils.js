@@ -1,4 +1,4 @@
-import config from "../config/config";
+import config from "../config/config.js";
 export async function fetchWithTimeout(url, options = {
     headers: {
         "User-Agent": config.userAgent,

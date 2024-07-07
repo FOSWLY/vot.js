@@ -1,4 +1,4 @@
-import { RequestHeaders, RequestLang, ResponseLang, VideoService } from "./yandex";
+import { RequestHeaders, RequestLang, ResponseLang, VideoService } from "./yandex.js";
 export type TranslationStatus = "success" | "waiting" | "parted" | "failed";
 export type TranslationProvider = "yandex";
 export type VideoTranslationVOTOpts = {

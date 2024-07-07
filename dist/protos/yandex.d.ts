@@ -1,4 +1,4 @@
-import _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal.js";
 export declare const protobufPackage = "";
 export declare enum StreamInterval {
     NO_CONNECTION = 0,
@@ -8,77 +8,54 @@ export declare enum StreamInterval {
 }
 export declare function streamIntervalFromJSON(object: any): StreamInterval;
 export declare function streamIntervalToJSON(object: StreamInterval): string;
-/** VIDEO TRANSLATION */
 export interface VideoTranslationHelpObject {
-    /** video_file_url or subtitles_file_url */
     target: string;
-    /** raw url to video file or subs */
     targetUrl: string;
 }
 export interface VideoTranslationRequest {
     url: string;
-    /** used in mobile version */
     deviceId?: string | undefined;
-    /** true for the first request, false for subsequent ones */
     firstRequest: boolean;
     duration: number;
-    /** 1 1 */
     unknown0: number;
-    /** source language code */
     language: string;
-    /** 0 - auto detected by yabrowser, 1 - user set his own lang by dropdown */
     forceSourceLang: boolean;
-    /** 0 0 */
     unknown1: number;
-    /** array for translation assistance ([0] -> {2: link to video, 1: "video_file_url"}, [1] -> {2: link to subtitles, 1: "subtitles_file_url"}) */
     translationHelp: VideoTranslationHelpObject[];
     responseLanguage: string;
-    /** 0 */
     unknown2: number;
-    /** 1 */
     unknown3: number;
-    /** ? maybe they have some kind of bypass limiter from one IP, because after one such request it stopped working */
     bypassCache: boolean;
 }
 export interface VideoTranslationResponse {
-    /** if status is translated */
     url?: string | undefined;
     duration?: number | undefined;
     status: number;
-    /** secs until translation is completed */
     remainingTime?: number | undefined;
-    /** unknown 0 (1st request) -> 10 (2nd, 3th and etc requests). (if status is 0) */
     unknown0?: number | undefined;
-    /** it's not a type mistake */
     translationId: string;
-    /** detected language (if the wrong one is set) */
     language?: string | undefined;
     message?: string | undefined;
 }
-/** SUBTITLES */
 export interface SubtitlesObject {
     language: string;
     url: string;
     unknown0: number;
-    translatedLanguages: string;
+    translatedLanguage: string;
     translatedUrl: string;
     unknown1: number;
     unknown2: number;
 }
 export interface SubtitlesRequest {
     url: string;
-    /** source language code */
     language: string;
 }
 export interface SubtitlesResponse {
-    /** 0 - finished/failed, 1 - waiting result (1 - ~10min, maybe more) */
     waiting: boolean;
     subtitles: SubtitlesObject[];
 }
-/** STREAM TRANSLATION */
 export interface StreamTranslationObject {
     url: string;
-    /** timestamp in ms (timing of m3u8) */
     timestamp: number;
 }
 export interface StreamTranslationRequest {
@@ -87,19 +64,15 @@ export interface StreamTranslationRequest {
     responseLanguage: string;
 }
 export interface StreamTranslationResponse {
-    /** 20s - streaming, 10s - translating, 0s - there is no connection with the server (the broadcast is finished or deleted) */
     interval: StreamInterval;
     translatedInfo?: StreamTranslationObject | undefined;
     pingId?: number | undefined;
 }
-/** doesn't have response proto */
 export interface StreamPingRequest {
     pingId: number;
 }
-/** SESSIONS */
 export interface YandexSessionRequest {
     uuid: string;
-    /** e.g. video_translation */
     module: string;
 }
 export interface YandexSessionResponse {
@@ -273,7 +246,7 @@ export declare const SubtitlesObject: {
         language?: string | undefined;
         url?: string | undefined;
         unknown0?: number | undefined;
-        translatedLanguages?: string | undefined;
+        translatedLanguage?: string | undefined;
         translatedUrl?: string | undefined;
         unknown1?: number | undefined;
         unknown2?: number | undefined;
@@ -281,7 +254,7 @@ export declare const SubtitlesObject: {
         language?: string | undefined;
         url?: string | undefined;
         unknown0?: number | undefined;
-        translatedLanguages?: string | undefined;
+        translatedLanguage?: string | undefined;
         translatedUrl?: string | undefined;
         unknown1?: number | undefined;
         unknown2?: number | undefined;
@@ -290,7 +263,7 @@ export declare const SubtitlesObject: {
         language?: string | undefined;
         url?: string | undefined;
         unknown0?: number | undefined;
-        translatedLanguages?: string | undefined;
+        translatedLanguage?: string | undefined;
         translatedUrl?: string | undefined;
         unknown1?: number | undefined;
         unknown2?: number | undefined;
@@ -298,7 +271,7 @@ export declare const SubtitlesObject: {
         language?: string | undefined;
         url?: string | undefined;
         unknown0?: number | undefined;
-        translatedLanguages?: string | undefined;
+        translatedLanguage?: string | undefined;
         translatedUrl?: string | undefined;
         unknown1?: number | undefined;
         unknown2?: number | undefined;
@@ -335,7 +308,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -346,7 +319,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -354,7 +327,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -362,7 +335,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -370,7 +343,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -382,7 +355,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -393,7 +366,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -401,7 +374,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -409,7 +382,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;
@@ -417,7 +390,7 @@ export declare const SubtitlesResponse: {
             language?: string | undefined;
             url?: string | undefined;
             unknown0?: number | undefined;
-            translatedLanguages?: string | undefined;
+            translatedLanguage?: string | undefined;
             translatedUrl?: string | undefined;
             unknown1?: number | undefined;
             unknown2?: number | undefined;

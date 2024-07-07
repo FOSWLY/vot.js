@@ -1,8 +1,8 @@
 import { parseFromString } from "dom-parser";
-import { getHmacSha1 } from "../secure";
-import { fetchWithTimeout } from "./utils";
-import config from "../config/config";
-import { VideoService } from "../types/yandex";
+import { getHmacSha1 } from "../secure.js";
+import { fetchWithTimeout } from "./utils.js";
+import config from "../config/config.js";
+import { VideoService } from "../types/yandex.js";
 class VideoHelperError extends Error {
     constructor(message) {
         super(message);
@@ -11,7 +11,6 @@ class VideoHelperError extends Error {
     }
 }
 export class MailRuHelper {
-    //
     async getVideoData(videoId) {
         try {
             const res = await fetchWithTimeout(`https://my.mail.ru/+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`);
@@ -24,9 +23,9 @@ export class MailRuHelper {
     }
 }
 export class WeverseHelper {
-    API_ORIGIN = "https://global.apis.naver.com/weverse/wevweb"; // find as REACT_APP_API_GW_ORIGIN in main.<hash>.js
-    API_APP_ID = "be4d79eb8fc7bd008ee82c8ec4ff6fd4"; // find as REACT_APP_API_APP_ID in main.<hash>.js
-    API_HMAC_KEY = "1b9cb6378d959b45714bec49971ade22e6e24e42"; // find as c.active near `createHmac('sha1'...`  in main.<hash>.js
+    API_ORIGIN = "https://global.apis.naver.com/weverse/wevweb";
+    API_APP_ID = "be4d79eb8fc7bd008ee82c8ec4ff6fd4";
+    API_HMAC_KEY = "1b9cb6378d959b45714bec49971ade22e6e24e42";
     HEADERS = {
         Accept: "application/json, text/plain, */*",
         Origin: "https://weverse.io",
@@ -42,9 +41,7 @@ export class WeverseHelper {
         };
     }
     async createHash(pathname) {
-        // pathname example: /post/v1.0/post-3-142049908/preview?fieldSet=postForPreview...
         const timestamp = Date.now();
-        // example salt is /video/v1.1/vod/67134/inKey?gcc=RU&appId=be4d79eb8fc7bd008ee82c8ec4ff6fd4&language=en&os=WEB&platform=WEB&wpf=pc1707527163588
         let salt = pathname.substring(0, Math.min(255, pathname.length)) + timestamp;
         const sign = await getHmacSha1(this.API_HMAC_KEY, salt);
         if (!sign) {
@@ -60,7 +57,7 @@ export class WeverseHelper {
             new URLSearchParams({
                 fieldSet: "postForPreview",
                 ...this.getURLData(),
-            }); // ! DON'T EDIT ME
+            });
         try {
             const hash = await this.createHash(pathname);
             const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
@@ -78,7 +75,7 @@ export class WeverseHelper {
             new URLSearchParams({
                 gcc: "RU",
                 ...this.getURLData(),
-            }); // ! DON'T EDIT ME
+            });
         try {
             const hash = await this.createHash(pathname);
             const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
@@ -161,7 +158,6 @@ export class KodikHelper {
             const res = await fetchWithTimeout(url, {
                 headers: {
                     "User-Agent": config.userAgent,
-                    // only to mask request
                     Origin: this.API_ORIGIN,
                     Referer: this.API_ORIGIN,
                 },
@@ -197,12 +193,10 @@ export class KodikHelper {
                 method: "POST",
                 headers: {
                     "User-Agent": config.userAgent,
-                    // only to mask request
                     Origin: this.API_ORIGIN,
                     Referer: `${this.API_ORIGIN}/${videoType}/${id}/${hash}/360p`,
                 },
                 body: new URLSearchParams({
-                    // only to mask request (they don't check for these fields, but validate if they exist)
                     d,
                     d_sign,
                     pd,
@@ -212,7 +206,6 @@ export class KodikHelper {
                     bad_user: "false",
                     cdn_is_working: "true",
                     info: "{}",
-                    // required
                     type: videoType,
                     hash,
                     id,
@@ -226,7 +219,6 @@ export class KodikHelper {
         }
     }
     decryptUrl(encryptedUrl) {
-        // app.player_single.js
         const decryptedUrl = atob(encryptedUrl.replace(/[a-zA-Z]/g, function (e) {
             const charCode = e.charCodeAt(0) + 13;
             return String.fromCharCode((e <= "Z" ? 90 : 122) >= charCode ? charCode : charCode - 26);
@@ -243,7 +235,6 @@ export class KodikHelper {
             return undefined;
         }
         const videoDataLinks = Object.entries(videoData.links[videoData.default.toString()]);
-        // idk what other types there may be, so i will add a this check
         const videoLink = videoDataLinks.find(([_, data]) => data.type === "application/x-mpegURL")?.[1];
         if (!videoLink) {
             return undefined;
@@ -282,7 +273,6 @@ export class RedditHelper {
     async getVideoData(videoId) {
         const res = await fetchWithTimeout(`https://www.reddit.com/r/${videoId}`);
         const content = await res.text();
-        // get m3u8 from player
         const contentUrl = /https:\/\/v\.redd\.it\/([^/]+)\/HLSPlaylist\.m3u8\?([^"]+)/
             .exec(content)?.[0]
             ?.replaceAll("&amp;", "&");
@@ -294,18 +284,10 @@ export class RedditHelper {
         };
     }
 }
-/**
- * A convenient wrapper over the rest of the helpers
- */
 export default class VideoHelper {
-    /** @source */
     static [VideoService.mailru] = new MailRuHelper();
-    /** @source */
     static [VideoService.weverse] = new WeverseHelper();
-    /** @source */
     static [VideoService.kodik] = new KodikHelper();
-    /** @source */
     static [VideoService.patreon] = new PatreonHelper();
-    /** @source */
     static [VideoService.reddit] = new RedditHelper();
 }

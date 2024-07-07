@@ -1,5 +1,5 @@
-import { StreamTranslationResponse, SubtitlesResponse, VideoTranslationResponse, YandexSessionResponse } from "./protos/yandex";
-import type { SessionModule, TranslationHelp } from "./types/yandex";
+import { StreamTranslationResponse, SubtitlesResponse, VideoTranslationResponse, YandexSessionResponse } from "./protos/yandex.js";
+import type { SessionModule, TranslationHelp } from "./types/yandex.js";
 export declare const yandexProtobuf: {
     encodeTranslationRequest(url: string, duration: number, requestLang: string, responseLang: string, translationHelp: TranslationHelp[] | null): Uint8Array;
     decodeTranslationResponse(response: ArrayBuffer): VideoTranslationResponse;

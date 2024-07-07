@@ -1,5 +1,5 @@
-import { VideoService } from "../types/yandex";
-import { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, } from "./alternativeUrls";
+import { VideoService } from "../types/yandex.js";
+import { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, } from "./alternativeUrls.js";
 export default [
     {
         host: VideoService.youtube,
@@ -7,13 +7,11 @@ export default [
         match: /^((www.|m.)?youtube(-nocookie|kids)?.com)|(youtu.be)$/,
     },
     {
-        // Sites host Invidious. I tested the performance only on invidious.kevin.rocks, youtu.be and inv.vern.cc
         host: VideoService.invidious,
         url: "https://youtu.be/",
         match: sitesInvidious,
     },
     {
-        // Sites host Piped. I tested the performance only on piped.video
         host: VideoService.piped,
         url: "https://youtu.be/",
         match: sitesPiped,
@@ -111,7 +109,7 @@ export default [
     },
     {
         host: VideoService.peertube,
-        url: "stub", // This is a stub. The present value is set using origin url
+        url: "stub",
         match: sitesPeertube,
     },
     {
@@ -141,7 +139,7 @@ export default [
     },
     {
         host: VideoService.bannedvideo,
-        url: "https://madmaxworld.tv/watch?id=", // madmaxworld.tv for bypass cloudflare UAM on /watch page
+        url: "https://madmaxworld.tv/watch?id=",
         match: /^(www.)?banned.video|madmaxworld.tv$/,
         rawResult: true,
     },
@@ -157,7 +155,6 @@ export default [
         match: /^(www.)?newgrounds.com$/,
     },
     {
-        // TODO: Добавить поддержку tips (сделать через m3u8 т.к. обычная ссылка не принимается) и платных курсов
         host: VideoService.egghead,
         url: "https://egghead.io/",
         match: /^egghead.io$/,

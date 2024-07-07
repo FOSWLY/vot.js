@@ -1,4 +1,3 @@
-// Sites host Invidious. I tested the performance only on invidious.kevin.rocks, youtu.be and inv.vern.cc
 const sitesInvidious = [
     "invidious.snopyta.org",
     "yewtu.be",
@@ -16,7 +15,6 @@ const sitesInvidious = [
     "invidio.xamh.de",
     "invidious.dhusch.de",
 ];
-// Sites host Piped. I tested the performance only on piped.video
 const sitesPiped = [
     "piped.video",
     "piped.tokhmi.xyz",
@@ -55,13 +53,12 @@ const sitesProxiTok = [
     "proxitok.privacydev.net",
     "tok.artemislena.eu",
     "tok.adminforge.de",
-    "tik.hostux.net", // maybe instance doesn't working
+    "tik.hostux.net",
     "tt.vern.cc",
     "cringe.whatever.social",
     "proxitok.lunar.icu",
-    "proxitok.privacy.com.de", // maybe instance doesn't working
+    "proxitok.privacy.com.de",
 ];
-// Sites host Peertube. I tested the performance only on dalek.zone and tube.shanti.cafe
 const sitesPeertube = [
     "peertube.1312.media",
     "tube.shanti.cafe",

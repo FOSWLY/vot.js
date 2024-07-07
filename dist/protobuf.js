@@ -1,5 +1,4 @@
-import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex";
-// Export the encoding and decoding functions
+import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex.js";
 export const yandexProtobuf = {
     encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp) {
         return VideoTranslationRequest.encode({

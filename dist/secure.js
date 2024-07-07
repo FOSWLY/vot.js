@@ -1,14 +1,14 @@
 import crypto from "node:crypto";
-import config from "./config/config";
-// yandex signature
+import config from "./config/config.js";
+const utf8Encoder = new TextEncoder();
+async function signHMAC(hashName, hmac, data) {
+    const key = await crypto.subtle.importKey("raw", utf8Encoder.encode(hmac), { name: "HMAC", hash: { name: hashName } }, false, ["sign", "verify"]);
+    return await crypto.subtle.sign("HMAC", key, data);
+}
 export async function getSignature(body) {
-    const utf8Encoder = new TextEncoder();
-    const key = await crypto.subtle.importKey("raw", utf8Encoder.encode(config.hmac), { name: "HMAC", hash: { name: "SHA-256" } }, false, ["sign", "verify"]);
-    const signature = await crypto.subtle.sign("HMAC", key, body);
-    // Convert the signature to a hex string
+    const signature = await signHMAC("SHA-256", config.hmac, body);
     return new Uint8Array(signature).reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
 }
-// yandex uuid
 export function getUUID() {
     const hexDigits = "0123456789ABCDEF";
     let uuid = "";
@@ -18,13 +18,10 @@ export function getUUID() {
     }
     return uuid;
 }
-// hmac sha1 for weverse
 export async function getHmacSha1(hmacKey, salt) {
     try {
-        const utf8Encoder = new TextEncoder();
         let hmacSalt = utf8Encoder.encode(salt);
-        const key = await crypto.subtle.importKey("raw", utf8Encoder.encode(hmacKey), { name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign", "verify"]);
-        const signature = await crypto.subtle.sign("HMAC", key, hmacSalt);
+        const signature = await signHMAC("SHA-1", hmacKey, hmacSalt);
         return btoa(String.fromCharCode(...new Uint8Array(signature)));
     }
     catch (err) {

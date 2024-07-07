@@ -1,7 +1,7 @@
-import sites from "../config/sites";
-import { VideoService } from "../types/yandex";
-import VideoHelper from "./helper";
-import { fetchWithTimeout } from "./utils";
+import sites from "../config/sites.js";
+import { VideoService } from "../types/yandex.js";
+import VideoHelper from "./helper.js";
+import { fetchWithTimeout } from "./utils.js";
 class VideoDataError extends Error {
     constructor(message) {
         super(message);
@@ -20,9 +20,6 @@ export function getService(videoUrl) {
         console.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
         return false;
     }
-    // if (enteredURL.pathname.endsWith(".mp4")) {
-    //   return sites.find((site) => site.host === VideoService.custom);
-    // }
     const hostname = enteredURL.hostname;
     const isMathes = (match) => {
         if (match instanceof RegExp) {
@@ -88,13 +85,11 @@ export async function getVideoID(service, videoURL) {
                 const pathname = url.pathname.slice(1);
                 const isEmbed = pathname === "embed";
                 const res = await fetchWithTimeout(`https://clips.twitch.tv/${isEmbed ? url.searchParams.get("clip") : url.pathname.slice(1)}`, {
-                    // maybe this way there is a better chance that the schema will be on the page
                     headers: {
                         "User-Agent": "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
                     },
                 });
                 const content = await res.text();
-                // get creator.url from schema
                 const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(content);
                 if (!channelLink) {
                     return null;
@@ -156,7 +151,6 @@ export async function getVideoID(service, videoURL) {
         case VideoService.bitchute:
             return /(video|embed)\/([^/]+)/.exec(url.pathname)?.[2];
         case VideoService.eporner:
-            // ! LINK SHOULD BE LIKE THIS eporner.com/video-XXXXXXXXX/isdfsd-dfjsdfjsdf-dsfsdf-dsfsda-dsad-ddsd
             return /video-([^/]+)\/([^/]+)/.exec(url.pathname)?.[0];
         case VideoService.peertube:
             return /\/w\/([^/]+)/.exec(url.pathname)?.[0];
@@ -187,7 +181,6 @@ export async function getVideoID(service, videoURL) {
             const videoId = url.searchParams.get("id");
             const res = await fetchWithTimeout(`${service.url}${videoId}`);
             const content = await res.text();
-            // get og:video from meta
             return /https:\/\/download.assets.video\/videos\/([^.]+).mp4/.exec(content)?.[0];
         }
         case VideoService.weverse:
@@ -227,7 +220,7 @@ export async function getVideoData(url) {
         throw new VideoDataError(`Entered unsupported link: "${url}"`);
     }
     if (service.host === VideoService.peertube) {
-        service.url = new URL(url).origin; // set the url of the current site for peertube and directlink
+        service.url = new URL(url).origin;
     }
     if (service.rawResult) {
         return {

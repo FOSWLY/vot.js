@@ -1,8 +1,8 @@
-import * as MailRu from "../types/helpers/mailru";
-import * as Weverse from "../types/helpers/weverse";
-import * as Kodik from "../types/helpers/kodik";
-import * as Patreon from "../types/helpers/patreon";
-import { VideoService } from "../types/yandex";
+import * as MailRu from "../types/helpers/mailru.js";
+import * as Weverse from "../types/helpers/weverse.js";
+import * as Kodik from "../types/helpers/kodik.js";
+import * as Patreon from "../types/helpers/patreon.js";
+import { VideoService } from "../types/yandex.js";
 export declare class MailRuHelper {
     getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined>;
 }
@@ -55,19 +55,11 @@ export declare class RedditHelper {
         url: string;
     } | undefined>;
 }
-/**
- * A convenient wrapper over the rest of the helpers
- */
 export default class VideoHelper {
-    /** @source */
     static [VideoService.mailru]: MailRuHelper;
-    /** @source */
     static [VideoService.weverse]: WeverseHelper;
-    /** @source */
     static [VideoService.kodik]: KodikHelper;
-    /** @source */
     static [VideoService.patreon]: PatreonHelper;
-    /** @source */
     static [VideoService.reddit]: RedditHelper;
 }
 //# sourceMappingURL=helper.d.ts.map

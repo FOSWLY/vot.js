@@ -19,6 +19,7 @@
     "husky": "^9.0.11",
     "oxlint": "^0.5.0",
     "ts-proto": "^1.180.0",
+    "tsc-esm-fix": "^2.20.27",
     "typedoc": "0.25.13",
     "typedoc-plugin-include-example": "^1.2.0",
     "typedoc-plugin-inline-sources": "^1.0.2",
@@ -58,7 +59,7 @@
   "scripts": {
     "test": "bun test",
     "build:declaration": "tsc --project tsconfig.build.json --emitDeclarationOnly --outdir ./dist",
-    "build:default": "tsc --project tsconfig.build.json --outdir ./dist",
+    "build:default": "tsc --project tsconfig.build.json --outdir ./dist && tsc-esm-fix --tsconfig tsconfig.build.json",
     "build:typebox": "bun run typebox-gen.ts",
     "build:doc": "typedoc --options typedoc.json --tsconfig tsconfig.build.json",
     "build:bun": "bun build:default && bun build:typebox && bun build:doc",

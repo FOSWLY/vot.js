@@ -25,7 +25,9 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
 
-    "rootDir": "src"
+    "rootDir": "src",
+    "outDir": "./dist",
+    "removeComments": true
   },
   "exclude": [
     "./dist",
@@ -34,6 +36,5 @@
     "./examples",
     "node_modules",
     "./build-min.ts"
-  ],
-  "outDir": "./dist"
+  ]
 }
