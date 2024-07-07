@@ -1,11 +1,14 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { expect, test } from "bun:test";
 import VOTClient, { VOTWorkerClient } from "../src/index";
+
+const url = "https://youtu.be/LK6nLR1bzpI";
 
 test("Translate video", async () => {
   const client = new VOTClient();
 
   const response = await client.translateVideo({
-    url: "https://youtu.be/LK6nLR1bzpI",
+    url,
   });
 
   console.log("Translate video", response);
@@ -19,7 +22,7 @@ test("Translate video (worker)", async () => {
   });
 
   const response = await client.translateVideo({
-    url: "https://youtu.be/LK6nLR1bzpI",
+    url,
   });
 
   console.log("Translate video (worker)", response);
@@ -66,7 +69,7 @@ test("Get subtitles", async () => {
   const client = new VOTClient();
 
   const response = await client.getSubtitles({
-    url: "https://youtu.be/LK6nLR1bzpI",
+    url,
     requestLang: "ru",
   });
 
@@ -81,7 +84,7 @@ test("Get subtitles (worker)", async () => {
   });
 
   const response = await client.getSubtitles({
-    url: "https://youtu.be/LK6nLR1bzpI",
+    url,
     requestLang: "ru",
   });
 

@@ -20,7 +20,7 @@ export function getUUID() {
 }
 export async function getHmacSha1(hmacKey, salt) {
     try {
-        let hmacSalt = utf8Encoder.encode(salt);
+        const hmacSalt = utf8Encoder.encode(salt);
         const signature = await signHMAC("SHA-1", hmacKey, hmacSalt);
         return btoa(String.fromCharCode(...new Uint8Array(signature)));
     }

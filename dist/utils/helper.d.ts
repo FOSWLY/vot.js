@@ -26,6 +26,7 @@ export declare class WeverseHelper {
         wmsgpad: string;
         wmd: string;
     }>;
+    getHashURLParams(pathname: string): Promise<string>;
     getPostPreview(postId: string): Promise<Weverse.PostPreview | false>;
     getVideoInKey(videoId: number): Promise<false | Weverse.InKey>;
     getVideoInfo(infraVideoId: string, inkey: string, serviceId: string): Promise<false | Weverse.VideoInfo>;

@@ -368,7 +368,7 @@ test("custom", async () => {
   expect(await normalize(expected)).toEqual(expected);
 });
 
-describe("kodik", async () => {
+describe("kodik", () => {
   test("seria", async () => {
     expect(
       await normalize(

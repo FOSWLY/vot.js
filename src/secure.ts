@@ -4,7 +4,11 @@ import config from "./config/config";
 const utf8Encoder = new TextEncoder();
 type HashName = "SHA-256" | "SHA-1";
 
-async function signHMAC(hashName: HashName, hmac: string, data: any) {
+async function signHMAC(
+  hashName: HashName,
+  hmac: string,
+  data: crypto.webcrypto.BufferSource,
+) {
   const key = await crypto.subtle.importKey(
     "raw",
     utf8Encoder.encode(hmac),
@@ -41,7 +45,7 @@ export function getUUID() {
 // hmac sha1 for weverse
 export async function getHmacSha1(hmacKey: string, salt: string) {
   try {
-    let hmacSalt = utf8Encoder.encode(salt);
+    const hmacSalt = utf8Encoder.encode(salt);
 
     const signature = await signHMAC("SHA-1", hmacKey, hmacSalt);
     return btoa(String.fromCharCode(...new Uint8Array(signature)));

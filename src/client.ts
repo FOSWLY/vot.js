@@ -29,6 +29,7 @@ import { fetchWithTimeout, getTimestamp } from "./utils/utils";
 import { getVideoData } from "./utils/videoData";
 import { TranslationResponse, VideoTranslationVOTOpts } from "./types/vot";
 import { convertVOT } from "./utils/vot";
+import { StreamInterval } from "./protos/yandex";
 
 // https://stackoverflow.com/questions/64993118/error-should-not-import-the-named-export-version-imported-as-version
 const { version } = packageInfo;
@@ -135,7 +136,7 @@ export default class VOTClient {
     this.headers = { ...this.headers, ...headers };
   }
 
-  getOpts(body: any, headers: Record<string, string> = {}) {
+  getOpts(body: unknown, headers: Record<string, string> = {}) {
     return {
       method: "POST",
       headers: {
@@ -168,8 +169,8 @@ export default class VOTClient {
         success: res.status === 200,
         data,
       };
-    } catch (err: any) {
-      console.error("[vot.js]", err.message);
+    } catch (err: unknown) {
+      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
         data: null,
@@ -201,8 +202,8 @@ export default class VOTClient {
         success: res.status === 200,
         data,
       };
-    } catch (err: any) {
-      console.error("[vot.js]", err.message);
+    } catch (err: unknown) {
+      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
         data: null,
@@ -225,7 +226,7 @@ export default class VOTClient {
       uuid,
     };
 
-    return this.sessions[module] as ClientSession;
+    return this.sessions[module]!;
   }
 
   protected async translateVideoYAImpl({
@@ -236,6 +237,7 @@ export default class VOTClient {
     translationHelp = null,
     headers = {},
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
+    // eslint-disable-next-line sonarjs/no-duplicate-string
     const { secretKey, uuid } = await this.getSession("video-translation");
 
     const body = yandexProtobuf.encodeTranslationRequest(
@@ -262,7 +264,7 @@ export default class VOTClient {
       res.data as ArrayBuffer,
     );
 
-    switch (translationData.status) {
+    switch (translationData.status as VideoTranslationStatus) {
       case VideoTranslationStatus.FAILED:
         throw new VOTJSError(
           "Yandex couldn't translate video",
@@ -292,7 +294,7 @@ export default class VOTClient {
       case VideoTranslationStatus.WAITING:
         return {
           translated: false,
-          remainingTime: translationData.remainingTime as number,
+          remainingTime: translationData.remainingTime!,
         };
       case VideoTranslationStatus.LONG_WAITING:
       case VideoTranslationStatus.LONG_WAITING_2:
@@ -315,10 +317,10 @@ export default class VOTClient {
           translated: false,
           remainingTime: translationData.remainingTime ?? -1,
         };
+      default:
+        console.error("[vot.js] Unknown response", translationData);
+        throw new VOTJSError("Unknown response from Yandex", translationData);
     }
-
-    console.error("[vot.js] Unknown response", translationData);
-    throw new VOTJSError("Unknown response from Yandex", translationData);
   }
 
   protected async translateVideoVOTImpl({
@@ -347,7 +349,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video translation", res);
     }
 
-    const translationData = res.data as TranslationResponse;
+    const translationData = res.data!;
     switch (translationData.status) {
       case "failed":
         throw new VOTJSError(
@@ -364,13 +366,13 @@ export default class VOTClient {
 
         return {
           translated: true,
-          url: translationData.translatedUrl as string,
+          url: translationData.translatedUrl,
           remainingTime: -1,
         };
       case "waiting":
         return {
           translated: false,
-          remainingTime: translationData.remainingTime as number,
+          remainingTime: translationData.remainingTime,
           message: translationData.message,
         };
     }
@@ -513,28 +515,28 @@ export default class VOTClient {
 
     const interval = translateResponse.interval;
     switch (interval) {
-      case 0:
-      case 10:
+      case StreamInterval.NO_CONNECTION:
+      case StreamInterval.TRANSLATING:
         return {
           translated: false,
           interval,
           message:
-            interval === 0
+            interval === StreamInterval.NO_CONNECTION
               ? "streamNoConnectionToServer"
               : "translationTakeFewMinutes",
         };
-      case 20: {
+      case StreamInterval.STREAMING: {
         return {
           translated: true,
           interval,
-          pingId: translateResponse.pingId as number,
+          pingId: translateResponse.pingId!,
           result: translateResponse.translatedInfo as StreamTranslationObject,
         };
       }
+      default:
+        console.error("[vot.js] Unknown response", translateResponse);
+        throw new VOTJSError("Unknown response from Yandex", translateResponse);
     }
-
-    console.error("[vot.js] Unknown response", translateResponse);
-    throw new VOTJSError("Unknown response from Yandex", translateResponse);
   }
 
   async createSession(module: SessionModule) {
@@ -589,8 +591,8 @@ export class VOTWorkerClient extends VOTClient {
         success: res.status === 200,
         data,
       };
-    } catch (err: any) {
-      console.error("[vot.js]", err.message);
+    } catch (err: unknown) {
+      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
         data: null,

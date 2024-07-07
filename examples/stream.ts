@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import VOTClient from "../dist";
 import {
   StreamTranslationResponse,
@@ -15,7 +16,7 @@ function isAbortedWaitingStream(
   return !!(response as WaitingStreamTranslationResponse).message;
 }
 
-let fn = async () => {
+const fn = async () => {
   response = await client.translateStream({
     url: "https://youtu.be/nA9UZF-SZoQ",
     requestLang: "en",
@@ -34,7 +35,7 @@ let fn = async () => {
     return;
   }
 
-  client.pingStream({
+  await client.pingStream({
     pingId: response.pingId,
   });
 

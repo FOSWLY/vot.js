@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { ServiceConf, VideoService } from "../types/yandex";
 import {
   sitesInvidious,

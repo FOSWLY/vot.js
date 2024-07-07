@@ -21,12 +21,12 @@ export default class VOTClient {
     headers: Record<string, string>;
     headersVOT: Record<string, string>;
     constructor({ host, hostVOT, fetchFn, fetchOpts, getVideoDataFn, requestLang, responseLang, headers, }?: VOTOpts);
-    getOpts(body: any, headers?: Record<string, string>): {
+    getOpts(body: unknown, headers?: Record<string, string>): {
         method: string;
         headers: {
             [x: string]: string;
         };
-        body: any;
+        body: unknown;
     };
     request(path: string, body: Uint8Array, headers?: Record<string, string>): Promise<ClientResponse>;
     requestVOT<T = any>(path: string, body: NonNullable<any>, headers?: Record<string, string>): Promise<ClientResponse<T>>;

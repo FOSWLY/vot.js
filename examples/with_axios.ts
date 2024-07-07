@@ -23,10 +23,10 @@ const client = new (class AxiosVOTClient extends VOTClient {
       });
       return {
         success: res.status === 200,
-        data: res.data,
+        data: res.data as ClientResponse,
       };
-    } catch (err: any) {
-      console.error("[vot.js]", err.message);
+    } catch (err: unknown) {
+      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
         data: null,

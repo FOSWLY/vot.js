@@ -3,10 +3,7 @@ export type VideoId = string;
 export type Hash = string;
 export type Quality = `${number}p`;
 export type Path = `/${VideoType}/${VideoId}/${Hash}/${Quality}`;
-export type SecureData = {
-    videoType: VideoType;
-    videoId: VideoId;
-    hash: Hash;
+export type SecureContent = {
     d: string;
     d_sign: string;
     pd: string;
@@ -16,6 +13,11 @@ export type SecureData = {
     advert_debug?: boolean;
     first_url?: boolean;
 };
+export type SecureData = {
+    videoType: VideoType;
+    videoId: VideoId;
+    hash: Hash;
+} & SecureContent;
 export type VideoQualityData = {
     src: string;
     type: string;

@@ -25,8 +25,8 @@ export class MailRuHelper {
         `https://my.mail.ru/+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`,
       );
       return (await res.json()) as MailRu.VideoInfo;
-    } catch (err: any) {
-      console.error("Failed to get mail.ru video info", err.message);
+    } catch (err: unknown) {
+      console.error("Failed to get mail.ru video info", (err as Error).message);
       return undefined;
     }
   }
@@ -57,7 +57,7 @@ export class WeverseHelper {
     const timestamp = Date.now();
 
     // example salt is /video/v1.1/vod/67134/inKey?gcc=RU&appId=be4d79eb8fc7bd008ee82c8ec4ff6fd4&language=en&os=WEB&platform=WEB&wpf=pc1707527163588
-    let salt =
+    const salt =
       pathname.substring(0, Math.min(255, pathname.length)) + timestamp;
 
     const sign = await getHmacSha1(this.API_HMAC_KEY, salt);
@@ -71,28 +71,33 @@ export class WeverseHelper {
     };
   }
 
+  async getHashURLParams(pathname: string) {
+    const hash = await this.createHash(pathname);
+    return new URLSearchParams(hash).toString();
+  }
+
   async getPostPreview(postId: string): Promise<Weverse.PostPreview | false> {
     const pathname =
       `/post/v1.0/post-${postId}/preview?` +
       new URLSearchParams({
         fieldSet: "postForPreview",
         ...this.getURLData(),
-      }); // ! DON'T EDIT ME
+      }).toString(); // ! DON'T EDIT ME
 
     try {
-      const hash = await this.createHash(pathname);
+      const urlParams = await this.getHashURLParams(pathname);
       const res = await fetchWithTimeout(
-        this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash),
+        this.API_ORIGIN + pathname + "&" + urlParams,
         {
           headers: this.HEADERS,
         },
       );
 
       return (await res.json()) as Weverse.PostPreview;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(
         `Failed to get weverse post preview by postId: ${postId}`,
-        err.message,
+        (err as Error).message,
       );
       return false;
     }
@@ -104,12 +109,12 @@ export class WeverseHelper {
       new URLSearchParams({
         gcc: "RU",
         ...this.getURLData(),
-      }); // ! DON'T EDIT ME
+      }).toString(); // ! DON'T EDIT ME
 
     try {
-      const hash = await this.createHash(pathname);
+      const urlParams = await this.getHashURLParams(pathname);
       const res = await fetchWithTimeout(
-        this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash),
+        this.API_ORIGIN + pathname + "&" + urlParams,
         {
           method: "POST",
           headers: this.HEADERS,
@@ -117,10 +122,10 @@ export class WeverseHelper {
       );
 
       return (await res.json()) as Weverse.InKey;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(
         `Failed to get weverse InKey by videoId: ${videoId}`,
-        err.message,
+        (err as Error).message,
       );
       return false;
     }
@@ -129,36 +134,37 @@ export class WeverseHelper {
   async getVideoInfo(infraVideoId: string, inkey: string, serviceId: string) {
     const timestamp = Date.now();
     try {
+      const urlParams = new URLSearchParams({
+        key: inkey,
+        sid: serviceId,
+        nonce: timestamp.toString(),
+        devt: "html5_pc",
+        prv: "N",
+        aup: "N",
+        stpb: "N",
+        cpl: "en",
+        env: "prod",
+        lc: "en",
+        adi: JSON.stringify([
+          {
+            adSystem: null,
+          },
+        ]),
+        adu: "/",
+      }).toString();
       const res = await fetchWithTimeout(
         `https://global.apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${infraVideoId}?` +
-          new URLSearchParams({
-            key: inkey,
-            sid: serviceId,
-            nonce: timestamp.toString(),
-            devt: "html5_pc",
-            prv: "N",
-            aup: "N",
-            stpb: "N",
-            cpl: "en",
-            env: "prod",
-            lc: "en",
-            adi: JSON.stringify([
-              {
-                adSystem: null,
-              },
-            ]),
-            adu: "/",
-          }),
+          urlParams,
         {
           headers: this.HEADERS,
         },
       );
 
       return (await res.json()) as Weverse.VideoInfo;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(
         `Failed to get weverse video info (infraVideoId: ${infraVideoId}, inkey: ${inkey}, serviceId: ${serviceId}`,
-        err.message,
+        (err as Error).message,
       );
       return false;
     }
@@ -227,7 +233,7 @@ export class KodikHelper {
       const content = await res.text();
       const [videoType, videoId, hash] = videoPath.split("/").filter((a) => a);
 
-      let doc = parseFromString(content);
+      const doc = parseFromString(content);
       const secureScript = Array.from(
         doc.getElementsByTagName("script"),
       ).filter((s) => s.innerHTML.includes(`videoId = "${videoId}"`));
@@ -242,17 +248,19 @@ export class KodikHelper {
         throw new VideoHelperError("Secure json wasn't found in secure script");
       }
 
-      const secureJSON = JSON.parse(secureContent.replaceAll("'", ""));
+      const secureJSON = JSON.parse(
+        secureContent.replaceAll("'", ""),
+      ) as Kodik.SecureContent;
       return {
-        videoType,
+        videoType: videoType as Kodik.VideoType,
         videoId,
         hash,
         ...secureJSON,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(
         `Failed to get kodik secure data by videoPath: ${videoPath}.`,
-        err.message,
+        (err as Error).message,
       );
       return false;
     }
@@ -301,10 +309,10 @@ export class KodikHelper {
       });
 
       return (await res.json()) as Kodik.VideoData;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(
         `Failed to get kodik video data (type: ${videoType}, id: ${id}, hash: ${hash})`,
-        err.message,
+        (err as Error).message,
       );
       return false;
     }
@@ -340,6 +348,7 @@ export class KodikHelper {
     );
     // idk what other types there may be, so i will add a this check
     const videoLink = videoDataLinks.find(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ([_, data]) => data.type === "application/x-mpegURL",
     )?.[1];
     if (!videoLink) {
@@ -362,10 +371,10 @@ export class PatreonHelper {
       );
 
       return (await res.json()) as Patreon.PostsResponse;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(
         `Failed to get patreon posts by postId: ${postId}.`,
-        err.message,
+        (err as Error).message,
       );
       return false;
     }

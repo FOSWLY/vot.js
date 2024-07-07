@@ -42,7 +42,7 @@ export class WeverseHelper {
     }
     async createHash(pathname) {
         const timestamp = Date.now();
-        let salt = pathname.substring(0, Math.min(255, pathname.length)) + timestamp;
+        const salt = pathname.substring(0, Math.min(255, pathname.length)) + timestamp;
         const sign = await getHmacSha1(this.API_HMAC_KEY, salt);
         if (!sign) {
             throw new VideoHelperError("Failed to get weverse HMAC signature");
@@ -52,15 +52,19 @@ export class WeverseHelper {
             wmd: sign,
         };
     }
+    async getHashURLParams(pathname) {
+        const hash = await this.createHash(pathname);
+        return new URLSearchParams(hash).toString();
+    }
     async getPostPreview(postId) {
         const pathname = `/post/v1.0/post-${postId}/preview?` +
             new URLSearchParams({
                 fieldSet: "postForPreview",
                 ...this.getURLData(),
-            });
+            }).toString();
         try {
-            const hash = await this.createHash(pathname);
-            const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
+            const urlParams = await this.getHashURLParams(pathname);
+            const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + urlParams, {
                 headers: this.HEADERS,
             });
             return (await res.json());
@@ -75,10 +79,10 @@ export class WeverseHelper {
             new URLSearchParams({
                 gcc: "RU",
                 ...this.getURLData(),
-            });
+            }).toString();
         try {
-            const hash = await this.createHash(pathname);
-            const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + new URLSearchParams(hash), {
+            const urlParams = await this.getHashURLParams(pathname);
+            const res = await fetchWithTimeout(this.API_ORIGIN + pathname + "&" + urlParams, {
                 method: "POST",
                 headers: this.HEADERS,
             });
@@ -92,25 +96,26 @@ export class WeverseHelper {
     async getVideoInfo(infraVideoId, inkey, serviceId) {
         const timestamp = Date.now();
         try {
+            const urlParams = new URLSearchParams({
+                key: inkey,
+                sid: serviceId,
+                nonce: timestamp.toString(),
+                devt: "html5_pc",
+                prv: "N",
+                aup: "N",
+                stpb: "N",
+                cpl: "en",
+                env: "prod",
+                lc: "en",
+                adi: JSON.stringify([
+                    {
+                        adSystem: null,
+                    },
+                ]),
+                adu: "/",
+            }).toString();
             const res = await fetchWithTimeout(`https://global.apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${infraVideoId}?` +
-                new URLSearchParams({
-                    key: inkey,
-                    sid: serviceId,
-                    nonce: timestamp.toString(),
-                    devt: "html5_pc",
-                    prv: "N",
-                    aup: "N",
-                    stpb: "N",
-                    cpl: "en",
-                    env: "prod",
-                    lc: "en",
-                    adi: JSON.stringify([
-                        {
-                            adSystem: null,
-                        },
-                    ]),
-                    adu: "/",
-                }), {
+                urlParams, {
                 headers: this.HEADERS,
             });
             return (await res.json());
@@ -164,7 +169,7 @@ export class KodikHelper {
             });
             const content = await res.text();
             const [videoType, videoId, hash] = videoPath.split("/").filter((a) => a);
-            let doc = parseFromString(content);
+            const doc = parseFromString(content);
             const secureScript = Array.from(doc.getElementsByTagName("script")).filter((s) => s.innerHTML.includes(`videoId = "${videoId}"`));
             if (!secureScript.length) {
                 throw new VideoHelperError("Failed to find secure script");
@@ -175,7 +180,7 @@ export class KodikHelper {
             }
             const secureJSON = JSON.parse(secureContent.replaceAll("'", ""));
             return {
-                videoType,
+                videoType: videoType,
                 videoId,
                 hash,
                 ...secureJSON,

@@ -2,17 +2,18 @@ import { VideoData } from "../dist";
 import VOTClient, { VOTWorkerClient } from "../dist/client";
 
 const client = new VOTClient();
+const url = "https://youtu.be/LK6nLR1bzpI";
 
 // only link
 let response = await client.translateVideo({
-  url: "https://youtu.be/LK6nLR1bzpI",
+  url,
 });
 
 console.log(response);
 
 // link + langs
 response = await client.translateVideo({
-  url: "https://youtu.be/LK6nLR1bzpI",
+  url,
   requestLang: "en",
   responseLang: "ru",
 });
@@ -40,14 +41,14 @@ console.log(response);
 const workerClient = new VOTWorkerClient();
 
 response = await workerClient.translateVideo({
-  url: "https://youtu.be/LK6nLR1bzpI",
+  url,
 });
 
 console.log(response);
 
 // subs
-let subs = await client.getSubtitles({
-  url: "https://youtu.be/LK6nLR1bzpI",
+const subs = await client.getSubtitles({
+  url,
   requestLang: "ru",
 });
 

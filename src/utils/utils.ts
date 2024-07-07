@@ -2,7 +2,7 @@ import config from "../config/config";
 
 export async function fetchWithTimeout(
   url: string | URL | Request,
-  options: any = {
+  options: Record<string, any> = {
     headers: {
       "User-Agent": config.userAgent,
     },
@@ -11,7 +11,7 @@ export async function fetchWithTimeout(
   const { timeout = 3000 } = options;
 
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
+  const id = setTimeout(() => controller.abort(), timeout as number);
 
   const response = await fetch(url, {
     ...options,

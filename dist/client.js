@@ -6,6 +6,7 @@ import { VideoTranslationStatus } from "./types/yandex.js";
 import { fetchWithTimeout, getTimestamp } from "./utils/utils.js";
 import { getVideoData } from "./utils/videoData.js";
 import { convertVOT } from "./utils/vot.js";
+import { StreamInterval } from "./protos/yandex.js";
 const { version } = packageInfo;
 class VOTJSError extends Error {
     data;
@@ -169,9 +170,10 @@ export default class VOTClient {
                     translated: false,
                     remainingTime: translationData.remainingTime ?? -1,
                 };
+            default:
+                console.error("[vot.js] Unknown response", translationData);
+                throw new VOTJSError("Unknown response from Yandex", translationData);
         }
-        console.error("[vot.js] Unknown response", translationData);
-        throw new VOTJSError("Unknown response from Yandex", translationData);
     }
     async translateVideoVOTImpl({ url, videoId, service, requestLang = this.requestLang, responseLang = this.responseLang, headers = {}, }) {
         const votData = convertVOT(service, videoId, url);
@@ -284,16 +286,16 @@ export default class VOTClient {
         const translateResponse = yandexProtobuf.decodeStreamResponse(res.data);
         const interval = translateResponse.interval;
         switch (interval) {
-            case 0:
-            case 10:
+            case StreamInterval.NO_CONNECTION:
+            case StreamInterval.TRANSLATING:
                 return {
                     translated: false,
                     interval,
-                    message: interval === 0
+                    message: interval === StreamInterval.NO_CONNECTION
                         ? "streamNoConnectionToServer"
                         : "translationTakeFewMinutes",
                 };
-            case 20: {
+            case StreamInterval.STREAMING: {
                 return {
                     translated: true,
                     interval,
@@ -301,9 +303,10 @@ export default class VOTClient {
                     result: translateResponse.translatedInfo,
                 };
             }
+            default:
+                console.error("[vot.js] Unknown response", translateResponse);
+                throw new VOTJSError("Unknown response from Yandex", translateResponse);
         }
-        console.error("[vot.js] Unknown response", translateResponse);
-        throw new VOTJSError("Unknown response from Yandex", translateResponse);
     }
     async createSession(module) {
         const uuid = getUUID();

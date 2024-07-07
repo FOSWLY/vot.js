@@ -51,7 +51,7 @@ export async function getVideoID(service, videoURL) {
                 url.search = `?v=${url.pathname.replace("/", "")}`;
                 url.pathname = "/watch";
             }
-            return (/(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ||
+            return (/(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ??
                 url.searchParams.get("v"));
         case VideoService.vk: {
             const pathID = /^\/(video|clip)-?\d{8,9}_\d{9}$/.exec(url.pathname);
@@ -76,7 +76,7 @@ export async function getVideoID(service, videoURL) {
             const clipPath = /([^/]+)\/(?:clip)\/([^/]+)/.exec(url.pathname);
             const isClipsDomain = /^clips\.twitch\.tv$/.test(url.hostname);
             if (/^m\.twitch\.tv$/.test(url.hostname)) {
-                return /videos\/([^/]+)/.exec(url.href)?.[0] || url.pathname.slice(1);
+                return /videos\/([^/]+)/.exec(url.href)?.[0] ?? url.pathname.slice(1);
             }
             else if (/^player\.twitch\.tv$/.test(url.hostname)) {
                 return `videos/${url.searchParams.get("video")}`;
@@ -106,14 +106,14 @@ export async function getVideoID(service, videoURL) {
             return /([^/]+)\/video\/([^/]+)/.exec(url.pathname)?.[0];
         case VideoService.vimeo: {
             const appId = url.searchParams.get("app_id");
-            const videoId = /[^/]+\/[^/]+$/.exec(url.pathname)?.[0] ||
+            const videoId = /[^/]+\/[^/]+$/.exec(url.pathname)?.[0] ??
                 /[^/]+$/.exec(url.pathname)?.[0];
             return appId ? `${videoId}?app_id=${appId}` : videoId;
         }
         case VideoService.xvideos:
             return /[^/]+\/[^/]+$/.exec(url.pathname)?.[0];
         case VideoService.pornhub:
-            return (url.searchParams.get("viewkey") ||
+            return (url.searchParams.get("viewkey") ??
                 /embed\/([^/]+)/.exec(url.pathname)?.[1]);
         case VideoService.twitter:
             return /status\/([^/]+)/.exec(url.pathname)?.[1];
@@ -203,9 +203,7 @@ export async function getVideoID(service, videoURL) {
             return fullPostId.replace(/[^\d.]/g, "");
         }
         case VideoService.reddit:
-            return /\/r\/(([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+))/.exec(url.pathname)?.[1];
-        case VideoService.custom:
-            return url.pathname + url.search;
+            return /\/r\/(([^/]+)\/([^/]+)\/([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
         default:
             return undefined;
     }
@@ -215,7 +213,7 @@ export async function getVideoData(url) {
     if (!service) {
         throw new VideoDataError(`URL: "${url}" is unknown service`);
     }
-    let videoId = await getVideoID(service, url);
+    const videoId = await getVideoID(service, url);
     if (!videoId) {
         throw new VideoDataError(`Entered unsupported link: "${url}"`);
     }
