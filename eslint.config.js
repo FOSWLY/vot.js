@@ -14,7 +14,6 @@ export default tseslint.config(
   sonarjs.configs.recommended,
   {
     rules: {
-      // "@typescript-eslint/ban-types": 0,
       "@typescript-eslint/no-explicit-any": 0,
       "sonarjs/max-switch-cases": 0,
       "@typescript-eslint/consistent-type-definitions": 0,
