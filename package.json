@@ -67,7 +67,7 @@
     "build:proto-win": "protoc --plugin=protoc-gen-ts_proto=\".\\node_modules\\.bin\\protoc-gen-ts_proto.exe\" --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto",
     "rebuild:win": "bun build:proto-win && bun build:bun",
     "rebuild:linux": "bun build:proto-linux && bun build:bun",
-    "lint": "npx oxlint && npx eslint",
+    "lint": "bunx oxlint && bunx eslint",
     "prepare": "husky"
   },
   "type": "module",
