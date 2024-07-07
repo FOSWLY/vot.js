@@ -26,9 +26,6 @@ export default tseslint.config(
         project: true,
         tsconfigDirName: import.meta.dirname,
       },
-      globals: {
-        // ...globals.node,
-      },
     },
   },
   oxlint.configs["flat/recommended"], // oxlint should be the last one
