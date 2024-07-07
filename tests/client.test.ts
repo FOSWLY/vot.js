@@ -74,3 +74,18 @@ test("Get subtitles", async () => {
 
   expect(response.waiting).toEqual(false);
 });
+
+test("Get subtitles (worker)", async () => {
+  const client = new VOTWorkerClient({
+    host: "vot-worker.toil.cc",
+  });
+
+  const response = await client.getSubtitles({
+    url: "https://youtu.be/LK6nLR1bzpI",
+    requestLang: "ru",
+  });
+
+  console.log("Get subtitles", response);
+
+  expect(response.waiting).toEqual(false);
+});
