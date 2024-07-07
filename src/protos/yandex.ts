@@ -110,7 +110,7 @@ export interface SubtitlesObject {
   language: string;
   url: string;
   unknown0: number;
-  translatedLanguages: string;
+  translatedLanguage: string;
   translatedUrl: string;
   unknown1: number;
   unknown2: number;
@@ -668,7 +668,7 @@ export const VideoTranslationResponse = {
 };
 
 function createBaseSubtitlesObject(): SubtitlesObject {
-  return { language: "", url: "", unknown0: 0, translatedLanguages: "", translatedUrl: "", unknown1: 0, unknown2: 0 };
+  return { language: "", url: "", unknown0: 0, translatedLanguage: "", translatedUrl: "", unknown1: 0, unknown2: 0 };
 }
 
 export const SubtitlesObject = {
@@ -682,8 +682,8 @@ export const SubtitlesObject = {
     if (message.unknown0 !== 0) {
       writer.uint32(24).int32(message.unknown0);
     }
-    if (message.translatedLanguages !== "") {
-      writer.uint32(34).string(message.translatedLanguages);
+    if (message.translatedLanguage !== "") {
+      writer.uint32(34).string(message.translatedLanguage);
     }
     if (message.translatedUrl !== "") {
       writer.uint32(42).string(message.translatedUrl);
@@ -730,7 +730,7 @@ export const SubtitlesObject = {
             break;
           }
 
-          message.translatedLanguages = reader.string();
+          message.translatedLanguage = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -767,7 +767,7 @@ export const SubtitlesObject = {
       language: isSet(object.language) ? globalThis.String(object.language) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
-      translatedLanguages: isSet(object.translatedLanguages) ? globalThis.String(object.translatedLanguages) : "",
+      translatedLanguage: isSet(object.translatedLanguage) ? globalThis.String(object.translatedLanguage) : "",
       translatedUrl: isSet(object.translatedUrl) ? globalThis.String(object.translatedUrl) : "",
       unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
@@ -785,8 +785,8 @@ export const SubtitlesObject = {
     if (message.unknown0 !== 0) {
       obj.unknown0 = Math.round(message.unknown0);
     }
-    if (message.translatedLanguages !== "") {
-      obj.translatedLanguages = message.translatedLanguages;
+    if (message.translatedLanguage !== "") {
+      obj.translatedLanguage = message.translatedLanguage;
     }
     if (message.translatedUrl !== "") {
       obj.translatedUrl = message.translatedUrl;
@@ -808,7 +808,7 @@ export const SubtitlesObject = {
     message.language = object.language ?? "";
     message.url = object.url ?? "";
     message.unknown0 = object.unknown0 ?? 0;
-    message.translatedLanguages = object.translatedLanguages ?? "";
+    message.translatedLanguage = object.translatedLanguage ?? "";
     message.translatedUrl = object.translatedUrl ?? "";
     message.unknown1 = object.unknown1 ?? 0;
     message.unknown2 = object.unknown2 ?? 0;

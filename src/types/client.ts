@@ -29,6 +29,7 @@ export type VOTOpts = {
   getVideoDataFn?: GetVideoDataFunction;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
+  headers?: Record<string, string>;
 };
 
 export type ClientSession = {

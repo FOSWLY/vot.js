@@ -40,7 +40,7 @@ message SubtitlesObject {
   string language = 1;
   string url = 2;
   int32 unknown0 = 3;
-  string translatedLanguages = 4;
+  string translatedLanguage = 4;
   string translatedUrl = 5;
   int32 unknown1 = 6;
   int32 unknown2 = 7;
