@@ -1,6 +1,6 @@
 import config from "./config/config";
 
-import { version } from "../package.json";
+import packageInfo from "../package.json";
 import { yandexProtobuf } from "./protobuf";
 import { getSignature, getUUID } from "./secure";
 import type {
@@ -23,14 +23,15 @@ import type {
   StreamTranslationResponse,
   StreamTranslationObject,
   SessionModule,
-  WaitingVideoTranslationResponse,
-  TranslatedVideoTranslationResponse,
 } from "./types/yandex";
-import { VideoService, VideoTranslationStatus } from "./types/yandex";
+import { VideoTranslationStatus } from "./types/yandex";
 import { fetchWithTimeout, getTimestamp } from "./utils/utils";
 import { getVideoData } from "./utils/videoData";
 import { TranslationResponse, VideoTranslationVOTOpts } from "./types/vot";
-import { convertService } from "./utils/vot";
+import { convertVOT } from "./utils/vot";
+
+// https://stackoverflow.com/questions/64993118/error-should-not-import-the-named-export-version-imported-as-version
+const { version } = packageInfo;
 
 class VOTJSError extends Error {
   constructor(
@@ -78,7 +79,9 @@ export default class VOTClient {
    *
    * @source
    */
-  customFormatRE = /\.(m3u8|m4(a|v)|mpd)/; //
+  isCustomFormat(url: string) {
+    return /\.(m3u8|m4(a|v)|mpd)/.exec(url);
+  }
 
   /**
    * Headers for interacting with Yandex API
@@ -115,6 +118,7 @@ export default class VOTClient {
     getVideoDataFn = getVideoData,
     requestLang = "en",
     responseLang = "ru",
+    headers = {},
   }: VOTOpts = {}) {
     const schemaRe = /(http(s)?):\/\//;
     const schema = schemaRe.exec(host)?.[1] as URLSchema | undefined;
@@ -128,6 +132,7 @@ export default class VOTClient {
     this.getVideoDataFn = getVideoDataFn;
     this.requestLang = requestLang;
     this.responseLang = responseLang;
+    this.headers = { ...this.headers, ...headers };
   }
 
   getOpts(body: any, headers: Record<string, string> = {}) {
@@ -324,12 +329,13 @@ export default class VOTClient {
     responseLang = this.responseLang,
     headers = {},
   }: VideoTranslationVOTOpts): Promise<VideoTranslationResponse> {
+    const votData = convertVOT(service, videoId, url);
     const res = await this.requestVOT<TranslationResponse>(
       this.paths.videoTranslation,
       {
         provider: "yandex",
-        service: convertService(service),
-        videoId,
+        service: votData.service,
+        videoId: votData.videoId,
         fromLang: requestLang,
         toLang: responseLang,
         rawVideo: url,
@@ -388,8 +394,7 @@ export default class VOTClient {
       duration: videoDuration,
     } = await this.getVideoDataFn(url);
 
-    const isCustomFormat = this.customFormatRE.exec(videoUrl);
-    return isCustomFormat
+    return this.isCustomFormat(videoUrl)
       ? await this.translateVideoVOTImpl({
           url: videoUrl,
           videoId,
@@ -417,7 +422,7 @@ export default class VOTClient {
     headers = {},
   }: VideoSubtitlesOpts) {
     const { url: videoUrl } = await this.getVideoDataFn(url);
-    if (this.customFormatRE.exec(videoUrl)) {
+    if (this.isCustomFormat(videoUrl)) {
       throw new VOTJSError("Unsupported video URL for getting subtitles");
     }
 
@@ -475,7 +480,7 @@ export default class VOTClient {
     headers = {},
   }: StreamTranslationOpts): Promise<StreamTranslationResponse> {
     const { url: videoUrl } = await this.getVideoDataFn(url);
-    if (this.customFormatRE.exec(videoUrl)) {
+    if (this.isCustomFormat(videoUrl)) {
       throw new VOTJSError(
         "Unsupported video URL for getting stream translation",
       );
