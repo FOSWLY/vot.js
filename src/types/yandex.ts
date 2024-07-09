@@ -1,4 +1,5 @@
 import { VideoData } from "./client";
+import { availableLangs, availableTTS } from "../consts";
 
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 export type SessionModule = "video-translation" | "summarization";
@@ -9,23 +10,8 @@ export type TranslationHelp = {
 };
 
 export type RequestHeaders = Record<string, any>;
-
-export type RequestLang =
-  | "auto"
-  | "ru"
-  | "en"
-  | "zh"
-  | "ko"
-  | "lt"
-  | "lv"
-  | "ar"
-  | "fr"
-  | "it"
-  | "es"
-  | "de"
-  | "ja";
-
-export type ResponseLang = "ru" | "en" | "kk";
+export type RequestLang = (typeof availableLangs)[number];
+export type ResponseLang = (typeof availableTTS)[number];
 
 export enum VideoService {
   custom = "custom",
@@ -132,7 +118,7 @@ export type StreamTranslationOpts = {
 
 export type StreamTranslationObject = {
   url: string;
-  timestamp: number;
+  timestamp: string;
 };
 
 export type TranslatedStreamTranslationResponse = {

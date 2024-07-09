@@ -5,7 +5,6 @@
 // source: src/protos/yandex.proto
 
 /* eslint-disable */
-import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -70,18 +69,22 @@ export interface VideoTranslationRequest {
   unknown0: number;
   /** source language code */
   language: string;
-  /** 0 - auto detected by yabrowser, 1 - user set his own lang by dropdown */
+  /** 0 - auto detected by yabrowser, 1 - user set his */
   forceSourceLang: boolean;
-  /** 0 0 */
+  /** own lang by dropdown */
   unknown1: number;
-  /** array for translation assistance ([0] -> {2: link to video, 1: "video_file_url"}, [1] -> {2: link to subtitles, 1: "subtitles_file_url"}) */
+  /** array for translation assistance ([0] -> {2: link to video, 1: */
   translationHelp: VideoTranslationHelpObject[];
+  /**
+   * "video_file_url"}, [1] -> {2: link to subtitles, 1:
+   * "subtitles_file_url"})
+   */
   responseLanguage: string;
   /** 0 */
   unknown2: number;
   /** 1 */
   unknown3: number;
-  /** ? maybe they have some kind of bypass limiter from one IP, because after one such request it stopped working */
+  /** ? maybe they have some kind of bypass limiter from one IP, because */
   bypassCache: boolean;
 }
 
@@ -94,11 +97,11 @@ export interface VideoTranslationResponse {
   remainingTime?:
     | number
     | undefined;
-  /** unknown 0 (1st request) -> 10 (2nd, 3th and etc requests). (if status is 0) */
+  /** unknown 0 (1st request) -> 10 (2nd, 3th and */
   unknown0?:
     | number
     | undefined;
-  /** it's not a type mistake */
+  /** etc requests). (if status is 0) */
   translationId: string;
   /** detected language (if the wrong one is set) */
   language?: string | undefined;
@@ -131,8 +134,8 @@ export interface SubtitlesResponse {
 /** STREAM TRANSLATION */
 export interface StreamTranslationObject {
   url: string;
-  /** timestamp in ms (timing of m3u8) */
-  timestamp: number;
+  /** timestamp in ms (timing of m3u8). it could have been */
+  timestamp: string;
 }
 
 export interface StreamTranslationRequest {
@@ -142,8 +145,9 @@ export interface StreamTranslationRequest {
 }
 
 export interface StreamTranslationResponse {
-  /** 20s - streaming, 10s - translating, 0s - there is no connection with the server (the broadcast is finished or deleted) */
+  /** 20s - streaming, 10s - translating, 0s - there is no connection with */
   interval: StreamInterval;
+  /** the server (the broadcast is finished or deleted) */
   translatedInfo?: StreamTranslationObject | undefined;
   pingId?: number | undefined;
 }
@@ -967,7 +971,7 @@ export const SubtitlesResponse = {
 };
 
 function createBaseStreamTranslationObject(): StreamTranslationObject {
-  return { url: "", timestamp: 0 };
+  return { url: "", timestamp: "" };
 }
 
 export const StreamTranslationObject = {
@@ -975,8 +979,8 @@ export const StreamTranslationObject = {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
-    if (message.timestamp !== 0) {
-      writer.uint32(16).int64(message.timestamp);
+    if (message.timestamp !== "") {
+      writer.uint32(18).string(message.timestamp);
     }
     return writer;
   },
@@ -996,11 +1000,11 @@ export const StreamTranslationObject = {
           message.url = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.timestamp = longToNumber(reader.int64() as Long);
+          message.timestamp = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1014,7 +1018,7 @@ export const StreamTranslationObject = {
   fromJSON(object: any): StreamTranslationObject {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      timestamp: isSet(object.timestamp) ? globalThis.Number(object.timestamp) : 0,
+      timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : "",
     };
   },
 
@@ -1023,8 +1027,8 @@ export const StreamTranslationObject = {
     if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.timestamp !== 0) {
-      obj.timestamp = Math.round(message.timestamp);
+    if (message.timestamp !== "") {
+      obj.timestamp = message.timestamp;
     }
     return obj;
   },
@@ -1035,7 +1039,7 @@ export const StreamTranslationObject = {
   fromPartial<I extends Exact<DeepPartial<StreamTranslationObject>, I>>(object: I): StreamTranslationObject {
     const message = createBaseStreamTranslationObject();
     message.url = object.url ?? "";
-    message.timestamp = object.timestamp ?? 0;
+    message.timestamp = object.timestamp ?? "";
     return message;
   },
 };
@@ -1438,21 +1442,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
