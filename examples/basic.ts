@@ -1,4 +1,3 @@
-import { VideoData } from "../dist";
 import VOTClient, { VOTWorkerClient } from "../dist/client";
 import { getVideoData } from "../dist/utils/videoData";
 
@@ -59,7 +58,7 @@ const subs = await client.getSubtitles({
 console.log(subs);
 
 // translate weverse
-const videoDataWeverse = await VideoData.getVideoData(
+const videoDataWeverse = await getVideoData(
   "https://weverse.io/redvelvet/media/4-139332911",
 );
 
