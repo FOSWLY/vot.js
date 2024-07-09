@@ -213,14 +213,7 @@ export async function getVideoID(
     case VideoService.googledrive:
       return /\/file\/d\/([^/]+)/.exec(url.pathname)?.[1];
     case VideoService.bannedvideo: {
-      const videoId = url.searchParams.get("id");
-      const res = await fetchWithTimeout(`${service.url}${videoId}`);
-      const content = await res.text();
-
-      // get og:video from meta
-      return /https:\/\/download.assets.video\/videos\/([^.]+).mp4/.exec(
-        content,
-      )?.[0];
+      return url.searchParams.get("id");
     }
     case VideoService.weverse:
       return /([^/]+)\/(live|media)\/([^/]+)/.exec(url.pathname)?.[3];
@@ -295,9 +288,8 @@ export async function getVideoData(url: string): Promise<VideoData> {
   }
 
   return {
-    url: result.url,
+    ...result,
     videoId,
     host: service.host,
-    duration: result.duration,
   };
 }

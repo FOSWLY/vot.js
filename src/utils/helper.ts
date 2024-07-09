@@ -5,6 +5,7 @@ import * as MailRu from "../types/helpers/mailru";
 import * as Weverse from "../types/helpers/weverse";
 import * as Kodik from "../types/helpers/kodik";
 import * as Patreon from "../types/helpers/patreon";
+import * as BannedVideo from "../types/helpers/bannedvideo";
 import { fetchWithTimeout } from "./utils";
 import config from "../config/config";
 import { VideoService } from "../types/yandex";
@@ -417,6 +418,65 @@ export class RedditHelper {
   }
 }
 
+export class BannedVideoHelper {
+  async getVideoInfo(
+    videoId: string,
+  ): Promise<false | BannedVideo.GraphQLResponse> {
+    try {
+      const res = await fetchWithTimeout(`https://api.banned.video/graphql`, {
+        method: "POST",
+        body: JSON.stringify({
+          operationName: "GetVideo",
+          query: `query GetVideo($id: String!) {
+            getVideo(id: $id) {
+              title
+              description: summary
+              duration: videoDuration
+              videoUrl: directUrl
+              isStream: live
+            }
+          }`,
+          variables: {
+            id: videoId,
+          },
+        }),
+        headers: {
+          "User-Agent": "bannedVideoFrontEnd",
+          "apollographql-client-name": "banned-web",
+          "apollographql-client-version": "1.3",
+          "content-type": "application/json",
+        },
+      });
+
+      return (await res.json()) as BannedVideo.GraphQLResponse;
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get bannedvideo video info by videoId: ${videoId}.`,
+        (err as Error).message,
+      );
+      return false;
+    }
+  }
+
+  async getVideoData(videoId: string) {
+    const videoInfo = await this.getVideoInfo(videoId);
+    if (!videoInfo) {
+      return false;
+    }
+
+    const { videoUrl, duration, isStream, description, title } =
+      videoInfo.data.getVideo;
+
+    return {
+      url: videoUrl,
+      duration,
+      isStream,
+      title,
+      description,
+    };
+  }
+}
+
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -435,4 +495,7 @@ export default class VideoHelper {
 
   /** @source */
   static [VideoService.reddit] = new RedditHelper();
+
+  /** @source */
+  static [VideoService.bannedvideo] = new BannedVideoHelper();
 }
