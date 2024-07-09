@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "author": "Toil",
   "repository": {
     "type": "git",
@@ -44,6 +44,16 @@
       "require": "./dist/config/sites.js",
       "import": "./dist/config/sites.js",
       "types": "./dist/config/sites.d.ts"
+    },
+    "./alternativeUrls": {
+      "require": "./dist/config/alternativeUrls.js",
+      "import": "./dist/config/alternativeUrls.js",
+      "types": "./dist/config/alternativeUrls.d.ts"
+    },
+    "./consts": {
+      "require": "./dist/consts.js",
+      "import": "./dist/consts.js",
+      "types": "./dist/consts.d.ts"
     },
     "./utils/videoData": {
       "require": "./dist/utils/videoData.js",
