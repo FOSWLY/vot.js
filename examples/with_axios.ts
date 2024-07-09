@@ -1,6 +1,7 @@
 import VOTClient from "../dist/client";
 import axios from "axios";
 import { ClientResponse } from "../dist/types/client";
+import { getVideoData } from "../dist/utils/videoData";
 
 // https://github.com/axios/axios
 const client = new (class AxiosVOTClient extends VOTClient {
@@ -35,8 +36,9 @@ const client = new (class AxiosVOTClient extends VOTClient {
   }
 })();
 
+const videoData = await getVideoData("https://youtu.be/LK6nLR1bzpI");
 const response = await client.translateVideo({
-  url: "https://youtu.be/LK6nLR1bzpI",
+  videoData,
 });
 
 console.log(response);

@@ -12,16 +12,15 @@
 </code><button>Copy</button></pre>
 <a id="md:getting-started" class="tsd-anchor"></a><h2><a href="#md:getting-started">Getting started</a></h2><p>To start working with the API, you need to create a VOT Client. This can be done using the line provided below.</p>
 <p>Standard Client:</p>
-<pre><code class="language-ts"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">client</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">VOTClient</span><span class="hl-1">();</span>
+<pre><code class="language-ts"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">client</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">VOTClient</span><span class="hl-1">();</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">videoData</span><span class="hl-1"> = </span><span class="hl-5">await</span><span class="hl-1"> </span><span class="hl-6">client</span><span class="hl-1">.</span><span class="hl-0">getVideoData</span><span class="hl-1">(</span><span class="hl-2">&quot;https://youtu.be/LK6nLR1bzpI&quot;</span><span class="hl-1">);</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">result</span><span class="hl-1"> = </span><span class="hl-5">await</span><span class="hl-1"> </span><span class="hl-6">client</span><span class="hl-1">.</span><span class="hl-0">translateVideo</span><span class="hl-1">({ </span><span class="hl-6">videoData</span><span class="hl-1"> });</span>
 </code><button>Copy</button></pre>
 <p>Proxying via <a href="https://github.com/FOSWLY/vot-worker">vot-worker</a>:</p>
-<pre><code class="language-ts"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">client</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">VOTWorkerClient</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">host:</span><span class="hl-1"> </span><span class="hl-2">&quot;vot.toil.cc&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span>
+<pre><code class="language-ts"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">client</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">VOTWorkerClient</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-6">host:</span><span class="hl-1"> </span><span class="hl-2">&quot;vot.toil.cc&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span>
 </code><button>Copy</button></pre>
 <p>You can see more code examples <a href="https://github.com/FOSWLY/vot.js/examples">here</a></p>
 <a id="md:limitations" class="tsd-anchor"></a><h2><a href="#md:limitations">Limitations</a></h2><ol>
 <li>The library can&#39;t translate videos longer than 4 hours</li>
-<li>To translate udemy, coursera, coursehunter and other sites that have authorization, you must create your own handlers and translate only the link to the mp4 file to the library</li>
-<li>For weverse, before translating, you must normalize the link yourself (use getVideoData from /utils/helpers.ts) and then pass the normalized link for translation. Otherwise, you will receive an infinity translation due to the fact that weverse returns a link with a random access key</li>
+<li>To translate udemy, coursera, coursehunter and other sites that have authorization, you must create your own handlers</li>
 </ol>
 <a id="md:build" class="tsd-anchor"></a><h2><a href="#md:build">Build</a></h2><p>To build, you must have:</p>
 <ul>

@@ -230,19 +230,19 @@ export default class VOTClient {
   }
 
   protected async translateVideoYAImpl({
-    url,
-    duration = config.defaultDuration,
+    videoData,
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     translationHelp = null,
     headers = {},
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
+    const { url, duration = config.defaultDuration } = videoData;
+
     // eslint-disable-next-line sonarjs/no-duplicate-string
     const { secretKey, uuid } = await this.getSession("video-translation");
-
     const body = yandexProtobuf.encodeTranslationRequest(
       url,
-      duration,
+      duration!,
       requestLang,
       responseLang,
       translationHelp,
@@ -382,23 +382,17 @@ export default class VOTClient {
    * @includeExample examples/basic.ts:4-11,21-37,55-65
    */
   async translateVideo({
-    url,
-    duration = config.defaultDuration,
+    videoData,
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     translationHelp = null,
     headers = {},
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
-    const {
-      url: videoUrl,
-      videoId,
-      host,
-      duration: videoDuration,
-    } = await this.getVideoDataFn(url);
+    const { url, videoId, host } = videoData;
 
-    return this.isCustomFormat(videoUrl)
+    return this.isCustomFormat(url)
       ? await this.translateVideoVOTImpl({
-          url: videoUrl,
+          url,
           videoId,
           service: host,
           requestLang,
@@ -406,8 +400,7 @@ export default class VOTClient {
           headers,
         })
       : await this.translateVideoYAImpl({
-          url: videoUrl,
-          duration: videoDuration ?? duration,
+          videoData,
           requestLang,
           responseLang,
           translationHelp,
@@ -419,17 +412,17 @@ export default class VOTClient {
    * @includeExample examples/basic.ts:4-5,48-54
    */
   async getSubtitles({
-    url,
+    videoData,
     requestLang = this.requestLang,
     headers = {},
   }: VideoSubtitlesOpts) {
-    const { url: videoUrl } = await this.getVideoDataFn(url);
-    if (this.isCustomFormat(videoUrl)) {
+    const { url } = videoData;
+    if (this.isCustomFormat(url)) {
       throw new VOTJSError("Unsupported video URL for getting subtitles");
     }
 
     const { secretKey, uuid } = await this.getSession("video-translation");
-    const body = yandexProtobuf.encodeSubtitlesRequest(videoUrl, requestLang);
+    const body = yandexProtobuf.encodeSubtitlesRequest(url, requestLang);
 
     const sign = await getSignature(body);
     const pathname = "/video-subtitles/get-subtitles";
@@ -476,13 +469,13 @@ export default class VOTClient {
    * @includeExample examples/stream.ts:7-44
    */
   async translateStream({
-    url,
+    videoData,
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
   }: StreamTranslationOpts): Promise<StreamTranslationResponse> {
-    const { url: videoUrl } = await this.getVideoDataFn(url);
-    if (this.isCustomFormat(videoUrl)) {
+    const { url } = videoData;
+    if (this.isCustomFormat(url)) {
       throw new VOTJSError(
         "Unsupported video URL for getting stream translation",
       );
@@ -491,7 +484,7 @@ export default class VOTClient {
     const { secretKey, uuid } = await this.getSession("video-translation");
 
     const body = yandexProtobuf.encodeStreamRequest(
-      videoUrl,
+      url,
       requestLang,
       responseLang,
     );

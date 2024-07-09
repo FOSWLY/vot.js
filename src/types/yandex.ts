@@ -1,3 +1,5 @@
+import { VideoData } from "./client";
+
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 export type SessionModule = "video-translation" | "summarization";
 
@@ -86,8 +88,7 @@ export enum VideoTranslationStatus {
 }
 
 export type VideoTranslationOpts = {
-  url: string; // video url
-  duration?: number;
+  videoData: VideoData;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   translationHelp?: TranslationHelp[] | null;
@@ -112,7 +113,7 @@ export type VideoTranslationResponse =
   | WaitingVideoTranslationResponse;
 
 export type VideoSubtitlesOpts = {
-  url: string; // video url
+  videoData: VideoData;
   requestLang?: RequestLang;
   headers?: RequestHeaders;
 };
@@ -123,7 +124,7 @@ export type StreamPingOptions = {
 };
 
 export type StreamTranslationOpts = {
-  url: string;
+  videoData: VideoData;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   headers?: RequestHeaders;

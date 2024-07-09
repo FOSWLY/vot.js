@@ -141,7 +141,7 @@ export default [
         host: VideoService.bannedvideo,
         url: "https://madmaxworld.tv/watch?id=",
         match: /^(www.)?banned.video|madmaxworld.tv$/,
-        rawResult: true,
+        needExtraData: true,
     },
     {
         host: VideoService.weverse,

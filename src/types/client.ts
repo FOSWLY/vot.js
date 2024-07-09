@@ -17,6 +17,10 @@ export type VideoData = {
   videoId: string;
   host: VideoService;
   duration: number | null | undefined;
+  // for compatibility with extension / your own detect request lang logic
+  isStream?: boolean;
+  title?: string;
+  description?: string;
 };
 
 export type GetVideoDataFunction = (url: string) => Promise<VideoData>;

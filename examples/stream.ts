@@ -4,8 +4,10 @@ import {
   StreamTranslationResponse,
   WaitingStreamTranslationResponse,
 } from "../dist/types/yandex";
+import { getVideoData } from "../dist/utils/videoData";
 
 const client = new VOTClient();
+const videoData = await getVideoData("https://youtu.be/nA9UZF-SZoQ");
 
 let response: StreamTranslationResponse;
 let inter: Timer;
@@ -18,7 +20,7 @@ function isAbortedWaitingStream(
 
 const fn = async () => {
   response = await client.translateStream({
-    url: "https://youtu.be/nA9UZF-SZoQ",
+    videoData,
     requestLang: "en",
     responseLang: "ru",
   });

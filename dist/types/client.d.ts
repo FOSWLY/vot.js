@@ -6,6 +6,9 @@ export type VideoData = {
     videoId: string;
     host: VideoService;
     duration: number | null | undefined;
+    isStream?: boolean;
+    title?: string;
+    description?: string;
 };
 export type GetVideoDataFunction = (url: string) => Promise<VideoData>;
 export type VOTOpts = {

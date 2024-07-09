@@ -30,7 +30,10 @@ duration: Type.Union([
 Type.Number(),
 Type.Null(),
 Type.Undefined()
-])
+]),
+isStream: Type.Optional(Type.Boolean()),
+title: Type.Optional(Type.String()),
+description: Type.Optional(Type.String())
 })
 
 export type GetVideoDataFunction = Static<typeof GetVideoDataFunction>

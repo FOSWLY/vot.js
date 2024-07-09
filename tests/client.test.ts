@@ -1,14 +1,16 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { expect, test } from "bun:test";
 import VOTClient, { VOTWorkerClient } from "../src/index";
+import { getVideoData } from "../src/utils/videoData";
 
 const url = "https://youtu.be/LK6nLR1bzpI";
+const videoData = await getVideoData(url);
 
 test("Translate video", async () => {
   const client = new VOTClient();
 
   const response = await client.translateVideo({
-    url,
+    videoData,
   });
 
   console.log("Translate video", response);
@@ -22,7 +24,7 @@ test("Translate video (worker)", async () => {
   });
 
   const response = await client.translateVideo({
-    url,
+    videoData,
   });
 
   console.log("Translate video (worker)", response);
@@ -33,8 +35,9 @@ test("Translate video (worker)", async () => {
 test("Translate video (with translationHelp)", async () => {
   const client = new VOTClient();
 
+  const videoData = await getVideoData("https://s3.toil.cc/vot/video.mp4");
   const response = await client.translateVideo({
-    url: "https://s3.toil.cc/vot/video.mp4",
+    videoData,
     // just for example
     translationHelp: [
       {
@@ -55,9 +58,12 @@ test("Translate video (with translationHelp)", async () => {
 
 test("Translate video (with VOT Backend API)", async () => {
   const client = new VOTClient();
+  const videoData = await getVideoData(
+    "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+  );
 
   const response = await client.translateVideo({
-    url: "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+    videoData,
   });
 
   console.log("Translate video (with VOT Backend API)", response);
@@ -69,7 +75,7 @@ test("Get subtitles", async () => {
   const client = new VOTClient();
 
   const response = await client.getSubtitles({
-    url,
+    videoData,
     requestLang: "ru",
   });
 
@@ -84,7 +90,7 @@ test("Get subtitles (worker)", async () => {
   });
 
   const response = await client.getSubtitles({
-    url,
+    videoData,
     requestLang: "ru",
   });
 

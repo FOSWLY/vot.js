@@ -1,3 +1,4 @@
+import { VideoData } from "./client.js";
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 export type SessionModule = "video-translation" | "summarization";
 export type TranslationHelp = {
@@ -65,8 +66,7 @@ export declare enum VideoTranslationStatus {
     LONG_WAITING_2 = 6
 }
 export type VideoTranslationOpts = {
-    url: string;
-    duration?: number;
+    videoData: VideoData;
     requestLang?: RequestLang;
     responseLang?: ResponseLang;
     translationHelp?: TranslationHelp[] | null;
@@ -85,7 +85,7 @@ export type WaitingVideoTranslationResponse = {
 };
 export type VideoTranslationResponse = TranslatedVideoTranslationResponse | WaitingVideoTranslationResponse;
 export type VideoSubtitlesOpts = {
-    url: string;
+    videoData: VideoData;
     requestLang?: RequestLang;
     headers?: RequestHeaders;
 };
@@ -94,7 +94,7 @@ export type StreamPingOptions = {
     headers?: RequestHeaders;
 };
 export type StreamTranslationOpts = {
-    url: string;
+    videoData: VideoData;
     requestLang?: RequestLang;
     responseLang?: ResponseLang;
     headers?: RequestHeaders;

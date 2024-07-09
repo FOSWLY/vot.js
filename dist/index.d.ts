@@ -8,7 +8,4 @@ export * as MailRuType from "./types/helpers/mailru.js";
 export * as WeverseType from "./types/helpers/weverse.js";
 export * as KodikType from "./types/helpers/kodik.js";
 export * as PatreonType from "./types/helpers/patreon.js";
-export { getSignature, getUUID } from "./secure.js";
-export * as VideoData from "./utils/videoData.js";
-export * as VideoHelper from "./utils/helper.js";
 //# sourceMappingURL=index.d.ts.map

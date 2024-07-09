@@ -2,6 +2,7 @@ import * as MailRu from "../types/helpers/mailru.js";
 import * as Weverse from "../types/helpers/weverse.js";
 import * as Kodik from "../types/helpers/kodik.js";
 import * as Patreon from "../types/helpers/patreon.js";
+import * as BannedVideo from "../types/helpers/bannedvideo.js";
 import { VideoService } from "../types/yandex.js";
 export declare class MailRuHelper {
     getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined>;
@@ -56,11 +57,22 @@ export declare class RedditHelper {
         url: string;
     } | undefined>;
 }
+export declare class BannedVideoHelper {
+    getVideoInfo(videoId: string): Promise<false | BannedVideo.GraphQLResponse>;
+    getVideoData(videoId: string): Promise<false | {
+        url: string;
+        duration: number;
+        isStream: boolean;
+        title: string;
+        description: string;
+    }>;
+}
 export default class VideoHelper {
     static [VideoService.mailru]: MailRuHelper;
     static [VideoService.weverse]: WeverseHelper;
     static [VideoService.kodik]: KodikHelper;
     static [VideoService.patreon]: PatreonHelper;
     static [VideoService.reddit]: RedditHelper;
+    static [VideoService.bannedvideo]: BannedVideoHelper;
 }
 //# sourceMappingURL=helper.d.ts.map

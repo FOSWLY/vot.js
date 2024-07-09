@@ -31,6 +31,10 @@ npm install vot.js
 
 ```ts
 const client = new VOTClient();
+
+const videoData = await client.getVideoData("https://youtu.be/LK6nLR1bzpI");
+
+const result = await client.translateVideo({ videoData });
 ```
 
 Проксирование через [vot-worker](https://github.com/FOSWLY/vot-worker):
@@ -46,8 +50,7 @@ const client = new VOTWorkerClient({
 ## Ограничения
 
 1. Библиотека не может переводить видео длинной более 4 часов
-2. Для перевода udemy, coursera, coursehunter и прочих сайтов, которые имеют авторизацию, вы должны создать свои собственные обработчики и передавать в библиотеку только ссылку на mp4 файл
-3. Для weverse перед переводом вы должны самостоятельно нормализировать ссылку (используйте getVideoData из /utils/videoData.ts) и после этого передавать нормализированную ссылку для перевода. В противном случае вы получите вечный перевод из-за того, что weverse возвращает ссылку с рандомным ключом доступа
+2. Для перевода udemy, coursera, coursehunter и прочих сайтов, которые имеют авторизацию, вы должны создать свои собственные обработчики
 
 ## Сборка
 

@@ -1,3 +1,5 @@
+import { VideoData } from "./client";
+
 import { Type, Static } from '@sinclair/typebox'
 
 
@@ -67,8 +69,7 @@ export const VideoTranslationStatus = Type.Enum(EnumVideoTranslationStatus)
 
 export type VideoTranslationOpts = Static<typeof VideoTranslationOpts>
 export const VideoTranslationOpts = Type.Object({
-url: Type.String(),
-duration: Type.Optional(Type.Number()),
+videoData: VideoData,
 requestLang: Type.Optional(RequestLang),
 responseLang: Type.Optional(ResponseLang),
 translationHelp: Type.Optional(Type.Union([
@@ -101,7 +102,7 @@ WaitingVideoTranslationResponse
 
 export type VideoSubtitlesOpts = Static<typeof VideoSubtitlesOpts>
 export const VideoSubtitlesOpts = Type.Object({
-url: Type.String(),
+videoData: VideoData,
 requestLang: Type.Optional(RequestLang),
 headers: Type.Optional(RequestHeaders)
 })
@@ -114,7 +115,7 @@ headers: Type.Optional(RequestHeaders)
 
 export type StreamTranslationOpts = Static<typeof StreamTranslationOpts>
 export const StreamTranslationOpts = Type.Object({
-url: Type.String(),
+videoData: VideoData,
 requestLang: Type.Optional(RequestLang),
 responseLang: Type.Optional(ResponseLang),
 headers: Type.Optional(RequestHeaders)

@@ -1,28 +1,32 @@
 import { VideoData } from "../dist";
 import VOTClient, { VOTWorkerClient } from "../dist/client";
+import { getVideoData } from "../dist/utils/videoData";
 
 const client = new VOTClient();
 const url = "https://youtu.be/LK6nLR1bzpI";
+const videoData = await getVideoData(url);
 
 // only link
 let response = await client.translateVideo({
-  url,
+  videoData,
 });
 
 console.log(response);
 
 // link + langs
 response = await client.translateVideo({
-  url,
+  videoData,
   requestLang: "en",
   responseLang: "ru",
 });
 
 console.log(response);
 
+const videoDataTransHelp = await getVideoData("https://s3.toil.cc/vot/video");
+
 // link + translationHelp (just for example, this is an unsupported domain)
 response = await client.translateVideo({
-  url: "https://s3.toil.cc/vot/video",
+  videoData: videoDataTransHelp,
   translationHelp: [
     {
       target: "subtitles_file_url",
@@ -41,26 +45,26 @@ console.log(response);
 const workerClient = new VOTWorkerClient();
 
 response = await workerClient.translateVideo({
-  url,
+  videoData,
 });
 
 console.log(response);
 
 // subs
 const subs = await client.getSubtitles({
-  url,
+  videoData,
   requestLang: "ru",
 });
 
 console.log(subs);
 
-// translate weverse (read README.md for understand)
-const videoLink = (
-  await VideoData.getVideoData("https://weverse.io/redvelvet/media/4-139332911")
-)?.url;
+// translate weverse
+const videoDataWeverse = await VideoData.getVideoData(
+  "https://weverse.io/redvelvet/media/4-139332911",
+);
 
 response = await client.translateVideo({
-  url: videoLink,
+  videoData: videoDataWeverse,
 });
 
 console.log(response);
