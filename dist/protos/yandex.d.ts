@@ -56,7 +56,7 @@ export interface SubtitlesResponse {
 }
 export interface StreamTranslationObject {
     url: string;
-    timestamp: number;
+    timestamp: string;
 }
 export interface StreamTranslationRequest {
     url: string;
@@ -404,17 +404,17 @@ export declare const StreamTranslationObject: {
     toJSON(message: StreamTranslationObject): unknown;
     create<I extends {
         url?: string | undefined;
-        timestamp?: number | undefined;
+        timestamp?: string | undefined;
     } & {
         url?: string | undefined;
-        timestamp?: number | undefined;
+        timestamp?: string | undefined;
     } & { [K in Exclude<keyof I, keyof StreamTranslationObject>]: never; }>(base?: I): StreamTranslationObject;
     fromPartial<I_1 extends {
         url?: string | undefined;
-        timestamp?: number | undefined;
+        timestamp?: string | undefined;
     } & {
         url?: string | undefined;
-        timestamp?: number | undefined;
+        timestamp?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof StreamTranslationObject>]: never; }>(object: I_1): StreamTranslationObject;
 };
 export declare const StreamTranslationRequest: {
@@ -450,17 +450,17 @@ export declare const StreamTranslationResponse: {
         interval?: StreamInterval | undefined;
         translatedInfo?: {
             url?: string | undefined;
-            timestamp?: number | undefined;
+            timestamp?: string | undefined;
         } | undefined;
         pingId?: number | undefined;
     } & {
         interval?: StreamInterval | undefined;
         translatedInfo?: ({
             url?: string | undefined;
-            timestamp?: number | undefined;
+            timestamp?: string | undefined;
         } & {
             url?: string | undefined;
-            timestamp?: number | undefined;
+            timestamp?: string | undefined;
         } & { [K in Exclude<keyof I["translatedInfo"], keyof StreamTranslationObject>]: never; }) | undefined;
         pingId?: number | undefined;
     } & { [K_1 in Exclude<keyof I, keyof StreamTranslationResponse>]: never; }>(base?: I): StreamTranslationResponse;
@@ -468,17 +468,17 @@ export declare const StreamTranslationResponse: {
         interval?: StreamInterval | undefined;
         translatedInfo?: {
             url?: string | undefined;
-            timestamp?: number | undefined;
+            timestamp?: string | undefined;
         } | undefined;
         pingId?: number | undefined;
     } & {
         interval?: StreamInterval | undefined;
         translatedInfo?: ({
             url?: string | undefined;
-            timestamp?: number | undefined;
+            timestamp?: string | undefined;
         } & {
             url?: string | undefined;
-            timestamp?: number | undefined;
+            timestamp?: string | undefined;
         } & { [K_2 in Exclude<keyof I_1["translatedInfo"], keyof StreamTranslationObject>]: never; }) | undefined;
         pingId?: number | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof StreamTranslationResponse>]: never; }>(object: I_1): StreamTranslationResponse;

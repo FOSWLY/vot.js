@@ -1,4 +1,3 @@
-import Long from "long";
 import _m0 from "protobufjs/minimal.js";
 export const protobufPackage = "";
 export var StreamInterval;
@@ -770,15 +769,15 @@ export const SubtitlesResponse = {
     },
 };
 function createBaseStreamTranslationObject() {
-    return { url: "", timestamp: 0 };
+    return { url: "", timestamp: "" };
 }
 export const StreamTranslationObject = {
     encode(message, writer = _m0.Writer.create()) {
         if (message.url !== "") {
             writer.uint32(10).string(message.url);
         }
-        if (message.timestamp !== 0) {
-            writer.uint32(16).int64(message.timestamp);
+        if (message.timestamp !== "") {
+            writer.uint32(18).string(message.timestamp);
         }
         return writer;
     },
@@ -796,10 +795,10 @@ export const StreamTranslationObject = {
                     message.url = reader.string();
                     continue;
                 case 2:
-                    if (tag !== 16) {
+                    if (tag !== 18) {
                         break;
                     }
-                    message.timestamp = longToNumber(reader.int64());
+                    message.timestamp = reader.string();
                     continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
@@ -812,7 +811,7 @@ export const StreamTranslationObject = {
     fromJSON(object) {
         return {
             url: isSet(object.url) ? globalThis.String(object.url) : "",
-            timestamp: isSet(object.timestamp) ? globalThis.Number(object.timestamp) : 0,
+            timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : "",
         };
     },
     toJSON(message) {
@@ -820,8 +819,8 @@ export const StreamTranslationObject = {
         if (message.url !== "") {
             obj.url = message.url;
         }
-        if (message.timestamp !== 0) {
-            obj.timestamp = Math.round(message.timestamp);
+        if (message.timestamp !== "") {
+            obj.timestamp = message.timestamp;
         }
         return obj;
     },
@@ -831,7 +830,7 @@ export const StreamTranslationObject = {
     fromPartial(object) {
         const message = createBaseStreamTranslationObject();
         message.url = object.url ?? "";
-        message.timestamp = object.timestamp ?? 0;
+        message.timestamp = object.timestamp ?? "";
         return message;
     },
 };
@@ -1181,19 +1180,6 @@ export const YandexSessionResponse = {
         return message;
     },
 };
-function longToNumber(long) {
-    if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-        throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-    }
-    if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
-        throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
-    }
-    return long.toNumber();
-}
-if (_m0.util.Long !== Long) {
-    _m0.util.Long = Long;
-    _m0.configure();
-}
 function isSet(value) {
     return value !== null && value !== undefined;
 }

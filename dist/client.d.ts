@@ -16,6 +16,10 @@ export default class VOTClient {
     componentVersion: string;
     paths: {
         videoTranslation: string;
+        videoSubtitles: string;
+        streamPing: string;
+        streamTranslation: string;
+        createSession: string;
     };
     isCustomFormat(url: string): RegExpExecArray | null;
     headers: Record<string, string>;

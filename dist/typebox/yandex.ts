@@ -1,4 +1,5 @@
 import { VideoData } from "./client";
+import { availableLangs, availableTTS } from "../consts";
 
 import { Type, Static } from '@sinclair/typebox'
 
@@ -25,28 +26,10 @@ export type RequestHeaders = Static<typeof RequestHeaders>
 export const RequestHeaders = Type.Record(Type.String(), Type.Any())
 
 export type RequestLang = Static<typeof RequestLang>
-export const RequestLang = Type.Union([
-Type.Literal("auto"),
-Type.Literal("ru"),
-Type.Literal("en"),
-Type.Literal("zh"),
-Type.Literal("ko"),
-Type.Literal("lt"),
-Type.Literal("lv"),
-Type.Literal("ar"),
-Type.Literal("fr"),
-Type.Literal("it"),
-Type.Literal("es"),
-Type.Literal("de"),
-Type.Literal("ja")
-])
+export const RequestLang = Type.Index((typeof availableLangs), Type.Number())
 
 export type ResponseLang = Static<typeof ResponseLang>
-export const ResponseLang = Type.Union([
-Type.Literal("ru"),
-Type.Literal("en"),
-Type.Literal("kk")
-])
+export const ResponseLang = Type.Index((typeof availableTTS), Type.Number())
 
 export enum EnumVideoService { custom = "custom", directlink = custom, youtube = "youtube", piped = "piped", invidious = "invidious", vk = "vk", nine_gag = "nine_gag", gag = nine_gag, twitch = "twitch", proxitok = "proxitok", tiktok = "tiktok", vimeo = "vimeo", xvideos = "xvideos", pornhub = "pornhub", twitter = "twitter", rumble = "rumble", facebook = "facebook", rutube = "rutube", coub = "coub", bilibili = "bilibili", mail_ru = "mailru", mailru = mail_ru, bitchute = "bitchute", eporner = "eporner", peertube = "peertube", dailymotion = "dailymotion", trovo = "trovo", yandexdisk = "yandexdisk", ok_ru = "okru", okru = ok_ru, googledrive = "googledrive", bannedvideo = "bannedvideo", weverse = "weverse", newgrounds = "newgrounds", egghead = "egghead", youku = "youku", archive = "archive", kodik = "kodik", patreon = "patreon", reddit = "reddit" }
 
@@ -124,7 +107,7 @@ headers: Type.Optional(RequestHeaders)
 export type StreamTranslationObject = Static<typeof StreamTranslationObject>
 export const StreamTranslationObject = Type.Object({
 url: Type.String(),
-timestamp: Type.Number()
+timestamp: Type.String()
 })
 
 export type TranslatedStreamTranslationResponse = Static<typeof TranslatedStreamTranslationResponse>
