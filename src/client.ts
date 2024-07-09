@@ -72,6 +72,10 @@ export default class VOTClient {
 
   paths = {
     videoTranslation: "/video-translation/translate",
+    videoSubtitles: "/video-subtitles/get-subtitles",
+    streamPing: "/stream-translation/ping-stream",
+    streamTranslation: "/stream-translation/translate-stream",
+    createSession: "/session/create",
   };
 
   /**
@@ -105,7 +109,7 @@ export default class VOTClient {
    * Headers for interacting with VOT Backend API
    */
   headersVOT: Record<string, string> = {
-    "User-Agent": `vot-cli/${version}`,
+    "User-Agent": `vot.js/${version}`,
     "Content-Type": "application/json",
     Pragma: "no-cache",
     "Cache-Control": "no-cache",
@@ -425,12 +429,11 @@ export default class VOTClient {
     const body = yandexProtobuf.encodeSubtitlesRequest(url, requestLang);
 
     const sign = await getSignature(body);
-    const pathname = "/video-subtitles/get-subtitles";
 
-    const res = await this.request(pathname, body, {
+    const res = await this.request(this.paths.videoSubtitles, body, {
       "Vsubs-Signature": await getSignature(body),
       "Sec-Vsubs-Sk": secretKey,
-      "Sec-Vsubs-Token": `${sign}:${uuid}:${pathname}:${this.componentVersion}`,
+      "Sec-Vsubs-Token": `${sign}:${uuid}:${this.paths.videoSubtitles}:${this.componentVersion}`,
       ...headers,
     });
 
@@ -449,11 +452,10 @@ export default class VOTClient {
     const body = yandexProtobuf.encodeStreamPingRequest(pingId);
 
     const sign = await getSignature(body);
-    const pathname = "/stream-translation/ping-stream";
-    const res = await this.request(pathname, body, {
+    const res = await this.request(this.paths.streamPing, body, {
       "Vtrans-Signature": await getSignature(body),
       "Sec-Vtrans-Sk": secretKey,
-      "Sec-Vtrans-Token": `${sign}:${uuid}:${pathname}:${this.componentVersion}`,
+      "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.streamPing}:${this.componentVersion}`,
       ...headers,
     });
 
@@ -490,11 +492,10 @@ export default class VOTClient {
     );
 
     const sign = await getSignature(body);
-    const pathname = "/stream-translation/translate-stream";
-    const res = await this.request(pathname, body, {
+    const res = await this.request(this.paths.streamTranslation, body, {
       "Vtrans-Signature": await getSignature(body),
       "Sec-Vtrans-Sk": secretKey,
-      "Sec-Vtrans-Token": `${sign}:${uuid}:${pathname}:${this.componentVersion}`,
+      "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.streamTranslation}:${this.componentVersion}`,
       ...headers,
     });
 
@@ -536,7 +537,7 @@ export default class VOTClient {
     const uuid = getUUID();
     const body = yandexProtobuf.encodeYandexSessionRequest(uuid, module);
 
-    const res = await this.request("/session/create", body, {
+    const res = await this.request(this.paths.createSession, body, {
       "Vtrans-Signature": await getSignature(body),
     });
 
