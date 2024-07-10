@@ -45,7 +45,7 @@ const client = new VOTWorkerClient({
 });
 ```
 
-Больше примеров кода вы можете увидеть [здесь](https://github.com/FOSWLY/vot.js/examples)
+Больше примеров кода вы можете увидеть [здесь](https://github.com/FOSWLY/vot.js/tree/main/examples)
 
 ## Ограничения
 
