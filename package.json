@@ -65,6 +65,11 @@
       "import": "./dist/utils/helper.js",
       "types": "./dist/utils/helper.d.ts"
     },
+    "./utils/subs": {
+      "require": "./dist/utils/subs.js",
+      "import": "./dist/utils/subs.js",
+      "types": "./dist/utils/subs.d.ts"
+    },
     "./secure": {
       "require": "./dist/secure.js",
       "import": "./dist/secure.js",
