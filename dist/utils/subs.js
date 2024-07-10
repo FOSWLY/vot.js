@@ -1,4 +1,4 @@
-function convertToSrtTimeFormat(seconds) {
+export function convertToSrtTimeFormat(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
