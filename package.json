@@ -18,7 +18,7 @@
     "husky": "^9.0.11",
     "oxlint": "^0.6.1",
     "ts-proto": "^1.181.0",
-    "tsc-esm-fix": "^2.20.27",
+    "tsc-esm-fix": "^3.0.1",
     "typedoc": "0.25.13",
     "typedoc-plugin-include-example": "^1.2.0",
     "typedoc-plugin-inline-sources": "^1.0.2",
