@@ -1,18 +1,13 @@
 const sitesInvidious = [
-    "invidious.snopyta.org",
     "yewtu.be",
-    "invidious.kavin.rocks",
-    "vid.puffyan.us",
-    "invidious.namazso.eu",
-    "inv.riverside.rocks",
     "yt.artemislena.eu",
     "invidious.flokinet.to",
-    "invidious.esmailelbob.xyz",
-    "y.com.sb",
-    "invidious.nerdvpn.de",
-    "inv.vern.cc",
-    "invidious.slipfox.xyz",
-    "invidio.xamh.de",
+    "iv.melmac.space",
+    "inv.nadeko.net",
+    "inv.tux.pizza",
+    "invidious.private.coffee",
+    "yt.drgnz.club",
+    "vid.puffyan.us",
     "invidious.dhusch.de",
 ];
 const sitesPiped = [
@@ -53,7 +48,6 @@ const sitesProxiTok = [
     "proxitok.privacydev.net",
     "tok.artemislena.eu",
     "tok.adminforge.de",
-    "tik.hostux.net",
     "tt.vern.cc",
     "cringe.whatever.social",
     "proxitok.lunar.icu",
@@ -70,5 +64,6 @@ const sitesPeertube = [
     "tube.la-dina.net",
     "peertube.tmp.rcp.tf",
     "peertube.su",
+    "video.blender.org",
 ];
 export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube };

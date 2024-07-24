@@ -201,6 +201,13 @@ export async function getVideoID(service, videoURL) {
         }
         case VideoService.reddit:
             return /\/r\/(([^/]+)\/([^/]+)\/([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
+        case VideoService.kick: {
+            const videoId = /video\/([^/]+)/.exec(url.pathname)?.[0];
+            if (videoId) {
+                return videoId;
+            }
+            return undefined;
+        }
         default:
             return undefined;
     }

@@ -69,7 +69,7 @@ export default [
     {
         host: VideoService.twitter,
         url: "https://twitter.com/i/status/",
-        match: /^twitter.com$/,
+        match: /^(twitter|x).com$/,
     },
     {
         host: VideoService.rumble,
@@ -186,6 +186,11 @@ export default [
         url: "stub",
         match: /^(www.)?reddit.com$/,
         needExtraData: true,
+    },
+    {
+        host: VideoService.kick,
+        url: "https://kick.com/",
+        match: /^kick.com$/,
     },
     {
         host: VideoService.custom,

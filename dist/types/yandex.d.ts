@@ -49,7 +49,8 @@ export declare enum VideoService {
     archive = "archive",
     kodik = "kodik",
     patreon = "patreon",
-    reddit = "reddit"
+    reddit = "reddit",
+    kick = "kick"
 }
 export type ServiceConf = {
     host: VideoService;
