@@ -29,12 +29,5 @@
     "outDir": "./dist",
     "removeComments": true
   },
-  "exclude": [
-    "./dist",
-    "./tests",
-    "./typebox-gen.ts",
-    "./examples",
-    "node_modules",
-    "./build-min.ts"
-  ]
+  "exclude": ["./dist", "./tests", "./examples", "./scripts", "node_modules"]
 }
