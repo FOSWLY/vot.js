@@ -1,19 +1,14 @@
 // Sites host Invidious. I tested the performance only on invidious.kevin.rocks, youtu.be and inv.vern.cc
 const sitesInvidious = [
-  "invidious.snopyta.org",
   "yewtu.be",
-  "invidious.kavin.rocks",
-  "vid.puffyan.us",
-  "invidious.namazso.eu",
-  "inv.riverside.rocks",
   "yt.artemislena.eu",
   "invidious.flokinet.to",
-  "invidious.esmailelbob.xyz",
-  "y.com.sb",
-  "invidious.nerdvpn.de",
-  "inv.vern.cc",
-  "invidious.slipfox.xyz",
-  "invidio.xamh.de",
+  "iv.melmac.space",
+  "inv.nadeko.net",
+  "inv.tux.pizza",
+  "invidious.private.coffee",
+  "yt.drgnz.club",
+  "vid.puffyan.us",
   "invidious.dhusch.de",
 ];
 
@@ -57,11 +52,10 @@ const sitesProxiTok = [
   "proxitok.privacydev.net",
   "tok.artemislena.eu",
   "tok.adminforge.de",
-  "tik.hostux.net", // maybe instance doesn't working
   "tt.vern.cc",
   "cringe.whatever.social",
   "proxitok.lunar.icu",
-  "proxitok.privacy.com.de", // maybe instance doesn't working
+  "proxitok.privacy.com.de",
 ];
 
 // Sites host Peertube. I tested the performance only on dalek.zone and tube.shanti.cafe
@@ -76,6 +70,7 @@ const sitesPeertube = [
   "tube.la-dina.net",
   "peertube.tmp.rcp.tf",
   "peertube.su",
+  "video.blender.org",
 ];
 
 export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube };
