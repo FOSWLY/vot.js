@@ -241,6 +241,15 @@ export async function getVideoID(
       return /\/r\/(([^/]+)\/([^/]+)\/([^/]+)\/([^/]+))/.exec(
         url.pathname,
       )?.[1];
+    case VideoService.kick: {
+      const videoId = /video\/([^/]+)/.exec(url.pathname)?.[0];
+      if (videoId) {
+        return videoId;
+      }
+
+      // Can be used for get m3u8 for clips, but cloudflare ruin this. Maybe later... https://kick.com/api/v2/clips/clip_01J3K1KCNRFEDAH62QYFNX7ANM
+      return undefined;
+    }
     default:
       return undefined;
   }
@@ -258,7 +267,7 @@ export async function getVideoData(url: string): Promise<VideoData> {
   }
 
   if (service.host === VideoService.peertube) {
-    service.url = new URL(url).origin; // set the url of the current site for peertube and directlink
+    service.url = new URL(url).origin; // set the url of the current site for peertube
   }
 
   if (service.rawResult) {

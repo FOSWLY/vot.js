@@ -11,3 +11,5 @@ export * as MailRuType from "./types/helpers/mailru";
 export * as WeverseType from "./types/helpers/weverse";
 export * as KodikType from "./types/helpers/kodik";
 export * as PatreonType from "./types/helpers/patreon";
+
+export * as VOTConsts from "./consts";

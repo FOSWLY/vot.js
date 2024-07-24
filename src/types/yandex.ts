@@ -54,6 +54,7 @@ export enum VideoService {
   kodik = "kodik",
   patreon = "patreon",
   reddit = "reddit",
+  kick = "kick",
 }
 
 export type ServiceConf = {
