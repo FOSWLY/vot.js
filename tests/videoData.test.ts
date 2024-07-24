@@ -175,6 +175,12 @@ describe("twitter", () => {
     expect(await normalize(expected)).toEqual(expected);
   });
 
+  test("normal (x.com)", async () => {
+    expect(await normalize(expected.replace("twitter.com", "x.com"))).toEqual(
+      expected,
+    );
+  });
+
   test("with channel", async () => {
     expect(
       await normalize(
@@ -397,4 +403,10 @@ test("reddit", async () => {
       "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
     ),
   ).toStartWith("https://v.redd.it/l0wpsygl8tpc1/HLSPlaylist.m3u8");
+});
+
+test("kick", async () => {
+  const expected =
+    "https://kick.com/video/cb76dae0-da63-4415-beb3-53ee54383607";
+  expect(await normalize(expected)).toEqual(expected);
 });
