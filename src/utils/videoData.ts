@@ -14,7 +14,8 @@ class VideoDataError extends Error {
 }
 
 export function getService(videoUrl: string) {
-  if (videoUrl.startsWith("file://")) return false;
+  if (/(file:\/\/|(http(s)?:\/\/)(127\.0\.0\.1|localhost))/.exec(videoUrl))
+    return false;
 
   let enteredURL: URL;
   try {
