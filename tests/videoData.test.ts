@@ -405,8 +405,17 @@ test("reddit", async () => {
   ).toStartWith("https://v.redd.it/l0wpsygl8tpc1/HLSPlaylist.m3u8");
 });
 
-test("kick", async () => {
-  const expected =
-    "https://kick.com/video/cb76dae0-da63-4415-beb3-53ee54383607";
-  expect(await normalize(expected)).toEqual(expected);
+describe("kick", () => {
+  test("video", async () => {
+    const expected =
+      "https://kick.com/video/cb76dae0-da63-4415-beb3-53ee54383607";
+    expect(await normalize(expected)).toEqual(expected);
+  });
+
+  test("clips", async () => {
+    const clip = "clip_01J3K1KCNRFEDAH62QYFNX7ANM";
+    expect(
+      await normalize(`https://kick.com/coverdiva?clip=${clip}`),
+    ).toInclude(clip);
+  });
 });

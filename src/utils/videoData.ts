@@ -248,8 +248,7 @@ export async function getVideoID(
         return videoId;
       }
 
-      // Can be used for get m3u8 for clips, but cloudflare ruin this. Maybe later... https://kick.com/api/v2/clips/clip_01J3K1KCNRFEDAH62QYFNX7ANM
-      return undefined;
+      return url.searchParams.get("clip");
     }
     default:
       return undefined;

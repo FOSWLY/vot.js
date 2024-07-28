@@ -1,5 +1,3 @@
-export type ISODate = string;
-
 export enum TypeName {
   Channel = "Channel",
   Video = "Video",

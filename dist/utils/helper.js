@@ -1,5 +1,6 @@
 import { parseFromString } from "dom-parser";
 import { getHmacSha1 } from "../secure.js";
+import sites from "../config/sites.js";
 import { fetchWithTimeout } from "./utils.js";
 import config from "../config/config.js";
 import { VideoService } from "../types/yandex.js";
@@ -338,6 +339,35 @@ export class BannedVideoHelper {
         };
     }
 }
+export class KickHelper {
+    async getClipInfo(clipId) {
+        try {
+            const res = await fetchWithTimeout(`https://kick.com/api/v2/clips/${clipId}`);
+            return (await res.json());
+        }
+        catch (err) {
+            console.error(`Failed to get kick clip info by clipId: ${clipId}.`, err.message);
+            return false;
+        }
+    }
+    async getVideoData(videoId) {
+        if (!videoId.startsWith("clip_")) {
+            return {
+                url: sites.find((s) => s.host === VideoService.kick).url + videoId,
+            };
+        }
+        const clipInfo = await this.getClipInfo(videoId);
+        if (!clipInfo) {
+            return false;
+        }
+        const { clip_url, duration, title } = clipInfo.clip;
+        return {
+            url: clip_url,
+            duration,
+            title,
+        };
+    }
+}
 export default class VideoHelper {
     static [VideoService.mailru] = new MailRuHelper();
     static [VideoService.weverse] = new WeverseHelper();
@@ -345,4 +375,5 @@ export default class VideoHelper {
     static [VideoService.patreon] = new PatreonHelper();
     static [VideoService.reddit] = new RedditHelper();
     static [VideoService.bannedvideo] = new BannedVideoHelper();
+    static [VideoService.kick] = new KickHelper();
 }

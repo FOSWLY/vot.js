@@ -1,11 +1,13 @@
 import { parseFromString } from "dom-parser";
 
 import { getHmacSha1 } from "../secure";
+import sites from "../config/sites";
 import * as MailRu from "../types/helpers/mailru";
 import * as Weverse from "../types/helpers/weverse";
 import * as Kodik from "../types/helpers/kodik";
 import * as Patreon from "../types/helpers/patreon";
 import * as BannedVideo from "../types/helpers/bannedvideo";
+import * as Kick from "../types/helpers/kick";
 import { fetchWithTimeout } from "./utils";
 import config from "../config/config";
 import { VideoService } from "../types/yandex";
@@ -477,6 +479,46 @@ export class BannedVideoHelper {
   }
 }
 
+export class KickHelper {
+  async getClipInfo(clipId: string): Promise<false | Kick.Response> {
+    try {
+      const res = await fetchWithTimeout(
+        `https://kick.com/api/v2/clips/${clipId}`,
+      );
+
+      return (await res.json()) as Kick.Response;
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get kick clip info by clipId: ${clipId}.`,
+        (err as Error).message,
+      );
+      return false;
+    }
+  }
+
+  async getVideoData(videoId: string) {
+    if (!videoId.startsWith("clip_")) {
+      // video can be translated by api by default
+      return {
+        url: sites.find((s) => s.host === VideoService.kick)!.url + videoId,
+      };
+    }
+
+    const clipInfo = await this.getClipInfo(videoId);
+    if (!clipInfo) {
+      return false;
+    }
+
+    const { clip_url, duration, title } = clipInfo.clip;
+
+    return {
+      url: clip_url,
+      duration,
+      title,
+    };
+  }
+}
+
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -498,4 +540,7 @@ export default class VideoHelper {
 
   /** @source */
   static [VideoService.bannedvideo] = new BannedVideoHelper();
+
+  /** @source */
+  static [VideoService.kick] = new KickHelper();
 }

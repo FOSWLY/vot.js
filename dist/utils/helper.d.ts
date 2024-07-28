@@ -3,6 +3,7 @@ import * as Weverse from "../types/helpers/weverse.js";
 import * as Kodik from "../types/helpers/kodik.js";
 import * as Patreon from "../types/helpers/patreon.js";
 import * as BannedVideo from "../types/helpers/bannedvideo.js";
+import * as Kick from "../types/helpers/kick.js";
 import { VideoService } from "../types/yandex.js";
 export declare class MailRuHelper {
     getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined>;
@@ -67,6 +68,18 @@ export declare class BannedVideoHelper {
         description: string;
     }>;
 }
+export declare class KickHelper {
+    getClipInfo(clipId: string): Promise<false | Kick.Response>;
+    getVideoData(videoId: string): Promise<false | {
+        url: string;
+        duration?: undefined;
+        title?: undefined;
+    } | {
+        url: string;
+        duration: number;
+        title: string;
+    }>;
+}
 export default class VideoHelper {
     static [VideoService.mailru]: MailRuHelper;
     static [VideoService.weverse]: WeverseHelper;
@@ -74,5 +87,6 @@ export default class VideoHelper {
     static [VideoService.patreon]: PatreonHelper;
     static [VideoService.reddit]: RedditHelper;
     static [VideoService.bannedvideo]: BannedVideoHelper;
+    static [VideoService.kick]: KickHelper;
 }
 //# sourceMappingURL=helper.d.ts.map

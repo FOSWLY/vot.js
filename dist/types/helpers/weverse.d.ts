@@ -1,4 +1,4 @@
-export type ISODate = string;
+import { ISODate } from "../utils.js";
 export type StringBoolean = "true" | "false";
 export type EnableStatus = "on" | "off";
 export type Dimension = "uhd" | "normal";

@@ -206,7 +206,7 @@ export async function getVideoID(service, videoURL) {
             if (videoId) {
                 return videoId;
             }
-            return undefined;
+            return url.searchParams.get("clip");
         }
         default:
             return undefined;

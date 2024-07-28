@@ -1,4 +1,5 @@
-export type ISODate = string;
+import { ISODate } from "../utils";
+
 export type StringBoolean = "true" | "false";
 export type EnableStatus = "on" | "off";
 export type Dimension = "uhd" | "normal"; // maybe smth else

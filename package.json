@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "author": "Toil",
   "repository": {
     "type": "git",
@@ -54,6 +54,11 @@
       "require": "./dist/consts.js",
       "import": "./dist/consts.js",
       "types": "./dist/consts.d.ts"
+    },
+    "./types": {
+      "require": "./dist/types/index.js",
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./utils/videoData": {
       "require": "./dist/utils/videoData.js",

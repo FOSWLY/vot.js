@@ -203,6 +203,7 @@ export default [
     host: VideoService.kick,
     url: "https://kick.com/",
     match: /^kick.com$/,
+    needExtraData: true,
   },
   {
     host: VideoService.custom,
