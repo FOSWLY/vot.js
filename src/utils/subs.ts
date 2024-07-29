@@ -15,7 +15,7 @@ export function convertToSrtTimeFormat(seconds: number) {
 
 export function convertSubs(
   data: SubtitlesDate,
-  output: SubtitleFormat = "srt",
+  output: Exclude<SubtitleFormat, "json"> = "srt",
 ) {
   const subs = data.subtitles
     .map((sub, idx) => {

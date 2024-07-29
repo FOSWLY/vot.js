@@ -18,4 +18,6 @@ const availableLangs = [
 // up-to-date list of TTS working languages (response lang)
 const availableTTS = ["ru", "en", "kk"] as const;
 
-export { availableLangs, availableTTS };
+const subtitlesFormats = ["srt", "vtt", "json"] as const;
+
+export { availableLangs, availableTTS, subtitlesFormats };

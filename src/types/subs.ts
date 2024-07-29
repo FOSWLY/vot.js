@@ -1,4 +1,6 @@
-export type SubtitleFormat = "srt" | "vtt";
+import { subtitlesFormats } from "../consts";
+
+export type SubtitleFormat = (typeof subtitlesFormats)[number];
 
 export type SubtitleToken = {
   text: string;
