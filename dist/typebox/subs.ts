@@ -1,11 +1,10 @@
+import { subtitlesFormats } from "../consts";
+
 import { Type, Static } from '@sinclair/typebox'
 
 
 export type SubtitleFormat = Static<typeof SubtitleFormat>
-export const SubtitleFormat = Type.Union([
-Type.Literal("srt"),
-Type.Literal("vtt")
-])
+export const SubtitleFormat = Type.Index((typeof subtitlesFormats), Type.Number())
 
 export type SubtitleToken = Static<typeof SubtitleToken>
 export const SubtitleToken = Type.Object({

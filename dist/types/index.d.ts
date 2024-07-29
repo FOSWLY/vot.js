@@ -3,6 +3,7 @@ export * as ClientType from "./client.js";
 export * as YandexType from "./yandex.js";
 export * as VOTBackendType from "./vot.js";
 export * as UtilsType from "./utils.js";
+export * as SubsType from "./subs.js";
 export * as MailRuType from "./helpers/mailru.js";
 export * as WeverseType from "./helpers/weverse.js";
 export * as KodikType from "./helpers/kodik.js";

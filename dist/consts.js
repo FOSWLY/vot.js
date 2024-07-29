@@ -14,4 +14,5 @@ const availableLangs = [
     "ja",
 ];
 const availableTTS = ["ru", "en", "kk"];
-export { availableLangs, availableTTS };
+const subtitlesFormats = ["srt", "vtt", "json"];
+export { availableLangs, availableTTS, subtitlesFormats };
