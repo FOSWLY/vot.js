@@ -230,7 +230,7 @@ export default class VOTClient {
       uuid,
     };
 
-    return this.sessions[module]!;
+    return this.sessions[module];
   }
 
   protected async translateVideoYAImpl({
