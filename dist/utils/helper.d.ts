@@ -80,6 +80,11 @@ export declare class KickHelper {
         title: string;
     }>;
 }
+export declare class AppleDeveloperHelper {
+    getVideoData(videoId: string): Promise<{
+        url: string;
+    } | undefined>;
+}
 export default class VideoHelper {
     static [VideoService.mailru]: MailRuHelper;
     static [VideoService.weverse]: WeverseHelper;
@@ -88,5 +93,6 @@ export default class VideoHelper {
     static [VideoService.reddit]: RedditHelper;
     static [VideoService.bannedvideo]: BannedVideoHelper;
     static [VideoService.kick]: KickHelper;
+    static [VideoService.appledeveloper]: AppleDeveloperHelper;
 }
 //# sourceMappingURL=helper.d.ts.map

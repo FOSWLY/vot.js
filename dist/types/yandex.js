@@ -41,6 +41,8 @@ export var VideoService;
     VideoService["patreon"] = "patreon";
     VideoService["reddit"] = "reddit";
     VideoService["kick"] = "kick";
+    VideoService["apple_developer"] = "apple_developer";
+    VideoService["appledeveloper"] = "apple_developer";
 })(VideoService || (VideoService = {}));
 export var VideoTranslationStatus;
 (function (VideoTranslationStatus) {

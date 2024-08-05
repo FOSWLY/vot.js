@@ -208,6 +208,9 @@ export async function getVideoID(service, videoURL) {
             }
             return url.searchParams.get("clip");
         }
+        case VideoService.appledeveloper: {
+            return /videos\/play\/([^/]+)\/([\d]+)/.exec(url.pathname)?.[0];
+        }
         default:
             return undefined;
     }

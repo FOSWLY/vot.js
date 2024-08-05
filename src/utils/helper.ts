@@ -519,6 +519,28 @@ export class KickHelper {
   }
 }
 
+export class AppleDeveloperHelper {
+  async getVideoData(videoId: string) {
+    const res = await fetchWithTimeout(
+      `https://developer.apple.com/${videoId}`,
+    );
+    const content = await res.text();
+
+    // get m3u8 from schema
+    const contentUrl =
+      /https:\/\/devstreaming-cdn\.apple\.com\/videos\/([^.]+)\/(cmaf\.m3u8)/.exec(
+        content,
+      )?.[0];
+    if (!contentUrl) {
+      return undefined;
+    }
+
+    return {
+      url: contentUrl,
+    };
+  }
+}
+
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -543,4 +565,7 @@ export default class VideoHelper {
 
   /** @source */
   static [VideoService.kick] = new KickHelper();
+
+  /** @source */
+  static [VideoService.appledeveloper] = new AppleDeveloperHelper();
 }

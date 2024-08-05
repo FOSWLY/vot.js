@@ -55,6 +55,8 @@ export enum VideoService {
   patreon = "patreon",
   reddit = "reddit",
   kick = "kick",
+  apple_developer = "apple_developer",
+  appledeveloper = apple_developer,
 }
 
 export type ServiceConf = {

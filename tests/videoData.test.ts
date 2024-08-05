@@ -419,3 +419,13 @@ describe("kick", () => {
     ).toInclude(clip);
   });
 });
+
+test("apple_developer", async () => {
+  const normalized = await normalize(
+    "https://developer.apple.com/videos/play/wwdc2024/10068/",
+  );
+  expect(normalized).toStartWith(
+    "https://devstreaming-cdn.apple.com/videos/wwdc/2024/10068/",
+  );
+  expect(normalized).toEndWith("cmaf.m3u8");
+});

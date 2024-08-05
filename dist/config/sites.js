@@ -194,6 +194,12 @@ export default [
         needExtraData: true,
     },
     {
+        host: VideoService.appledeveloper,
+        url: "https://developer.apple.com/",
+        match: /^developer.apple.com$/,
+        needExtraData: true,
+    },
+    {
         host: VideoService.custom,
         url: "stub",
         match: (url) => /([^.]+).mp4/.test(url.pathname),

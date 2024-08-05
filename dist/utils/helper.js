@@ -368,6 +368,19 @@ export class KickHelper {
         };
     }
 }
+export class AppleDeveloperHelper {
+    async getVideoData(videoId) {
+        const res = await fetchWithTimeout(`https://developer.apple.com/${videoId}`);
+        const content = await res.text();
+        const contentUrl = /https:\/\/devstreaming-cdn\.apple\.com\/videos\/([^.]+)\/(cmaf\.m3u8)/.exec(content)?.[0];
+        if (!contentUrl) {
+            return undefined;
+        }
+        return {
+            url: contentUrl,
+        };
+    }
+}
 export default class VideoHelper {
     static [VideoService.mailru] = new MailRuHelper();
     static [VideoService.weverse] = new WeverseHelper();
@@ -376,4 +389,5 @@ export default class VideoHelper {
     static [VideoService.reddit] = new RedditHelper();
     static [VideoService.bannedvideo] = new BannedVideoHelper();
     static [VideoService.kick] = new KickHelper();
+    static [VideoService.appledeveloper] = new AppleDeveloperHelper();
 }
