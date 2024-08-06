@@ -43,6 +43,11 @@ describe("youtube", () => {
       expected,
     );
   });
+  test("poketube", async () => {
+    expect(await normalize("https://poketube.fun/watch?v=LK6nLR1bzpI")).toEqual(
+      expected,
+    );
+  });
 });
 
 test("raw link", async () => {

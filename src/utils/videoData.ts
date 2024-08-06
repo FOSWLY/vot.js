@@ -55,6 +55,7 @@ export async function getVideoID(
     case VideoService.custom:
       return url.href;
     case VideoService.piped:
+    case VideoService.poketube:
     case VideoService.invidious:
     case VideoService.youtube:
       if (url.hostname === "youtu.be") {

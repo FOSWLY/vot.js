@@ -5,6 +5,7 @@ import {
   sitesPiped,
   sitesProxiTok,
   sitesPeertube,
+  sitesPoketube,
 } from "./alternativeUrls";
 
 export default [
@@ -24,6 +25,12 @@ export default [
     host: VideoService.piped,
     url: "https://youtu.be/",
     match: sitesPiped,
+  },
+  {
+    // Sites host Poketube. I tested the performance only on poketube.fun
+    host: VideoService.poketube,
+    url: "https://youtu.be/",
+    match: sitesPoketube,
   },
   {
     host: VideoService.vk,

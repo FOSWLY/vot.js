@@ -1,5 +1,5 @@
 import { VideoService } from "../types/yandex.js";
-import { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, } from "./alternativeUrls.js";
+import { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, sitesPoketube, } from "./alternativeUrls.js";
 export default [
     {
         host: VideoService.youtube,
@@ -15,6 +15,11 @@ export default [
         host: VideoService.piped,
         url: "https://youtu.be/",
         match: sitesPiped,
+    },
+    {
+        host: VideoService.poketube,
+        url: "https://youtu.be/",
+        match: sitesPoketube,
     },
     {
         host: VideoService.vk,

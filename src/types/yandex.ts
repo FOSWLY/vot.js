@@ -57,6 +57,7 @@ export enum VideoService {
   kick = "kick",
   apple_developer = "apple_developer",
   appledeveloper = apple_developer,
+  poketube = "poketube",
 }
 
 export type ServiceConf = {

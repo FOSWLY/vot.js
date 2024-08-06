@@ -73,4 +73,19 @@ const sitesPeertube = [
   "video.blender.org",
 ];
 
-export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube };
+// Sites host Poketube. I tested the performance only on poketube.fun
+const sitesPoketube = [
+  "poketube.fun",
+  "pt.sudovanilla.org",
+  "poke.ggtyler.dev",
+  "poke.uk2.littlekai.co.uk",
+  "poke.blahai.gay",
+];
+
+export {
+  sitesInvidious,
+  sitesPiped,
+  sitesProxiTok,
+  sitesPeertube,
+  sitesPoketube,
+};

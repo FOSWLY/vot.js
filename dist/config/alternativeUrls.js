@@ -66,4 +66,11 @@ const sitesPeertube = [
     "peertube.su",
     "video.blender.org",
 ];
-export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube };
+const sitesPoketube = [
+    "poketube.fun",
+    "pt.sudovanilla.org",
+    "poke.ggtyler.dev",
+    "poke.uk2.littlekai.co.uk",
+    "poke.blahai.gay",
+];
+export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, sitesPoketube, };
