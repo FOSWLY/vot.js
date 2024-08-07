@@ -402,12 +402,29 @@ test("patreon", async () => {
   ).toStartWith("https://stream.mux.com");
 });
 
-test("reddit", async () => {
-  expect(
-    await normalize(
-      "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
-    ),
-  ).toStartWith("https://v.redd.it/l0wpsygl8tpc1/HLSPlaylist.m3u8");
+describe("reddit", () => {
+  const expected = "https://v.redd.it/l0wpsygl8tpc1/HLSPlaylist.m3u8";
+  test("www", async () => {
+    expect(
+      await normalize(
+        "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+      ),
+    ).toStartWith(expected);
+  });
+  test("new", async () => {
+    expect(
+      await normalize(
+        "https://new.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+      ),
+    ).toStartWith(expected);
+  });
+  test("old", async () => {
+    expect(
+      await normalize(
+        "https://old.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+      ),
+    ).toStartWith(expected);
+  });
 });
 
 describe("kick", () => {
