@@ -189,7 +189,7 @@ export default [
     {
         host: VideoService.reddit,
         url: "stub",
-        match: /^(www.)?reddit.com$/,
+        match: /^(www.|new.|old.)?reddit.com$/,
         needExtraData: true,
     },
     {
