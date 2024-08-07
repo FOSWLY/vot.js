@@ -71,6 +71,13 @@ const sitesPeertube = [
   "peertube.tmp.rcp.tf",
   "peertube.su",
   "video.blender.org",
+  "videos.viorsan.com",
+  "tube-sciences-technologies.apps.education.fr",
+  "tube-numerique-educatif.apps.education.fr",
+  "tube-arts-lettres-sciences-humaines.apps.education.fr",
+  "beetoons.tv",
+  "comics.peertube.biz",
+  "makertube.net",
 ];
 
 // Sites host Poketube. I tested the performance only on poketube.fun
