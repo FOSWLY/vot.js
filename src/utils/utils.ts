@@ -8,17 +8,17 @@ export async function fetchWithTimeout(
     },
   },
 ) {
-  const { timeout = 3000 } = options;
+  const { timeout = 3000, ...fetchOptions } = options;
 
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout as number);
+  const timeoutId = setTimeout(() => controller.abort(), timeout as number);
 
   const response = await fetch(url, {
-    ...options,
     signal: controller.signal,
+    ...fetchOptions,
   });
 
-  clearTimeout(id);
+  clearTimeout(timeoutId);
 
   return response;
 }
