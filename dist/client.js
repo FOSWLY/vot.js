@@ -92,10 +92,9 @@ export default class VOTClient {
             };
         }
         catch (err) {
-            console.error("[vot.js]", err.message);
             return {
                 success: false,
-                data: null,
+                data: err?.message,
             };
         }
     }
@@ -105,7 +104,6 @@ export default class VOTClient {
             ...headers,
         });
         try {
-            console.log(`${this.schemaVOT}://${this.hostVOT}${path}`);
             const res = await this.fetch(`${this.schemaVOT}://${this.hostVOT}${path}`, options);
             const data = (await res.json());
             return {
@@ -114,10 +112,9 @@ export default class VOTClient {
             };
         }
         catch (err) {
-            console.error("[vot.js]", err.message);
             return {
                 success: false,
-                data: null,
+                data: err?.message,
             };
         }
     }
@@ -318,9 +315,9 @@ export default class VOTClient {
         if (!res.success) {
             throw new VOTJSError("Failed to request create session", res);
         }
-        const subtitlesResponse = yandexProtobuf.decodeYandexSessionResponse(res.data);
+        const sessionResponse = yandexProtobuf.decodeYandexSessionResponse(res.data);
         return {
-            ...subtitlesResponse,
+            ...sessionResponse,
             uuid,
         };
     }
@@ -345,10 +342,9 @@ export class VOTWorkerClient extends VOTClient {
             };
         }
         catch (err) {
-            console.error("[vot.js]", err.message);
             return {
                 success: false,
-                data: null,
+                data: err?.message,
             };
         }
     }

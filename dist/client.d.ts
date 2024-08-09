@@ -33,7 +33,7 @@ export default class VOTClient {
         body: unknown;
     };
     request(path: string, body: Uint8Array, headers?: Record<string, string>): Promise<ClientResponse>;
-    requestVOT<T = any>(path: string, body: NonNullable<any>, headers?: Record<string, string>): Promise<ClientResponse<T>>;
+    requestVOT<T = unknown>(path: string, body: NonNullable<any>, headers?: Record<string, string>): Promise<ClientResponse<T>>;
     getSession(module: SessionModule): Promise<ClientSession>;
     protected translateVideoYAImpl({ videoData, requestLang, responseLang, translationHelp, headers, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     protected translateVideoVOTImpl({ url, videoId, service, requestLang, responseLang, headers, }: VideoTranslationVOTOpts): Promise<VideoTranslationResponse>;

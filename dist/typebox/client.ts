@@ -59,14 +59,26 @@ uuid: Type.String(),
 secretKey: Type.String()
 })
 
-export type ClientResponse<T extends TSchema> = Static<ReturnType<typeof ClientResponse<T>>>
-export const ClientResponse = <T extends TSchema>(T: T) => Type.Object({
+export type ClientSuccessResponse<T extends TSchema> = Static<ReturnType<typeof ClientSuccessResponse<T>>>
+export const ClientSuccessResponse = <T extends TSchema>(T: T) => Type.Object({
 success: Type.Boolean(),
+data: T
+})
+
+export type ClientFailedResponse = Static<typeof ClientFailedResponse>
+export const ClientFailedResponse = Type.Object({
+success: Type.Literal(false),
 data: Type.Union([
-Type.Null(),
-T
+Type.String(),
+Type.Null()
 ])
 })
+
+export type ClientResponse<T extends TSchema> = Static<ReturnType<typeof ClientResponse<T>>>
+export const ClientResponse = <T extends TSchema>(T: T) => Type.Union([
+ClientFailedResponse,
+ClientSuccessResponse(T)
+])
 
 export type VOTSessions = Static<typeof VOTSessions>
 export const VOTSessions = Type.Mapped(SessionModule, K => Type.Optional(ClientSession))

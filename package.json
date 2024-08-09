@@ -1,34 +1,20 @@
 {
   "name": "vot.js",
-  "version": "1.0.2",
+  "description": "Unoffical library for interacting with the Yandex VOT API",
+  "version": "1.0.3",
   "author": "Toil",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
+  "bugs": {
+    "url": "https://github.com/FOSWLY/vot.js/issues"
+  },
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "devDependencies": {
-    "@sinclair/typebox-codegen": "^0.10.3",
-    "@types/bun": "latest",
-    "@types/eslint__js": "^8.42.3",
-    "eslint": "^9.8.0",
-    "eslint-plugin-oxlint": "^0.5.0",
-    "eslint-plugin-sonarjs": "^1.0.4",
-    "husky": "^9.1.4",
-    "oxlint": "0.7.0",
-    "ts-proto": "^1.181.1",
-    "tsc-esm-fix": "^3.0.2",
-    "typedoc": "0.25.13",
-    "typedoc-plugin-include-example": "^1.2.0",
-    "typedoc-plugin-inline-sources": "^1.0.2",
-    "typedoc-plugin-rename-defaults": "^0.7.1",
-    "typescript": "^5.5.4",
-    "typescript-eslint": "8.0.1"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -81,10 +67,6 @@
       "types": "./dist/secure.d.ts"
     }
   },
-  "bugs": {
-    "url": "https://github.com/FOSWLY/vot.js/issues"
-  },
-  "description": "Unoffical library for interacting with the Yandex VOT API",
   "engines": {
     "node": ">=18"
   },
@@ -100,7 +82,31 @@
     "vot-js",
     "vot.js"
   ],
-  "license": "MIT",
+  "devDependencies": {
+    "@sinclair/typebox-codegen": "^0.10.3",
+    "@types/bun": "latest",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.8.0",
+    "eslint-plugin-oxlint": "^0.5.0",
+    "eslint-plugin-sonarjs": "^1.0.4",
+    "husky": "^9.1.4",
+    "oxlint": "0.7.0",
+    "ts-proto": "^1.181.1",
+    "tsc-esm-fix": "^3.0.2",
+    "typedoc": "0.25.13",
+    "typedoc-plugin-include-example": "^1.2.0",
+    "typedoc-plugin-inline-sources": "^1.0.2",
+    "typedoc-plugin-rename-defaults": "^0.7.1",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "8.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dom-parser": "^1.1.5",
+    "protobufjs": "^7.3.2"
+  },
   "scripts": {
     "test": "bun test",
     "build:declaration": "tsc --project tsconfig.build.json --emitDeclarationOnly --outdir ./dist",
@@ -117,11 +123,5 @@
     "update-config": "bun run scripts/update-config.ts",
     "lint": "bunx oxlint --ignore-path=.oxlintignore && bunx eslint",
     "prepare": "husky"
-  },
-  "type": "module",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "dom-parser": "^1.1.5",
-    "protobufjs": "^7.3.2"
   }
 }

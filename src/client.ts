@@ -37,7 +37,7 @@ const { version } = packageInfo;
 class VOTJSError extends Error {
   constructor(
     message: string,
-    public data: any = undefined,
+    public data: unknown = undefined,
   ) {
     super(message);
     this.name = "VOTJSError";
@@ -174,10 +174,9 @@ export default class VOTClient {
         data,
       };
     } catch (err: unknown) {
-      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
-        data: null,
+        data: (err as Error)?.message,
       };
     }
   }
@@ -185,7 +184,7 @@ export default class VOTClient {
   /**
    * The standard method for requesting the VOT Backend API
    */
-  async requestVOT<T = any>(
+  async requestVOT<T = unknown>(
     path: string,
     body: NonNullable<any>,
     headers: Record<string, string> = {},
@@ -196,7 +195,6 @@ export default class VOTClient {
     });
 
     try {
-      console.log(`${this.schemaVOT}://${this.hostVOT}${path}`);
       const res = await this.fetch(
         `${this.schemaVOT}://${this.hostVOT}${path}`,
         options,
@@ -207,10 +205,9 @@ export default class VOTClient {
         data,
       };
     } catch (err: unknown) {
-      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
-        data: null,
+        data: (err as Error)?.message,
       };
     }
   }
@@ -353,7 +350,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video translation", res);
     }
 
-    const translationData = res.data!;
+    const translationData = res.data;
     switch (translationData.status) {
       case "failed":
         throw new VOTJSError(
@@ -545,12 +542,12 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request create session", res);
     }
 
-    const subtitlesResponse = yandexProtobuf.decodeYandexSessionResponse(
+    const sessionResponse = yandexProtobuf.decodeYandexSessionResponse(
       res.data as ArrayBuffer,
     );
 
     return {
-      ...subtitlesResponse,
+      ...sessionResponse,
       uuid,
     };
   }
@@ -586,10 +583,9 @@ export class VOTWorkerClient extends VOTClient {
         data,
       };
     } catch (err: unknown) {
-      console.error("[vot.js]", (err as Error).message);
       return {
         success: false,
-        data: null,
+        data: (err as Error)?.message,
       };
     }
   }

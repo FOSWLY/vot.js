@@ -43,10 +43,19 @@ export type ClientSession = {
   secretKey: string;
 };
 
-export type ClientResponse<T = any> = {
+export type ClientSuccessResponse<T = unknown> = {
   success: boolean;
-  data: null | T;
+  data: T;
 };
+
+export type ClientFailedResponse = {
+  success: false;
+  data: string | null;
+};
+
+export type ClientResponse<T = unknown> =
+  | ClientFailedResponse
+  | ClientSuccessResponse<T>;
 
 export type VOTSessions = {
   [K in SessionModule]?: ClientSession;
