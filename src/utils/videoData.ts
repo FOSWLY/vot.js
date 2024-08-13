@@ -254,6 +254,12 @@ export async function getVideoID(
     case VideoService.appledeveloper: {
       return /videos\/play\/([^/]+)\/([\d]+)/.exec(url.pathname)?.[0];
     }
+    case VideoService.epicgames: {
+      return /\/(\w{4})\/[^\/]+$/.exec(url.pathname)?.[0];
+    }
+    case VideoService.nineanimetv: {
+      return /[^/]+$/.exec(url)?.[0];
+    }
     default:
       return undefined;
   }

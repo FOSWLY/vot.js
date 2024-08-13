@@ -541,6 +541,47 @@ export class AppleDeveloperHelper {
   }
 }
 
+export class EpicGamesHelper {
+  async getVideoData(videoId: string) {
+    const content = await fetchWithTimeout(
+      `https://dev.epicgames.com/community/api/learning/post.json?hash_id=${videoId}`,
+    ).then(res => res.json());
+
+    return {
+      // url это json с dash плейлистом в формате base64
+      url: content.blocks?.[1]?.video_url?.replace('qsep://', 'https://'),
+      //subtitles: content.blocks?.[1]?.video_captions?.[0]?.signed_url,
+    };
+  }
+}
+
+export class NineAnimetvHelper {
+
+  async getVideoData(videoId: string) {
+    const episodeId = videoId.split('?ep=')[1];
+
+    const content = await fetchWithTimeout(`https://9animetv.to/ajax/episode/servers?episodeId=${episodeId}`).then(res => res.json());;
+
+    const sourceId = content.link.slice(0, -3);
+    if (!sourceId) {
+      return undefined;
+    }
+
+    const sourcesUrl = `https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=${sourceId}`;
+    const sourcesContent = await fetchWithTimeout(sourcesUrl).then(res => res.json());
+
+    const videoUrl = sourcesContent.sources[0]?.file;
+    // WEBVTT
+    // const russianSubtitles = sourcesContent.tracks?.find((track: any) => track.label === 'Russian')?.file;
+    // const englishSubtitles = sourcesContent.tracks?.find((track: any) => track.label === 'English')?.file;
+
+    return {
+      url: videoUrl,
+      //subtitles: russianSubtitles || englishSubtitles || null,
+    };
+  }
+}
+
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -568,4 +609,10 @@ export default class VideoHelper {
 
   /** @source */
   static [VideoService.appledeveloper] = new AppleDeveloperHelper();
+
+  /** @source */
+  static [VideoService.epicgames] = new EpicGamesHelper();
+
+  /** @source */
+  static [VideoService.nineanimetv] = new NineAnimetvHelper();
 }

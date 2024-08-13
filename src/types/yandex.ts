@@ -58,6 +58,8 @@ export enum VideoService {
   apple_developer = "apple_developer",
   appledeveloper = apple_developer,
   poketube = "poketube",
+  epicgames = "epicgames",
+  nineanimetv = "nineanimetv",
 }
 
 export type ServiceConf = {
