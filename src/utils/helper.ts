@@ -560,14 +560,26 @@ export class NineAnimetvHelper {
   async getVideoData(videoId: string) {
     const episodeId = videoId.split('?ep=')[1];
 
-    const content = await fetchWithTimeout(`https://9animetv.to/ajax/episode/servers?episodeId=${episodeId}`).then(res => res.json());;
+    // Получаем айди для эпизода
+    // Пример: https://9animetv.to/ajax/episode/servers?episodeId=123269
+    const content = await fetchWithTimeout(`https://9animetv.to/ajax/episode/servers?episodeId=${episodeId}`).then(res => res.json());
 
-    const sourceId = content.link.slice(0, -3);
+    // Получаем айди для видео из HTML
+    const sourceId = content.html[0]?.exec(/data-id="(\d+)"/)?.[0];
     if (!sourceId) {
       return undefined;
     }
 
-    const sourcesUrl = `https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=${sourceId}`;
+    // Получаем ссылку на RapidCloud
+    // Пример: https://9animetv.to/ajax/episode/sources?id=1108082
+    const rapidCloud = await fetchWithTimeout(`https://9animetv.to/ajax/episode/sources?id=${sourceId}`).then(res => res.json());
+
+    // Очищаем лишнюю часть из ссылки
+    const rapidCloudId = rapidCloud.link.slice(0, -3);
+
+    // Получаем прямую ссылку на видео
+    // Пример: https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=RdyPyRt4sK03
+    const sourcesUrl = `https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=${rapidCloudId}`;
     const sourcesContent = await fetchWithTimeout(sourcesUrl).then(res => res.json());
 
     const videoUrl = sourcesContent.sources[0]?.file;
