@@ -8,6 +8,7 @@ import * as Kodik from "../types/helpers/kodik";
 import * as Patreon from "../types/helpers/patreon";
 import * as BannedVideo from "../types/helpers/bannedvideo";
 import * as Kick from "../types/helpers/kick";
+import * as NineAnimeTV from "../types/helpers/nineanimetv";
 import { fetchWithTimeout } from "./utils";
 import config from "../config/config";
 import { VideoService } from "../types/yandex";
@@ -545,51 +546,121 @@ export class EpicGamesHelper {
   async getVideoData(videoId: string) {
     const content = await fetchWithTimeout(
       `https://dev.epicgames.com/community/api/learning/post.json?hash_id=${videoId}`,
-    ).then(res => res.json());
+    ).then((res) => res.json());
 
     return {
       // url это json с dash плейлистом в формате base64
-      url: content.blocks?.[1]?.video_url?.replace('qsep://', 'https://'),
+      url: content.blocks?.[1]?.video_url?.replace("qsep://", "https://"),
       //subtitles: content.blocks?.[1]?.video_captions?.[0]?.signed_url,
     };
   }
 }
 
 export class NineAnimetvHelper {
+  API_ORIGIN = "https://9animetv.to/ajax/episode";
+  RAPID_CLOUD_ORIGIN = "https://rapid-cloud.co/ajax/embed-6-v2";
+
+  async getSourceId(episodeId: string | number) {
+    try {
+      const res = await fetchWithTimeout(
+        `${this.API_ORIGIN}/servers?episodeId=${episodeId}`,
+      );
+
+      const content = (await res.json()) as NineAnimeTV.ServersData;
+      if (!content.html) {
+        return false;
+      }
+
+      return /data-id="(\d+)"/.exec(content.html)?.[1];
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get 9animetv servers info by episodeId: ${episodeId}.`,
+        (err as Error).message,
+      );
+      return false;
+    }
+  }
+
+  async getPlayerLink(sourceId: string | number) {
+    try {
+      const res = await fetchWithTimeout(
+        `${this.API_ORIGIN}/sources?id=${sourceId}`,
+      );
+
+      const content = (await res.json()) as NineAnimeTV.PlayerSources;
+      if (!content.link.includes("rapid-cloud.co")) {
+        // ignore empty link and strcloud.in (it always returns an error instead of a video)
+        return false;
+      }
+
+      return content.link;
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get player link by sourceId: ${sourceId}.`,
+        (err as Error).message,
+      );
+      return false;
+    }
+  }
+
+  async getRapidCloudData(rapidId: string) {
+    try {
+      const res = await fetchWithTimeout(
+        `${this.RAPID_CLOUD_ORIGIN}/getSources?id=${rapidId}`,
+      );
+
+      const content = (await res.json()) as NineAnimeTV.RapidData;
+      if (content.encrypted) {
+        // I haven't seen such links, so I don't know what they look like, it's better to skip
+        console.warn(
+          "Encrypted RapidCloud data found. Let us know about it",
+          content,
+        );
+        return false;
+      }
+
+      return content;
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get rapid cloud data by rapidId: ${rapidId}.`,
+        (err as Error).message,
+      );
+      return false;
+    }
+  }
 
   async getVideoData(videoId: string) {
-    const episodeId = videoId.split('?ep=')[1];
-
-    // Получаем айди для эпизода
-    // Пример: https://9animetv.to/ajax/episode/servers?episodeId=123269
-    const content = await fetchWithTimeout(`https://9animetv.to/ajax/episode/servers?episodeId=${episodeId}`).then(res => res.json());
-
-    // Получаем айди для видео из HTML
-    const sourceId = content.html[0]?.exec(/data-id="(\d+)"/)?.[0];
+    const episodeId = videoId.split("?ep=")[1];
+    const sourceId = await this.getSourceId(episodeId);
     if (!sourceId) {
       return undefined;
     }
 
-    // Получаем ссылку на RapidCloud
-    // Пример: https://9animetv.to/ajax/episode/sources?id=1108082
-    const rapidCloud = await fetchWithTimeout(`https://9animetv.to/ajax/episode/sources?id=${sourceId}`).then(res => res.json());
+    const playerLink = await this.getPlayerLink(sourceId);
+    if (!playerLink) {
+      return undefined;
+    }
 
-    // Очищаем лишнюю часть из ссылки
-    const rapidCloudId = rapidCloud.link.exec(/\/([^\/?]+)\?/)?.[0];
+    // only get id from link
+    const rapidCloudId = /\/([^/?]+)\?/.exec(playerLink)?.[1];
+    if (!rapidCloudId) {
+      return undefined;
+    }
 
-    // Получаем прямую ссылку на видео
-    // Пример: https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=RdyPyRt4sK03
-    const sourcesUrl = `https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=${rapidCloudId}`;
-    const sourcesContent = await fetchWithTimeout(sourcesUrl).then(res => res.json());
+    const rapidData = await this.getRapidCloudData(rapidCloudId);
+    if (!rapidData) {
+      return undefined;
+    }
 
-    const videoUrl = sourcesContent.sources[0]?.file;
-    // WEBVTT
-    // const russianSubtitles = sourcesContent.tracks?.find((track: any) => track.label === 'Russian')?.file;
-    // const englishSubtitles = sourcesContent.tracks?.find((track: any) => track.label === 'English')?.file;
+    const videoUrl = rapidData.sources.find(
+      (file) => file.type === "hls",
+    )?.file;
+    if (!videoUrl) {
+      return undefined;
+    }
 
     return {
       url: videoUrl,
-      //subtitles: russianSubtitles || englishSubtitles || null,
     };
   }
 }
