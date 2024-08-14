@@ -575,7 +575,7 @@ export class NineAnimetvHelper {
     const rapidCloud = await fetchWithTimeout(`https://9animetv.to/ajax/episode/sources?id=${sourceId}`).then(res => res.json());
 
     // Очищаем лишнюю часть из ссылки
-    const rapidCloudId = rapidCloud.link.slice(0, -3);
+    const rapidCloudId = rapidCloud.link.exec(/\/([^\/?]+)\?/)?.[0];
 
     // Получаем прямую ссылку на видео
     // Пример: https://rapid-cloud.co/ajax/embed-6-v2/getSources?id=RdyPyRt4sK03

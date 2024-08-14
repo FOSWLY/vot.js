@@ -258,7 +258,7 @@ export async function getVideoID(
       return /\/(\w{4})\/[^\/]+$/.exec(url.pathname)?.[0];
     }
     case VideoService.nineanimetv: {
-      return /[^/]+$/.exec(url)?.[0];
+      return /[^/]+$/.exec(url.href)?.[0];
     }
     default:
       return undefined;
