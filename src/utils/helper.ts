@@ -9,6 +9,7 @@ import * as Patreon from "../types/helpers/patreon";
 import * as BannedVideo from "../types/helpers/bannedvideo";
 import * as Kick from "../types/helpers/kick";
 import * as NineAnimeTV from "../types/helpers/nineanimetv";
+import * as EpicGames from "../types/helpers/epicgames";
 import { fetchWithTimeout } from "./utils";
 import config from "../config/config";
 import { VideoService } from "../types/yandex";
@@ -543,14 +544,40 @@ export class AppleDeveloperHelper {
 }
 
 export class EpicGamesHelper {
-  async getVideoData(videoId: string) {
-    const content = await fetchWithTimeout(
-      `https://dev.epicgames.com/community/api/learning/post.json?hash_id=${videoId}`,
-    ).then((res) => res.json());
+  API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
 
+  async getPostInfo(videoId: string) {
+    try {
+      const res = await fetchWithTimeout(
+        `${this.API_ORIGIN}/post.json?hash_id=${videoId}`,
+      );
+
+      return (await res.json()) as EpicGames.Post;
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get post info by videoId: ${videoId}.`,
+        (err as Error).message,
+      );
+      return false;
+    }
+  }
+
+  async getVideoData(videoId: string) {
+    const postInfo = await this.getPostInfo(videoId);
+    if (!postInfo) {
+      return undefined;
+    }
+
+    const playlistUrl = postInfo.blocks
+      .find((block) => block.type === "video")
+      ?.video_url?.replace("qsep://", "https://");
+    if (!playlistUrl) {
+      return undefined;
+    }
+
+    // url returns a json containing a dash playlist (in base64) in the playlist field
     return {
-      // url это json с dash плейлистом в формате base64
-      url: content.blocks?.[1]?.video_url?.replace("qsep://", "https://"),
+      url: playlistUrl,
       //subtitles: content.blocks?.[1]?.video_captions?.[0]?.signed_url,
     };
   }

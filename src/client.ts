@@ -84,8 +84,11 @@ export default class VOTClient {
    *
    * @source
    */
-  isCustomFormat(url: string) {
-    return /\.(m3u8|m4(a|v)|mpd)/.exec(url);
+  isCustomLink(url: string): boolean {
+    return !!(
+      /\.(m3u8|m4(a|v)|mpd)/.exec(url) ??
+      /^https:\/\/cdn\.qstv\.on\.epicgames\.com/.exec(url)
+    );
   }
 
   /**
@@ -391,7 +394,7 @@ export default class VOTClient {
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
     const { url, videoId, host } = videoData;
 
-    return this.isCustomFormat(url)
+    return this.isCustomLink(url)
       ? await this.translateVideoVOTImpl({
           url,
           videoId,
@@ -418,7 +421,7 @@ export default class VOTClient {
     headers = {},
   }: VideoSubtitlesOpts) {
     const { url } = videoData;
-    if (this.isCustomFormat(url)) {
+    if (this.isCustomLink(url)) {
       throw new VOTJSError("Unsupported video URL for getting subtitles");
     }
 
@@ -474,7 +477,7 @@ export default class VOTClient {
     headers = {},
   }: StreamTranslationOpts): Promise<StreamTranslationResponse> {
     const { url } = videoData;
-    if (this.isCustomFormat(url)) {
+    if (this.isCustomLink(url)) {
       throw new VOTJSError(
         "Unsupported video URL for getting stream translation",
       );
