@@ -1,3 +1,7 @@
+# 1.0.4
+
+- Added support of `/inbox/` and `/bk/` paths for Mail.ru videos
+
 # 1.0.3
 
 - The behavior of the `data` field has been changed in case of a request error, now an error is written to it, if there is one

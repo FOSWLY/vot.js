@@ -6,6 +6,8 @@ import * as BannedVideo from "../types/helpers/bannedvideo.js";
 import * as Kick from "../types/helpers/kick.js";
 import { VideoService } from "../types/yandex.js";
 export declare class MailRuHelper {
+    API_ORIGIN: string;
+    getExtraVideoId(pathname: string): Promise<string | undefined>;
     getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined>;
 }
 export declare class WeverseHelper {
