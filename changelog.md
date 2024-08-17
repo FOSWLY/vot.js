@@ -1,6 +1,9 @@
 # 1.0.5
+
 - Added EpicGames support
 - Added 9animetv support
+- Fix embed Mail.ru videos
+- Simplified logic for `/inbox/` and `/bk/` paths of Mail.ru videos
 
 # 1.0.4
 

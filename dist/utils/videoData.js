@@ -136,13 +136,10 @@ export async function getVideoID(service, videoURL) {
         }
         case VideoService.mailru: {
             const pathname = url.pathname;
-            if (/\/(v|mail)\//.exec(pathname)) {
+            if (/\/(v|mail|bk|inbox)\//.exec(pathname)) {
                 return pathname.slice(1);
             }
-            const videoId = /video\/embed\/([^/]+)/.exec(pathname)?.[1] ??
-                /\/(bk|inbox)\/([^/]+)\/video\//.exec(pathname)
-                ? await VideoHelper.mailru.getExtraVideoId(pathname)
-                : undefined;
+            const videoId = /video\/embed\/([^/]+)/.exec(pathname)?.[1];
             if (!videoId) {
                 return null;
             }
@@ -214,6 +211,12 @@ export async function getVideoID(service, videoURL) {
         }
         case VideoService.appledeveloper: {
             return /videos\/play\/([^/]+)\/([\d]+)/.exec(url.pathname)?.[0];
+        }
+        case VideoService.epicgames: {
+            return /\/(\w{4})\/[^/]+$/.exec(url.pathname)?.[1];
+        }
+        case VideoService.nineanimetv: {
+            return /[^/]+$/.exec(url.href)?.[0];
         }
         default:
             return undefined;

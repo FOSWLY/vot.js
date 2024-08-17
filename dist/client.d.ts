@@ -21,7 +21,7 @@ export default class VOTClient {
         streamTranslation: string;
         createSession: string;
     };
-    isCustomFormat(url: string): RegExpExecArray | null;
+    isCustomLink(url: string): boolean;
     headers: Record<string, string>;
     headersVOT: Record<string, string>;
     constructor({ host, hostVOT, fetchFn, fetchOpts, getVideoDataFn, requestLang, responseLang, headers, }?: VOTOpts);

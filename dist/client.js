@@ -37,8 +37,9 @@ export default class VOTClient {
         streamTranslation: "/stream-translation/translate-stream",
         createSession: "/session/create",
     };
-    isCustomFormat(url) {
-        return /\.(m3u8|m4(a|v)|mpd)/.exec(url);
+    isCustomLink(url) {
+        return !!(/\.(m3u8|m4(a|v)|mpd)/.exec(url) ??
+            /^https:\/\/cdn\.qstv\.on\.epicgames\.com/.exec(url));
     }
     headers = {
         "User-Agent": this.userAgent,
@@ -213,7 +214,7 @@ export default class VOTClient {
     }
     async translateVideo({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
         const { url, videoId, host } = videoData;
-        return this.isCustomFormat(url)
+        return this.isCustomLink(url)
             ? await this.translateVideoVOTImpl({
                 url,
                 videoId,
@@ -232,7 +233,7 @@ export default class VOTClient {
     }
     async getSubtitles({ videoData, requestLang = this.requestLang, headers = {}, }) {
         const { url } = videoData;
-        if (this.isCustomFormat(url)) {
+        if (this.isCustomLink(url)) {
             throw new VOTJSError("Unsupported video URL for getting subtitles");
         }
         const { secretKey, uuid } = await this.getSession("video-translation");
@@ -266,7 +267,7 @@ export default class VOTClient {
     }
     async translateStream({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, headers = {}, }) {
         const { url } = videoData;
-        if (this.isCustomFormat(url)) {
+        if (this.isCustomLink(url)) {
             throw new VOTJSError("Unsupported video URL for getting stream translation");
         }
         const { secretKey, uuid } = await this.getSession("video-translation");

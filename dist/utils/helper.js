@@ -13,17 +13,6 @@ class VideoHelperError extends Error {
 }
 export class MailRuHelper {
     API_ORIGIN = "https://my.mail.ru/";
-    async getExtraVideoId(pathname) {
-        try {
-            const res = await fetchWithTimeout(`${this.API_ORIGIN}${pathname}`);
-            const content = await res.text();
-            return /"itemId":\s?"([^"]+)"/.exec(content)?.[1];
-        }
-        catch (err) {
-            console.error("Failed to get mail.ru extra video id", err.message);
-            return undefined;
-        }
-    }
     async getVideoData(videoId) {
         try {
             const res = await fetchWithTimeout(`${this.API_ORIGIN}+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`);
@@ -393,6 +382,107 @@ export class AppleDeveloperHelper {
         };
     }
 }
+export class EpicGamesHelper {
+    API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
+    async getPostInfo(videoId) {
+        try {
+            const res = await fetchWithTimeout(`${this.API_ORIGIN}/post.json?hash_id=${videoId}`);
+            return (await res.json());
+        }
+        catch (err) {
+            console.error(`Failed to get post info by videoId: ${videoId}.`, err.message);
+            return false;
+        }
+    }
+    async getVideoData(videoId) {
+        const postInfo = await this.getPostInfo(videoId);
+        if (!postInfo) {
+            return undefined;
+        }
+        const playlistUrl = postInfo.blocks
+            .find((block) => block.type === "video")
+            ?.video_url?.replace("qsep://", "https://");
+        if (!playlistUrl) {
+            return undefined;
+        }
+        return {
+            url: playlistUrl,
+        };
+    }
+}
+export class NineAnimetvHelper {
+    API_ORIGIN = "https://9animetv.to/ajax/episode";
+    RAPID_CLOUD_ORIGIN = "https://rapid-cloud.co/ajax/embed-6-v2";
+    async getSourceId(episodeId) {
+        try {
+            const res = await fetchWithTimeout(`${this.API_ORIGIN}/servers?episodeId=${episodeId}`);
+            const content = (await res.json());
+            if (!content.html) {
+                return false;
+            }
+            return /data-id="(\d+)"/.exec(content.html)?.[1];
+        }
+        catch (err) {
+            console.error(`Failed to get 9animetv servers info by episodeId: ${episodeId}.`, err.message);
+            return false;
+        }
+    }
+    async getPlayerLink(sourceId) {
+        try {
+            const res = await fetchWithTimeout(`${this.API_ORIGIN}/sources?id=${sourceId}`);
+            const content = (await res.json());
+            if (!content.link.includes("rapid-cloud.co")) {
+                return false;
+            }
+            return content.link;
+        }
+        catch (err) {
+            console.error(`Failed to get player link by sourceId: ${sourceId}.`, err.message);
+            return false;
+        }
+    }
+    async getRapidCloudData(rapidId) {
+        try {
+            const res = await fetchWithTimeout(`${this.RAPID_CLOUD_ORIGIN}/getSources?id=${rapidId}`);
+            const content = (await res.json());
+            if (content.encrypted) {
+                console.warn("Encrypted RapidCloud data found. Let us know about it", content);
+                return false;
+            }
+            return content;
+        }
+        catch (err) {
+            console.error(`Failed to get rapid cloud data by rapidId: ${rapidId}.`, err.message);
+            return false;
+        }
+    }
+    async getVideoData(videoId) {
+        const episodeId = videoId.split("?ep=")[1];
+        const sourceId = await this.getSourceId(episodeId);
+        if (!sourceId) {
+            return undefined;
+        }
+        const playerLink = await this.getPlayerLink(sourceId);
+        if (!playerLink) {
+            return undefined;
+        }
+        const rapidCloudId = /\/([^/?]+)\?/.exec(playerLink)?.[1];
+        if (!rapidCloudId) {
+            return undefined;
+        }
+        const rapidData = await this.getRapidCloudData(rapidCloudId);
+        if (!rapidData) {
+            return undefined;
+        }
+        const videoUrl = rapidData.sources.find((file) => file.type === "hls")?.file;
+        if (!videoUrl) {
+            return undefined;
+        }
+        return {
+            url: videoUrl,
+        };
+    }
+}
 export default class VideoHelper {
     static [VideoService.mailru] = new MailRuHelper();
     static [VideoService.weverse] = new WeverseHelper();
@@ -402,4 +492,6 @@ export default class VideoHelper {
     static [VideoService.bannedvideo] = new BannedVideoHelper();
     static [VideoService.kick] = new KickHelper();
     static [VideoService.appledeveloper] = new AppleDeveloperHelper();
+    static [VideoService.epicgames] = new EpicGamesHelper();
+    static [VideoService.nineanimetv] = new NineAnimetvHelper();
 }

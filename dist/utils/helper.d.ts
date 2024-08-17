@@ -4,10 +4,11 @@ import * as Kodik from "../types/helpers/kodik.js";
 import * as Patreon from "../types/helpers/patreon.js";
 import * as BannedVideo from "../types/helpers/bannedvideo.js";
 import * as Kick from "../types/helpers/kick.js";
+import * as NineAnimeTV from "../types/helpers/nineanimetv.js";
+import * as EpicGames from "../types/helpers/epicgames.js";
 import { VideoService } from "../types/yandex.js";
 export declare class MailRuHelper {
     API_ORIGIN: string;
-    getExtraVideoId(pathname: string): Promise<string | undefined>;
     getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined>;
 }
 export declare class WeverseHelper {
@@ -83,6 +84,23 @@ export declare class KickHelper {
     }>;
 }
 export declare class AppleDeveloperHelper {
+    getVideoData(videoId: string): Promise<{
+        url: string;
+    } | undefined>;
+}
+export declare class EpicGamesHelper {
+    API_ORIGIN: string;
+    getPostInfo(videoId: string): Promise<false | EpicGames.Post>;
+    getVideoData(videoId: string): Promise<{
+        url: string;
+    } | undefined>;
+}
+export declare class NineAnimetvHelper {
+    API_ORIGIN: string;
+    RAPID_CLOUD_ORIGIN: string;
+    getSourceId(episodeId: string | number): Promise<string | false | undefined>;
+    getPlayerLink(sourceId: string | number): Promise<string | false>;
+    getRapidCloudData(rapidId: string): Promise<false | NineAnimeTV.RapidData>;
     getVideoData(videoId: string): Promise<{
         url: string;
     } | undefined>;
