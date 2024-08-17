@@ -25,20 +25,6 @@ class VideoHelperError extends Error {
 export class MailRuHelper {
   API_ORIGIN = "https://my.mail.ru/";
 
-  async getExtraVideoId(pathname: string): Promise<string | undefined> {
-    try {
-      const res = await fetchWithTimeout(`${this.API_ORIGIN}${pathname}`);
-      const content = await res.text();
-      return /"itemId":\s?"([^"]+)"/.exec(content)?.[1];
-    } catch (err: unknown) {
-      console.error(
-        "Failed to get mail.ru extra video id",
-        (err as Error).message,
-      );
-      return undefined;
-    }
-  }
-
   async getVideoData(videoId: string): Promise<MailRu.VideoInfo | undefined> {
     try {
       const res = await fetchWithTimeout(
