@@ -205,6 +205,18 @@ export default [
         needExtraData: true,
     },
     {
+        host: VideoService.epicgames,
+        url: "https://dev.epicgames.com/community/learning/",
+        match: /^dev.epicgames.com$/,
+        needExtraData: true,
+    },
+    {
+        host: VideoService.nineanimetv,
+        url: "https://9animetv.to/watch/",
+        match: /^9animetv.to$/,
+        needExtraData: true,
+    },
+    {
         host: VideoService.custom,
         url: "stub",
         match: (url) => /([^.]+).mp4/.test(url.pathname),

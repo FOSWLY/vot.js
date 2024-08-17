@@ -96,5 +96,7 @@ export default class VideoHelper {
     static [VideoService.bannedvideo]: BannedVideoHelper;
     static [VideoService.kick]: KickHelper;
     static [VideoService.appledeveloper]: AppleDeveloperHelper;
+    static [VideoService.epicgames]: EpicGamesHelper;
+    static [VideoService.nineanimetv]: NineAnimetvHelper;
 }
 //# sourceMappingURL=helper.d.ts.map

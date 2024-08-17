@@ -44,6 +44,8 @@ export var VideoService;
     VideoService["apple_developer"] = "apple_developer";
     VideoService["appledeveloper"] = "apple_developer";
     VideoService["poketube"] = "poketube";
+    VideoService["epicgames"] = "epicgames";
+    VideoService["nineanimetv"] = "nineanimetv";
 })(VideoService || (VideoService = {}));
 export var VideoTranslationStatus;
 (function (VideoTranslationStatus) {
