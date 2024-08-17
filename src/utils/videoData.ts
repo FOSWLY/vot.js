@@ -166,11 +166,15 @@ export async function getVideoID(
     }
     case VideoService.mailru: {
       const pathname = url.pathname;
-      if (pathname.startsWith("/v/") || pathname.startsWith("/mail/")) {
+      if (/\/(v|mail)\//.exec(pathname)) {
         return pathname.slice(1);
       }
 
-      const videoId = /video\/embed\/([^/]+)/.exec(pathname)?.[1];
+      const videoId =
+        (/video\/embed\/([^/]+)/.exec(pathname)?.[1] ??
+        /\/(bk|inbox)\/([^/]+)\/video\//.exec(pathname))
+          ? await VideoHelper.mailru.getExtraVideoId(pathname)
+          : undefined;
       if (!videoId) {
         return null;
       }

@@ -12,9 +12,21 @@ class VideoHelperError extends Error {
     }
 }
 export class MailRuHelper {
+    API_ORIGIN = "https://my.mail.ru/";
+    async getExtraVideoId(pathname) {
+        try {
+            const res = await fetchWithTimeout(`${this.API_ORIGIN}${pathname}`);
+            const content = await res.text();
+            return /"itemId":\s?"([^"]+)"/.exec(content)?.[1];
+        }
+        catch (err) {
+            console.error("Failed to get mail.ru extra video id", err.message);
+            return undefined;
+        }
+    }
     async getVideoData(videoId) {
         try {
-            const res = await fetchWithTimeout(`https://my.mail.ru/+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`);
+            const res = await fetchWithTimeout(`${this.API_ORIGIN}+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`);
             return (await res.json());
         }
         catch (err) {

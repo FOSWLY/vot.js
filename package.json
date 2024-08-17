@@ -87,10 +87,10 @@
     "@types/bun": "latest",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.8.0",
-    "eslint-plugin-oxlint": "0.7.1",
+    "eslint-plugin-oxlint": "^0.7.1",
     "eslint-plugin-sonarjs": "^1.0.4",
     "husky": "^9.1.4",
-    "oxlint": "0.7.0",
+    "oxlint": "0.7.1",
     "ts-proto": "^1.181.1",
     "tsc-esm-fix": "^3.0.2",
     "typedoc": "0.25.13",
@@ -98,7 +98,7 @@
     "typedoc-plugin-inline-sources": "^1.0.2",
     "typedoc-plugin-rename-defaults": "^0.7.1",
     "typescript": "^5.5.4",
-    "typescript-eslint": "8.0.1"
+    "typescript-eslint": "8.1.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
