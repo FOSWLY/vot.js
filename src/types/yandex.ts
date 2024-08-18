@@ -61,6 +61,7 @@ export enum VideoService {
   epicgames = "epicgames",
   nineanimetv = "nineanimetv",
   odysee = "odysee",
+  coursehunter = "coursehunter",
 }
 
 export type ServiceConf = {
