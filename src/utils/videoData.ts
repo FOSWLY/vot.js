@@ -1,8 +1,6 @@
 import sites from "../config/sites";
 import { ServiceConf, VideoService } from "../types/yandex";
-import * as Kodik from "../types/helpers/kodik";
-import VideoHelper from "./helper";
-import { fetchWithTimeout } from "./utils";
+import VideoHelper from "../helpers";
 import { VideoData } from "../types/client";
 
 class VideoDataError extends Error {
@@ -50,8 +48,15 @@ export async function getVideoID(
   service: ServiceConf,
   videoURL: string,
 ): Promise<string | null | undefined> {
-  const url = new URL(videoURL);
-  switch (service.host) {
+  // fix type mismatch
+  const url = new URL(videoURL) as URL;
+  const serviceHost = service.host;
+  if (Object.getOwnPropertyDescriptor(VideoHelper, serviceHost)) {
+    return await VideoHelper[serviceHost as VideoService.weverse].getVideoId(
+      url,
+    );
+  }
+  switch (serviceHost) {
     case VideoService.custom:
       return url.href;
     case VideoService.piped:
@@ -85,48 +90,6 @@ export async function getVideoID(
     case VideoService.nine_gag:
     case VideoService.gag:
       return /gag\/([^/]+)/.exec(url.pathname)?.[1];
-    case VideoService.twitch: {
-      const clipPath = /([^/]+)\/(?:clip)\/([^/]+)/.exec(url.pathname);
-      const isClipsDomain = /^clips\.twitch\.tv$/.test(url.hostname);
-      if (/^m\.twitch\.tv$/.test(url.hostname)) {
-        return /videos\/([^/]+)/.exec(url.href)?.[0] ?? url.pathname.slice(1);
-      } else if (/^player\.twitch\.tv$/.test(url.hostname)) {
-        return `videos/${url.searchParams.get("video")}`;
-      } else if (isClipsDomain) {
-        const pathname = url.pathname.slice(1);
-        const isEmbed = pathname === "embed";
-        const res = await fetchWithTimeout(
-          `https://clips.twitch.tv/${
-            isEmbed ? url.searchParams.get("clip") : url.pathname.slice(1)
-          }`,
-          {
-            // maybe this way there is a better chance that the schema will be on the page
-            headers: {
-              "User-Agent":
-                "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
-            },
-          },
-        );
-
-        const content = await res.text();
-
-        // get creator.url from schema
-        const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(
-          content,
-        );
-        if (!channelLink) {
-          return null;
-        }
-
-        return `${channelLink[1]}/clip/${
-          isEmbed ? url.searchParams.get("clip") : pathname
-        }`;
-      } else if (clipPath) {
-        return clipPath[0];
-      }
-
-      return /(?:videos)\/([^/]+)/.exec(url.pathname)?.[0];
-    }
     case VideoService.proxitok:
     case VideoService.tiktok:
       return /([^/]+)\/video\/([^/]+)/.exec(url.pathname)?.[0];
@@ -164,24 +127,6 @@ export async function getVideoID(
       }
       return vid;
     }
-    case VideoService.mailru: {
-      const pathname = url.pathname;
-      if (/\/(v|mail|bk|inbox)\//.exec(pathname)) {
-        return pathname.slice(1);
-      }
-
-      const videoId = /video\/embed\/([^/]+)/.exec(pathname)?.[1];
-      if (!videoId) {
-        return null;
-      }
-
-      const videoData = await VideoHelper.mailru.getVideoData(videoId);
-      if (!videoData) {
-        return null;
-      }
-
-      return videoData.meta.url.replace("//my.mail.ru/", "");
-    }
     case VideoService.bitchute:
       return /(video|embed)\/([^/]+)/.exec(url.pathname)?.[2];
     case VideoService.eporner:
@@ -214,11 +159,6 @@ export async function getVideoID(
     }
     case VideoService.googledrive:
       return /\/file\/d\/([^/]+)/.exec(url.pathname)?.[1];
-    case VideoService.bannedvideo: {
-      return url.searchParams.get("id");
-    }
-    case VideoService.weverse:
-      return /([^/]+)\/(live|media)\/([^/]+)/.exec(url.pathname)?.[3];
     case VideoService.newgrounds:
       return /([^/]+)\/(view)\/([^/]+)/.exec(url.pathname)?.[0];
     case VideoService.egghead:
@@ -227,42 +167,6 @@ export async function getVideoID(
       return /v_show\/id_[\w=]+/.exec(url.pathname)?.[0];
     case VideoService.archive:
       return /(details|embed)\/([^/]+)/.exec(url.pathname)?.[2];
-    case VideoService.kodik:
-      return /\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/.exec(
-        url.pathname,
-      )?.[0] as Kodik.Path;
-    case VideoService.patreon: {
-      const fullPostId = /posts\/([^/]+)/.exec(url.pathname)?.[1];
-      if (!fullPostId) {
-        return undefined;
-      }
-
-      return fullPostId.replace(/[^\d.]/g, "");
-    }
-    case VideoService.reddit:
-      return /\/r\/(([^/]+)\/([^/]+)\/([^/]+)\/([^/]+))/.exec(
-        url.pathname,
-      )?.[1];
-    case VideoService.kick: {
-      const videoId = /video\/([^/]+)/.exec(url.pathname)?.[0];
-      if (videoId) {
-        return videoId;
-      }
-
-      return url.searchParams.get("clip");
-    }
-    case VideoService.appledeveloper: {
-      return /videos\/play\/([^/]+)\/([\d]+)/.exec(url.pathname)?.[0];
-    }
-    case VideoService.epicgames: {
-      return /\/(\w{4})\/[^/]+$/.exec(url.pathname)?.[1];
-    }
-    case VideoService.nineanimetv: {
-      return /[^/]+$/.exec(url.href)?.[0];
-    }
-    case VideoService.odysee: {
-      return url.pathname.slice(1);
-    }
     default:
       return undefined;
   }
