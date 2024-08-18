@@ -465,3 +465,10 @@ test("nineanimetv", async () => {
   );
   expect(normalized).toEndWith("master.m3u8");
 });
+
+test("odysee", async () => {
+  const normalized = await normalize(
+    "https://odysee.com/@fort_boyard:b/%C3%89mission-du-mercredi-14-ao%C3%BBt-2024-en-replay---Fort-Boyard---toujours-plus-fort-!:5",
+  );
+  expect(normalized).toStartWith("https://player.odycdn.com/");
+});

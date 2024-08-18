@@ -60,6 +60,7 @@ export enum VideoService {
   poketube = "poketube",
   epicgames = "epicgames",
   nineanimetv = "nineanimetv",
+  odysee = "odysee",
 }
 
 export type ServiceConf = {

@@ -1,3 +1,7 @@
+# 1.x
+
+- Added Odysee support
+
 # 1.0.5
 
 - Added EpicGames support

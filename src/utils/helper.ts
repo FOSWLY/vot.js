@@ -34,7 +34,7 @@ export class MailRuHelper {
       );
       return (await res.json()) as MailRu.VideoInfo;
     } catch (err: unknown) {
-      console.error("Failed to get mail.ru video info", (err as Error).message);
+      console.error("Failed to get mail.ru video data", (err as Error).message);
       return undefined;
     }
   }
@@ -695,6 +695,21 @@ export class NineAnimetvHelper {
   }
 }
 
+export class OdyseeHelper {
+  API_ORIGIN = "https://odysee.com/";
+
+  async getVideoData(videoId: string) {
+    try {
+      const res = await fetchWithTimeout(`${this.API_ORIGIN}${videoId}`);
+      const content = await res.text();
+      return { url: /"contentUrl":(\s)?"([^"]+)"/.exec(content)?.[2] };
+    } catch (err: unknown) {
+      console.error("Failed to get odysee video data", (err as Error).message);
+      return undefined;
+    }
+  }
+}
+
 /**
  * A convenient wrapper over the rest of the helpers
  */
@@ -728,4 +743,7 @@ export default class VideoHelper {
 
   /** @source */
   static [VideoService.nineanimetv] = new NineAnimetvHelper();
+
+  /** @source */
+  static [VideoService.odysee] = new OdyseeHelper();
 }

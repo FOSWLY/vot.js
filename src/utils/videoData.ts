@@ -260,6 +260,9 @@ export async function getVideoID(
     case VideoService.nineanimetv: {
       return /[^/]+$/.exec(url.href)?.[0];
     }
+    case VideoService.odysee: {
+      return url.pathname.slice(1);
+    }
     default:
       return undefined;
   }

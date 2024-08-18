@@ -231,6 +231,12 @@ export default [
     needExtraData: true,
   },
   {
+    host: VideoService.odysee,
+    url: "stub",
+    match: /^odysee.com$/,
+    needExtraData: true,
+  },
+  {
     host: VideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).mp4/.test(url.pathname),
