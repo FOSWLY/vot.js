@@ -1,6 +1,15 @@
-# 1.x
+# 1.1.0
 
 - Added Odysee support
+- Added Coursehunter support
+- Fix EpicGames 3 and 5 symbols ids
+- Rework VideoHelper logic
+
+Now 1 helper = 1 file.
+
+some GetVideoId service logic moved to helper file.
+
+`/helpers/index.ts` - concat all helpers in one class.
 
 # 1.0.5
 

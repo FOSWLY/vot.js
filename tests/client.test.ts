@@ -20,7 +20,7 @@ test("Translate video", async () => {
 
 test("Translate video (worker)", async () => {
   const client = new VOTWorkerClient({
-    host: "vot.toil.cc",
+    host: "vot-worker.toil.cc",
   });
 
   const response = await client.translateVideo({

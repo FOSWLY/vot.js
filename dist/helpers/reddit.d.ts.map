@@ -1,0 +1,1 @@
+{"version":3,"file":"reddit.d.ts","sourceRoot":"","sources":["../../src/helpers/reddit.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,QAAQ,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,YAAa,SAAQ,UAAU;IAClD,UAAU,SAA4B;IAEhC,YAAY,CAAC,OAAO,EAAE,MAAM;;;IAmB5B,UAAU,CAAC,GAAG,EAAE,GAAG;CAG1B"}

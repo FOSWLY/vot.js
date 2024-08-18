@@ -1,1 +1,1 @@
-{"version":3,"file":"sites.d.ts","sourceRoot":"","sources":["../../src/config/sites.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,WAAW,EAAgB,MAAM,iBAAiB,CAAC;wBA6OvD,WAAW,EAAE;AApOlB,wBAoOmB"}
+{"version":3,"file":"sites.d.ts","sourceRoot":"","sources":["../../src/config/sites.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,WAAW,EAAgB,MAAM,iBAAiB,CAAC;wBAyPvD,WAAW,EAAE;AAhPlB,wBAgPmB"}

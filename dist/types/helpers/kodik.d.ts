@@ -1,8 +1,6 @@
 export type VideoType = "seria" | "video";
 export type VideoId = string;
 export type Hash = string;
-export type Quality = `${number}p`;
-export type Path = `/${VideoType}/${VideoId}/${Hash}/${Quality}`;
 export type SecureContent = {
     d: string;
     d_sign: string;

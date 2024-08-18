@@ -217,6 +217,18 @@ export default [
         needExtraData: true,
     },
     {
+        host: VideoService.odysee,
+        url: "stub",
+        match: /^odysee.com$/,
+        needExtraData: true,
+    },
+    {
+        host: VideoService.coursehunter,
+        url: "https://coursehunter.net/course/",
+        match: /^coursehunter.net$/,
+        needExtraData: true,
+    },
+    {
         host: VideoService.custom,
         url: "stub",
         match: (url) => /([^.]+).mp4/.test(url.pathname),

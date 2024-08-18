@@ -9,3 +9,8 @@ export * as WeverseType from "./helpers/weverse.js";
 export * as KodikType from "./helpers/kodik.js";
 export * as PatreonType from "./helpers/patreon.js";
 export * as KickType from "./helpers/kick.js";
+export * as BannedVideoType from "./helpers/bannedvideo.js";
+export * as CoursehunterType from "./helpers/coursehunter.js";
+export * as EpicGamesType from "./helpers/epicgames.js";
+export * as NineAnimeTVType from "./helpers/nineanimetv.js";
+export * as BaseHelperType from "./helpers/base.js";
