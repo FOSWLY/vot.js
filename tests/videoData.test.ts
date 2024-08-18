@@ -472,3 +472,11 @@ test("odysee", async () => {
   );
   expect(normalized).toStartWith("https://player.odycdn.com/");
 });
+
+test("coursehunter", async () => {
+  const normalized = await normalize(
+    "https://coursehunter.net/course/intensiv-docker-2-0?lesson=3",
+  );
+  expect(normalized).toInclude("coursehunter.net");
+  expect(normalized).toEndWith("/lesson3.mp4");
+});

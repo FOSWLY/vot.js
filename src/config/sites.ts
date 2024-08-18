@@ -237,6 +237,12 @@ export default [
     needExtraData: true,
   },
   {
+    host: VideoService.coursehunter,
+    url: "https://coursehunter.net/course/",
+    match: /^coursehunter.net$/,
+    needExtraData: true,
+  },
+  {
     host: VideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).mp4/.test(url.pathname),
