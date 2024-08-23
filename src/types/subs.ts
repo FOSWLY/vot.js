@@ -16,7 +16,7 @@ export type SubtitleItem = {
   speakerId: string;
 };
 
-export type SubtitlesDate = {
+export type SubtitlesData = {
   containsTokens: boolean;
   subtitles: SubtitleItem[];
 };

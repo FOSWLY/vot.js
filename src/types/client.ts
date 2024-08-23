@@ -12,6 +12,11 @@ export type FetchFunction = (
 
 export type URLSchema = "http" | "https";
 
+export type VideoDataSubtitle = {
+  language: string;
+  url: string;
+};
+
 export type VideoData = {
   url: string;
   videoId: string;
@@ -21,6 +26,7 @@ export type VideoData = {
   isStream?: boolean;
   title?: string;
   description?: string;
+  subtitles?: VideoDataSubtitle[];
 };
 
 export type GetVideoDataFunction = (url: string) => Promise<VideoData>;
