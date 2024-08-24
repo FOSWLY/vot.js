@@ -94,23 +94,139 @@ const srtSubs = `1
 what'd you get there?
 
 2
-00:00:34,649 --> 00:00:38,469
+00:00:34,650 --> 00:00:38,470
 we're back in tokyo checking out the carrot tower.`;
-
-test("Convert to SRT", () => {
-  const srt = convertSubs(jsonSubs, "srt");
-  expect(srt).toEqual(srtSubs);
-});
 
 const vttSubs = `WEBVTT
 
-00:00:26,170 --> 00:00:27,350
+00:00:26.170 --> 00:00:27.350
 what'd you get there?
 
-00:00:34,649 --> 00:00:38,469
+00:00:34.650 --> 00:00:38.470
 we're back in tokyo checking out the carrot tower.`;
 
-test("Convert to VTT", () => {
-  const srt = convertSubs(jsonSubs, "vtt");
-  expect(srt).toEqual(vttSubs);
+const jsonSubsWithoutTokens = {
+  containsTokens: false,
+  subtitles: [
+    {
+      text: "у вас были существующие системы ранжирования и подтверждения доверия. Если что-то публикуется на новостном сайте,",
+      startMs: 361120,
+      durationMs: 5259,
+      speakerId: "0",
+    },
+    {
+      text: "скорее всего, это правда. Если что-то публикуется на Reddit, скорее всего, это человек, а не бот.",
+      startMs: 366600,
+      durationMs: 4479,
+      speakerId: "0",
+    },
+    {
+      text: "Если что-то получило много положительных отзывов, скорее всего, это хорошо, а не плохо. Поскольку искусственный интеллект начинает использоваться для создания",
+      startMs: 371360,
+      durationMs: 5099,
+      speakerId: "0",
+    },
+    {
+      text: "этот контент заполняет эти места, так как мы получаем все больше новостных статей, генерируемых чатом GPT,",
+      startMs: 376460,
+      durationMs: 5080,
+      speakerId: "0",
+    },
+    {
+      text: "поскольку мы получаем все больше ответов о переполнении стека, генерируемом открытыми моделями искусственного интеллекта, поскольку эти источники",
+      startMs: 381580,
+      durationMs: 5259,
+      speakerId: "0",
+    },
+  ],
+};
+
+const vttSubs2 = `WEBVTT
+
+00:06:01.120 --> 00:06:06.379
+у вас были существующие системы ранжирования и подтверждения доверия. Если что-то публикуется на новостном сайте,
+
+00:06:06.600 --> 00:06:11.079
+скорее всего, это правда. Если что-то публикуется на Reddit, скорее всего, это человек, а не бот.
+
+00:06:11.360 --> 00:06:16.459
+Если что-то получило много положительных отзывов, скорее всего, это хорошо, а не плохо. Поскольку искусственный интеллект начинает использоваться для создания
+
+00:06:16.460 --> 00:06:21.540
+этот контент заполняет эти места, так как мы получаем все больше новостных статей, генерируемых чатом GPT,
+
+00:06:21.580 --> 00:06:26.839
+поскольку мы получаем все больше ответов о переполнении стека, генерируемом открытыми моделями искусственного интеллекта, поскольку эти источники`;
+
+const srtSubs2 = `1
+00:06:01,120 --> 00:06:06,379
+у вас были существующие системы ранжирования и подтверждения доверия. Если что-то публикуется на новостном сайте,
+
+2
+00:06:06,600 --> 00:06:11,079
+скорее всего, это правда. Если что-то публикуется на Reddit, скорее всего, это человек, а не бот.
+
+3
+00:06:11,360 --> 00:06:16,459
+Если что-то получило много положительных отзывов, скорее всего, это хорошо, а не плохо. Поскольку искусственный интеллект начинает использоваться для создания
+
+4
+00:06:16,460 --> 00:06:21,540
+этот контент заполняет эти места, так как мы получаем все больше новостных статей, генерируемых чатом GPT,
+
+5
+00:06:21,580 --> 00:06:26,839
+поскольку мы получаем все больше ответов о переполнении стека, генерируемом открытыми моделями искусственного интеллекта, поскольку эти источники`;
+
+const vttSubsMultiLine = `WEBVTT
+
+00:00:00.000 --> 00:00:01.415
+
+
+00:00:01.415 --> 00:00:02.608
+MATHEW WADSTEIN:
+Now that we are prepared to`;
+
+const srtSubsMultiLine = `1
+00:00:00,000 --> 00:00:01,415
+
+
+2
+00:00:01,415 --> 00:00:02,608
+MATHEW WADSTEIN:
+Now that we are prepared to`;
+
+test("Convert JSON (with tokens) -> SRT", () => {
+  const subs = convertSubs(jsonSubs, "srt");
+  expect(subs).toEqual(srtSubs);
+});
+
+test("Convert JSON (with tokens) -> VTT", () => {
+  const subs = convertSubs(jsonSubs, "vtt");
+  expect(subs).toEqual(vttSubs);
+});
+
+test("Convert JSON -> VTT", () => {
+  const subs = convertSubs(jsonSubsWithoutTokens, "vtt");
+  expect(subs).toEqual(vttSubs2);
+});
+
+test("Convert VTT -> JSON", () => {
+  const json = convertSubs(vttSubs2, "json");
+  expect(json).toEqual(jsonSubsWithoutTokens);
+});
+
+test("Convert SRT -> JSON", () => {
+  const subs = convertSubs(srtSubs2, "json");
+  expect(subs).toEqual(jsonSubsWithoutTokens);
+});
+
+test("Convert VTT -> SRT", () => {
+  const subs = convertSubs(vttSubs2, "srt");
+  expect(subs).toEqual(srtSubs2);
+});
+
+test("Convert VTT (multi-line) -> SRT", () => {
+  const subs = convertSubs(vttSubsMultiLine, "srt") as string;
+  expect(subs).toEqual(srtSubsMultiLine);
 });
