@@ -26,3 +26,8 @@ export async function fetchWithTimeout(
 export function getTimestamp() {
   return Math.floor(Date.now() / 1000);
 }
+
+export function normalizeLang(lang: string) {
+  // convert lang to ISO 639-1
+  return lang.toLowerCase().split(/[_;-]/)[0].trim();
+}
