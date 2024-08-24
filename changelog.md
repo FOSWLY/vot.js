@@ -1,3 +1,19 @@
+# 1.2.0 [WIP]
+
+- Fixed an inaccuracy due to which milliseconds were incorrectly converted to a string in `convertToStrTime` function ([vot-cli#37](https://github.com/FOSWLY/vot-cli/pull/37#discussion_r1694870105))
+- Fixed VTT timestamp delimiter
+- Added new subtitles convert directions:
+
+  - `SRT -> JSON`;
+  - `SRT -> VTT`;
+  - `VTT -> JSON`;
+  - `VTT -> SRT`;
+
+- Added `convertToMSTime` function
+- Function `convertToSrtTime` now accepts milliseconds instead of seconds, also added extra timestamp delimiter argument
+- Renamed function `convertToSrtTimeFormat` -> `convertToStrTime`
+- Fix a typo that turned `SubtitlesData` into `SubtitlesDate`
+
 # 1.1.0
 
 - Added Odysee support
