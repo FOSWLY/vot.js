@@ -110,9 +110,8 @@ export default class KodikHelper extends BaseHelper {
     const decryptedUrl = atob(
       encryptedUrl.replace(/[a-zA-Z]/g, function (e) {
         const charCode = e.charCodeAt(0) + 13;
-        return String.fromCharCode(
-          (e <= "Z" ? 90 : 122) >= charCode ? charCode : charCode - 26,
-        );
+        const pos = e <= "Z" ? 90 : 122;
+        return String.fromCharCode(pos >= charCode ? charCode : charCode - 26);
       }),
     );
 
