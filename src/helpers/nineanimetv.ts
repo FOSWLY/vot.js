@@ -105,11 +105,13 @@ export default class NineAnimeTVHelper extends BaseHelper {
     }
 
     const subtitles = rapidData.tracks.reduce((result, track) => {
-      const lang = /([\w+]+)(-\d)?\.vtt/.exec(track.file)?.[1];
-      if (!lang) {
+      const fileName = /([\w+]+)(-\d)?\.vtt/.exec(track.file)?.[1];
+      if (!fileName) {
         return result;
       }
 
+      const lang = fileName.length === 3 ? fileName : track.label;
+      // there may be an unsupported language  (e.g. English, Spanish and etc full names of languages)
       const language = normalizeLang(lang);
       if (result.find((t) => t.language === language)) {
         return result;

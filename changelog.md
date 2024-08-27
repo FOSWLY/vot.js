@@ -1,3 +1,7 @@
+# 1.2.2
+
+- Fix 9animetv set hash filename as subtitles language
+
 # 1.2.1
 
 - Removed export `convertSubsToJSON` function
