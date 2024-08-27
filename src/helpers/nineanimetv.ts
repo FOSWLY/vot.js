@@ -1,5 +1,7 @@
 import { BaseHelper } from "./base";
 import * as NineAnimeTV from "../types/helpers/nineanimetv";
+import { normalizeLang } from "../utils/utils";
+import { MinimalVideoData, VideoDataSubtitle } from "../types/client";
 
 export default class NineAnimeTVHelper extends BaseHelper {
   API_ORIGIN = "https://9animetv.to/ajax/episode";
@@ -72,7 +74,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
     }
   }
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const episodeId = videoId.split("?ep=")[1];
     const sourceId = await this.getSourceId(episodeId);
     if (!sourceId) {
@@ -102,8 +104,29 @@ export default class NineAnimeTVHelper extends BaseHelper {
       return undefined;
     }
 
+    const subtitles = rapidData.tracks.reduce((result, track) => {
+      const lang = /([\w+]+)(-\d)?\.vtt/.exec(track.file)?.[1];
+      if (!lang) {
+        return result;
+      }
+
+      const language = normalizeLang(lang);
+      if (result.find((t) => t.language === language)) {
+        return result;
+      }
+
+      result.push({
+        language,
+        format: "vtt",
+        url: track.file,
+      });
+
+      return result;
+    }, [] as VideoDataSubtitle[]);
+
     return {
       url: videoUrl,
+      subtitles,
     };
   }
 
