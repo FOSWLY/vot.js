@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["dist/*", "docs/*", "**/*.d.ts"],
+    ignores: ["dist/*", "docs/*", "**/*.d.ts", "examples/*", "scripts/*"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -19,6 +19,13 @@ export default tseslint.config(
       "sonarjs/single-char-in-character-classes": 0,
       "sonarjs/slow-regex": 0,
       "sonarjs/function-return-type": 0,
+      // sonarjs/sonar-no-fallthrough crashed in 2.0.1
+      "sonarjs/sonar-no-fallthrough": 0,
+      "sonarjs/single-character-alternation": 0,
+      "sonarjs/anchor-precedence": 0,
+      "sonarjs/todo-tag": 0,
+      "sonarjs/redundant-type-aliases": 0,
+      "sonarjs/cognitive-complexity": "warn",
     },
     languageOptions: {
       ecmaVersion: "latest",
