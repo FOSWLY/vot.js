@@ -1,4 +1,4 @@
-import { SubtitleFormat, SubtitlesData } from "../types/subs";
+import { SubtitleFormat, SubtitleItem, SubtitlesData } from "../types/subs";
 
 export function convertToStrTime(ms: number, delimiter = ",") {
   const seconds = ms / 1000;
@@ -16,7 +16,12 @@ export function convertToStrTime(ms: number, delimiter = ",") {
 }
 
 function convertToMSTime(time: string) {
-  const [strHours, strMinutes, strSeconds] = time.split(":");
+  const parts = time.split(":");
+  if (parts.length < 3) {
+    parts.unshift("00");
+  }
+
+  const [strHours, strMinutes, strSeconds] = parts;
 
   const secs = +strSeconds.replace(/[,.]/, "");
   const mins = +strMinutes * 60_000;
@@ -50,29 +55,39 @@ function convertSubsToJSON(
   data: string,
   from: Exclude<SubtitleFormat, "json"> = "srt",
 ): SubtitlesData {
-  const parts = data.split("\n\n");
+  const parts = data.split(/\r?\n\r?\n/g);
   if (from === "vtt") {
     parts.shift();
   }
 
   const offset = +(from === "srt");
-  const subtitles = parts.map((part) => {
+  const subtitles = parts.reduce((result, part) => {
     // for work with multi-line subs
     const lines = part.trim().split("\n");
     const time = lines[offset];
     const text = lines.slice(offset + 1).join("\n");
+    if (
+      (lines.length !== 2 || !part.includes(" --> ")) &&
+      !time?.includes(" --> ")
+    ) {
+      // for work with multi-line paragraphs
+      result[result.length - 1].text += `\n\n${lines.join("\n")}`;
+      return result;
+    }
+
     const [start, end] = time.split(" --> ");
     const startMs = convertToMSTime(start);
     const endMs = convertToMSTime(end);
     const durationMs = endMs - startMs;
 
-    return {
+    result.push({
       text,
       startMs,
       durationMs,
       speakerId: "0",
-    };
-  });
+    });
+    return result;
+  }, [] as SubtitleItem[]);
 
   return {
     containsTokens: false,
@@ -85,7 +100,7 @@ export function getSubsFormat(data: SubtitlesData | string): SubtitleFormat {
     return "json";
   }
 
-  if (data.startsWith("WEBVTT\n\n")) {
+  if (/(WEBVTT)(\r?\n\r?\n)/.exec(data)) {
     return "vtt";
   }
 

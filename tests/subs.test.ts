@@ -196,6 +196,65 @@ const srtSubsMultiLine = `1
 MATHEW WADSTEIN:
 Now that we are prepared to`;
 
+const cursedVTT = `WEBVTT
+
+04:00.970 --> 04:04.430
+m 6 15 l 256 14 250 284 12 283 16 25
+
+04:00.970 --> 04:04.430
+<b>Selezioni per l'All Japan
+
+Quando: il 15 a mezzogiorno
+
+Cosa si farà: tumbling, stunt, danza
+
+Possono partecipare tutti gli anni
+
+Non ci saranno allenamenti regolari
+fino alle selezioni.
+Potrete allenarvi per conto vostro
+nella palestra 1.
+Non dimenticate di fare
+riscaldamento e stretching
+e di riordinare quando avete finito.
+
+Non battete la fiacca
+
+Siate belle e zelanti</b>
+
+04:06.750 --> 04:08.760
+Ieri è stato incredibile, vero?`;
+
+const srtMultilineWithParagraphs = `1
+00:04:00,970 --> 00:04:04,430
+m 6 15 l 256 14 250 284 12 283 16 25
+
+2
+00:04:00,970 --> 00:04:04,430
+<b>Selezioni per l'All Japan
+
+Quando: il 15 a mezzogiorno
+
+Cosa si farà: tumbling, stunt, danza
+
+Possono partecipare tutti gli anni
+
+Non ci saranno allenamenti regolari
+fino alle selezioni.
+Potrete allenarvi per conto vostro
+nella palestra 1.
+Non dimenticate di fare
+riscaldamento e stretching
+e di riordinare quando avete finito.
+
+Non battete la fiacca
+
+Siate belle e zelanti</b>
+
+3
+00:04:06,750 --> 00:04:08,760
+Ieri è stato incredibile, vero?`;
+
 test("Convert JSON (with tokens) -> SRT", () => {
   const subs = convertSubs(jsonSubs, "srt");
   expect(subs).toEqual(srtSubs);
@@ -229,4 +288,9 @@ test("Convert VTT -> SRT", () => {
 test("Convert VTT (multi-line) -> SRT", () => {
   const subs = convertSubs(vttSubsMultiLine, "srt") as string;
   expect(subs).toEqual(srtSubsMultiLine);
+});
+
+test("Convert VTT (multi-line with paragraphs + with short timestamp format) -> SRT", () => {
+  const subs = convertSubs(cursedVTT, "srt") as string;
+  expect(subs).toEqual(srtMultilineWithParagraphs);
 });
