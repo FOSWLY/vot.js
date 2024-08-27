@@ -1,5 +1,6 @@
 import { BaseHelper } from "./base";
 import * as BannedVideo from "../types/helpers/bannedvideo";
+import { MinimalVideoData } from "../types/client";
 
 export default class BannedVideoHelper extends BaseHelper {
   API_ORIGIN = "https://api.banned.video";
@@ -43,7 +44,7 @@ export default class BannedVideoHelper extends BaseHelper {
     }
   }
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const videoInfo = await this.getVideoInfo(videoId);
     if (!videoInfo) {
       return undefined;

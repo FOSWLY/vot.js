@@ -1,4 +1,4 @@
-import { FetchFunction, VideoData } from "../types/client";
+import { FetchFunction, MinimalVideoData } from "../types/client";
 import { BaseHelperOpts } from "../types/helpers/base";
 import { fetchWithTimeout } from "../utils/utils";
 
@@ -18,11 +18,8 @@ export class BaseHelper {
     this.fetch = fetchFn;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async getVideoData(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    videoId: string,
-  ): Promise<Partial<VideoData> | undefined> {
+  // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     return undefined;
   }
 

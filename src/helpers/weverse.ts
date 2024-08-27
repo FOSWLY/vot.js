@@ -1,6 +1,7 @@
 import { BaseHelper, VideoHelperError } from "./base";
 import { getHmacSha1 } from "../secure";
 import * as Weverse from "../types/helpers/weverse";
+import { MinimalVideoData } from "../types/client";
 
 export default class WeverseHelper extends BaseHelper {
   API_ORIGIN = "https://global.apis.naver.com/weverse/wevweb"; // find as REACT_APP_API_GW_ORIGIN in main.<hash>.js
@@ -146,7 +147,7 @@ export default class WeverseHelper extends BaseHelper {
     );
   }
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const videoPreview = await this.getPostPreview(videoId);
     if (!videoPreview) {
       return undefined;

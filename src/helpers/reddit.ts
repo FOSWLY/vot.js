@@ -1,9 +1,10 @@
+import { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
 
 export default class RedditHelper extends BaseHelper {
   API_ORIGIN = "https://www.reddit.com";
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const res = await this.fetch(`${this.API_ORIGIN}/r/${videoId}`);
     const content = await res.text();
 

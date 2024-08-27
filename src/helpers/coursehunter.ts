@@ -1,3 +1,4 @@
+import { MinimalVideoData } from "../types/client";
 import { Lesson } from "../types/helpers/coursehunter";
 import { BaseHelper } from "./base";
 
@@ -33,7 +34,7 @@ export default class CoursehunterHelper extends BaseHelper {
     }
   }
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const courseId = await this.getCourseId(videoId);
     if (!courseId) {
       return undefined;

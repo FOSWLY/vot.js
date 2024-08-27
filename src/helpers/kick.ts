@@ -2,6 +2,7 @@ import sites from "../config/sites";
 import { BaseHelper } from "./base";
 import * as Kick from "../types/helpers/kick";
 import { VideoService } from "../types/yandex";
+import { MinimalVideoData } from "../types/client";
 
 export default class KickHelper extends BaseHelper {
   API_ORIGIN = "https://kick.com/api/v2";
@@ -20,7 +21,7 @@ export default class KickHelper extends BaseHelper {
     }
   }
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     if (!videoId.startsWith("clip_")) {
       // video can be translated by api by default
       return {

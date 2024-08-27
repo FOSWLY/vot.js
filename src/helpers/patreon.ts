@@ -1,5 +1,6 @@
 import { BaseHelper } from "./base";
 import * as Patreon from "../types/helpers/patreon";
+import { MinimalVideoData } from "../types/client";
 
 export default class PatreonHelper extends BaseHelper {
   API_ORIGIN = "https://www.patreon.com/api";
@@ -22,7 +23,9 @@ export default class PatreonHelper extends BaseHelper {
     }
   }
 
-  async getVideoData(postId: string | number) {
+  async getVideoData(
+    postId: string | number,
+  ): Promise<MinimalVideoData | undefined> {
     const postData = await this.getPosts(postId);
     if (!postData) {
       return undefined;

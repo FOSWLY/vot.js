@@ -3,6 +3,7 @@ import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base";
 import config from "../config/config";
 import * as Kodik from "../types/helpers/kodik";
+import { MinimalVideoData } from "../types/client";
 
 export default class KodikHelper extends BaseHelper {
   API_ORIGIN = "https://kodik.biz";
@@ -118,7 +119,7 @@ export default class KodikHelper extends BaseHelper {
     return "https:" + decryptedUrl;
   }
 
-  async getVideoData(videoId: string) {
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const secureData = await this.getSecureData(videoId);
     if (!secureData) {
       return undefined;
