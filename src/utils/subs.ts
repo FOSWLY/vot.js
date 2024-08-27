@@ -16,7 +16,7 @@ export function convertToStrTime(ms: number, delimiter = ",") {
 }
 
 function convertToMSTime(time: string) {
-  const parts = time.split(":");
+  const parts = time.split(" ")?.[0]?.split(":");
   if (parts.length < 3) {
     parts.unshift("00");
   }

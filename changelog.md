@@ -1,3 +1,7 @@
+# 1.2.4
+
+- Fix VTT/SRT converter for work with subtitles that have stylization
+
 # 1.2.3
 
 - Fix VTT/SRT converter for subtitles with CRLF ending

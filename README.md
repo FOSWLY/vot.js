@@ -7,7 +7,7 @@
 
 An unofficial library for interacting with the Yandex VOT API, which supports working with JavaScript, TypeScript, and also has built-in parted types for Typebox.
 
-The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTWorkerClient` client and specify the domain of the worker server, for example `vot-worker.toil.cc `.
+The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTWorkerClient` client and specify the domain of the worker server, for example `vot-worker.toil.cc`.
 
 ## Installation
 

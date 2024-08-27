@@ -198,7 +198,7 @@ Now that we are prepared to`;
 
 const cursedVTT = `WEBVTT
 
-04:00.970 --> 04:04.430
+04:00.970 --> 04:04.430 align:middle line:90%
 m 6 15 l 256 14 250 284 12 283 16 25
 
 04:00.970 --> 04:04.430

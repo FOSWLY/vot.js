@@ -11,7 +11,7 @@ export function convertToStrTime(ms, delimiter = ",") {
         .padStart(2, "0")}${delimiter}${milliseconds.toString().padStart(3, "0")}`;
 }
 function convertToMSTime(time) {
-    const parts = time.split(":");
+    const parts = time.split(" ")?.[0]?.split(":");
     if (parts.length < 3) {
         parts.unshift("00");
     }

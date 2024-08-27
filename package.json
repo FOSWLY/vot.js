@@ -1,7 +1,7 @@
 {
   "name": "vot.js",
   "description": "Unoffical library for interacting with the Yandex VOT API",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -88,7 +88,7 @@
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.9.1",
     "eslint-plugin-oxlint": "^0.9.0",
-    "eslint-plugin-sonarjs": "2.0.1",
+    "eslint-plugin-sonarjs": "^2.0.1",
     "husky": "^9.1.5",
     "oxlint": "^0.9.0",
     "ts-proto": "1.181.2",
@@ -98,7 +98,7 @@
     "typedoc-plugin-inline-sources": "^1.0.2",
     "typedoc-plugin-rename-defaults": "^0.7.1",
     "typescript": "^5.5.4",
-    "typescript-eslint": "8.3.0"
+    "typescript-eslint": "^8.3.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
