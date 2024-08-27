@@ -1,4 +1,4 @@
-# 1.2.0 [WIP]
+# 1.2.0
 
 - Added normalize lang function
 - Added convert string time to ms function (e.g. 00:06:16,460 --> 376460)
