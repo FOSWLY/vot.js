@@ -22,8 +22,8 @@ tokens: Type.Optional(Type.Array(SubtitleToken)),
 speakerId: Type.String()
 })
 
-export type SubtitlesDate = Static<typeof SubtitlesDate>
-export const SubtitlesDate = Type.Object({
+export type SubtitlesData = Static<typeof SubtitlesData>
+export const SubtitlesData = Type.Object({
 containsTokens: Type.Boolean(),
 subtitles: Type.Array(SubtitleItem)
 })

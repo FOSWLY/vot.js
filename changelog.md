@@ -1,5 +1,10 @@
 # 1.2.0 [WIP]
 
+- Added normalize lang function
+- Added convert string time to ms function (e.g. 00:06:16,460 --> 376460)
+- Added get internal video subtitles from EpicGames and 9AnimeTV
+- Function `convertToStrTime` now accepts milliseconds instead of seconds, also added extra timestamp delimiter argument
+- Improved typings for all GetVideoData helpers
 - Fixed an inaccuracy due to which milliseconds were incorrectly converted to a string in `convertToStrTime` function ([vot-cli#37](https://github.com/FOSWLY/vot-cli/pull/37#discussion_r1694870105))
 - Fixed VTT timestamp delimiter
 - Added new subtitles convert directions:
@@ -9,8 +14,6 @@
   - `VTT -> JSON`;
   - `VTT -> SRT`;
 
-- Added `convertToMSTime` function
-- Function `convertToSrtTime` now accepts milliseconds instead of seconds, also added extra timestamp delimiter argument
 - Renamed function `convertToSrtTimeFormat` -> `convertToStrTime`
 - Fix a typo that turned `SubtitlesData` into `SubtitlesDate`
 

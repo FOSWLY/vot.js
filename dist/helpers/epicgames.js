@@ -1,4 +1,5 @@
 import { BaseHelper } from "./base.js";
+import { normalizeLang } from "../utils/utils.js";
 export default class EpicGamesHelper extends BaseHelper {
     API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
     async getPostInfo(videoId) {
@@ -16,14 +17,22 @@ export default class EpicGamesHelper extends BaseHelper {
         if (!postInfo) {
             return undefined;
         }
-        const playlistUrl = postInfo.blocks
-            .find((block) => block.type === "video")
-            ?.video_url?.replace("qsep://", "https://");
+        const videoBlock = postInfo.blocks.find((block) => block.type === "video");
+        const playlistUrl = videoBlock?.video_url?.replace("qsep://", "https://");
         if (!playlistUrl) {
             return undefined;
         }
+        const { title, description } = postInfo;
+        const subtitles = videoBlock?.video_captions?.map((caption) => ({
+            language: normalizeLang(caption.locale),
+            format: "vtt",
+            url: caption.signed_url,
+        }));
         return {
             url: playlistUrl,
+            title,
+            description,
+            subtitles,
         };
     }
     async getVideoId(url) {

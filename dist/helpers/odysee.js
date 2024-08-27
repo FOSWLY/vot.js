@@ -5,7 +5,11 @@ export default class OdyseeHelper extends BaseHelper {
         try {
             const res = await this.fetch(`${this.API_ORIGIN}/${videoId}`);
             const content = await res.text();
-            return { url: /"contentUrl":(\s)?"([^"]+)"/.exec(content)?.[2] };
+            const url = /"contentUrl":(\s)?"([^"]+)"/.exec(content)?.[2];
+            if (!url) {
+                throw new Error("Odysee url doesn't parsed");
+            }
+            return { url };
         }
         catch (err) {
             console.error("Failed to get odysee video data", err.message);

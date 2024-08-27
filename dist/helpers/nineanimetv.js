@@ -1,4 +1,5 @@
 import { BaseHelper } from "./base.js";
+import { normalizeLang } from "../utils/utils.js";
 export default class NineAnimeTVHelper extends BaseHelper {
     API_ORIGIN = "https://9animetv.to/ajax/episode";
     RAPID_CLOUD_ORIGIN = "https://rapid-cloud.co/ajax/embed-6-v2";
@@ -67,8 +68,25 @@ export default class NineAnimeTVHelper extends BaseHelper {
         if (!videoUrl) {
             return undefined;
         }
+        const subtitles = rapidData.tracks.reduce((result, track) => {
+            const lang = /([\w+]+)(-\d)?\.vtt/.exec(track.file)?.[1];
+            if (!lang) {
+                return result;
+            }
+            const language = normalizeLang(lang);
+            if (result.find((t) => t.language === language)) {
+                return result;
+            }
+            result.push({
+                language,
+                format: "vtt",
+                url: track.file,
+            });
+            return result;
+        }, []);
         return {
             url: videoUrl,
+            subtitles,
         };
     }
     async getVideoId(url) {

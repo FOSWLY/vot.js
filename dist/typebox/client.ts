@@ -1,3 +1,5 @@
+import { SubtitleFormat } from "./subs";
+import { AtLeast } from "./utils";
 import {
   RequestLang,
   ResponseLang,
@@ -21,20 +23,27 @@ Type.Literal("http"),
 Type.Literal("https")
 ])
 
+export type VideoDataSubtitle = Static<typeof VideoDataSubtitle>
+export const VideoDataSubtitle = Type.Object({
+language: Type.String(),
+format: SubtitleFormat,
+url: Type.String()
+})
+
 export type VideoData = Static<typeof VideoData>
 export const VideoData = Type.Object({
 url: Type.String(),
 videoId: Type.String(),
 host: VideoService,
-duration: Type.Union([
-Type.Number(),
-Type.Null(),
-Type.Undefined()
-]),
+duration: Type.Optional(Type.Number()),
 isStream: Type.Optional(Type.Boolean()),
 title: Type.Optional(Type.String()),
-description: Type.Optional(Type.String())
+description: Type.Optional(Type.String()),
+subtitles: Type.Optional(Type.Array(VideoDataSubtitle))
 })
+
+export type MinimalVideoData = Static<typeof MinimalVideoData>
+export const MinimalVideoData = AtLeast(VideoData, Type.Literal("url"))
 
 export type GetVideoDataFunction = Static<typeof GetVideoDataFunction>
 export const GetVideoDataFunction = Type.Function([Type.String()], Type.Promise(VideoData))

@@ -1,5 +1,6 @@
 import { BaseHelper } from "./base.js";
 import * as Weverse from "../types/helpers/weverse.js";
+import { MinimalVideoData } from "../types/client.js";
 export default class WeverseHelper extends BaseHelper {
     API_ORIGIN: string;
     API_APP_ID: string;
@@ -25,10 +26,7 @@ export default class WeverseHelper extends BaseHelper {
     getVideoInKey(videoId: number): Promise<false | Weverse.InKey>;
     getVideoInfo(infraVideoId: string, inkey: string, serviceId: string): Promise<false | Weverse.VideoInfo>;
     extractVideoInfo(videoList: Weverse.Video[]): Weverse.Video | undefined;
-    getVideoData(videoId: string): Promise<{
-        url: string;
-        duration: number;
-    } | undefined>;
+    getVideoData(videoId: string): Promise<MinimalVideoData | undefined>;
     getVideoId(url: URL): Promise<string | undefined>;
 }
 //# sourceMappingURL=weverse.d.ts.map

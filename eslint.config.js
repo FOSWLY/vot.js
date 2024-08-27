@@ -16,6 +16,9 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": 0,
       "sonarjs/max-switch-cases": 0,
       "@typescript-eslint/consistent-type-definitions": 0,
+      "sonarjs/single-char-in-character-classes": 0,
+      "sonarjs/slow-regex": 0,
+      "sonarjs/function-return-type": 0,
     },
     languageOptions: {
       ecmaVersion: "latest",

@@ -26,18 +26,18 @@ export * as OdyseeHelper from "./odysee.js";
 export * as CoursehunterHelper from "./coursehunter.js";
 export * as TwitchHelper from "./twitch.js";
 export default class VideoHelper {
-    static [VideoService.mailru]: MailRuHelper;
-    static [VideoService.weverse]: WeverseHelper;
-    static [VideoService.kodik]: KodikHelper;
-    static [VideoService.patreon]: PatreonHelper;
-    static [VideoService.reddit]: RedditHelper;
-    static [VideoService.bannedvideo]: BannedVideoHelper;
-    static [VideoService.kick]: KickHelper;
-    static [VideoService.appledeveloper]: AppleDeveloperHelper;
-    static [VideoService.epicgames]: EpicGamesHelper;
-    static [VideoService.nineanimetv]: NineAnimeTVHelper;
-    static [VideoService.odysee]: OdyseeHelper;
-    static [VideoService.twitch]: TwitchHelper;
-    static [VideoService.coursehunter]: CoursehunterHelper;
+    static readonly [VideoService.mailru]: MailRuHelper;
+    static readonly [VideoService.weverse]: WeverseHelper;
+    static readonly [VideoService.kodik]: KodikHelper;
+    static readonly [VideoService.patreon]: PatreonHelper;
+    static readonly [VideoService.reddit]: RedditHelper;
+    static readonly [VideoService.bannedvideo]: BannedVideoHelper;
+    static readonly [VideoService.kick]: KickHelper;
+    static readonly [VideoService.appledeveloper]: AppleDeveloperHelper;
+    static readonly [VideoService.epicgames]: EpicGamesHelper;
+    static readonly [VideoService.nineanimetv]: NineAnimeTVHelper;
+    static readonly [VideoService.odysee]: OdyseeHelper;
+    static readonly [VideoService.twitch]: TwitchHelper;
+    static readonly [VideoService.coursehunter]: CoursehunterHelper;
 }
 //# sourceMappingURL=index.d.ts.map

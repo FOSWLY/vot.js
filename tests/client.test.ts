@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { expect, test } from "bun:test";
 import VOTClient, { VOTWorkerClient } from "../src/index";
 import { getVideoData } from "../src/utils/videoData";
