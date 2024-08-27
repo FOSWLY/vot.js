@@ -18,7 +18,7 @@ export function getService(videoUrl: string) {
   let enteredURL: URL;
   try {
     enteredURL = new URL(videoUrl) as URL;
-  } catch (e) {
+  } catch {
     console.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
     return false;
   }

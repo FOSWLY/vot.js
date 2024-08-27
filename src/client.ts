@@ -242,11 +242,10 @@ export default class VOTClient {
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
     const { url, duration = config.defaultDuration } = videoData;
 
-    // eslint-disable-next-line sonarjs/no-duplicate-string
     const { secretKey, uuid } = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeTranslationRequest(
       url,
-      duration!,
+      duration,
       requestLang,
       responseLang,
       translationHelp,
