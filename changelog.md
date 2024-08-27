@@ -1,3 +1,8 @@
+# 1.2.3
+
+- Fix VTT/SRT converter for subtitles with CRLF ending
+- Fix VTT/SRT converter for work with multi-line paragraphs
+
 # 1.2.2
 
 - Fix 9animetv set hash filename as subtitles language

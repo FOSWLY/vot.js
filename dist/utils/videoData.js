@@ -15,7 +15,7 @@ export function getService(videoUrl) {
     try {
         enteredURL = new URL(videoUrl);
     }
-    catch (e) {
+    catch {
         console.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
         return false;
     }

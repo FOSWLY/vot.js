@@ -11,7 +11,11 @@ export function convertToStrTime(ms, delimiter = ",") {
         .padStart(2, "0")}${delimiter}${milliseconds.toString().padStart(3, "0")}`;
 }
 function convertToMSTime(time) {
-    const [strHours, strMinutes, strSeconds] = time.split(":");
+    const parts = time.split(":");
+    if (parts.length < 3) {
+        parts.unshift("00");
+    }
+    const [strHours, strMinutes, strSeconds] = parts;
     const secs = +strSeconds.replace(/[,.]/, "");
     const mins = +strMinutes * 60_000;
     const hours = +strHours * 3_600_000;
@@ -31,26 +35,32 @@ function convertSubsFromJSON(data, output = "srt") {
     return isVTT ? `WEBVTT\n\n${subs}` : subs;
 }
 function convertSubsToJSON(data, from = "srt") {
-    const parts = data.split("\n\n");
+    const parts = data.split(/\r?\n\r?\n/g);
     if (from === "vtt") {
         parts.shift();
     }
     const offset = +(from === "srt");
-    const subtitles = parts.map((part) => {
+    const subtitles = parts.reduce((result, part) => {
         const lines = part.trim().split("\n");
         const time = lines[offset];
         const text = lines.slice(offset + 1).join("\n");
+        if ((lines.length !== 2 || !part.includes(" --> ")) &&
+            !time?.includes(" --> ")) {
+            result[result.length - 1].text += `\n\n${lines.join("\n")}`;
+            return result;
+        }
         const [start, end] = time.split(" --> ");
         const startMs = convertToMSTime(start);
         const endMs = convertToMSTime(end);
         const durationMs = endMs - startMs;
-        return {
+        result.push({
             text,
             startMs,
             durationMs,
             speakerId: "0",
-        };
-    });
+        });
+        return result;
+    }, []);
     return {
         containsTokens: false,
         subtitles,
@@ -60,7 +70,7 @@ export function getSubsFormat(data) {
     if (typeof data !== "string") {
         return "json";
     }
-    if (data.startsWith("WEBVTT\n\n")) {
+    if (/(WEBVTT)(\r?\n\r?\n)/.exec(data)) {
         return "vtt";
     }
     return "srt";
