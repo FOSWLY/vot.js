@@ -30,7 +30,7 @@ function convertSubsFromJSON(data, output = "srt") {
         .trim();
     return isVTT ? `WEBVTT\n\n${subs}` : subs;
 }
-export function convertSubsToJSON(data, from = "srt") {
+function convertSubsToJSON(data, from = "srt") {
     const parts = data.split("\n\n");
     if (from === "vtt") {
         parts.shift();

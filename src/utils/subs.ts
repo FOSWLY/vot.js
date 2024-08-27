@@ -46,7 +46,7 @@ function convertSubsFromJSON(
   return isVTT ? `WEBVTT\n\n${subs}` : subs;
 }
 
-export function convertSubsToJSON(
+function convertSubsToJSON(
   data: string,
   from: Exclude<SubtitleFormat, "json"> = "srt",
 ): SubtitlesData {

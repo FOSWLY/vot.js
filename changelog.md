@@ -1,3 +1,7 @@
+# 1.2.1
+
+- Removed export `convertSubsToJSON` function
+
 # 1.2.0
 
 - Added normalize lang function
