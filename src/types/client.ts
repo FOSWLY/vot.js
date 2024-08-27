@@ -1,3 +1,5 @@
+import { SubtitleFormat } from "./subs";
+import { AtLeast } from "./utils";
 import {
   RequestLang,
   ResponseLang,
@@ -14,6 +16,7 @@ export type URLSchema = "http" | "https";
 
 export type VideoDataSubtitle = {
   language: string;
+  format: SubtitleFormat;
   url: string;
 };
 
@@ -21,13 +24,15 @@ export type VideoData = {
   url: string;
   videoId: string;
   host: VideoService;
-  duration: number | null | undefined;
+  duration?: number;
   // for compatibility with extension / your own detect request lang logic
   isStream?: boolean;
   title?: string;
   description?: string;
   subtitles?: VideoDataSubtitle[];
 };
+
+export type MinimalVideoData = AtLeast<VideoData, "url">;
 
 export type GetVideoDataFunction = (url: string) => Promise<VideoData>;
 
