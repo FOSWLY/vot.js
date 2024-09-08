@@ -12,6 +12,7 @@ import NineAnimeTVHelper from "./nineanimetv.js";
 import OdyseeHelper from "./odysee.js";
 import CoursehunterHelper from "./coursehunter.js";
 import TwitchHelper from "./twitch.js";
+import SapHelper from "./sap.js";
 export * as MailRuHelper from "./mailru.js";
 export * as WeverseHelper from "./weverse.js";
 export * as KodikHelper from "./kodik.js";
@@ -25,6 +26,7 @@ export * as NineAnimeTVHelper from "./nineanimetv.js";
 export * as OdyseeHelper from "./odysee.js";
 export * as CoursehunterHelper from "./coursehunter.js";
 export * as TwitchHelper from "./twitch.js";
+export * as SapHelper from "./sap.js";
 export default class VideoHelper {
     static [VideoService.mailru] = new MailRuHelper();
     static [VideoService.weverse] = new WeverseHelper();
@@ -39,4 +41,5 @@ export default class VideoHelper {
     static [VideoService.odysee] = new OdyseeHelper();
     static [VideoService.twitch] = new TwitchHelper();
     static [VideoService.coursehunter] = new CoursehunterHelper();
+    static [VideoService.sap] = new SapHelper();
 }

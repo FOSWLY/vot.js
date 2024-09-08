@@ -1,3 +1,7 @@
+# 1.2.5
+
+- Added Sap Learning support (learning.sap.com)
+
 # 1.2.4
 
 - Fix VTT/SRT converter for work with subtitles that have stylization

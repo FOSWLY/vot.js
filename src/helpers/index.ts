@@ -12,6 +12,7 @@ import NineAnimeTVHelper from "./nineanimetv";
 import OdyseeHelper from "./odysee";
 import CoursehunterHelper from "./coursehunter";
 import TwitchHelper from "./twitch";
+import SapHelper from "./sap";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -26,6 +27,7 @@ export * as NineAnimeTVHelper from "./nineanimetv";
 export * as OdyseeHelper from "./odysee";
 export * as CoursehunterHelper from "./coursehunter";
 export * as TwitchHelper from "./twitch";
+export * as SapHelper from "./sap";
 
 /**
  * A convenient wrapper over the rest of the helpers
@@ -69,4 +71,7 @@ export default class VideoHelper {
 
   /** @source */
   static readonly [VideoService.coursehunter] = new CoursehunterHelper();
+
+  /** @source */
+  static readonly [VideoService.sap] = new SapHelper();
 }

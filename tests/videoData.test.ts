@@ -480,3 +480,22 @@ test("coursehunter", async () => {
   expect(normalized).toInclude("coursehunter.net");
   expect(normalized).toEndWith("/lesson3.mp4");
 });
+
+describe("sap", () => {
+  const courseUrl =
+    "https://learning.sap.com/courses/opportunities-and-success-for-partners-in-sap-s-industry-cloud";
+  test("course demo", async () => {
+    const normalized = await normalize(courseUrl);
+
+    expect(normalized).toInclude("kaltura.com");
+    expect(normalized).toInclude(".mp4");
+  });
+  test("course video", async () => {
+    const normalized = await normalize(
+      `${courseUrl}/introduction-to-sap-s-industry-cloud-for-partners_LE_fe1cc42e-59b4-45fd-8b23-2561c6aa9331`,
+    );
+
+    expect(normalized).toInclude("kaltura.com");
+    expect(normalized).toInclude(".mp4");
+  });
+});

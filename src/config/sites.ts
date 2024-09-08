@@ -242,6 +242,12 @@ export default [
     needExtraData: true,
   },
   {
+    host: VideoService.sap,
+    url: "https://learning.sap.com/courses/",
+    match: /^learning.sap.com$/,
+    needExtraData: true,
+  },
+  {
     host: VideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).mp4/.test(url.pathname),
