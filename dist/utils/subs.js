@@ -46,6 +46,9 @@ function convertSubsToJSON(data, from = "srt") {
         const text = lines.slice(offset + 1).join("\n");
         if ((lines.length !== 2 || !part.includes(" --> ")) &&
             !time?.includes(" --> ")) {
+            if (result.length === 0) {
+                return result;
+            }
             result[result.length - 1].text += `\n\n${lines.join("\n")}`;
             return result;
         }

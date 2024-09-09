@@ -70,6 +70,10 @@ function convertSubsToJSON(
       (lines.length !== 2 || !part.includes(" --> ")) &&
       !time?.includes(" --> ")
     ) {
+      if (result.length === 0) {
+        // skip an invalid segment if there is nowhere to assign it
+        return result;
+      }
       // for work with multi-line paragraphs
       result[result.length - 1].text += `\n\n${lines.join("\n")}`;
       return result;
