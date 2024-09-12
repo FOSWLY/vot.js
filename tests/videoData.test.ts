@@ -498,4 +498,12 @@ describe("sap", () => {
     expect(normalized).toInclude("kaltura.com");
     expect(normalized).toInclude(".mp4");
   });
+  test("learning journey", async () => {
+    const learningJourney =
+      "https://learning.sap.com/learning-journeys/discovering-sap-activate-implementation-tools-and-methodology/describing-sap-activate";
+    const normalized = await normalize(learningJourney);
+
+    expect(normalized).toInclude("kaltura.com");
+    expect(normalized).toInclude(".mp4");
+  });
 });

@@ -6,7 +6,7 @@ import { BaseHelper, VideoHelperError } from "./base";
 import { normalizeLang } from "../utils/utils";
 
 export default class SapHelper extends BaseHelper {
-  API_ORIGIN = "https://learning.sap.com/courses";
+  API_ORIGIN = "https://learning.sap.com/";
 
   async requestKaltura(
     kalturaDomain: string,
@@ -88,6 +88,7 @@ export default class SapHelper extends BaseHelper {
       if (!entryId) {
         // for course demo
         entryId = /"sourceId":\s?"([^"]+)"/.exec(content)?.[1];
+        console.log(entryId);
       }
 
       if (!kalturaDomain || Number.isNaN(+partnerId) || !entryId) {
@@ -140,6 +141,8 @@ export default class SapHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return /courses\/(([^/]+)(\/[^/]+)?)/.exec(url.pathname)?.[1];
+    return /((courses|learning-journeys)\/([^/]+)(\/[^/]+)?)/.exec(
+      url.pathname,
+    )?.[1];
   }
 }
