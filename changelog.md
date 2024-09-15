@@ -1,3 +1,9 @@
+# 1.2.9
+
+- Added support Watchporn.to embed
+- Fix Watchporn.to getVideoId
+- Fix Kick getVideoData for new format of videos and clips
+
 # 1.2.8
 
 - Fix Kick getVideoId for new format of videos and clips

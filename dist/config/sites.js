@@ -236,7 +236,7 @@ export default [
     },
     {
         host: VideoService.watchpornto,
-        url: "https://watchporn.to/video/",
+        url: "https://watchporn.to/",
         match: /^watchporn.to$/,
     },
     {
