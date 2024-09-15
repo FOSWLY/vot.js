@@ -1,5 +1,6 @@
 import { describe, test, expect } from "bun:test";
 import { getVideoData } from "../src/utils/videoData";
+import config from "../src/config/config";
 
 const normalize = async (url: string) => {
   return (await getVideoData(url))?.url;
@@ -374,9 +375,15 @@ test("youku", async () => {
   ).toEqual(expected);
 });
 
-test("custom", async () => {
-  const expected = "https://s3.toil.cc/vot/video.mp4";
-  expect(await normalize(expected)).toEqual(expected);
+describe("custom", () => {
+  test(".mp4", async () => {
+    const expected = "https://s3.toil.cc/vot/video.mp4";
+    expect(await normalize(expected)).toEqual(expected);
+  });
+  test(".webm", async () => {
+    const expected = "https://s3.toil.cc/vot/output444.webm";
+    expect(await normalize(expected)).toEqual(expected);
+  });
 });
 
 describe("kodik", () => {
@@ -506,4 +513,20 @@ describe("sap", () => {
     expect(normalized).toInclude("kaltura.com");
     expect(normalized).toInclude(".mp4");
   });
+});
+
+test("watchpornto", async () => {
+  const expected = "https://watchporn.to/video/80811/latinsandra-the-cuck";
+  const normalized = await normalize(expected);
+  expect(normalized).toEqual(expected);
+});
+
+test("linkedin", async () => {
+  const expected =
+    "https://www.linkedin.com/learning/learning-personal-branding-2018/your-most-powerful-marketing-tool";
+  const normalized = await normalize(
+    `${expected}?autoplay=true&trk=course_preview&upsellOrderOrigin=default_guest_learning`,
+  );
+  expect(normalized).toStartWith(`https://${config.mediaProxy}`);
+  expect(normalized).toIncludeRepeated(`.mp4`, 2);
 });
