@@ -63,6 +63,8 @@ export enum VideoService {
   odysee = "odysee",
   coursehunter = "coursehunter",
   sap = "sap",
+  watchpornto = "watchpornto",
+  linkedin = "linkedin",
 }
 
 export type ServiceConf = {

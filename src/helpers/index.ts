@@ -13,6 +13,7 @@ import OdyseeHelper from "./odysee";
 import CoursehunterHelper from "./coursehunter";
 import TwitchHelper from "./twitch";
 import SapHelper from "./sap";
+import LinkedinHelper from "./linkedin";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -28,6 +29,7 @@ export * as OdyseeHelper from "./odysee";
 export * as CoursehunterHelper from "./coursehunter";
 export * as TwitchHelper from "./twitch";
 export * as SapHelper from "./sap";
+export * as LinkedinHelper from "./linkedin";
 
 /**
  * A convenient wrapper over the rest of the helpers
@@ -74,4 +76,6 @@ export default class VideoHelper {
 
   /** @source */
   static readonly [VideoService.sap] = new SapHelper();
+  /** @source */
+  static readonly [VideoService.linkedin] = new LinkedinHelper();
 }

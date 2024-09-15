@@ -156,3 +156,11 @@ export function normalizeLang(lang: string) {
 
   return lang.toLowerCase().split(/[_;-]/)[0].trim();
 }
+
+export function proxyMedia(url: URL, format: "mp4" | "webm" = "mp4") {
+  return `https://${
+    config.mediaProxy
+  }/v1/proxy/video.${format}?url=${encodeURIComponent(url.href)}&origin=${
+    url.origin
+  }&referer=${url.origin}`;
+}
