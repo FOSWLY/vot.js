@@ -31,10 +31,6 @@ export default class KickHelper extends BaseHelper {
         };
     }
     async getVideoId(url) {
-        const videoId = /video\/([^/]+)/.exec(url.pathname)?.[0];
-        if (videoId) {
-            return videoId;
-        }
-        return url.searchParams.get("clip") ?? undefined;
+        return /([^/]+)\/(videos|clips)\/([^/]+)/.exec(url.pathname)?.[0];
     }
 }

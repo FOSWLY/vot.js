@@ -1,3 +1,7 @@
+# 1.2.8
+
+- Fix Kick getVideoId for new format of videos and clips
+
 # 1.2.7
 
 - Added support Linkedin learning

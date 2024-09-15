@@ -45,11 +45,6 @@ export default class KickHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    const videoId = /video\/([^/]+)/.exec(url.pathname)?.[0];
-    if (videoId) {
-      return videoId;
-    }
-
-    return url.searchParams.get("clip") ?? undefined;
+    return /([^/]+)\/(videos|clips)\/([^/]+)/.exec(url.pathname)?.[0];
   }
 }

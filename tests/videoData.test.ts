@@ -437,15 +437,14 @@ describe("reddit", () => {
 describe("kick", () => {
   test("video", async () => {
     const expected =
-      "https://kick.com/video/cb76dae0-da63-4415-beb3-53ee54383607";
+      "https://kick.com/chopstix/videos/e8ccfbab-ff88-4e93-83a5-8f0f5e82d621";
     expect(await normalize(expected)).toEqual(expected);
   });
 
   test("clips", async () => {
-    const clip = "clip_01J3K1KCNRFEDAH62QYFNX7ANM";
-    expect(
-      await normalize(`https://kick.com/coverdiva?clip=${clip}`),
-    ).toInclude(clip);
+    const expected =
+      "https://kick.com/coverdiva/clips/clip_01J3K1KCNRFEDAH62QYFNX7ANM";
+    expect(await normalize(expected)).toInclude(expected);
   });
 });
 
