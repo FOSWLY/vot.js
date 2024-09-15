@@ -1,3 +1,10 @@
+# 1.2.7
+
+- Added support Linkedin learning
+- Added support raw `.webm` links
+- Added support Watchporn.to
+- Added support Sap `/learning-journeys` path
+
 # 1.2.6
 
 - Fix VTT/SRT converter for work with invalid lines type

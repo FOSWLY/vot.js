@@ -1,7 +1,7 @@
 {
   "name": "vot.js",
   "description": "Unoffical library for interacting with the Yandex VOT API",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "author": "Toil",
   "license": "MIT",
   "repository": {

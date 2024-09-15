@@ -145,6 +145,8 @@ export async function getVideoID(service, videoURL) {
             return /v_show\/id_[\w=]+/.exec(url.pathname)?.[0];
         case VideoService.archive:
             return /(details|embed)\/([^/]+)/.exec(url.pathname)?.[2];
+        case VideoService.watchpornto:
+            return /\/video\/((\d+)\/([^/]+))/.exec(url.pathname)?.[1];
         default:
             return undefined;
     }

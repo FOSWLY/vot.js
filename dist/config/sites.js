@@ -235,9 +235,20 @@ export default [
         needExtraData: true,
     },
     {
+        host: VideoService.watchpornto,
+        url: "https://watchporn.to/video/",
+        match: /^watchporn.to$/,
+    },
+    {
+        host: VideoService.linkedin,
+        url: "https://www.linkedin.com/learning/",
+        match: /^(www)?.linkedin.com$/,
+        needExtraData: true,
+    },
+    {
         host: VideoService.custom,
         url: "stub",
-        match: (url) => /([^.]+).mp4/.test(url.pathname),
+        match: (url) => /([^.]+).(mp4|webm)/.test(url.pathname),
         rawResult: true,
     },
 ];

@@ -29,5 +29,12 @@
     "outDir": "./dist",
     "removeComments": true
   },
-  "exclude": ["./dist", "./tests", "./examples", "./scripts", "node_modules"]
+  "exclude": [
+    "./dist",
+    "./tests",
+    "./examples",
+    "./scripts",
+    "node_modules",
+    "./test-scripts"
+  ]
 }

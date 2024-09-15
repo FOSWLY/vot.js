@@ -13,5 +13,7 @@ export * as BannedVideoType from "./helpers/bannedvideo.js";
 export * as CoursehunterType from "./helpers/coursehunter.js";
 export * as EpicGamesType from "./helpers/epicgames.js";
 export * as NineAnimeTVType from "./helpers/nineanimetv.js";
+export * as SapType from "./helpers/sap.js";
+export * as LinkedinType from "./helpers/linkedin.js";
 export * as BaseHelperType from "./helpers/base.js";
 //# sourceMappingURL=index.d.ts.map

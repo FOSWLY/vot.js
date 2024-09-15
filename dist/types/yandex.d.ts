@@ -58,7 +58,9 @@ export declare enum VideoService {
     nineanimetv = "nineanimetv",
     odysee = "odysee",
     coursehunter = "coursehunter",
-    sap = "sap"
+    sap = "sap",
+    watchpornto = "watchpornto",
+    linkedin = "linkedin"
 }
 export type ServiceConf = {
     host: VideoService;

@@ -49,6 +49,8 @@ export var VideoService;
     VideoService["odysee"] = "odysee";
     VideoService["coursehunter"] = "coursehunter";
     VideoService["sap"] = "sap";
+    VideoService["watchpornto"] = "watchpornto";
+    VideoService["linkedin"] = "linkedin";
 })(VideoService || (VideoService = {}));
 export var VideoTranslationStatus;
 (function (VideoTranslationStatus) {

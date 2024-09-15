@@ -2,7 +2,7 @@ import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base.js";
 import { normalizeLang } from "../utils/utils.js";
 export default class SapHelper extends BaseHelper {
-    API_ORIGIN = "https://learning.sap.com/courses";
+    API_ORIGIN = "https://learning.sap.com/";
     async requestKaltura(kalturaDomain, partnerId, entryId) {
         const clientTag = "html5:v3.17.22";
         const apiVersion = "3.3.0";
@@ -68,6 +68,7 @@ export default class SapHelper extends BaseHelper {
                 ?.firstChild?.getAttribute("id");
             if (!entryId) {
                 entryId = /"sourceId":\s?"([^"]+)"/.exec(content)?.[1];
+                console.log(entryId);
             }
             if (!kalturaDomain || Number.isNaN(+partnerId) || !entryId) {
                 throw new VideoHelperError(`One of the necessary parameters for getting a link to a sap video in wasn't found for ${videoId}. Params: kalturaDomain = ${kalturaDomain}, partnerId = ${partnerId}, entryId = ${entryId}`);
@@ -107,6 +108,6 @@ export default class SapHelper extends BaseHelper {
         };
     }
     async getVideoId(url) {
-        return /courses\/(([^/]+)(\/[^/]+)?)/.exec(url.pathname)?.[1];
+        return /((courses|learning-journeys)\/([^/]+)(\/[^/]+)?)/.exec(url.pathname)?.[1];
     }
 }

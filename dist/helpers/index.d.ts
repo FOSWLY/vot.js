@@ -13,6 +13,7 @@ import OdyseeHelper from "./odysee.js";
 import CoursehunterHelper from "./coursehunter.js";
 import TwitchHelper from "./twitch.js";
 import SapHelper from "./sap.js";
+import LinkedinHelper from "./linkedin.js";
 export * as MailRuHelper from "./mailru.js";
 export * as WeverseHelper from "./weverse.js";
 export * as KodikHelper from "./kodik.js";
@@ -27,6 +28,7 @@ export * as OdyseeHelper from "./odysee.js";
 export * as CoursehunterHelper from "./coursehunter.js";
 export * as TwitchHelper from "./twitch.js";
 export * as SapHelper from "./sap.js";
+export * as LinkedinHelper from "./linkedin.js";
 export default class VideoHelper {
     static readonly [VideoService.mailru]: MailRuHelper;
     static readonly [VideoService.weverse]: WeverseHelper;
@@ -42,5 +44,6 @@ export default class VideoHelper {
     static readonly [VideoService.twitch]: TwitchHelper;
     static readonly [VideoService.coursehunter]: CoursehunterHelper;
     static readonly [VideoService.sap]: SapHelper;
+    static readonly [VideoService.linkedin]: LinkedinHelper;
 }
 //# sourceMappingURL=index.d.ts.map
