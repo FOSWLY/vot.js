@@ -76,6 +76,7 @@ export default class VideoHelper {
 
   /** @source */
   static readonly [VideoService.sap] = new SapHelper();
+
   /** @source */
   static readonly [VideoService.linkedin] = new LinkedinHelper();
 }
