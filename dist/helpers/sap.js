@@ -68,7 +68,6 @@ export default class SapHelper extends BaseHelper {
                 ?.firstChild?.getAttribute("id");
             if (!entryId) {
                 entryId = /"sourceId":\s?"([^"]+)"/.exec(content)?.[1];
-                console.log(entryId);
             }
             if (!kalturaDomain || Number.isNaN(+partnerId) || !entryId) {
                 throw new VideoHelperError(`One of the necessary parameters for getting a link to a sap video in wasn't found for ${videoId}. Params: kalturaDomain = ${kalturaDomain}, partnerId = ${partnerId}, entryId = ${entryId}`);

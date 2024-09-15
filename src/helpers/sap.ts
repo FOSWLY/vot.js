@@ -88,7 +88,6 @@ export default class SapHelper extends BaseHelper {
       if (!entryId) {
         // for course demo
         entryId = /"sourceId":\s?"([^"]+)"/.exec(content)?.[1];
-        console.log(entryId);
       }
 
       if (!kalturaDomain || Number.isNaN(+partnerId) || !entryId) {
