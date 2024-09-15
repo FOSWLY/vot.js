@@ -1,50 +1,57 @@
-import sites from "../config/sites";
 import { BaseHelper } from "./base";
 import * as Kick from "../types/helpers/kick";
-import { VideoService } from "../types/yandex";
 import { MinimalVideoData } from "../types/client";
 
 export default class KickHelper extends BaseHelper {
-  API_ORIGIN = "https://kick.com/api/v2";
+  API_ORIGIN = "https://kick.com/api";
 
-  async getClipInfo(clipId: string): Promise<false | Kick.Response> {
+  async getClipInfo(clipId: string): Promise<MinimalVideoData | undefined> {
     try {
-      const res = await this.fetch(`${this.API_ORIGIN}/clips/${clipId}`);
-
-      return (await res.json()) as Kick.Response;
+      const res = await this.fetch(`${this.API_ORIGIN}/v2/clips/${clipId}`);
+      const data = (await res.json()) as Kick.ClipResponse;
+      const { clip_url: url, duration, title } = data.clip;
+      return {
+        url,
+        duration,
+        title,
+      };
     } catch (err: unknown) {
       console.error(
         `Failed to get kick clip info by clipId: ${clipId}.`,
         (err as Error).message,
       );
-      return false;
+      return undefined;
+    }
+  }
+
+  async getVideoInfo(videoId: string): Promise<MinimalVideoData | undefined> {
+    try {
+      const res = await this.fetch(`${this.API_ORIGIN}/v1/video/${videoId}`);
+      const data = (await res.json()) as Kick.VideoResponse;
+      const { source: url, livestream } = data;
+      const { session_title: title, duration } = livestream;
+      return {
+        url,
+        duration: Math.round(duration / 1000),
+        title,
+      };
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get kick video info by videoId: ${videoId}.`,
+        (err as Error).message,
+      );
+      return undefined;
     }
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    if (!videoId.startsWith("clip_")) {
-      // video can be translated by api by default
-      return {
-        url: sites.find((s) => s.host === VideoService.kick)!.url + videoId,
-      };
-    }
-
-    const clipInfo = await this.getClipInfo(videoId);
-    if (!clipInfo) {
-      return undefined;
-    }
-
-    const { clip_url, duration, title } = clipInfo.clip;
-
-    return {
-      url: clip_url,
-      duration,
-      title,
-    };
+    return videoId.startsWith("videos")
+      ? await this.getVideoInfo(videoId.replace("videos/", ""))
+      : await this.getClipInfo(videoId.replace("clips/", ""));
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return /([^/]+)\/(videos|clips)\/([^/]+)/.exec(url.pathname)?.[0];
+    return /([^/]+)\/((videos|clips)\/([^/]+))/.exec(url.pathname)?.[2];
   }
 }

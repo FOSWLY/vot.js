@@ -514,10 +514,17 @@ describe("sap", () => {
   });
 });
 
-test("watchpornto", async () => {
-  const expected = "https://watchporn.to/video/80811/latinsandra-the-cuck";
-  const normalized = await normalize(expected);
-  expect(normalized).toEqual(expected);
+describe("watchporn.to", () => {
+  test("watchpornto", async () => {
+    const expected = "https://watchporn.to/video/80811/latinsandra-the-cuck/";
+    const normalized = await normalize(expected);
+    expect(normalized).toEqual(expected);
+  });
+  test("watchpornto", async () => {
+    const expected = "https://watchporn.to/embed/80811";
+    const normalized = await normalize(expected);
+    expect(normalized).toEqual(expected);
+  });
 });
 
 test("linkedin", async () => {
