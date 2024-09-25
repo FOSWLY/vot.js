@@ -1,4 +1,4 @@
-import { BaseHelper } from "./base";
+import { BaseHelper, VideoHelperError } from "./base";
 
 export default class TwitchHelper extends BaseHelper {
   API_ORIGIN = "https://clips.twitch.tv";
@@ -7,24 +7,32 @@ export default class TwitchHelper extends BaseHelper {
     const clearPathname = pathname.slice(1);
     const isEmbed = clearPathname === "embed";
     const videoPath = isEmbed ? clipId : clearPathname;
-    const res = await this.fetch(`${this.API_ORIGIN}/${videoPath}`, {
-      // maybe this way there is a better chance that the schema will be on the page
-      headers: {
-        "User-Agent": "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
-      },
-    });
+    try {
+      const res = await this.fetch(`${this.API_ORIGIN}/${videoPath}`, {
+        // maybe this way there is a better chance that the schema will be on the page
+        headers: {
+          "User-Agent": "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
+        },
+      });
 
-    const content = await res.text();
+      const content = await res.text();
 
-    // get creator.url from schema
-    const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(
-      content,
-    );
-    if (!channelLink) {
+      // get creator.url from schema
+      const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(
+        content,
+      );
+      if (!channelLink) {
+        throw new VideoHelperError("Failed to find channel link");
+      }
+
+      return `${channelLink[1]}/clip/${videoPath}`;
+    } catch (err: unknown) {
+      console.error(
+        `Failed to get twitch clip link by pathname: ${pathname} and clip ID: ${clipId}`,
+        (err as Error).message,
+      );
       return undefined;
     }
-
-    return `${channelLink[1]}/clip/${videoPath}`;
   }
 
   async getVideoId(url: URL) {
