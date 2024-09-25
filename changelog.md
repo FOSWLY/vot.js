@@ -1,3 +1,7 @@
+# 1.3.1
+
+- Improved the work of constructing links to private videos for vimeo embed
+
 # 1.3.0
 
 > [!CAUTION]

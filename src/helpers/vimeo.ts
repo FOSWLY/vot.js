@@ -81,9 +81,15 @@ export default class VimeoHelper extends BaseHelper {
       const pathLength =
         Array.from(data.base_url.matchAll(/\.\.\//g)).length + 1;
       const pathFragments = baseUrl.pathname.split("/");
-      baseUrl.pathname = pathFragments
-        .slice(0, pathFragments.length - pathLength)
-        .join("/");
+      let extraPath = data.base_url.replaceAll("../", "");
+      extraPath =
+        extraPath && !extraPath.startsWith("/") ? `/${extraPath}` : extraPath;
+      baseUrl.pathname =
+        pathFragments.slice(0, pathFragments.length - pathLength).join("/") +
+        extraPath;
+      if (!baseUrl.pathname.endsWith("/")) {
+        baseUrl.pathname += "/";
+      }
 
       const videoData = data.audio.find(
         (v) => v.mime_type === "audio/mp4" && v.format === "dash",
@@ -98,9 +104,9 @@ export default class VimeoHelper extends BaseHelper {
       }
 
       const [videoName, videoParams] = segmentUrl.split("?", 2);
-      baseUrl.pathname += `/${videoData.base_url}${videoName}`; // base_url ends with "/"
       const params = new URLSearchParams(videoParams);
       params.delete("range");
+      baseUrl.pathname += `${videoData.base_url}${videoName}`; // base_url ends with "/"
       baseUrl.href = baseUrl.href.split("?")[0] + "?" + params.toString();
       return baseUrl.href;
     } catch (err: unknown) {

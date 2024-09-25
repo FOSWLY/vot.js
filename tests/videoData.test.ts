@@ -3,7 +3,8 @@ import { getVideoData } from "../src/utils/videoData";
 import config from "../src/config/config";
 
 const normalize = async (url: string, referer?: string) => {
-  return (await getVideoData(url, { referer }))?.url;
+  const data = await getVideoData(url, { referer });
+  return data?.url;
 };
 
 describe("youtube", () => {
@@ -163,6 +164,12 @@ describe("vimeo", () => {
   test("embed private", async () => {
     const expected = "https://player.vimeo.com/video/722299957";
     expect(await normalize(expected, "https://leetcode.com/")).toEqual(
+      expected,
+    );
+  });
+  test("embed private 2", async () => {
+    const expected = "https://player.vimeo.com/video/994752187";
+    expect(await normalize(expected, "https://laracasts.com/")).toEqual(
       expected,
     );
   });
