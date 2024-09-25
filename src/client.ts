@@ -81,8 +81,6 @@ export default class VOTClient {
   /**
    * Media with this format use VOT Backend API
    * Not all video files in .mpd format are currently supported!
-   *
-   * @source
    */
   isCustomLink(url: string): boolean {
     return !!(
@@ -412,7 +410,7 @@ export default class VOTClient {
   }
 
   /**
-   * @includeExample examples/basic.ts:4-5,48-54
+   * @includeExample examples/basic.ts:4-5,48-56
    */
   async getSubtitles({
     videoData,
