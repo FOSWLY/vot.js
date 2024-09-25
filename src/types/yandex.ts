@@ -73,6 +73,7 @@ export type ServiceConf = {
   match?: any;
   rawResult?: true;
   needExtraData?: true;
+  additionalData?: string;
 };
 
 export enum VideoTranslationStatus {

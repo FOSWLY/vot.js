@@ -65,11 +65,14 @@ export default [
     host: VideoService.vimeo,
     url: "https://vimeo.com/",
     match: /^vimeo.com$/,
+    needExtraData: true,
   },
   {
     host: VideoService.vimeo,
     url: "https://player.vimeo.com/",
     match: /^player.vimeo.com$/,
+    additionalData: "embed",
+    needExtraData: true,
   },
   {
     host: VideoService.xvideos,
@@ -255,7 +258,7 @@ export default [
   {
     host: VideoService.linkedin,
     url: "https://www.linkedin.com/learning/",
-    match: /^(www)?.linkedin.com$/,
+    match: /^(www.)?linkedin.com$/,
     needExtraData: true,
   },
   {
