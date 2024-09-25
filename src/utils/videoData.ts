@@ -1,7 +1,10 @@
 import sites from "../config/sites";
 import { ServiceConf, VideoService } from "../types/yandex";
-import VideoHelper from "../helpers";
-import { VideoData } from "../types/client";
+import VideoHelper, {
+  availableHelpers,
+  AvailableVideoHelpers,
+} from "../helpers";
+import { GetVideoDataOpts, VideoData } from "../types/client";
 
 class VideoDataError extends Error {
   constructor(message: string) {
@@ -47,15 +50,18 @@ export function getService(videoUrl: string) {
 export async function getVideoID(
   service: ServiceConf,
   videoURL: string,
+  opts: GetVideoDataOpts = {},
 ): Promise<string | null | undefined> {
   // fix type mismatch
   const url = new URL(videoURL) as URL;
   const serviceHost = service.host;
-  if (Object.getOwnPropertyDescriptor(VideoHelper, serviceHost)) {
-    return await VideoHelper[serviceHost as VideoService.weverse].getVideoId(
-      url,
+  if (Object.keys(availableHelpers).includes(serviceHost)) {
+    const helper = new VideoHelper(opts).getHelper(
+      serviceHost as keyof AvailableVideoHelpers,
     );
+    return await helper.getVideoId(url);
   }
+
   switch (serviceHost) {
     case VideoService.custom:
       return url.href;
@@ -93,14 +99,6 @@ export async function getVideoID(
     case VideoService.proxitok:
     case VideoService.tiktok:
       return /([^/]+)\/video\/([^/]+)/.exec(url.pathname)?.[0];
-    case VideoService.vimeo: {
-      const appId = url.searchParams.get("app_id");
-      const videoId =
-        /[^/]+\/[^/]+$/.exec(url.pathname)?.[0] ??
-        /[^/]+$/.exec(url.pathname)?.[0];
-
-      return appId ? `${videoId}?app_id=${appId}` : videoId;
-    }
     case VideoService.xvideos:
       return /[^/]+\/[^/]+$/.exec(url.pathname)?.[0];
     case VideoService.pornhub:
@@ -168,19 +166,22 @@ export async function getVideoID(
     case VideoService.archive:
       return /(details|embed)\/([^/]+)/.exec(url.pathname)?.[2];
     case VideoService.watchpornto:
-      return /\/(video|embed)\/(\d+)(\/[^/]+\/)?/.exec(url.pathname)?.[0];
+      return /(video|embed)\/(\d+)(\/[^/]+\/)?/.exec(url.pathname)?.[0];
     default:
       return undefined;
   }
 }
 
-export async function getVideoData(url: string): Promise<VideoData> {
+export async function getVideoData(
+  url: string,
+  opts: GetVideoDataOpts = {},
+): Promise<VideoData> {
   const service = getService(url);
   if (!service) {
     throw new VideoDataError(`URL: "${url}" is unknown service`);
   }
 
-  const videoId = await getVideoID(service, url);
+  const videoId = await getVideoID(service, url, opts);
   if (!videoId) {
     throw new VideoDataError(`Entered unsupported link: "${url}"`);
   }
@@ -207,10 +208,10 @@ export async function getVideoData(url: string): Promise<VideoData> {
     };
   }
 
-  const result =
-    await VideoHelper[service.host as VideoService.weverse].getVideoData(
-      videoId,
-    );
+  const helper = new VideoHelper({ ...opts, service }).getHelper(
+    service.host as keyof AvailableVideoHelpers,
+  );
+  const result = await helper.getVideoData(videoId);
   if (!result) {
     throw new VideoDataError(`Failed to get video raw url for ${service.host}`);
   }

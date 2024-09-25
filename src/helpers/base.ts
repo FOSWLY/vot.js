@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FetchFunction, MinimalVideoData } from "../types/client";
 import { BaseHelperOpts } from "../types/helpers/base";
+import { ServiceConf } from "../types/yandex";
 import { fetchWithTimeout } from "../utils/utils";
 
 export class VideoHelperError extends Error {
@@ -13,18 +16,40 @@ export class VideoHelperError extends Error {
 export class BaseHelper {
   API_ORIGIN = "https://example.com";
   fetch: FetchFunction;
+  extraInfo: boolean;
+  referer: string;
+  service: ServiceConf | undefined;
 
-  constructor({ fetchFn = fetchWithTimeout }: BaseHelperOpts = {}) {
+  constructor({
+    fetchFn = fetchWithTimeout,
+    extraInfo = true,
+    referer = "",
+    service,
+  }: BaseHelperOpts = {}) {
     this.fetch = fetchFn;
+    this.extraInfo = extraInfo;
+    this.referer = referer;
+    this.service = service;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     return undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
   async getVideoId(url: URL): Promise<string | undefined> {
     return undefined;
+  }
+
+  returnBaseData(videoId: string) {
+    if (!this.service) {
+      return undefined;
+    }
+
+    return {
+      url: this.service.url + videoId,
+      videoId,
+      host: this.service.host,
+      duration: undefined,
+    };
   }
 }

@@ -1,9 +1,11 @@
+import { BaseHelperOpts } from "./helpers/base";
 import { SubtitleFormat } from "./subs";
 import { AtLeast } from "./utils";
 import {
   RequestLang,
   ResponseLang,
   SessionModule,
+  TranslationHelp,
   VideoService,
 } from "./yandex";
 
@@ -31,11 +33,17 @@ export type VideoData = {
   title?: string;
   description?: string;
   subtitles?: VideoDataSubtitle[];
+  translationHelp?: TranslationHelp[] | null;
 };
 
 export type MinimalVideoData = AtLeast<VideoData, "url">;
 
-export type GetVideoDataFunction = (url: string) => Promise<VideoData>;
+export type GetVideoDataOpts = Omit<BaseHelperOpts, "service">;
+
+export type GetVideoDataFunction = (
+  url: string,
+  opts?: GetVideoDataOpts,
+) => Promise<VideoData>;
 
 export type VOTOpts = {
   host?: string;

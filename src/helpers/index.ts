@@ -1,4 +1,6 @@
 import { VideoService } from "../types/yandex";
+import { BaseHelperOpts } from "../types/helpers/base";
+
 import MailRuHelper from "./mailru";
 import WeverseHelper from "./weverse";
 import KodikHelper from "./kodik";
@@ -14,6 +16,7 @@ import CoursehunterHelper from "./coursehunter";
 import TwitchHelper from "./twitch";
 import SapHelper from "./sap";
 import LinkedinHelper from "./linkedin";
+import VimeoHelper from "./vimeo";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -30,53 +33,42 @@ export * as CoursehunterHelper from "./coursehunter";
 export * as TwitchHelper from "./twitch";
 export * as SapHelper from "./sap";
 export * as LinkedinHelper from "./linkedin";
+export * as VimeoHelper from "./vimeo";
+
+export const availableHelpers = {
+  [VideoService.mailru]: MailRuHelper,
+  [VideoService.weverse]: WeverseHelper,
+  [VideoService.kodik]: KodikHelper,
+  [VideoService.patreon]: PatreonHelper,
+  [VideoService.reddit]: RedditHelper,
+  [VideoService.bannedvideo]: BannedVideoHelper,
+  [VideoService.kick]: KickHelper,
+  [VideoService.appledeveloper]: AppleDeveloperHelper,
+  [VideoService.epicgames]: EpicGamesHelper,
+  [VideoService.nineanimetv]: NineAnimeTVHelper,
+  [VideoService.odysee]: OdyseeHelper,
+  [VideoService.coursehunter]: CoursehunterHelper,
+  [VideoService.twitch]: TwitchHelper,
+  [VideoService.sap]: SapHelper,
+  [VideoService.linkedin]: LinkedinHelper,
+  [VideoService.vimeo]: VimeoHelper,
+};
+
+export type AvailableVideoHelpers = typeof availableHelpers;
 
 /**
  * A convenient wrapper over the rest of the helpers
  */
 export default class VideoHelper {
-  /** @source */
-  static readonly [VideoService.mailru] = new MailRuHelper();
+  helpersData: BaseHelperOpts;
 
-  /** @source */
-  static readonly [VideoService.weverse] = new WeverseHelper();
+  constructor(helpersData: BaseHelperOpts = {}) {
+    this.helpersData = helpersData;
+  }
 
-  /** @source */
-  static readonly [VideoService.kodik] = new KodikHelper();
-
-  /** @source */
-  static readonly [VideoService.patreon] = new PatreonHelper();
-
-  /** @source */
-  static readonly [VideoService.reddit] = new RedditHelper();
-
-  /** @source */
-  static readonly [VideoService.bannedvideo] = new BannedVideoHelper();
-
-  /** @source */
-  static readonly [VideoService.kick] = new KickHelper();
-
-  /** @source */
-  static readonly [VideoService.appledeveloper] = new AppleDeveloperHelper();
-
-  /** @source */
-  static readonly [VideoService.epicgames] = new EpicGamesHelper();
-
-  /** @source */
-  static readonly [VideoService.nineanimetv] = new NineAnimeTVHelper();
-
-  /** @source */
-  static readonly [VideoService.odysee] = new OdyseeHelper();
-
-  /** @source */
-  static readonly [VideoService.twitch] = new TwitchHelper();
-
-  /** @source */
-  static readonly [VideoService.coursehunter] = new CoursehunterHelper();
-
-  /** @source */
-  static readonly [VideoService.sap] = new SapHelper();
-
-  /** @source */
-  static readonly [VideoService.linkedin] = new LinkedinHelper();
+  getHelper<K extends keyof AvailableVideoHelpers>(
+    service: K,
+  ): AvailableVideoHelpers[K]["prototype"] {
+    return new availableHelpers[service](this.helpersData);
+  }
 }
