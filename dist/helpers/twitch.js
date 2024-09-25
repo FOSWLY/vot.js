@@ -1,21 +1,27 @@
-import { BaseHelper } from "./base.js";
+import { BaseHelper, VideoHelperError } from "./base.js";
 export default class TwitchHelper extends BaseHelper {
     API_ORIGIN = "https://clips.twitch.tv";
     async getClipLink(pathname, clipId) {
         const clearPathname = pathname.slice(1);
         const isEmbed = clearPathname === "embed";
         const videoPath = isEmbed ? clipId : clearPathname;
-        const res = await this.fetch(`${this.API_ORIGIN}/${videoPath}`, {
-            headers: {
-                "User-Agent": "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
-            },
-        });
-        const content = await res.text();
-        const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(content);
-        if (!channelLink) {
+        try {
+            const res = await this.fetch(`${this.API_ORIGIN}/${videoPath}`, {
+                headers: {
+                    "User-Agent": "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
+                },
+            });
+            const content = await res.text();
+            const channelLink = /"url":"https:\/\/www\.twitch\.tv\/([^"]+)"/.exec(content);
+            if (!channelLink) {
+                throw new VideoHelperError("Failed to find channel link");
+            }
+            return `${channelLink[1]}/clip/${videoPath}`;
+        }
+        catch (err) {
+            console.error(`Failed to get twitch clip link by pathname: ${pathname} and clip ID: ${clipId}`, err.message);
             return undefined;
         }
-        return `${channelLink[1]}/clip/${videoPath}`;
     }
     async getVideoId(url) {
         const pathname = url.pathname;

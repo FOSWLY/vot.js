@@ -1,4 +1,4 @@
-import { VideoService } from "../types/yandex.js";
+import { BaseHelperOpts } from "../types/helpers/base.js";
 import MailRuHelper from "./mailru.js";
 import WeverseHelper from "./weverse.js";
 import KodikHelper from "./kodik.js";
@@ -14,6 +14,7 @@ import CoursehunterHelper from "./coursehunter.js";
 import TwitchHelper from "./twitch.js";
 import SapHelper from "./sap.js";
 import LinkedinHelper from "./linkedin.js";
+import VimeoHelper from "./vimeo.js";
 export * as MailRuHelper from "./mailru.js";
 export * as WeverseHelper from "./weverse.js";
 export * as KodikHelper from "./kodik.js";
@@ -29,21 +30,29 @@ export * as CoursehunterHelper from "./coursehunter.js";
 export * as TwitchHelper from "./twitch.js";
 export * as SapHelper from "./sap.js";
 export * as LinkedinHelper from "./linkedin.js";
+export * as VimeoHelper from "./vimeo.js";
+export declare const availableHelpers: {
+    mailru: typeof MailRuHelper;
+    weverse: typeof WeverseHelper;
+    kodik: typeof KodikHelper;
+    patreon: typeof PatreonHelper;
+    reddit: typeof RedditHelper;
+    bannedvideo: typeof BannedVideoHelper;
+    kick: typeof KickHelper;
+    apple_developer: typeof AppleDeveloperHelper;
+    epicgames: typeof EpicGamesHelper;
+    nineanimetv: typeof NineAnimeTVHelper;
+    odysee: typeof OdyseeHelper;
+    coursehunter: typeof CoursehunterHelper;
+    twitch: typeof TwitchHelper;
+    sap: typeof SapHelper;
+    linkedin: typeof LinkedinHelper;
+    vimeo: typeof VimeoHelper;
+};
+export type AvailableVideoHelpers = typeof availableHelpers;
 export default class VideoHelper {
-    static readonly [VideoService.mailru]: MailRuHelper;
-    static readonly [VideoService.weverse]: WeverseHelper;
-    static readonly [VideoService.kodik]: KodikHelper;
-    static readonly [VideoService.patreon]: PatreonHelper;
-    static readonly [VideoService.reddit]: RedditHelper;
-    static readonly [VideoService.bannedvideo]: BannedVideoHelper;
-    static readonly [VideoService.kick]: KickHelper;
-    static readonly [VideoService.appledeveloper]: AppleDeveloperHelper;
-    static readonly [VideoService.epicgames]: EpicGamesHelper;
-    static readonly [VideoService.nineanimetv]: NineAnimeTVHelper;
-    static readonly [VideoService.odysee]: OdyseeHelper;
-    static readonly [VideoService.twitch]: TwitchHelper;
-    static readonly [VideoService.coursehunter]: CoursehunterHelper;
-    static readonly [VideoService.sap]: SapHelper;
-    static readonly [VideoService.linkedin]: LinkedinHelper;
+    helpersData: BaseHelperOpts;
+    constructor(helpersData?: BaseHelperOpts);
+    getHelper<K extends keyof AvailableVideoHelpers>(service: K): AvailableVideoHelpers[K]["prototype"];
 }
 //# sourceMappingURL=index.d.ts.map

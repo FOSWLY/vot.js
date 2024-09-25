@@ -2,8 +2,8 @@ import { describe, test, expect } from "bun:test";
 import { getVideoData } from "../src/utils/videoData";
 import config from "../src/config/config";
 
-const normalize = async (url: string) => {
-  return (await getVideoData(url))?.url;
+const normalize = async (url: string, referer?: string) => {
+  return (await getVideoData(url, { referer }))?.url;
 };
 
 describe("youtube", () => {
@@ -150,9 +150,20 @@ describe("vimeo", () => {
   test("normal", async () => {
     expect(await normalize(expected)).toEqual(expected);
   });
+  test("normal double id", async () => {
+    expect(await normalize("https://vimeo.com/807245860/4bb6b8c22a")).toEqual(
+      "https://vimeo.com/807245860/4bb6b8c22a",
+    );
+  });
   test("embed", async () => {
     expect(await normalize("https://player.vimeo.com/video/149640932")).toEqual(
-      "https://player.vimeo.com/video/149640932",
+      expected,
+    );
+  });
+  test("embed private", async () => {
+    const expected = "https://player.vimeo.com/video/722299957";
+    expect(await normalize(expected, "https://leetcode.com/")).toEqual(
+      expected,
     );
   });
 });

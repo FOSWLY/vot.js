@@ -14,6 +14,7 @@ import CoursehunterHelper from "./coursehunter.js";
 import TwitchHelper from "./twitch.js";
 import SapHelper from "./sap.js";
 import LinkedinHelper from "./linkedin.js";
+import VimeoHelper from "./vimeo.js";
 export * as MailRuHelper from "./mailru.js";
 export * as WeverseHelper from "./weverse.js";
 export * as KodikHelper from "./kodik.js";
@@ -29,20 +30,31 @@ export * as CoursehunterHelper from "./coursehunter.js";
 export * as TwitchHelper from "./twitch.js";
 export * as SapHelper from "./sap.js";
 export * as LinkedinHelper from "./linkedin.js";
+export * as VimeoHelper from "./vimeo.js";
+export const availableHelpers = {
+    [VideoService.mailru]: MailRuHelper,
+    [VideoService.weverse]: WeverseHelper,
+    [VideoService.kodik]: KodikHelper,
+    [VideoService.patreon]: PatreonHelper,
+    [VideoService.reddit]: RedditHelper,
+    [VideoService.bannedvideo]: BannedVideoHelper,
+    [VideoService.kick]: KickHelper,
+    [VideoService.appledeveloper]: AppleDeveloperHelper,
+    [VideoService.epicgames]: EpicGamesHelper,
+    [VideoService.nineanimetv]: NineAnimeTVHelper,
+    [VideoService.odysee]: OdyseeHelper,
+    [VideoService.coursehunter]: CoursehunterHelper,
+    [VideoService.twitch]: TwitchHelper,
+    [VideoService.sap]: SapHelper,
+    [VideoService.linkedin]: LinkedinHelper,
+    [VideoService.vimeo]: VimeoHelper,
+};
 export default class VideoHelper {
-    static [VideoService.mailru] = new MailRuHelper();
-    static [VideoService.weverse] = new WeverseHelper();
-    static [VideoService.kodik] = new KodikHelper();
-    static [VideoService.patreon] = new PatreonHelper();
-    static [VideoService.reddit] = new RedditHelper();
-    static [VideoService.bannedvideo] = new BannedVideoHelper();
-    static [VideoService.kick] = new KickHelper();
-    static [VideoService.appledeveloper] = new AppleDeveloperHelper();
-    static [VideoService.epicgames] = new EpicGamesHelper();
-    static [VideoService.nineanimetv] = new NineAnimeTVHelper();
-    static [VideoService.odysee] = new OdyseeHelper();
-    static [VideoService.twitch] = new TwitchHelper();
-    static [VideoService.coursehunter] = new CoursehunterHelper();
-    static [VideoService.sap] = new SapHelper();
-    static [VideoService.linkedin] = new LinkedinHelper();
+    helpersData;
+    constructor(helpersData = {}) {
+        this.helpersData = helpersData;
+    }
+    getHelper(service) {
+        return new availableHelpers[service](this.helpersData);
+    }
 }

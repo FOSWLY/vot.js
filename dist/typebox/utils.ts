@@ -9,3 +9,9 @@ export const AtLeast = <T extends TSchema, K extends TSchema>(T: T, K: K) => Typ
 Type.Partial(T),
 Type.Pick(T, K)
 ])
+
+export type TinyInt = Static<typeof TinyInt>
+export const TinyInt = Type.Union([
+Type.Literal(0),
+Type.Literal(1)
+])

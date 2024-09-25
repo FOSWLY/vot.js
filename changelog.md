@@ -1,3 +1,16 @@
+# 1.3.0
+
+> [!CAUTION]
+> After the update, if you patch files or use the Video Helper class you need to migrate to the new logic of working with VideoHelper
+
+- Reworked logic of VideoHelper to improve typing. Now, to get a helper, you need to create an instance of VideoHelper and call the getHelper method with the necessary service
+- Added additional params to getVideoData and getVideoId
+- Added info about title, description and subs for Vimeo
+- Now, on Vimeo, the id of the embedded video is equal to the regular one if it's public
+- Added fetch error handling for some video helpers
+- Removed app_id query param for Vimeo (Maybe no more is needed)
+- Fixed match Linkedin domain without `www.`
+
 # 1.2.9
 
 - Added support Watchporn.to embed

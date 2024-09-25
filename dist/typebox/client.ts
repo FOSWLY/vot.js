@@ -1,9 +1,11 @@
+import { BaseHelperOpts } from "./helpers/base";
 import { SubtitleFormat } from "./subs";
 import { AtLeast } from "./utils";
 import {
   RequestLang,
   ResponseLang,
   SessionModule,
+  TranslationHelp,
   VideoService,
 } from "./yandex";
 
@@ -40,14 +42,21 @@ duration: Type.Optional(Type.Number()),
 isStream: Type.Optional(Type.Boolean()),
 title: Type.Optional(Type.String()),
 description: Type.Optional(Type.String()),
-subtitles: Type.Optional(Type.Array(VideoDataSubtitle))
+subtitles: Type.Optional(Type.Array(VideoDataSubtitle)),
+translationHelp: Type.Optional(Type.Union([
+Type.Array(TranslationHelp),
+Type.Null()
+]))
 })
 
 export type MinimalVideoData = Static<typeof MinimalVideoData>
 export const MinimalVideoData = AtLeast(VideoData, Type.Literal("url"))
 
+export type GetVideoDataOpts = Static<typeof GetVideoDataOpts>
+export const GetVideoDataOpts = Type.Omit(BaseHelperOpts, Type.Literal("service"))
+
 export type GetVideoDataFunction = Static<typeof GetVideoDataFunction>
-export const GetVideoDataFunction = Type.Function([Type.String()], Type.Promise(VideoData))
+export const GetVideoDataFunction = Type.Function([Type.String(), Type.Optional(GetVideoDataOpts)], Type.Promise(VideoData))
 
 export type VOTOpts = Static<typeof VOTOpts>
 export const VOTOpts = Type.Object({

@@ -55,6 +55,23 @@ test("Translate video (with translationHelp)", async () => {
   expect(response.translated).not.toBeNull();
 });
 
+test("Translate private vimeo embed (with internal translationHelp)", async () => {
+  const url = "https://player.vimeo.com/video/722306580";
+  const videoData = await getVideoData(url, {
+    referer: "https://leetcode.com",
+  });
+  const client = new VOTClient();
+
+  const response = await client.translateVideo({
+    videoData,
+    translationHelp: videoData.translationHelp,
+  });
+
+  console.log("Translate video", response);
+
+  expect(response.translated).not.toBeNull();
+});
+
 test("Translate video (with VOT Backend API)", async () => {
   const client = new VOTClient();
   const videoData = await getVideoData(

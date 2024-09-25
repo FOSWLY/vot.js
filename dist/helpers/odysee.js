@@ -12,7 +12,7 @@ export default class OdyseeHelper extends BaseHelper {
             return { url };
         }
         catch (err) {
-            console.error("Failed to get odysee video data", err.message);
+            console.error(`Failed to get odysee video data by video ID: ${videoId}`, err.message);
             return undefined;
         }
     }
