@@ -1,3 +1,11 @@
+# 1.3.2
+
+- Added Coursetrain support (coursetrain.net)
+- Added Ricktube support (ricktube.ru)
+- Added Incestflix support (incestflix.com)
+- Added PornTN support (porntn.com) (maybe doesn't work, now site on Maintenance)
+- Getting video ID for `yandexdisk`, `vk` and `trovo` has been moved in a separate helpers
+
 # 1.3.1
 
 - Improved the work of constructing links to private videos for vimeo embed

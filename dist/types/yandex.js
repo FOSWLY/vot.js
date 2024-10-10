@@ -51,6 +51,10 @@ export var VideoService;
     VideoService["sap"] = "sap";
     VideoService["watchpornto"] = "watchpornto";
     VideoService["linkedin"] = "linkedin";
+    VideoService["ricktube"] = "ricktube";
+    VideoService["coursetrain"] = "coursetrain";
+    VideoService["incestflix"] = "incestflix";
+    VideoService["porntn"] = "porntn";
 })(VideoService || (VideoService = {}));
 export var VideoTranslationStatus;
 (function (VideoTranslationStatus) {

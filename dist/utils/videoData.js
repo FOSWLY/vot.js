@@ -51,6 +51,7 @@ export async function getVideoID(service, videoURL, opts = {}) {
         case VideoService.piped:
         case VideoService.poketube:
         case VideoService.invidious:
+        case VideoService.ricktube:
         case VideoService.youtube:
             if (url.hostname === "youtu.be") {
                 url.search = `?v=${url.pathname.replace("/", "")}`;
@@ -58,22 +59,6 @@ export async function getVideoID(service, videoURL, opts = {}) {
             }
             return (/(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ??
                 url.searchParams.get("v"));
-        case VideoService.vk: {
-            const pathID = /^\/(video|clip)-?\d{8,9}_\d{9}$/.exec(url.pathname);
-            const paramZ = url.searchParams.get("z");
-            const paramOID = url.searchParams.get("oid");
-            const paramID = url.searchParams.get("id");
-            if (pathID) {
-                return pathID[0].slice(1);
-            }
-            else if (paramZ) {
-                return paramZ.split("/")[0];
-            }
-            else if (paramOID && paramID) {
-                return `video-${Math.abs(parseInt(paramOID))}_${paramID}`;
-            }
-            return null;
-        }
         case VideoService.nine_gag:
         case VideoService.gag:
             return /gag\/([^/]+)/.exec(url.pathname)?.[1];
@@ -93,11 +78,15 @@ export async function getVideoID(service, videoURL, opts = {}) {
         case VideoService.rutube:
             return /(?:video|embed)\/([^/]+)/.exec(url.pathname)?.[1];
         case VideoService.bilibili: {
+            const bangumiId = /bangumi\/play\/([^/]+)/.exec(url.pathname)?.[0];
+            if (bangumiId) {
+                return bangumiId;
+            }
             const bvid = url.searchParams.get("bvid");
             if (bvid) {
-                return bvid;
+                return `video/${bvid}`;
             }
-            let vid = /video\/([^/]+)/.exec(url.pathname)?.[1];
+            let vid = /video\/([^/]+)/.exec(url.pathname)?.[0];
             if (vid && url.searchParams.get("p") !== null) {
                 vid += `/?p=${url.searchParams.get("p")}`;
             }
@@ -114,19 +103,6 @@ export async function getVideoID(service, videoURL, opts = {}) {
                 ? url.pathname.slice(1)
                 : /video\/([^/]+)/.exec(url.pathname)?.[1];
         }
-        case VideoService.trovo: {
-            const vid = url.searchParams.get("vid");
-            if (!vid) {
-                return null;
-            }
-            const path = /([^/]+)\/([\d]+)/.exec(url.pathname)?.[0];
-            if (!path) {
-                return null;
-            }
-            return `${path}?vid=${vid}`;
-        }
-        case VideoService.yandexdisk:
-            return /\/i\/([^/]+)/.exec(url.pathname)?.[1];
         case VideoService.okru: {
             return /\/video\/(\d+)/.exec(url.pathname)?.[1];
         }

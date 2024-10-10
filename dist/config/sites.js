@@ -1,5 +1,5 @@
 import { VideoService } from "../types/yandex.js";
-import { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, sitesPoketube, } from "./alternativeUrls.js";
+import { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, sitesPoketube, sitesRicktube, } from "./alternativeUrls.js";
 export default [
     {
         host: VideoService.youtube,
@@ -20,6 +20,11 @@ export default [
         host: VideoService.poketube,
         url: "https://youtu.be/",
         match: sitesPoketube,
+    },
+    {
+        host: VideoService.ricktube,
+        url: "https://youtu.be/",
+        match: sitesRicktube,
     },
     {
         host: VideoService.vk,
@@ -97,7 +102,7 @@ export default [
     },
     {
         host: VideoService.bilibili,
-        url: "https://www.bilibili.com/video/",
+        url: "https://www.bilibili.com/",
         match: /^(www|m|player).bilibili.com$/,
     },
     {
@@ -246,6 +251,24 @@ export default [
         host: VideoService.linkedin,
         url: "https://www.linkedin.com/learning/",
         match: /^(www.)?linkedin.com$/,
+        needExtraData: true,
+    },
+    {
+        host: VideoService.coursetrain,
+        url: "https://coursetrain.net/course/",
+        match: /^coursetrain.net$/,
+        needExtraData: true,
+    },
+    {
+        host: VideoService.incestflix,
+        url: "http://www.incestflix.com/watch/",
+        match: /^(www.)?incestflix.com$/,
+        needExtraData: true,
+    },
+    {
+        host: VideoService.porntn,
+        url: "https://porntn.com/videos/",
+        match: /^porntn.com$/,
         needExtraData: true,
     },
     {
