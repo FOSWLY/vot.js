@@ -5,6 +5,7 @@ import {
   sitesProxiTok,
   sitesPeertube,
   sitesPoketube,
+  sitesRicktube,
 } from "./alternativeUrls";
 
 export default [
@@ -30,6 +31,12 @@ export default [
     host: VideoService.poketube,
     url: "https://youtu.be/",
     match: sitesPoketube,
+  },
+  {
+    // Sites host Ricktube
+    host: VideoService.ricktube,
+    url: "https://youtu.be/",
+    match: sitesRicktube,
   },
   {
     host: VideoService.vk,
@@ -108,7 +115,7 @@ export default [
   },
   {
     host: VideoService.bilibili,
-    url: "https://www.bilibili.com/video/",
+    url: "https://www.bilibili.com/",
     match: /^(www|m|player).bilibili.com$/,
   },
   {
@@ -259,6 +266,25 @@ export default [
     host: VideoService.linkedin,
     url: "https://www.linkedin.com/learning/",
     match: /^(www.)?linkedin.com$/,
+    needExtraData: true,
+  },
+  {
+    host: VideoService.coursetrain,
+    url: "https://coursetrain.net/course/",
+    match: /^coursetrain.net$/,
+    needExtraData: true,
+  },
+  {
+    host: VideoService.incestflix,
+    // eslint-disable-next-line sonarjs/no-clear-text-protocols
+    url: "http://www.incestflix.com/watch/",
+    match: /^(www.)?incestflix.com$/,
+    needExtraData: true,
+  },
+  {
+    host: VideoService.porntn,
+    url: "https://porntn.com/videos/",
+    match: /^porntn.com$/,
     needExtraData: true,
   },
   {

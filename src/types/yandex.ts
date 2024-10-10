@@ -65,6 +65,10 @@ export enum VideoService {
   sap = "sap",
   watchpornto = "watchpornto",
   linkedin = "linkedin",
+  ricktube = "ricktube",
+  coursetrain = "coursetrain",
+  incestflix = "incestflix",
+  porntn = "porntn",
 }
 
 export type ServiceConf = {
