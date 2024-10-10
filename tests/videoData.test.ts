@@ -1,9 +1,11 @@
+/* eslint-disable sonarjs/no-commented-code */
 import { describe, test, expect } from "bun:test";
 import { getVideoData } from "../src/utils/videoData";
 import config from "../src/config/config";
 
 const normalize = async (url: string, referer?: string) => {
   const data = await getVideoData(url, { referer });
+  // console.log(data);
   return data?.url;
 };
 
@@ -47,6 +49,11 @@ describe("youtube", () => {
   });
   test("poketube", async () => {
     expect(await normalize("https://poketube.fun/watch?v=LK6nLR1bzpI")).toEqual(
+      expected,
+    );
+  });
+  test("ricktube", async () => {
+    expect(await normalize("https://ricktube.ru/watch?v=LK6nLR1bzpI")).toEqual(
       expected,
     );
   });
@@ -258,6 +265,10 @@ describe("bilibili", () => {
       ),
     ).toEqual(expected);
   });
+  test("bangumi", async () => {
+    const expectedBangumi = "https://www.bilibili.com/bangumi/play/ep277052";
+    expect(await normalize(expectedBangumi)).toEqual(expectedBangumi);
+  });
 });
 
 describe("mail.ru", () => {
@@ -462,7 +473,9 @@ describe("kick", () => {
   test("clips", async () => {
     const expected =
       "https://kick.com/coverdiva/clips/clip_01J3K1KCNRFEDAH62QYFNX7ANM";
-    expect(await normalize(expected)).toInclude(expected);
+    expect(await normalize(expected)).toInclude(
+      "clip_01J3K1KCNRFEDAH62QYFNX7ANM",
+    );
   });
 });
 
@@ -553,4 +566,27 @@ test("linkedin", async () => {
   );
   expect(normalized).toStartWith(`https://${config.mediaProxy}`);
   expect(normalized).toIncludeRepeated(`.mp4`, 2);
+});
+
+test("coursetrain", async () => {
+  const normalized = await normalize(
+    "https://coursetrain.net/course/uderzhanie-sostoyaniya-i-upravlenie-emociyami-emocionalnyy-intellekt-v-deystvii?lesson=1",
+  );
+  expect(normalized).toInclude("coursetrain.net");
+  expect(normalized).toEndWith("/lesson1.mp4");
+});
+
+test("incestflix", async () => {
+  const normalized = await normalize(
+    // eslint-disable-next-line sonarjs/no-clear-text-protocols
+    "http://www.incestflix.com/watch/deviant-kat-waking-mommy-up-blowjob",
+  );
+  expect(normalized).toInclude("deviant-kat-waking-mommy-up-blowjob");
+});
+
+test("porntn", async () => {
+  const normalized = await normalize(
+    "https://porntn.com/videos/15443/diddly-asmr-15-september-2024-tits-massage-youtube-video-gone-wrong/",
+  );
+  expect(normalized).toInclude("porntn.com");
 });
