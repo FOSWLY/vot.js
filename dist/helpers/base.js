@@ -11,11 +11,13 @@ export class BaseHelper {
     fetch;
     extraInfo;
     referer;
+    origin;
     service;
-    constructor({ fetchFn = fetchWithTimeout, extraInfo = true, referer = "", service, } = {}) {
+    constructor({ fetchFn = fetchWithTimeout, extraInfo = true, referer = "", origin = "", service, } = {}) {
         this.fetch = fetchFn;
         this.extraInfo = extraInfo;
         this.referer = referer;
+        this.origin = /^(http(s)?):\/\//.test(String(origin)) ? origin : "";
         this.service = service;
     }
     async getVideoData(videoId) {

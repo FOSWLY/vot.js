@@ -6,6 +6,7 @@ import {
   sitesPeertube,
   sitesPoketube,
   sitesRicktube,
+  sitesCoursehunterLike,
 } from "./alternativeUrls";
 
 export default [
@@ -246,9 +247,9 @@ export default [
     needExtraData: true,
   },
   {
-    host: VideoService.coursehunter,
-    url: "https://coursehunter.net/course/",
-    match: /^coursehunter.net$/,
+    host: VideoService.coursehunterLike,
+    url: "stub",
+    match: sitesCoursehunterLike,
     needExtraData: true,
   },
   {
@@ -266,12 +267,6 @@ export default [
     host: VideoService.linkedin,
     url: "https://www.linkedin.com/learning/",
     match: /^(www.)?linkedin.com$/,
-    needExtraData: true,
-  },
-  {
-    host: VideoService.coursetrain,
-    url: "https://coursetrain.net/course/",
-    match: /^coursetrain.net$/,
     needExtraData: true,
   },
   {

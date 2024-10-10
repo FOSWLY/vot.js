@@ -10,7 +10,7 @@ import AppleDeveloperHelper from "./appledeveloper.js";
 import EpicGamesHelper from "./epicgames.js";
 import NineAnimeTVHelper from "./nineanimetv.js";
 import OdyseeHelper from "./odysee.js";
-import CoursehunterHelper from "./coursehunter.js";
+import CoursehunterLikeHelper from "./coursehunterLike.js";
 import TwitchHelper from "./twitch.js";
 import SapHelper from "./sap.js";
 import LinkedinHelper from "./linkedin.js";
@@ -18,7 +18,6 @@ import VimeoHelper from "./vimeo.js";
 import YandexDiskHelper from "./yandexdisk.js";
 import VKHelper from "./vk.js";
 import TrovoHelper from "./trovo.js";
-import CoursetrainHelper from "./coursetrain.js";
 import IncestflixHelper from "./incestflix.js";
 import PornTNHelper from "./porntn.js";
 export * as MailRuHelper from "./mailru.js";
@@ -32,7 +31,7 @@ export * as AppleDeveloperHelper from "./appledeveloper.js";
 export * as EpicGamesHelper from "./epicgames.js";
 export * as NineAnimeTVHelper from "./nineanimetv.js";
 export * as OdyseeHelper from "./odysee.js";
-export * as CoursehunterHelper from "./coursehunter.js";
+export * as CoursehunterLikeHelper from "./coursehunterLike.js";
 export * as TwitchHelper from "./twitch.js";
 export * as SapHelper from "./sap.js";
 export * as LinkedinHelper from "./linkedin.js";
@@ -40,7 +39,6 @@ export * as VimeoHelper from "./vimeo.js";
 export * as YandexDiskHelper from "./yandexdisk.js";
 export * as VKHelper from "./vk.js";
 export * as TrovoHelper from "./trovo.js";
-export * as CoursetrainHelper from "./coursetrain.js";
 export * as IncestflixHelper from "./incestflix.js";
 export * as PornTNHelper from "./porntn.js";
 export const availableHelpers = {
@@ -55,7 +53,7 @@ export const availableHelpers = {
     [VideoService.epicgames]: EpicGamesHelper,
     [VideoService.nineanimetv]: NineAnimeTVHelper,
     [VideoService.odysee]: OdyseeHelper,
-    [VideoService.coursehunter]: CoursehunterHelper,
+    [VideoService.coursehunterLike]: CoursehunterLikeHelper,
     [VideoService.twitch]: TwitchHelper,
     [VideoService.sap]: SapHelper,
     [VideoService.linkedin]: LinkedinHelper,
@@ -63,7 +61,6 @@ export const availableHelpers = {
     [VideoService.yandexdisk]: YandexDiskHelper,
     [VideoService.vk]: VKHelper,
     [VideoService.trovo]: TrovoHelper,
-    [VideoService.coursetrain]: CoursetrainHelper,
     [VideoService.incestflix]: IncestflixHelper,
     [VideoService.porntn]: PornTNHelper,
 };

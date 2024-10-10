@@ -164,8 +164,13 @@ export async function getVideoData(
     throw new VideoDataError(`Entered unsupported link: "${url}"`);
   }
 
-  if (service.host === VideoService.peertube) {
-    service.url = new URL(url).origin; // set the url of the current site for peertube
+  const origin = new URL(url).origin;
+  if (
+    [VideoService.peertube, VideoService.coursehunterLike].includes(
+      service.host,
+    )
+  ) {
+    service.url = origin; // set the url of the current site for peertube
   }
 
   if (service.rawResult) {
@@ -186,9 +191,11 @@ export async function getVideoData(
     };
   }
 
-  const helper = new VideoHelper({ ...opts, service }).getHelper(
-    service.host as keyof AvailableVideoHelpers,
-  );
+  const helper = new VideoHelper({
+    ...opts,
+    service,
+    origin,
+  }).getHelper(service.host as keyof AvailableVideoHelpers);
   const result = await helper.getVideoData(videoId);
   if (!result) {
     throw new VideoDataError(`Failed to get video raw url for ${service.host}`);

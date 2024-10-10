@@ -13,7 +13,7 @@ export * as KodikType from "./helpers/kodik";
 export * as PatreonType from "./helpers/patreon";
 export * as KickType from "./helpers/kick";
 export * as BannedVideoType from "./helpers/bannedvideo";
-export * as CoursehunterType from "./helpers/coursehunter";
+export * as CoursehunterLikeType from "./helpers/coursehunterLike";
 export * as EpicGamesType from "./helpers/epicgames";
 export * as NineAnimeTVType from "./helpers/nineanimetv";
 export * as SapType from "./helpers/sap";

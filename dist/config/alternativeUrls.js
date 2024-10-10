@@ -81,4 +81,5 @@ const sitesPoketube = [
     "poke.blahai.gay",
 ];
 const sitesRicktube = ["ricktube.ru"];
-export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, sitesPoketube, sitesRicktube, };
+const sitesCoursehunterLike = ["coursehunter.net", "coursetrain.net"];
+export { sitesInvidious, sitesPiped, sitesProxiTok, sitesPeertube, sitesPoketube, sitesRicktube, sitesCoursehunterLike, };

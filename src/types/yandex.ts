@@ -61,12 +61,11 @@ export enum VideoService {
   epicgames = "epicgames",
   nineanimetv = "nineanimetv",
   odysee = "odysee",
-  coursehunter = "coursehunter",
+  coursehunterLike = "coursehunterLike",
   sap = "sap",
   watchpornto = "watchpornto",
   linkedin = "linkedin",
   ricktube = "ricktube",
-  coursetrain = "coursetrain",
   incestflix = "incestflix",
   porntn = "porntn",
 }

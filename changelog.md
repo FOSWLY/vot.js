@@ -1,3 +1,7 @@
+# 1.3.3
+
+- Coursehunter and Coursetrain logic are merged to CoursehunterLike
+
 # 1.3.2
 
 - Added Coursetrain support (coursetrain.net)

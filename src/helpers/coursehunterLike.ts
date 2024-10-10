@@ -1,19 +1,20 @@
 import { MinimalVideoData } from "../types/client";
-import { Lesson } from "../types/helpers/coursehunter";
+import { Lesson } from "../types/helpers/coursehunterLike";
 import { BaseHelper } from "./base";
 
-export default class CoursetrainHelper extends BaseHelper {
-  API_ORIGIN = "https://coursetrain.net";
+export default class CoursehunterLikeHelper extends BaseHelper {
+  API_ORIGIN = this.origin ?? "https://coursehunter.net";
 
   async getCourseId(videoId: string) {
     try {
-      const res = await this.fetch(`${this.API_ORIGIN}/course/${videoId}`);
+      const res = await this.fetch(`${this.API_ORIGIN}/${videoId}`);
       const content = await res.text();
       return /course_id(\s)?=(\s)?([\d]+)/.exec(content)?.[3];
-    } catch (err: unknown) {
+    } catch (err) {
       console.error(
-        `Failed to get Coursetrain courseId by videoId: ${videoId}`,
-        (err as Error).message,
+        `Failed to get CoursehunterLike courseId by videoId: ${videoId}, because ${
+          (err as Error).message
+        }`,
       );
       return false;
     }
@@ -25,10 +26,11 @@ export default class CoursetrainHelper extends BaseHelper {
         `${this.API_ORIGIN}/api/v1/course/${courseId}/lessons`,
       );
       return (await res.json()) as Lesson[];
-    } catch (err: unknown) {
+    } catch (err) {
       console.error(
-        `Failed to get Coursetrain lessons data by courseId: ${courseId}`,
-        (err as Error).message,
+        `Failed to get CoursehunterLike lessons data by courseId: ${courseId}, because ${
+          (err as Error).message
+        }`,
       );
       return false;
     }
@@ -61,7 +63,7 @@ export default class CoursetrainHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    const courseId = /\/course\/([^/]+)/.exec(url.pathname)?.[1];
+    const courseId = /course\/([^/]+)/.exec(url.pathname)?.[0];
     return courseId ? courseId + url.search : undefined;
   }
 }

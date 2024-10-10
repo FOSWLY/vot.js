@@ -510,12 +510,21 @@ test("odysee", async () => {
   expect(normalized).toStartWith("https://player.odycdn.com/");
 });
 
-test("coursehunter", async () => {
-  const normalized = await normalize(
-    "https://coursehunter.net/course/intensiv-docker-2-0?lesson=3",
-  );
-  expect(normalized).toInclude("coursehunter.net");
-  expect(normalized).toEndWith("/lesson3.mp4");
+describe("coursehunterLike", () => {
+  test("coursehunter", async () => {
+    const normalized = await normalize(
+      "https://coursehunter.net/course/intensiv-docker-2-0?lesson=3",
+    );
+    expect(normalized).toInclude("coursehunter.net");
+    expect(normalized).toEndWith("/lesson3.mp4");
+  });
+  test("coursetrain", async () => {
+    const normalized = await normalize(
+      "https://coursetrain.net/course/uderzhanie-sostoyaniya-i-upravlenie-emociyami-emocionalnyy-intellekt-v-deystvii?lesson=1",
+    );
+    expect(normalized).toInclude("coursetrain.net");
+    expect(normalized).toEndWith("/lesson1.mp4");
+  });
 });
 
 describe("sap", () => {
@@ -566,14 +575,6 @@ test("linkedin", async () => {
   );
   expect(normalized).toStartWith(`https://${config.mediaProxy}`);
   expect(normalized).toIncludeRepeated(`.mp4`, 2);
-});
-
-test("coursetrain", async () => {
-  const normalized = await normalize(
-    "https://coursetrain.net/course/uderzhanie-sostoyaniya-i-upravlenie-emociyami-emocionalnyy-intellekt-v-deystvii?lesson=1",
-  );
-  expect(normalized).toInclude("coursetrain.net");
-  expect(normalized).toEndWith("/lesson1.mp4");
 });
 
 test("incestflix", async () => {

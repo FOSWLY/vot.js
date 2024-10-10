@@ -91,6 +91,9 @@ const sitesPoketube = [
 
 const sitesRicktube = ["ricktube.ru"];
 
+// If you know what the correct name of this engine is, let me know so that I change the name
+const sitesCoursehunterLike = ["coursehunter.net", "coursetrain.net"];
+
 export {
   sitesInvidious,
   sitesPiped,
@@ -98,4 +101,5 @@ export {
   sitesPeertube,
   sitesPoketube,
   sitesRicktube,
+  sitesCoursehunterLike,
 };

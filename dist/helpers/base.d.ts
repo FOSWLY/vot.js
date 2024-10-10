@@ -9,8 +9,9 @@ export declare class BaseHelper {
     fetch: FetchFunction;
     extraInfo: boolean;
     referer: string;
+    origin: string;
     service: ServiceConf | undefined;
-    constructor({ fetchFn, extraInfo, referer, service, }?: BaseHelperOpts);
+    constructor({ fetchFn, extraInfo, referer, origin, service, }?: BaseHelperOpts);
     getVideoData(videoId: string): Promise<MinimalVideoData | undefined>;
     getVideoId(url: URL): Promise<string | undefined>;
     returnBaseData(videoId: string): {

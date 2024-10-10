@@ -1,5 +1,5 @@
 import { MinimalVideoData } from "../types/client.js";
-import { Lesson } from "../types/helpers/coursehunter.js";
+import { Lesson } from "../types/helpers/coursehunterLike.js";
 import { BaseHelper } from "./base.js";
 export default class CoursetrainHelper extends BaseHelper {
     API_ORIGIN: string;

@@ -18,17 +18,20 @@ export class BaseHelper {
   fetch: FetchFunction;
   extraInfo: boolean;
   referer: string;
+  origin: string;
   service: ServiceConf | undefined;
 
   constructor({
     fetchFn = fetchWithTimeout,
     extraInfo = true,
     referer = "",
+    origin = "",
     service,
   }: BaseHelperOpts = {}) {
     this.fetch = fetchFn;
     this.extraInfo = extraInfo;
     this.referer = referer;
+    this.origin = /^(http(s)?):\/\//.test(String(origin)) ? origin : "";
     this.service = service;
   }
 
