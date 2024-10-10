@@ -17,6 +17,12 @@ import TwitchHelper from "./twitch";
 import SapHelper from "./sap";
 import LinkedinHelper from "./linkedin";
 import VimeoHelper from "./vimeo";
+import YandexDiskHelper from "./yandexdisk";
+import VKHelper from "./vk";
+import TrovoHelper from "./trovo";
+import CoursetrainHelper from "./coursetrain";
+import IncestflixHelper from "./incestflix";
+import PornTNHelper from "./porntn";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -34,6 +40,12 @@ export * as TwitchHelper from "./twitch";
 export * as SapHelper from "./sap";
 export * as LinkedinHelper from "./linkedin";
 export * as VimeoHelper from "./vimeo";
+export * as YandexDiskHelper from "./yandexdisk";
+export * as VKHelper from "./vk";
+export * as TrovoHelper from "./trovo";
+export * as CoursetrainHelper from "./coursetrain";
+export * as IncestflixHelper from "./incestflix";
+export * as PornTNHelper from "./porntn";
 
 export const availableHelpers = {
   [VideoService.mailru]: MailRuHelper,
@@ -52,6 +64,12 @@ export const availableHelpers = {
   [VideoService.sap]: SapHelper,
   [VideoService.linkedin]: LinkedinHelper,
   [VideoService.vimeo]: VimeoHelper,
+  [VideoService.yandexdisk]: YandexDiskHelper,
+  [VideoService.vk]: VKHelper,
+  [VideoService.trovo]: TrovoHelper,
+  [VideoService.coursetrain]: CoursetrainHelper,
+  [VideoService.incestflix]: IncestflixHelper,
+  [VideoService.porntn]: PornTNHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
