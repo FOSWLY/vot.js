@@ -1,3 +1,7 @@
+# 1.3.4
+
+- Added Incestflix mirrors with https support
+
 # 1.3.3
 
 - Coursehunter and Coursetrain logic are merged to CoursehunterLike

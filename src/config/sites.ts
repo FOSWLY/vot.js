@@ -271,9 +271,8 @@ export default [
   },
   {
     host: VideoService.incestflix,
-    // eslint-disable-next-line sonarjs/no-clear-text-protocols
-    url: "http://www.incestflix.com/watch/",
-    match: /^(www.)?incestflix.com$/,
+    url: "https://www.incestflix.net/watch/",
+    match: /^(www.)?incestflix.(net|to|com)$/,
     needExtraData: true,
   },
   {

@@ -255,8 +255,8 @@ export default [
     },
     {
         host: VideoService.incestflix,
-        url: "http://www.incestflix.com/watch/",
-        match: /^(www.)?incestflix.com$/,
+        url: "https://www.incestflix.net/watch/",
+        match: /^(www.)?incestflix.(net|to|com)$/,
         needExtraData: true,
     },
     {
