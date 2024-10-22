@@ -95,7 +95,7 @@
     "eslint-plugin-oxlint": "^0.9.10",
     "eslint-plugin-sonarjs": "^2.0.3",
     "husky": "^9.1.6",
-    "oxlint": "^0.9.10",
+    "oxlint": "^0.10.2",
     "ts-proto": "1.181.2",
     "tsc-esm-fix": "^3.1.0",
     "typedoc": "^0.26.8",
