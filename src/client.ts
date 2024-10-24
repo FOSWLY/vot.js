@@ -23,6 +23,7 @@ import type {
   StreamTranslationResponse,
   StreamTranslationObject,
   SessionModule,
+  VideoTranslationFailAudioResponse,
 } from "./types/yandex";
 import { VideoTranslationStatus } from "./types/yandex";
 import { fetchWithTimeout, getTimestamp } from "./utils/utils";
@@ -72,6 +73,8 @@ export default class VOTClient {
 
   paths = {
     videoTranslation: "/video-translation/translate",
+    videoTranslationFailAudio: "/video-translation/fail-audio-js",
+    videoTranslationAudio: "/video-translation/audio",
     videoSubtitles: "/video-subtitles/get-subtitles",
     streamPing: "/stream-translation/ping-stream",
     streamTranslation: "/stream-translation/translate-stream",
@@ -141,9 +144,13 @@ export default class VOTClient {
     this.headers = { ...this.headers, ...headers };
   }
 
-  getOpts(body: unknown, headers: Record<string, string> = {}) {
+  getOpts(
+    body: unknown,
+    headers: Record<string, string> = {},
+    method = "POST",
+  ) {
     return {
-      method: "POST",
+      method,
       headers: {
         ...this.headers,
         ...headers,
@@ -157,24 +164,59 @@ export default class VOTClient {
    * The standard method for requesting the Yandex API, if necessary, you can override how it is done in the example
    * @includeExample examples/with_axios.ts:4-41
    */
-  async request(
+  async request<T = ArrayBuffer>(
     path: string,
     body: Uint8Array,
     headers: Record<string, string> = {},
-  ): Promise<ClientResponse> {
-    const options: any = this.getOpts(new Blob([body]), headers);
+    method = "POST",
+  ): Promise<ClientResponse<T>> {
+    const options = this.getOpts(new Blob([body]), headers, method);
 
     try {
       const res = await this.fetch(
         `${this.schema}://${this.host}${path}`,
         options,
       );
-      const data = await res.arrayBuffer();
+      const data = (await res.arrayBuffer()) as T;
       return {
         success: res.status === 200,
         data,
       };
-    } catch (err: unknown) {
+    } catch (err) {
+      return {
+        success: false,
+        data: (err as Error)?.message,
+      };
+    }
+  }
+
+  async requestJSON<T = unknown>(
+    path: string,
+    body: unknown = null,
+    headers: Record<string, string> = {},
+    method = "POST",
+  ): Promise<ClientResponse<T>> {
+    const options = this.getOpts(
+      body,
+      {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      method,
+    );
+
+    try {
+      const res = await this.fetch(
+        `${this.schema}://${this.host}${path}`,
+        options,
+      );
+      const data = (await res.json()) as T;
+
+      return {
+        success: res.status === 200,
+        data,
+      };
+    } catch (err) {
       return {
         success: false,
         data: (err as Error)?.message,
@@ -190,7 +232,7 @@ export default class VOTClient {
     body: NonNullable<any>,
     headers: Record<string, string> = {},
   ): Promise<ClientResponse<T>> {
-    const options: any = this.getOpts(JSON.stringify(body), {
+    const options = this.getOpts(JSON.stringify(body), {
       ...this.headersVOT,
       ...headers,
     });
@@ -205,7 +247,7 @@ export default class VOTClient {
         success: res.status === 200,
         data,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       return {
         success: false,
         data: (err as Error)?.message,
@@ -237,6 +279,7 @@ export default class VOTClient {
     responseLang = this.responseLang,
     translationHelp = null,
     headers = {},
+    shouldSendFailedAudio = true,
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
     const { url, duration = config.defaultDuration } = videoData;
 
@@ -261,9 +304,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video translation", res);
     }
 
-    const translationData = yandexProtobuf.decodeTranslationResponse(
-      res.data as ArrayBuffer,
-    );
+    const translationData = yandexProtobuf.decodeTranslationResponse(res.data);
 
     switch (translationData.status as VideoTranslationStatus) {
       case VideoTranslationStatus.FAILED:
@@ -313,7 +354,23 @@ export default class VOTClient {
             В среднем перевод с этим статусом занимает более 10 минут. Вероятнее всего, чтобы так не происходило нужно делать 1 запрос с bypassCache=true,
             а следующие с bypassCache=false, либо убирать firstRequest=true, но это, только, догадки
             UPD: Заметил, что Яндекс в этом случае загружает видео/аудио с ютуба в webm, а после отправляет в protobuf через PUT /translate-video/audio
+            UPD 2: Или отправляет PUT /video-translation/fail-audio-js + PUT /translate-video/audio без самого аудио файла
         */
+
+        if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
+          // try to fix with fake requests (only for youtube)
+          await this.requestVtransFailAudio(url);
+          await this.requestVtransAudio(url, translationData.translationId);
+          return await this.translateVideoYAImpl({
+            videoData,
+            requestLang,
+            responseLang,
+            translationHelp,
+            headers,
+            shouldSendFailedAudio: false,
+          });
+        }
+
         return {
           translated: false,
           remainingTime: translationData.remainingTime ?? -1,
@@ -379,6 +436,60 @@ export default class VOTClient {
     }
   }
 
+  protected async requestVtransFailAudio(url: string) {
+    const res = await this.requestJSON<VideoTranslationFailAudioResponse>(
+      this.paths.videoTranslationFailAudio,
+      JSON.stringify({
+        video_url: url,
+      }),
+      undefined,
+      "PUT",
+    );
+    if (!res.data || typeof res.data === "string" || res.data.status !== 1) {
+      throw new VOTJSError(
+        "Failed to request to fake video translation fail audio js",
+        res,
+      );
+    }
+
+    return res;
+  }
+
+  // TODO: add try download and set webm file blob (?)
+  // * download webm help sources:
+  // 1. https://github.com/kkdai/youtube/blob/23aa415a67479586129084478367c7478ec45878/client.go#L183C1-L183C29 (yabrowser used this android logic)
+  // 2. yabrowser raw js
+  async requestVtransAudio(
+    url: string,
+    translationId: string,
+    headers: Record<string, string> = {},
+  ) {
+    const { secretKey, uuid } = await this.getSession("video-translation");
+    const body = yandexProtobuf.encodeTranslationAudioRequest(
+      url,
+      translationId,
+    );
+
+    const sign = await getSignature(body);
+    const res = await this.request(
+      this.paths.videoTranslationAudio,
+      body,
+      {
+        "Vtrans-Signature": sign,
+        "Sec-Vtrans-Sk": secretKey,
+        "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.videoTranslationAudio}:${this.componentVersion}`,
+        ...headers,
+      },
+      "PUT",
+    );
+
+    if (!res.success) {
+      throw new VOTJSError("Failed to request video translation audio", res);
+    }
+
+    return yandexProtobuf.decodeTranslationAudioResponse(res.data);
+  }
+
   /**
    * @includeExample examples/basic.ts:4-11,21-37,55-65
    */
@@ -438,7 +549,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video subtitles", res);
     }
 
-    return yandexProtobuf.decodeSubtitlesResponse(res.data as ArrayBuffer);
+    return yandexProtobuf.decodeSubtitlesResponse(res.data);
   }
 
   /**
@@ -500,9 +611,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request stream translation", res);
     }
 
-    const translateResponse = yandexProtobuf.decodeStreamResponse(
-      res.data as ArrayBuffer,
-    );
+    const translateResponse = yandexProtobuf.decodeStreamResponse(res.data);
 
     const interval = translateResponse.interval;
     switch (interval) {
@@ -533,7 +642,6 @@ export default class VOTClient {
   async createSession(module: SessionModule) {
     const uuid = getUUID();
     const body = yandexProtobuf.encodeYandexSessionRequest(uuid, module);
-
     const res = await this.request(this.paths.createSession, body, {
       "Vtrans-Signature": await getSignature(body),
     });
@@ -543,7 +651,7 @@ export default class VOTClient {
     }
 
     const sessionResponse = yandexProtobuf.decodeYandexSessionResponse(
-      res.data as ArrayBuffer,
+      res.data,
     );
 
     return {
@@ -554,11 +662,11 @@ export default class VOTClient {
 }
 
 export class VOTWorkerClient extends VOTClient {
-  async request(
+  async request<T = ArrayBuffer>(
     path: string,
     body: Uint8Array,
     headers: Record<string, string> = {},
-  ): Promise<ClientResponse> {
+  ): Promise<ClientResponse<T>> {
     const options = this.getOpts(
       JSON.stringify({
         headers: {
@@ -577,12 +685,12 @@ export class VOTWorkerClient extends VOTClient {
         `${this.schema}://${this.host}${path}`,
         options,
       );
-      const data = await res.arrayBuffer();
+      const data = (await res.arrayBuffer()) as T;
       return {
         success: res.status === 200,
         data,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       return {
         success: false,
         data: (err as Error)?.message,
