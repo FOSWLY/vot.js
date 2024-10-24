@@ -64,3 +64,12 @@ export var VideoTranslationStatus;
     VideoTranslationStatus[VideoTranslationStatus["PART_CONTENT"] = 5] = "PART_CONTENT";
     VideoTranslationStatus[VideoTranslationStatus["LONG_WAITING_2"] = 6] = "LONG_WAITING_2";
 })(VideoTranslationStatus || (VideoTranslationStatus = {}));
+export var AudioInfoMessage;
+(function (AudioInfoMessage) {
+    AudioInfoMessage["WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME"] = "web_api_get_all_generating_urls_data_from_iframe";
+    AudioInfoMessage["WEB_API_REPLACED_FETCH_INSIDE_IFRAME"] = "web_api_replaced_fetch_inside_iframe";
+    AudioInfoMessage["WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK"] = "web_api_replaced_fetch_force_request_with_seek";
+    AudioInfoMessage["WEB_API_REPLACED_FETCH"] = "web_api_replaced_fetch";
+    AudioInfoMessage["ANDROID_API"] = "android_api";
+    AudioInfoMessage["WEB_API_SLOW"] = "web_api_slow";
+})(AudioInfoMessage || (AudioInfoMessage = {}));

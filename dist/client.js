@@ -32,6 +32,8 @@ export default class VOTClient {
     componentVersion = config.componentVersion;
     paths = {
         videoTranslation: "/video-translation/translate",
+        videoTranslationFailAudio: "/video-translation/fail-audio-js",
+        videoTranslationAudio: "/video-translation/audio",
         videoSubtitles: "/video-subtitles/get-subtitles",
         streamPing: "/stream-translation/ping-stream",
         streamTranslation: "/stream-translation/translate-stream",
@@ -71,9 +73,9 @@ export default class VOTClient {
         this.responseLang = responseLang;
         this.headers = { ...this.headers, ...headers };
     }
-    getOpts(body, headers = {}) {
+    getOpts(body, headers = {}, method = "POST") {
         return {
-            method: "POST",
+            method,
             headers: {
                 ...this.headers,
                 ...headers,
@@ -82,11 +84,31 @@ export default class VOTClient {
             ...this.fetchOpts,
         };
     }
-    async request(path, body, headers = {}) {
-        const options = this.getOpts(new Blob([body]), headers);
+    async request(path, body, headers = {}, method = "POST") {
+        const options = this.getOpts(new Blob([body]), headers, method);
         try {
             const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
-            const data = await res.arrayBuffer();
+            const data = (await res.arrayBuffer());
+            return {
+                success: res.status === 200,
+                data,
+            };
+        }
+        catch (err) {
+            return {
+                success: false,
+                data: err?.message,
+            };
+        }
+    }
+    async requestJSON(path, body = null, headers = {}, method = "POST") {
+        const options = this.getOpts(body, {
+            "Content-Type": "application/json",
+            ...headers,
+        }, method);
+        try {
+            const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
+            const data = (await res.json());
             return {
                 success: res.status === 200,
                 data,
@@ -134,7 +156,7 @@ export default class VOTClient {
         };
         return this.sessions[module];
     }
-    async translateVideoYAImpl({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
+    async translateVideoYAImpl({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, shouldSendFailedAudio = true, }) {
         const { url, duration = config.defaultDuration } = videoData;
         const { secretKey, uuid } = await this.getSession("video-translation");
         const body = yandexProtobuf.encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp);
@@ -169,6 +191,18 @@ export default class VOTClient {
                 };
             case VideoTranslationStatus.LONG_WAITING:
             case VideoTranslationStatus.LONG_WAITING_2:
+                if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
+                    await this.requestVtransFailAudio(url);
+                    await this.requestVtransAudio(url, translationData.translationId);
+                    return await this.translateVideoYAImpl({
+                        videoData,
+                        requestLang,
+                        responseLang,
+                        translationHelp,
+                        headers,
+                        shouldSendFailedAudio: false,
+                    });
+                }
                 return {
                     translated: false,
                     remainingTime: translationData.remainingTime ?? -1,
@@ -211,6 +245,30 @@ export default class VOTClient {
                     message: translationData.message,
                 };
         }
+    }
+    async requestVtransFailAudio(url) {
+        const res = await this.requestJSON(this.paths.videoTranslationFailAudio, JSON.stringify({
+            video_url: url,
+        }), undefined, "PUT");
+        if (!res.data || typeof res.data === "string" || res.data.status !== 1) {
+            throw new VOTJSError("Failed to request to fake video translation fail audio js", res);
+        }
+        return res;
+    }
+    async requestVtransAudio(url, translationId, headers = {}) {
+        const { secretKey, uuid } = await this.getSession("video-translation");
+        const body = yandexProtobuf.encodeTranslationAudioRequest(url, translationId);
+        const sign = await getSignature(body);
+        const res = await this.request(this.paths.videoTranslationAudio, body, {
+            "Vtrans-Signature": sign,
+            "Sec-Vtrans-Sk": secretKey,
+            "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.videoTranslationAudio}:${this.componentVersion}`,
+            ...headers,
+        }, "PUT");
+        if (!res.success) {
+            throw new VOTJSError("Failed to request video translation audio", res);
+        }
+        return yandexProtobuf.decodeTranslationAudioResponse(res.data);
     }
     async translateVideo({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
         const { url, videoId, host } = videoData;
@@ -336,7 +394,7 @@ export class VOTWorkerClient extends VOTClient {
         });
         try {
             const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
-            const data = await res.arrayBuffer();
+            const data = (await res.arrayBuffer());
             return {
                 success: res.status === 200,
                 data,

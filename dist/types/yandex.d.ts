@@ -81,12 +81,21 @@ export declare enum VideoTranslationStatus {
     PART_CONTENT = 5,
     LONG_WAITING_2 = 6
 }
+export declare enum AudioInfoMessage {
+    WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe",
+    WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe",
+    WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK = "web_api_replaced_fetch_force_request_with_seek",
+    WEB_API_REPLACED_FETCH = "web_api_replaced_fetch",
+    ANDROID_API = "android_api",
+    WEB_API_SLOW = "web_api_slow"
+}
 export type VideoTranslationOpts = {
     videoData: VideoData;
     requestLang?: RequestLang;
     responseLang?: ResponseLang;
     translationHelp?: TranslationHelp[] | null;
     headers?: RequestHeaders;
+    shouldSendFailedAudio?: boolean;
 };
 export type TranslatedVideoTranslationResponse = {
     translated: true;
@@ -131,4 +140,7 @@ export type WaitingStreamTranslationResponse = {
     message: string;
 };
 export type StreamTranslationResponse = TranslatedStreamTranslationResponse | WaitingStreamTranslationResponse;
+export type VideoTranslationFailAudioResponse = {
+    status: number;
+};
 //# sourceMappingURL=yandex.d.ts.map

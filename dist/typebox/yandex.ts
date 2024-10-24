@@ -51,6 +51,11 @@ export enum EnumVideoTranslationStatus { FAILED = 0, FINISHED = 1, WAITING = 2, 
 export type VideoTranslationStatus = Static<typeof VideoTranslationStatus>
 export const VideoTranslationStatus = Type.Enum(EnumVideoTranslationStatus)
 
+export enum EnumAudioInfoMessage { WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe", WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe", WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK = "web_api_replaced_fetch_force_request_with_seek", WEB_API_REPLACED_FETCH = "web_api_replaced_fetch", ANDROID_API = "android_api", WEB_API_SLOW = "web_api_slow" }
+
+export type AudioInfoMessage = Static<typeof AudioInfoMessage>
+export const AudioInfoMessage = Type.Enum(EnumAudioInfoMessage)
+
 export type VideoTranslationOpts = Static<typeof VideoTranslationOpts>
 export const VideoTranslationOpts = Type.Object({
 videoData: VideoData,
@@ -60,7 +65,8 @@ translationHelp: Type.Optional(Type.Union([
 Type.Array(TranslationHelp),
 Type.Null()
 ])),
-headers: Type.Optional(RequestHeaders)
+headers: Type.Optional(RequestHeaders),
+shouldSendFailedAudio: Type.Optional(Type.Boolean())
 })
 
 export type TranslatedVideoTranslationResponse = Static<typeof TranslatedVideoTranslationResponse>
@@ -131,3 +137,8 @@ export const StreamTranslationResponse = Type.Union([
 TranslatedStreamTranslationResponse,
 WaitingStreamTranslationResponse
 ])
+
+export type VideoTranslationFailAudioResponse = Static<typeof VideoTranslationFailAudioResponse>
+export const VideoTranslationFailAudioResponse = Type.Object({
+status: Type.Number()
+})

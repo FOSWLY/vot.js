@@ -26,6 +26,7 @@ export interface VideoTranslationRequest {
     unknown2: number;
     unknown3: number;
     bypassCache: boolean;
+    unknown4: number;
 }
 export interface VideoTranslationResponse {
     url?: string | undefined;
@@ -36,6 +37,18 @@ export interface VideoTranslationResponse {
     translationId: string;
     language?: string | undefined;
     message?: string | undefined;
+}
+export interface AudioObject {
+    audioFile: Uint8Array;
+    message: string;
+}
+export interface VideoTranslationAudioRequest {
+    translationId: string;
+    url: string;
+    audioInfo: AudioObject | undefined;
+}
+export interface VideoTranslationAudioResponse {
+    status: number;
 }
 export interface SubtitlesObject {
     language: string;
@@ -102,6 +115,30 @@ export declare const VideoTranslationResponse: {
     toJSON(message: VideoTranslationResponse): unknown;
     create<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(base?: I): VideoTranslationResponse;
     fromPartial<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(object: I): VideoTranslationResponse;
+};
+export declare const AudioObject: {
+    encode(message: AudioObject, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): AudioObject;
+    fromJSON(object: any): AudioObject;
+    toJSON(message: AudioObject): unknown;
+    create<I extends Exact<DeepPartial<AudioObject>, I>>(base?: I): AudioObject;
+    fromPartial<I extends Exact<DeepPartial<AudioObject>, I>>(object: I): AudioObject;
+};
+export declare const VideoTranslationAudioRequest: {
+    encode(message: VideoTranslationAudioRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): VideoTranslationAudioRequest;
+    fromJSON(object: any): VideoTranslationAudioRequest;
+    toJSON(message: VideoTranslationAudioRequest): unknown;
+    create<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(base?: I): VideoTranslationAudioRequest;
+    fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(object: I): VideoTranslationAudioRequest;
+};
+export declare const VideoTranslationAudioResponse: {
+    encode(message: VideoTranslationAudioResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): VideoTranslationAudioResponse;
+    fromJSON(object: any): VideoTranslationAudioResponse;
+    toJSON(message: VideoTranslationAudioResponse): unknown;
+    create<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(base?: I): VideoTranslationAudioResponse;
+    fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(object: I): VideoTranslationAudioResponse;
 };
 export declare const SubtitlesObject: {
     encode(message: SubtitlesObject, writer?: _m0.Writer): _m0.Writer;

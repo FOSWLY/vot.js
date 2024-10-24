@@ -118,6 +118,7 @@ function createBaseVideoTranslationRequest() {
         unknown2: 0,
         unknown3: 0,
         bypassCache: false,
+        unknown4: 0,
     };
 }
 export const VideoTranslationRequest = {
@@ -160,6 +161,9 @@ export const VideoTranslationRequest = {
         }
         if (message.bypassCache !== false) {
             writer.uint32(136).bool(message.bypassCache);
+        }
+        if (message.unknown4 !== 0) {
+            writer.uint32(144).int32(message.unknown4);
         }
         return writer;
     },
@@ -248,6 +252,12 @@ export const VideoTranslationRequest = {
                     }
                     message.bypassCache = reader.bool();
                     continue;
+                case 18:
+                    if (tag !== 144) {
+                        break;
+                    }
+                    message.unknown4 = reader.int32();
+                    continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -273,6 +283,7 @@ export const VideoTranslationRequest = {
             unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
             unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
             bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
+            unknown4: isSet(object.unknown4) ? globalThis.Number(object.unknown4) : 0,
         };
     },
     toJSON(message) {
@@ -316,6 +327,9 @@ export const VideoTranslationRequest = {
         if (message.bypassCache !== false) {
             obj.bypassCache = message.bypassCache;
         }
+        if (message.unknown4 !== 0) {
+            obj.unknown4 = Math.round(message.unknown4);
+        }
         return obj;
     },
     create(base) {
@@ -336,6 +350,7 @@ export const VideoTranslationRequest = {
         message.unknown2 = object.unknown2 ?? 0;
         message.unknown3 = object.unknown3 ?? 0;
         message.bypassCache = object.bypassCache ?? false;
+        message.unknown4 = object.unknown4 ?? 0;
         return message;
     },
 };
@@ -495,6 +510,204 @@ export const VideoTranslationResponse = {
         message.translationId = object.translationId ?? "";
         message.language = object.language ?? undefined;
         message.message = object.message ?? undefined;
+        return message;
+    },
+};
+function createBaseAudioObject() {
+    return { audioFile: new Uint8Array(0), message: "" };
+}
+export const AudioObject = {
+    encode(message, writer = _m0.Writer.create()) {
+        if (message.audioFile.length !== 0) {
+            writer.uint32(18).bytes(message.audioFile);
+        }
+        if (message.message !== "") {
+            writer.uint32(10).string(message.message);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseAudioObject();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 2:
+                    if (tag !== 18) {
+                        break;
+                    }
+                    message.audioFile = reader.bytes();
+                    continue;
+                case 1:
+                    if (tag !== 10) {
+                        break;
+                    }
+                    message.message = reader.string();
+                    continue;
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skipType(tag & 7);
+        }
+        return message;
+    },
+    fromJSON(object) {
+        return {
+            audioFile: isSet(object.audioFile) ? bytesFromBase64(object.audioFile) : new Uint8Array(0),
+            message: isSet(object.message) ? globalThis.String(object.message) : "",
+        };
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.audioFile.length !== 0) {
+            obj.audioFile = base64FromBytes(message.audioFile);
+        }
+        if (message.message !== "") {
+            obj.message = message.message;
+        }
+        return obj;
+    },
+    create(base) {
+        return AudioObject.fromPartial(base ?? {});
+    },
+    fromPartial(object) {
+        const message = createBaseAudioObject();
+        message.audioFile = object.audioFile ?? new Uint8Array(0);
+        message.message = object.message ?? "";
+        return message;
+    },
+};
+function createBaseVideoTranslationAudioRequest() {
+    return { translationId: "", url: "", audioInfo: undefined };
+}
+export const VideoTranslationAudioRequest = {
+    encode(message, writer = _m0.Writer.create()) {
+        if (message.translationId !== "") {
+            writer.uint32(10).string(message.translationId);
+        }
+        if (message.url !== "") {
+            writer.uint32(18).string(message.url);
+        }
+        if (message.audioInfo !== undefined) {
+            AudioObject.encode(message.audioInfo, writer.uint32(50).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseVideoTranslationAudioRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    if (tag !== 10) {
+                        break;
+                    }
+                    message.translationId = reader.string();
+                    continue;
+                case 2:
+                    if (tag !== 18) {
+                        break;
+                    }
+                    message.url = reader.string();
+                    continue;
+                case 6:
+                    if (tag !== 50) {
+                        break;
+                    }
+                    message.audioInfo = AudioObject.decode(reader, reader.uint32());
+                    continue;
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skipType(tag & 7);
+        }
+        return message;
+    },
+    fromJSON(object) {
+        return {
+            translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
+            url: isSet(object.url) ? globalThis.String(object.url) : "",
+            audioInfo: isSet(object.audioInfo) ? AudioObject.fromJSON(object.audioInfo) : undefined,
+        };
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.translationId !== "") {
+            obj.translationId = message.translationId;
+        }
+        if (message.url !== "") {
+            obj.url = message.url;
+        }
+        if (message.audioInfo !== undefined) {
+            obj.audioInfo = AudioObject.toJSON(message.audioInfo);
+        }
+        return obj;
+    },
+    create(base) {
+        return VideoTranslationAudioRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object) {
+        const message = createBaseVideoTranslationAudioRequest();
+        message.translationId = object.translationId ?? "";
+        message.url = object.url ?? "";
+        message.audioInfo = (object.audioInfo !== undefined && object.audioInfo !== null)
+            ? AudioObject.fromPartial(object.audioInfo)
+            : undefined;
+        return message;
+    },
+};
+function createBaseVideoTranslationAudioResponse() {
+    return { status: 0 };
+}
+export const VideoTranslationAudioResponse = {
+    encode(message, writer = _m0.Writer.create()) {
+        if (message.status !== 0) {
+            writer.uint32(32).int32(message.status);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseVideoTranslationAudioResponse();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 4:
+                    if (tag !== 32) {
+                        break;
+                    }
+                    message.status = reader.int32();
+                    continue;
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skipType(tag & 7);
+        }
+        return message;
+    },
+    fromJSON(object) {
+        return { status: isSet(object.status) ? globalThis.Number(object.status) : 0 };
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.status !== 0) {
+            obj.status = Math.round(message.status);
+        }
+        return obj;
+    },
+    create(base) {
+        return VideoTranslationAudioResponse.fromPartial(base ?? {});
+    },
+    fromPartial(object) {
+        const message = createBaseVideoTranslationAudioResponse();
+        message.status = object.status ?? 0;
         return message;
     },
 };
@@ -1180,6 +1393,31 @@ export const YandexSessionResponse = {
         return message;
     },
 };
+function bytesFromBase64(b64) {
+    if (globalThis.Buffer) {
+        return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    }
+    else {
+        const bin = globalThis.atob(b64);
+        const arr = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; ++i) {
+            arr[i] = bin.charCodeAt(i);
+        }
+        return arr;
+    }
+}
+function base64FromBytes(arr) {
+    if (globalThis.Buffer) {
+        return globalThis.Buffer.from(arr).toString("base64");
+    }
+    else {
+        const bin = [];
+        arr.forEach((byte) => {
+            bin.push(globalThis.String.fromCharCode(byte));
+        });
+        return globalThis.btoa(bin.join(""));
+    }
+}
 function isSet(value) {
     return value !== null && value !== undefined;
 }

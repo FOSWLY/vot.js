@@ -1,4 +1,5 @@
-import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex.js";
+import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationAudioRequest, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex.js";
+import { AudioInfoMessage, } from "./types/yandex.js";
 export const yandexProtobuf = {
     encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp) {
         return VideoTranslationRequest.encode({
@@ -14,9 +15,23 @@ export const yandexProtobuf = {
             unknown2: 0,
             unknown3: 1,
             bypassCache: false,
+            unknown4: 1,
         }).finish();
     },
     decodeTranslationResponse(response) {
+        return VideoTranslationResponse.decode(new Uint8Array(response));
+    },
+    encodeTranslationAudioRequest(url, translationId) {
+        return VideoTranslationAudioRequest.encode({
+            url,
+            translationId,
+            audioInfo: {
+                audioFile: new Uint8Array(0),
+                message: AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
+            },
+        }).finish();
+    },
+    decodeTranslationAudioResponse(response) {
         return VideoTranslationResponse.decode(new Uint8Array(response));
     },
     encodeSubtitlesRequest(url, requestLang) {

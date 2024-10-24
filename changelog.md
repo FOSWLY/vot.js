@@ -1,3 +1,9 @@
+# 1.3.5
+
+- Fixed long waiting for translation for new translation requests for YouTube (status = 6)
+- Added a blank function for video-translation/audio (now return only empty audio info for continue video translation)
+- Updated Protobuf
+
 # 1.3.4
 
 - Added Incestflix mirrors with https support
