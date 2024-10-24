@@ -1,3 +1,4 @@
 dist
 docs
+test-scripts
 **/*.d.ts

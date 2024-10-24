@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-commented-code */
 import { describe, test, expect } from "bun:test";
 import { getVideoData } from "../src/utils/videoData";
 import config from "../src/config/config";

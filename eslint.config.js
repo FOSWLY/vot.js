@@ -5,11 +5,19 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["dist/*", "docs/*", "**/*.d.ts", "examples/*", "scripts/*"],
+    ignores: [
+      "dist/*",
+      "docs/*",
+      "**/*.d.ts",
+      "examples/*",
+      "scripts/*",
+      "test-scripts/*",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   sonarjs.configs.recommended,
   {
     rules: {
