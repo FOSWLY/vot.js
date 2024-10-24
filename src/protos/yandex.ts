@@ -86,6 +86,8 @@ export interface VideoTranslationRequest {
   unknown3: number;
   /** ? maybe they have some kind of bypass limiter from one IP, because */
   bypassCache: boolean;
+  /** after one such request it stopped working */
+  unknown4: number;
 }
 
 export interface VideoTranslationResponse {
@@ -106,6 +108,29 @@ export interface VideoTranslationResponse {
   /** detected language (if the wrong one is set) */
   language?: string | undefined;
   message?: string | undefined;
+}
+
+/** video translation audio info */
+export interface AudioObject {
+  /**
+   * e.g:
+   * 32Eߣ�B��01B��01B�04B�10B��webmB��04B��0230S�g010000000033��21M�t�M��S��25I�fS��00000000000000DM��S��26T�kS��0000000000000077M��S��34S�kS��00000000000000�25I�f�*ױ�17B@D��Gш�M��google/video-fileWA�google/video-file26T�k֮�ׁ01sŇ\����ϡ��02��00"���eng��A_OPUSc��OpusHead0105E�37�fSց�0�23�p�C\�ws�ܔ��00q]�77_�mt�26+.�y�$��31�00���J=33�34�iw�16�02�4�L�21U��30)`00000000,A+�Hv9��?C��05����º�31��
+   * ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
+   * also can be empty
+   */
+  audioFile: Uint8Array;
+  message: string;
+}
+
+export interface VideoTranslationAudioRequest {
+  translationId: string;
+  url: string;
+  audioInfo: AudioObject | undefined;
+}
+
+export interface VideoTranslationAudioResponse {
+  /** maybe this status is VideoTranslationResponse.status */
+  status: number;
 }
 
 /** SUBTITLES */
@@ -145,9 +170,9 @@ export interface StreamTranslationRequest {
 }
 
 export interface StreamTranslationResponse {
-  /** 20s - streaming, 10s - translating, 0s - there is no connection with */
+  /** 20s - streaming, 10s - translating, 0s - there is no connection */
   interval: StreamInterval;
-  /** the server (the broadcast is finished or deleted) */
+  /** with the server (the broadcast is finished or deleted) */
   translatedInfo?: StreamTranslationObject | undefined;
   pingId?: number | undefined;
 }
@@ -258,6 +283,7 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
     unknown2: 0,
     unknown3: 0,
     bypassCache: false,
+    unknown4: 0,
   };
 }
 
@@ -301,6 +327,9 @@ export const VideoTranslationRequest = {
     }
     if (message.bypassCache !== false) {
       writer.uint32(136).bool(message.bypassCache);
+    }
+    if (message.unknown4 !== 0) {
+      writer.uint32(144).int32(message.unknown4);
     }
     return writer;
   },
@@ -403,6 +432,13 @@ export const VideoTranslationRequest = {
 
           message.bypassCache = reader.bool();
           continue;
+        case 18:
+          if (tag !== 144) {
+            break;
+          }
+
+          message.unknown4 = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -429,6 +465,7 @@ export const VideoTranslationRequest = {
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
       unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
       bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
+      unknown4: isSet(object.unknown4) ? globalThis.Number(object.unknown4) : 0,
     };
   },
 
@@ -473,6 +510,9 @@ export const VideoTranslationRequest = {
     if (message.bypassCache !== false) {
       obj.bypassCache = message.bypassCache;
     }
+    if (message.unknown4 !== 0) {
+      obj.unknown4 = Math.round(message.unknown4);
+    }
     return obj;
   },
 
@@ -494,6 +534,7 @@ export const VideoTranslationRequest = {
     message.unknown2 = object.unknown2 ?? 0;
     message.unknown3 = object.unknown3 ?? 0;
     message.bypassCache = object.bypassCache ?? false;
+    message.unknown4 = object.unknown4 ?? 0;
     return message;
   },
 };
@@ -667,6 +708,230 @@ export const VideoTranslationResponse = {
     message.translationId = object.translationId ?? "";
     message.language = object.language ?? undefined;
     message.message = object.message ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAudioObject(): AudioObject {
+  return { audioFile: new Uint8Array(0), message: "" };
+}
+
+export const AudioObject = {
+  encode(message: AudioObject, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.audioFile.length !== 0) {
+      writer.uint32(18).bytes(message.audioFile);
+    }
+    if (message.message !== "") {
+      writer.uint32(10).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AudioObject {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAudioObject();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.audioFile = reader.bytes();
+          continue;
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AudioObject {
+    return {
+      audioFile: isSet(object.audioFile) ? bytesFromBase64(object.audioFile) : new Uint8Array(0),
+      message: isSet(object.message) ? globalThis.String(object.message) : "",
+    };
+  },
+
+  toJSON(message: AudioObject): unknown {
+    const obj: any = {};
+    if (message.audioFile.length !== 0) {
+      obj.audioFile = base64FromBytes(message.audioFile);
+    }
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AudioObject>, I>>(base?: I): AudioObject {
+    return AudioObject.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AudioObject>, I>>(object: I): AudioObject {
+    const message = createBaseAudioObject();
+    message.audioFile = object.audioFile ?? new Uint8Array(0);
+    message.message = object.message ?? "";
+    return message;
+  },
+};
+
+function createBaseVideoTranslationAudioRequest(): VideoTranslationAudioRequest {
+  return { translationId: "", url: "", audioInfo: undefined };
+}
+
+export const VideoTranslationAudioRequest = {
+  encode(message: VideoTranslationAudioRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.translationId !== "") {
+      writer.uint32(10).string(message.translationId);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    if (message.audioInfo !== undefined) {
+      AudioObject.encode(message.audioInfo, writer.uint32(50).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VideoTranslationAudioRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationAudioRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.translationId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.audioInfo = AudioObject.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoTranslationAudioRequest {
+    return {
+      translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      audioInfo: isSet(object.audioInfo) ? AudioObject.fromJSON(object.audioInfo) : undefined,
+    };
+  },
+
+  toJSON(message: VideoTranslationAudioRequest): unknown {
+    const obj: any = {};
+    if (message.translationId !== "") {
+      obj.translationId = message.translationId;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.audioInfo !== undefined) {
+      obj.audioInfo = AudioObject.toJSON(message.audioInfo);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(base?: I): VideoTranslationAudioRequest {
+    return VideoTranslationAudioRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(object: I): VideoTranslationAudioRequest {
+    const message = createBaseVideoTranslationAudioRequest();
+    message.translationId = object.translationId ?? "";
+    message.url = object.url ?? "";
+    message.audioInfo = (object.audioInfo !== undefined && object.audioInfo !== null)
+      ? AudioObject.fromPartial(object.audioInfo)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseVideoTranslationAudioResponse(): VideoTranslationAudioResponse {
+  return { status: 0 };
+}
+
+export const VideoTranslationAudioResponse = {
+  encode(message: VideoTranslationAudioResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.status !== 0) {
+      writer.uint32(32).int32(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VideoTranslationAudioResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationAudioResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoTranslationAudioResponse {
+    return { status: isSet(object.status) ? globalThis.Number(object.status) : 0 };
+  },
+
+  toJSON(message: VideoTranslationAudioResponse): unknown {
+    const obj: any = {};
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(base?: I): VideoTranslationAudioResponse {
+    return VideoTranslationAudioResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(
+    object: I,
+  ): VideoTranslationAudioResponse {
+    const message = createBaseVideoTranslationAudioResponse();
+    message.status = object.status ?? 0;
     return message;
   },
 };
@@ -1430,6 +1695,31 @@ export const YandexSessionResponse = {
     return message;
   },
 };
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  if ((globalThis as any).Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(globalThis.String.fromCharCode(byte));
+    });
+    return globalThis.btoa(bin.join(""));
+  }
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

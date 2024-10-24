@@ -27,6 +27,7 @@ message VideoTranslationRequest {
   bool bypassCache =
       17; // ? maybe they have some kind of bypass limiter from one IP, because
           // after one such request it stopped working
+  int32 unknown4 = 18; // 1
 }
 
 message VideoTranslationResponse {
@@ -41,6 +42,26 @@ message VideoTranslationResponse {
   string translationId = 7;     // it's not a type mistake
   optional string language = 8; // detected language (if the wrong one is set)
   optional string message = 9;
+}
+
+// video translation audio info
+message AudioObject {
+  // e.g:
+  // 32Eߣ�B��01B��01B�04B�10B��webmB��04B��0230S�g010000000033��21M�t�M��S��25I�fS��00000000000000DM��S��26T�kS��0000000000000077M��S��34S�kS��00000000000000�25I�f�*ױ�17B@D��Gш�M��google/video-fileWA�google/video-file26T�k֮�ׁ01sŇ\����ϡ��02��00"���eng��A_OPUSc��OpusHead0105E�37�fSց�0�23�p�C\�ws�ܔ��00q]�77_�mt�26+.�y�$��31�00���J=33�34�iw�16�02�4�L�21U��30)`00000000,A+�Hv9��?C��05����º�31��
+  // ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
+  // also can be empty
+  bytes audioFile = 2;
+  string message = 1;
+}
+
+message VideoTranslationAudioRequest {
+  string translationId = 1;
+  string url = 2;
+  AudioObject audioInfo = 6;
+}
+
+message VideoTranslationAudioResponse {
+  int32 status = 4; // maybe this status is VideoTranslationResponse.status
 }
 
 // SUBTITLES
@@ -86,8 +107,8 @@ enum StreamInterval {
 
 message StreamTranslationResponse {
   StreamInterval interval =
-      1; // 20s - streaming, 10s - translating, 0s - there is no connection with
-         // the server (the broadcast is finished or deleted)
+      1; // 20s - streaming, 10s - translating, 0s - there is no connection
+         // with the server (the broadcast is finished or deleted)
   optional StreamTranslationObject translatedInfo = 2;
   optional int32 pingId = 3;
 }

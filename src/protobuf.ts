@@ -4,12 +4,17 @@ import {
   StreamTranslationResponse,
   SubtitlesRequest,
   SubtitlesResponse,
+  VideoTranslationAudioRequest,
   VideoTranslationRequest,
   VideoTranslationResponse,
   YandexSessionRequest,
   YandexSessionResponse,
 } from "./protos/yandex";
-import type { SessionModule, TranslationHelp } from "./types/yandex";
+import {
+  AudioInfoMessage,
+  type SessionModule,
+  type TranslationHelp,
+} from "./types/yandex";
 
 // Export the encoding and decoding functions
 export const yandexProtobuf = {
@@ -33,9 +38,25 @@ export const yandexProtobuf = {
       unknown2: 0,
       unknown3: 1,
       bypassCache: false,
+      unknown4: 1,
     }).finish();
   },
   decodeTranslationResponse(response: ArrayBuffer) {
+    return VideoTranslationResponse.decode(new Uint8Array(response));
+  },
+  encodeTranslationAudioRequest(url: string, translationId: string) {
+    return VideoTranslationAudioRequest.encode({
+      url,
+      translationId,
+      audioInfo: {
+        audioFile: new Uint8Array(0),
+        // message: "{AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME}_itag_{d.itag}", // for real audio file
+        message:
+          AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
+      },
+    }).finish();
+  },
+  decodeTranslationAudioResponse(response: ArrayBuffer) {
     return VideoTranslationResponse.decode(new Uint8Array(response));
   },
   encodeSubtitlesRequest(url: string, requestLang: string) {
