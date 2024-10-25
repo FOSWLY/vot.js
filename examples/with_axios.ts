@@ -5,15 +5,16 @@ import { getVideoData } from "../dist/utils/videoData";
 
 // https://github.com/axios/axios
 const client = new (class AxiosVOTClient extends VOTClient {
-  async request(
+  async request<T = unknown>(
     path: string,
     body: Uint8Array,
     headers: Record<string, string> = {},
-  ): Promise<ClientResponse> {
+    method = "POST",
+  ): Promise<ClientResponse<T>> {
     try {
       const res = await axios({
         url: `https://${this.host}${path}`,
-        method: "POST",
+        method,
         headers: {
           ...this.headers,
           ...headers,
@@ -24,15 +25,16 @@ const client = new (class AxiosVOTClient extends VOTClient {
       });
       return {
         success: res.status === 200,
-        data: res.data as ClientResponse,
+        data: res.data as T,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       return {
         success: false,
         data: (err as Error)?.message,
       };
     }
   }
+  //...
 })();
 
 const videoData = await getVideoData("https://youtu.be/LK6nLR1bzpI");
