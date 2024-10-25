@@ -53,6 +53,7 @@ export default class VOTClient {
     }>;
 }
 export declare class VOTWorkerClient extends VOTClient {
-    request<T = ArrayBuffer>(path: string, body: Uint8Array, headers?: Record<string, string>): Promise<ClientResponse<T>>;
+    request<T = ArrayBuffer>(path: string, body: Uint8Array, headers?: Record<string, string>, method?: string): Promise<ClientResponse<T>>;
+    requestJSON<T = unknown>(path: string, body?: unknown, headers?: Record<string, string>, method?: string): Promise<ClientResponse<T>>;
 }
 //# sourceMappingURL=client.d.ts.map

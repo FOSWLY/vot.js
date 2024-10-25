@@ -382,7 +382,7 @@ export default class VOTClient {
     }
 }
 export class VOTWorkerClient extends VOTClient {
-    async request(path, body, headers = {}) {
+    async request(path, body, headers = {}, method = "POST") {
         const options = this.getOpts(JSON.stringify({
             headers: {
                 ...this.headers,
@@ -391,10 +391,38 @@ export class VOTWorkerClient extends VOTClient {
             body: Array.from(body),
         }), {
             "Content-Type": "application/json",
-        });
+        }, method);
         try {
             const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
             const data = (await res.arrayBuffer());
+            return {
+                success: res.status === 200,
+                data,
+            };
+        }
+        catch (err) {
+            return {
+                success: false,
+                data: err?.message,
+            };
+        }
+    }
+    async requestJSON(path, body = null, headers = {}, method = "POST") {
+        const options = this.getOpts(JSON.stringify({
+            headers: {
+                ...this.headers,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                ...headers,
+            },
+            body,
+        }), {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        }, method);
+        try {
+            const res = await this.fetch(`${this.schema}://${this.host}${path}`, options);
+            const data = (await res.json());
             return {
                 success: res.status === 200,
                 data,

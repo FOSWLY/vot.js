@@ -1,3 +1,7 @@
+# 1.3.6
+
+- Updated VOT Worker requests logic
+
 # 1.3.5
 
 - Fixed long waiting for translation for new translation requests for YouTube (status = 6)
