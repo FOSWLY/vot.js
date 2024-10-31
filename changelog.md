@@ -1,3 +1,7 @@
+# 1.3.7
+
+- Now protobufjs is part of dependencies. Previously, it was pulled from ts-proto dependencies, but for some reason, it stopped working
+
 # 1.3.6
 
 - Updated VOT Worker requests logic
