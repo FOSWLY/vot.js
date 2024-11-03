@@ -3,6 +3,7 @@ import { semver } from "bun";
 
 import { parseFromString } from "dom-parser";
 
+import { version } from "../package.json";
 import config from "../src/config/config.ts";
 
 const CONFIG_PATH = "/src/config/config.ts";
@@ -69,4 +70,5 @@ async function getActualVersion(version: string) {
 }
 
 config.componentVersion = await getActualVersion(config.componentVersion);
+config.version = version;
 await rewriteConfig(config);

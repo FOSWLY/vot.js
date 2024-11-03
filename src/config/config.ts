@@ -10,4 +10,6 @@ export default {
   componentVersion: "24.10.1.598",
   hmac: "bt8xH3VOlb4mqf0nqAibnDOoiPlXsisf",
   defaultDuration: 343,
+  loggerLevel: 1,
+  version: "1.3.8",
 };
