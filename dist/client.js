@@ -1,5 +1,4 @@
 import config from "./config/config.js";
-import packageInfo from "../package.json";
 import { yandexProtobuf } from "./protobuf.js";
 import { getSignature, getUUID } from "./secure.js";
 import { VideoTranslationStatus } from "./types/yandex.js";
@@ -7,7 +6,7 @@ import { fetchWithTimeout, getTimestamp } from "./utils/utils.js";
 import { getVideoData } from "./utils/videoData.js";
 import { convertVOT } from "./utils/vot.js";
 import { StreamInterval } from "./protos/yandex.js";
-const { version } = packageInfo;
+import Logger from "./utils/logger.js";
 class VOTJSError extends Error {
     data;
     constructor(message, data = undefined) {
@@ -53,7 +52,7 @@ export default class VOTClient {
         "Sec-Fetch-Mode": "no-cors",
     };
     headersVOT = {
-        "User-Agent": `vot.js/${version}`,
+        "User-Agent": `vot.js/${config.version}`,
         "Content-Type": "application/json",
         Pragma: "no-cache",
         "Cache-Control": "no-cache",
@@ -208,7 +207,7 @@ export default class VOTClient {
                     remainingTime: translationData.remainingTime ?? -1,
                 };
             default:
-                console.error("[vot.js] Unknown response", translationData);
+                Logger.error("Unknown response", translationData);
                 throw new VOTJSError("Unknown response from Yandex", translationData);
         }
     }
@@ -361,7 +360,7 @@ export default class VOTClient {
                 };
             }
             default:
-                console.error("[vot.js] Unknown response", translateResponse);
+                Logger.error("Unknown response", translateResponse);
                 throw new VOTJSError("Unknown response from Yandex", translateResponse);
         }
     }

@@ -1,5 +1,6 @@
 import { BaseHelper } from "./base.js";
 import { normalizeLang } from "../utils/utils.js";
+import Logger from "../utils/logger.js";
 export default class NineAnimeTVHelper extends BaseHelper {
     API_ORIGIN = "https://9animetv.to/ajax/episode";
     RAPID_CLOUD_ORIGIN = "https://rapid-cloud.co/ajax/embed-6-v2";
@@ -13,7 +14,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
             return /data-id="(\d+)"/.exec(content.html)?.[1];
         }
         catch (err) {
-            console.error(`Failed to get 9animetv servers info by episodeId: ${episodeId}.`, err.message);
+            Logger.error(`Failed to get 9animetv servers info by episodeId: ${episodeId}.`, err.message);
             return false;
         }
     }
@@ -27,7 +28,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
             return content.link;
         }
         catch (err) {
-            console.error(`Failed to get player link by sourceId: ${sourceId}.`, err.message);
+            Logger.error(`Failed to get player link by sourceId: ${sourceId}.`, err.message);
             return false;
         }
     }
@@ -36,13 +37,13 @@ export default class NineAnimeTVHelper extends BaseHelper {
             const res = await this.fetch(`${this.RAPID_CLOUD_ORIGIN}/getSources?id=${rapidId}`);
             const content = (await res.json());
             if (content.encrypted) {
-                console.warn("Encrypted RapidCloud data found. Let us know about it", content);
+                Logger.warn("Encrypted RapidCloud data found. Let us know about it", content);
                 return false;
             }
             return content;
         }
         catch (err) {
-            console.error(`Failed to get rapid cloud data by rapidId: ${rapidId}.`, err.message);
+            Logger.error(`Failed to get rapid cloud data by rapidId: ${rapidId}.`, err.message);
             return false;
         }
     }

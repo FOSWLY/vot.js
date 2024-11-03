@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import config from "./config/config";
+import Logger from "./utils/logger";
 
 const utf8Encoder = new TextEncoder();
 type HashName = "SHA-256" | "SHA-1";
@@ -51,7 +52,7 @@ export async function getHmacSha1(hmacKey: string, salt: string) {
     const signature = await signHMAC("SHA-1", hmacKey, hmacSalt);
     return btoa(String.fromCharCode(...new Uint8Array(signature)));
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
     return false;
   }
 }

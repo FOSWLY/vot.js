@@ -1,6 +1,7 @@
 import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base.js";
 import { proxyMedia } from "../utils/utils.js";
+import Logger from "../utils/logger.js";
 export default class LinkedinHelper extends BaseHelper {
     API_ORIGIN = "https://www.linkedin.com/learning";
     async getVideoData(videoId) {
@@ -37,7 +38,7 @@ export default class LinkedinHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error("Failed to get linkedin video data", err.message);
+            Logger.error("Failed to get linkedin video data", err.message);
             return undefined;
         }
     }

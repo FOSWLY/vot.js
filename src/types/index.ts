@@ -5,6 +5,7 @@ export * as YandexType from "./yandex";
 export * as VOTBackendType from "./vot";
 export * as UtilsType from "./utils";
 export * as SubsType from "./subs";
+export * as LoggerType from "./logger";
 
 export * as BaseHelperType from "./helpers/base";
 export * as MailRuType from "./helpers/mailru";

@@ -1,4 +1,5 @@
 import { BaseHelper } from "./base.js";
+import Logger from "../utils/logger.js";
 export default class PatreonHelper extends BaseHelper {
     API_ORIGIN = "https://www.patreon.com/api";
     async getPosts(postId) {
@@ -7,7 +8,7 @@ export default class PatreonHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get patreon posts by postId: ${postId}.`, err.message);
+            Logger.error(`Failed to get patreon posts by postId: ${postId}.`, err.message);
             return false;
         }
     }

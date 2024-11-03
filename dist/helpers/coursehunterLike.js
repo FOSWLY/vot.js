@@ -1,3 +1,4 @@
+import Logger from "../utils/logger.js";
 import { BaseHelper } from "./base.js";
 export default class CoursehunterLikeHelper extends BaseHelper {
     API_ORIGIN = this.origin ?? "https://coursehunter.net";
@@ -8,7 +9,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
             return /course_id(\s)?=(\s)?([\d]+)/.exec(content)?.[3];
         }
         catch (err) {
-            console.error(`Failed to get CoursehunterLike courseId by videoId: ${videoId}, because ${err.message}`);
+            Logger.error(`Failed to get CoursehunterLike courseId by videoId: ${videoId}, because ${err.message}`);
             return false;
         }
     }
@@ -18,7 +19,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get CoursehunterLike lessons data by courseId: ${courseId}, because ${err.message}`);
+            Logger.error(`Failed to get CoursehunterLike lessons data by courseId: ${courseId}, because ${err.message}`);
             return false;
         }
     }

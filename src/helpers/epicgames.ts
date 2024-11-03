@@ -2,6 +2,7 @@ import { BaseHelper } from "./base";
 import * as EpicGames from "../types/helpers/epicgames";
 import { MinimalVideoData, VideoDataSubtitle } from "../types/client";
 import { normalizeLang } from "../utils/utils";
+import Logger from "../utils/logger";
 
 export default class EpicGamesHelper extends BaseHelper {
   API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
@@ -14,7 +15,7 @@ export default class EpicGamesHelper extends BaseHelper {
 
       return (await res.json()) as EpicGames.Post;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get epicgames post info by videoId: ${videoId}.`,
         (err as Error).message,
       );

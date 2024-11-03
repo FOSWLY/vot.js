@@ -1,3 +1,4 @@
+import Logger from "../utils/logger.js";
 import { BaseHelper, VideoHelperError } from "./base.js";
 export default class RedditHelper extends BaseHelper {
     API_ORIGIN = "https://www.reddit.com";
@@ -16,7 +17,7 @@ export default class RedditHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error(`Failed to get reddit video data by video ID: ${videoId}`, err.message);
+            Logger.error(`Failed to get reddit video data by video ID: ${videoId}`, err.message);
             return undefined;
         }
     }

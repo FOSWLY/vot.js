@@ -1,11 +1,12 @@
 import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base.js";
 import { normalizeLang } from "../utils/utils.js";
+import Logger from "../utils/logger.js";
 export default class VimeoHelper extends BaseHelper {
     API_KEY = "";
     DEFAULT_SITE_ORIGIN = "https://vimeo.com";
     SITE_ORIGIN = this.isPrivatePlayer()
-        ? (this.service?.url?.slice(0, -1) ?? this.DEFAULT_SITE_ORIGIN)
+        ? this.service?.url?.slice(0, -1) ?? this.DEFAULT_SITE_ORIGIN
         : this.DEFAULT_SITE_ORIGIN;
     isErrorData(data) {
         return Object.hasOwn(data, "error");
@@ -23,7 +24,7 @@ export default class VimeoHelper extends BaseHelper {
             return data;
         }
         catch (err) {
-            console.error(`Failed to get default viewer data.`, err.message);
+            Logger.error(`Failed to get default viewer data.`, err.message);
             return false;
         }
     }
@@ -44,7 +45,7 @@ export default class VimeoHelper extends BaseHelper {
             return data;
         }
         catch (err) {
-            console.error(`Failed to get video info by video ID: ${videoId}`, err.message);
+            Logger.error(`Failed to get video info by video ID: ${videoId}`, err.message);
             return false;
         }
     }
@@ -85,7 +86,7 @@ export default class VimeoHelper extends BaseHelper {
             return baseUrl.href;
         }
         catch (err) {
-            console.error(`Failed to get private video source`, err.message);
+            Logger.error(`Failed to get private video source`, err.message);
             return false;
         }
     }
@@ -120,7 +121,7 @@ export default class VimeoHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error(`Failed to get private video info by video ID: ${videoId}`, err.message);
+            Logger.error(`Failed to get private video info by video ID: ${videoId}`, err.message);
             return false;
         }
     }
@@ -142,7 +143,7 @@ export default class VimeoHelper extends BaseHelper {
             return data;
         }
         catch (err) {
-            console.error(`Failed to get subtitles info by video ID: ${videoId}`, err.message);
+            Logger.error(`Failed to get subtitles info by video ID: ${videoId}`, err.message);
             return false;
         }
     }
@@ -222,6 +223,6 @@ export default class VimeoHelper extends BaseHelper {
         }
         return embedId?.startsWith("video/")
             ? embedId.replace("video/", "")
-            : (embedId ?? /[^/]+$/.exec(url.pathname)?.[0]);
+            : embedId ?? /[^/]+$/.exec(url.pathname)?.[0];
     }
 }

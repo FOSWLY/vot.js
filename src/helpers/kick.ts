@@ -1,6 +1,7 @@
 import { BaseHelper } from "./base";
 import * as Kick from "../types/helpers/kick";
 import { MinimalVideoData } from "../types/client";
+import Logger from "../utils/logger";
 
 export default class KickHelper extends BaseHelper {
   API_ORIGIN = "https://kick.com/api";
@@ -16,7 +17,7 @@ export default class KickHelper extends BaseHelper {
         title,
       };
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get kick clip info by clipId: ${clipId}.`,
         (err as Error).message,
       );
@@ -36,7 +37,7 @@ export default class KickHelper extends BaseHelper {
         title,
       };
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get kick video info by videoId: ${videoId}.`,
         (err as Error).message,
       );

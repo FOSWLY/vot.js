@@ -1,5 +1,6 @@
 import { MinimalVideoData } from "../types/client";
 import { Lesson } from "../types/helpers/coursehunterLike";
+import Logger from "../utils/logger";
 import { BaseHelper } from "./base";
 
 export default class CoursehunterLikeHelper extends BaseHelper {
@@ -11,7 +12,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
       const content = await res.text();
       return /course_id(\s)?=(\s)?([\d]+)/.exec(content)?.[3];
     } catch (err) {
-      console.error(
+      Logger.error(
         `Failed to get CoursehunterLike courseId by videoId: ${videoId}, because ${
           (err as Error).message
         }`,
@@ -27,7 +28,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
       );
       return (await res.json()) as Lesson[];
     } catch (err) {
-      console.error(
+      Logger.error(
         `Failed to get CoursehunterLike lessons data by courseId: ${courseId}, because ${
           (err as Error).message
         }`,

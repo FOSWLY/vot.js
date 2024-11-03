@@ -1,4 +1,5 @@
 import { MinimalVideoData } from "../types/client";
+import Logger from "../utils/logger";
 import { BaseHelper } from "./base";
 
 export default class OdyseeHelper extends BaseHelper {
@@ -15,7 +16,7 @@ export default class OdyseeHelper extends BaseHelper {
 
       return { url };
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get odysee video data by video ID: ${videoId}`,
         (err as Error).message,
       );

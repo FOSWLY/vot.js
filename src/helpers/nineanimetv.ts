@@ -2,6 +2,7 @@ import { BaseHelper } from "./base";
 import * as NineAnimeTV from "../types/helpers/nineanimetv";
 import { normalizeLang } from "../utils/utils";
 import { MinimalVideoData, VideoDataSubtitle } from "../types/client";
+import Logger from "../utils/logger";
 
 export default class NineAnimeTVHelper extends BaseHelper {
   API_ORIGIN = "https://9animetv.to/ajax/episode";
@@ -20,7 +21,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
 
       return /data-id="(\d+)"/.exec(content.html)?.[1];
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get 9animetv servers info by episodeId: ${episodeId}.`,
         (err as Error).message,
       );
@@ -40,7 +41,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
 
       return content.link;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get player link by sourceId: ${sourceId}.`,
         (err as Error).message,
       );
@@ -57,7 +58,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
       const content = (await res.json()) as NineAnimeTV.RapidData;
       if (content.encrypted) {
         // I haven't seen such links, so I don't know what they look like, it's better to skip
-        console.warn(
+        Logger.warn(
           "Encrypted RapidCloud data found. Let us know about it",
           content,
         );
@@ -66,7 +67,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
 
       return content;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get rapid cloud data by rapidId: ${rapidId}.`,
         (err as Error).message,
       );

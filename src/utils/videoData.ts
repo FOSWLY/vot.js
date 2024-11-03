@@ -5,6 +5,7 @@ import VideoHelper, {
   AvailableVideoHelpers,
 } from "../helpers";
 import { GetVideoDataOpts, VideoData } from "../types/client";
+import Logger from "./logger";
 
 class VideoDataError extends Error {
   constructor(message: string) {
@@ -22,7 +23,7 @@ export function getService(videoUrl: string) {
   try {
     enteredURL = new URL(videoUrl) as URL;
   } catch {
-    console.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
+    Logger.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
     return false;
   }
 

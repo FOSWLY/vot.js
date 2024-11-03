@@ -1,3 +1,8 @@
+# 1.3.8
+
+- Added logging level setting that can be edited using the global configuration
+- Package version info moved to config to reduce for the minimum version of nodejs
+
 # 1.3.7
 
 - Now protobufjs is part of dependencies. Previously, it was pulled from ts-proto dependencies, but for some reason, it stopped working

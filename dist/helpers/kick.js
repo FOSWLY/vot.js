@@ -1,4 +1,5 @@
 import { BaseHelper } from "./base.js";
+import Logger from "../utils/logger.js";
 export default class KickHelper extends BaseHelper {
     API_ORIGIN = "https://kick.com/api";
     async getClipInfo(clipId) {
@@ -13,7 +14,7 @@ export default class KickHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error(`Failed to get kick clip info by clipId: ${clipId}.`, err.message);
+            Logger.error(`Failed to get kick clip info by clipId: ${clipId}.`, err.message);
             return undefined;
         }
     }
@@ -30,7 +31,7 @@ export default class KickHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error(`Failed to get kick video info by videoId: ${videoId}.`, err.message);
+            Logger.error(`Failed to get kick video info by videoId: ${videoId}.`, err.message);
             return undefined;
         }
     }

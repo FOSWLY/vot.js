@@ -1,6 +1,7 @@
 import sites from "../config/sites.js";
 import { VideoService } from "../types/yandex.js";
 import VideoHelper, { availableHelpers, } from "../helpers/index.js";
+import Logger from "./logger.js";
 class VideoDataError extends Error {
     constructor(message) {
         super(message);
@@ -16,7 +17,7 @@ export function getService(videoUrl) {
         enteredURL = new URL(videoUrl);
     }
     catch {
-        console.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
+        Logger.error(`Invalid URL: ${videoUrl}. Have you forgotten https?`);
         return false;
     }
     const hostname = enteredURL.hostname;

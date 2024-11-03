@@ -1,3 +1,4 @@
+import Logger from "../utils/logger.js";
 import { BaseHelper } from "./base.js";
 export default class OdyseeHelper extends BaseHelper {
     API_ORIGIN = "https://odysee.com";
@@ -12,7 +13,7 @@ export default class OdyseeHelper extends BaseHelper {
             return { url };
         }
         catch (err) {
-            console.error(`Failed to get odysee video data by video ID: ${videoId}`, err.message);
+            Logger.error(`Failed to get odysee video data by video ID: ${videoId}`, err.message);
             return undefined;
         }
     }

@@ -2,6 +2,7 @@ import { BaseHelper, VideoHelperError } from "./base";
 import { getHmacSha1 } from "../secure";
 import * as Weverse from "../types/helpers/weverse";
 import { MinimalVideoData } from "../types/client";
+import Logger from "../utils/logger";
 
 export default class WeverseHelper extends BaseHelper {
   API_ORIGIN = "https://global.apis.naver.com/weverse/wevweb"; // find as REACT_APP_API_GW_ORIGIN in main.<hash>.js
@@ -65,8 +66,8 @@ export default class WeverseHelper extends BaseHelper {
       );
 
       return (await res.json()) as Weverse.PostPreview;
-    } catch (err: unknown) {
-      console.error(
+    } catch (err) {
+      Logger.error(
         `Failed to get weverse post preview by postId: ${postId}`,
         (err as Error).message,
       );
@@ -93,8 +94,8 @@ export default class WeverseHelper extends BaseHelper {
       );
 
       return (await res.json()) as Weverse.InKey;
-    } catch (err: unknown) {
-      console.error(
+    } catch (err) {
+      Logger.error(
         `Failed to get weverse InKey by videoId: ${videoId}`,
         (err as Error).message,
       );
@@ -132,8 +133,8 @@ export default class WeverseHelper extends BaseHelper {
       );
 
       return (await res.json()) as Weverse.VideoInfo;
-    } catch (err: unknown) {
-      console.error(
+    } catch (err) {
+      Logger.error(
         `Failed to get weverse video info (infraVideoId: ${infraVideoId}, inkey: ${inkey}, serviceId: ${serviceId}`,
         (err as Error).message,
       );

@@ -5,6 +5,7 @@ import * as Vimeo from "../types/helpers/vimeo";
 import { BaseHelper, VideoHelperError } from "./base";
 import { normalizeLang } from "../utils/utils";
 import { TranslationHelp } from "../types/yandex";
+import Logger from "../utils/logger";
 
 export default class VimeoHelper extends BaseHelper {
   API_KEY = "";
@@ -30,7 +31,7 @@ export default class VimeoHelper extends BaseHelper {
       this.API_KEY = `jwt ${jwt}`;
       return data;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get default viewer data.`,
         (err as Error).message,
       );
@@ -59,7 +60,7 @@ export default class VimeoHelper extends BaseHelper {
 
       return data;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get video info by video ID: ${videoId}`,
         (err as Error).message,
       );
@@ -110,7 +111,7 @@ export default class VimeoHelper extends BaseHelper {
       baseUrl.href = baseUrl.href.split("?")[0] + "?" + params.toString();
       return baseUrl.href;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get private video source`,
         (err as Error).message,
       );
@@ -158,8 +159,8 @@ export default class VimeoHelper extends BaseHelper {
         duration,
         subs,
       };
-    } catch (err: unknown) {
-      console.error(
+    } catch (err) {
+      Logger.error(
         `Failed to get private video info by video ID: ${videoId}`,
         (err as Error).message,
       );
@@ -188,8 +189,8 @@ export default class VimeoHelper extends BaseHelper {
       }
 
       return data;
-    } catch (err: unknown) {
-      console.error(
+    } catch (err) {
+      Logger.error(
         `Failed to get subtitles info by video ID: ${videoId}`,
         (err as Error).message,
       );

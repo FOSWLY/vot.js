@@ -1,5 +1,6 @@
 import { BaseHelper } from "./base.js";
 import { normalizeLang } from "../utils/utils.js";
+import Logger from "../utils/logger.js";
 export default class EpicGamesHelper extends BaseHelper {
     API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
     async getPostInfo(videoId) {
@@ -8,7 +9,7 @@ export default class EpicGamesHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get epicgames post info by videoId: ${videoId}.`, err.message);
+            Logger.error(`Failed to get epicgames post info by videoId: ${videoId}.`, err.message);
             return false;
         }
     }

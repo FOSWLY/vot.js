@@ -1,3 +1,4 @@
+import Logger from "../utils/logger";
 import { BaseHelper, VideoHelperError } from "./base";
 
 export default class TwitchHelper extends BaseHelper {
@@ -27,7 +28,7 @@ export default class TwitchHelper extends BaseHelper {
 
       return `${channelLink[1]}/clip/${videoPath}`;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get twitch clip link by pathname: ${pathname} and clip ID: ${clipId}`,
         (err as Error).message,
       );

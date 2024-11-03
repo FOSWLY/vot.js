@@ -2,6 +2,7 @@ import { parseFromString } from "dom-parser";
 import { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 import { proxyMedia } from "../utils/utils";
+import Logger from "../utils/logger";
 
 export default class IncestflixHelper extends BaseHelper {
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
@@ -30,7 +31,7 @@ export default class IncestflixHelper extends BaseHelper {
         url: proxyMedia(source),
       };
     } catch (err) {
-      console.error(
+      Logger.error(
         `Failed to get Incestflix data by videoId: ${videoId}`,
         (err as Error).message,
       );

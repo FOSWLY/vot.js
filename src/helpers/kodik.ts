@@ -4,6 +4,7 @@ import { BaseHelper, VideoHelperError } from "./base";
 import config from "../config/config";
 import * as Kodik from "../types/helpers/kodik";
 import { MinimalVideoData } from "../types/client";
+import Logger from "../utils/logger";
 
 export default class KodikHelper extends BaseHelper {
   API_ORIGIN = "https://kodik.biz";
@@ -47,7 +48,7 @@ export default class KodikHelper extends BaseHelper {
         ...secureJSON,
       };
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get kodik secure data by videoPath: ${videoPath}.`,
         (err as Error).message,
       );
@@ -98,7 +99,7 @@ export default class KodikHelper extends BaseHelper {
 
       return (await res.json()) as Kodik.VideoData;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get kodik video data (type: ${videoType}, id: ${id}, hash: ${hash})`,
         (err as Error).message,
       );

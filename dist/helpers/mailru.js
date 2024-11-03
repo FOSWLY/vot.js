@@ -1,4 +1,5 @@
 import { BaseHelper } from "./base.js";
+import Logger from "../utils/logger.js";
 export default class MailRuHelper extends BaseHelper {
     API_ORIGIN = "https://my.mail.ru";
     async getVideoMeta(videoId) {
@@ -7,7 +8,7 @@ export default class MailRuHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error("Failed to get mail.ru video data", err.message);
+            Logger.error("Failed to get mail.ru video data", err.message);
             return undefined;
         }
     }

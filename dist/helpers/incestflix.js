@@ -1,6 +1,7 @@
 import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base.js";
 import { proxyMedia } from "../utils/utils.js";
+import Logger from "../utils/logger.js";
 export default class IncestflixHelper extends BaseHelper {
     async getVideoData(videoId) {
         try {
@@ -23,7 +24,7 @@ export default class IncestflixHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error(`Failed to get Incestflix data by videoId: ${videoId}`, err.message);
+            Logger.error(`Failed to get Incestflix data by videoId: ${videoId}`, err.message);
             return undefined;
         }
     }

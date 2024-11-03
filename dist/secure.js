@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import config from "./config/config.js";
+import Logger from "./utils/logger.js";
 const utf8Encoder = new TextEncoder();
 async function signHMAC(hashName, hmac, data) {
     const key = await crypto.subtle.importKey("raw", utf8Encoder.encode(hmac), { name: "HMAC", hash: { name: hashName } }, false, ["sign", "verify"]);
@@ -25,7 +26,7 @@ export async function getHmacSha1(hmacKey, salt) {
         return btoa(String.fromCharCode(...new Uint8Array(signature)));
     }
     catch (err) {
-        console.error(err);
+        Logger.error(err);
         return false;
     }
 }

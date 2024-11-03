@@ -4,6 +4,7 @@ import * as Sap from "../types/helpers/sap";
 import { MinimalVideoData, VideoDataSubtitle } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 import { normalizeLang } from "../utils/utils";
+import Logger from "../utils/logger";
 
 export default class SapHelper extends BaseHelper {
   API_ORIGIN = "https://learning.sap.com/";
@@ -60,7 +61,7 @@ export default class SapHelper extends BaseHelper {
       );
       return (await res.json()) as Sap.Response;
     } catch (err: unknown) {
-      console.error("Failed to request kaltura data", (err as Error).message);
+      Logger.error("Failed to request kaltura data", (err as Error).message);
       return undefined;
     }
   }
@@ -98,7 +99,7 @@ export default class SapHelper extends BaseHelper {
 
       return await this.requestKaltura(kalturaDomain, partnerId, entryId);
     } catch (err: unknown) {
-      console.error("Failed to get kaltura data", (err as Error).message);
+      Logger.error("Failed to get kaltura data", (err as Error).message);
       return undefined;
     }
   }

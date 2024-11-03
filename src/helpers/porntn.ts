@@ -2,6 +2,7 @@ import { parseFromString } from "dom-parser";
 import { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 import { proxyMedia } from "../utils/utils";
+import Logger from "../utils/logger";
 
 export default class PornTNHelper extends BaseHelper {
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
@@ -21,7 +22,7 @@ export default class PornTNHelper extends BaseHelper {
         .split(varDelimiter)?.[1]
         ?.split(";\n", 1)[0]
         .replace(/(\t|\n)/g, "");
-      console.log(scriptText);
+      Logger.log(scriptText);
 
       const source = /video_url: 'function\/0\/([^']+)'/.exec(content)?.[1];
       const rnd = /rnd: '([^']+)'/.exec(content)?.[1];
@@ -33,13 +34,13 @@ export default class PornTNHelper extends BaseHelper {
 
       const url = new URL(source) as URL;
       url.searchParams.append("rnd", rnd);
-      console.log(url.href);
+      Logger.log(url.href);
       return {
         url: proxyMedia(url),
         title,
       };
     } catch (err) {
-      console.error(
+      Logger.error(
         `Failed to get PornTN data by videoId: ${videoId}`,
         (err as Error).message,
       );

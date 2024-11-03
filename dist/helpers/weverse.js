@@ -1,5 +1,6 @@
 import { BaseHelper, VideoHelperError } from "./base.js";
 import { getHmacSha1 } from "../secure.js";
+import Logger from "../utils/logger.js";
 export default class WeverseHelper extends BaseHelper {
     API_ORIGIN = "https://global.apis.naver.com/weverse/wevweb";
     API_APP_ID = "be4d79eb8fc7bd008ee82c8ec4ff6fd4";
@@ -48,7 +49,7 @@ export default class WeverseHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get weverse post preview by postId: ${postId}`, err.message);
+            Logger.error(`Failed to get weverse post preview by postId: ${postId}`, err.message);
             return false;
         }
     }
@@ -67,7 +68,7 @@ export default class WeverseHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get weverse InKey by videoId: ${videoId}`, err.message);
+            Logger.error(`Failed to get weverse InKey by videoId: ${videoId}`, err.message);
             return false;
         }
     }
@@ -99,7 +100,7 @@ export default class WeverseHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get weverse video info (infraVideoId: ${infraVideoId}, inkey: ${inkey}, serviceId: ${serviceId}`, err.message);
+            Logger.error(`Failed to get weverse video info (infraVideoId: ${infraVideoId}, inkey: ${inkey}, serviceId: ${serviceId}`, err.message);
             return false;
         }
     }

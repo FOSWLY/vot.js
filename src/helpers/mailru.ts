@@ -1,5 +1,6 @@
 import { BaseHelper } from "./base";
 import * as MailRu from "../types/helpers/mailru";
+import Logger from "../utils/logger";
 
 export default class MailRuHelper extends BaseHelper {
   API_ORIGIN = "https://my.mail.ru";
@@ -13,7 +14,7 @@ export default class MailRuHelper extends BaseHelper {
       );
       return (await res.json()) as MailRu.VideoInfo;
     } catch (err: unknown) {
-      console.error("Failed to get mail.ru video data", (err as Error).message);
+      Logger.error("Failed to get mail.ru video data", (err as Error).message);
       return undefined;
     }
   }

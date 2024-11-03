@@ -6,6 +6,8 @@ declare const _default: {
     componentVersion: string;
     hmac: string;
     defaultDuration: number;
+    loggerLevel: number;
+    version: string;
 };
 export default _default;
 //# sourceMappingURL=config.d.ts.map

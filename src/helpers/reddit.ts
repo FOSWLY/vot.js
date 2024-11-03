@@ -1,4 +1,5 @@
 import { MinimalVideoData } from "../types/client";
+import Logger from "../utils/logger";
 import { BaseHelper, VideoHelperError } from "./base";
 
 export default class RedditHelper extends BaseHelper {
@@ -22,7 +23,7 @@ export default class RedditHelper extends BaseHelper {
         url: decodeURIComponent(contentUrl),
       };
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get reddit video data by video ID: ${videoId}`,
         (err as Error).message,
       );

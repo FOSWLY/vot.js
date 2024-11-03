@@ -1,6 +1,5 @@
 import config from "./config/config";
 
-import packageInfo from "../package.json";
 import { yandexProtobuf } from "./protobuf";
 import { getSignature, getUUID } from "./secure";
 import type {
@@ -31,9 +30,7 @@ import { getVideoData } from "./utils/videoData";
 import { TranslationResponse, VideoTranslationVOTOpts } from "./types/vot";
 import { convertVOT } from "./utils/vot";
 import { StreamInterval } from "./protos/yandex";
-
-// https://stackoverflow.com/questions/64993118/error-should-not-import-the-named-export-version-imported-as-version
-const { version } = packageInfo;
+import Logger from "./utils/logger";
 
 class VOTJSError extends Error {
   constructor(
@@ -113,7 +110,7 @@ export default class VOTClient {
    * Headers for interacting with VOT Backend API
    */
   headersVOT: Record<string, string> = {
-    "User-Agent": `vot.js/${version}`,
+    "User-Agent": `vot.js/${config.version}`,
     "Content-Type": "application/json",
     Pragma: "no-cache",
     "Cache-Control": "no-cache",
@@ -376,7 +373,7 @@ export default class VOTClient {
           remainingTime: translationData.remainingTime ?? -1,
         };
       default:
-        console.error("[vot.js] Unknown response", translationData);
+        Logger.error("Unknown response", translationData);
         throw new VOTJSError("Unknown response from Yandex", translationData);
     }
   }
@@ -634,7 +631,7 @@ export default class VOTClient {
         };
       }
       default:
-        console.error("[vot.js] Unknown response", translateResponse);
+        Logger.error("Unknown response", translateResponse);
         throw new VOTJSError("Unknown response from Yandex", translateResponse);
     }
   }

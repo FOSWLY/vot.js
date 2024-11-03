@@ -1,6 +1,7 @@
 import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base.js";
 import config from "../config/config.js";
+import Logger from "../utils/logger.js";
 export default class KodikHelper extends BaseHelper {
     API_ORIGIN = "https://kodik.biz";
     async getSecureData(videoPath) {
@@ -32,7 +33,7 @@ export default class KodikHelper extends BaseHelper {
             };
         }
         catch (err) {
-            console.error(`Failed to get kodik secure data by videoPath: ${videoPath}.`, err.message);
+            Logger.error(`Failed to get kodik secure data by videoPath: ${videoPath}.`, err.message);
             return false;
         }
     }
@@ -64,7 +65,7 @@ export default class KodikHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error(`Failed to get kodik video data (type: ${videoType}, id: ${id}, hash: ${hash})`, err.message);
+            Logger.error(`Failed to get kodik video data (type: ${videoType}, id: ${id}, hash: ${hash})`, err.message);
             return false;
         }
     }

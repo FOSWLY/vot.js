@@ -1,6 +1,7 @@
 import { parseFromString } from "dom-parser";
 import { BaseHelper, VideoHelperError } from "./base.js";
 import { normalizeLang } from "../utils/utils.js";
+import Logger from "../utils/logger.js";
 export default class SapHelper extends BaseHelper {
     API_ORIGIN = "https://learning.sap.com/";
     async requestKaltura(kalturaDomain, partnerId, entryId) {
@@ -48,7 +49,7 @@ export default class SapHelper extends BaseHelper {
             return (await res.json());
         }
         catch (err) {
-            console.error("Failed to request kaltura data", err.message);
+            Logger.error("Failed to request kaltura data", err.message);
             return undefined;
         }
     }
@@ -75,7 +76,7 @@ export default class SapHelper extends BaseHelper {
             return await this.requestKaltura(kalturaDomain, partnerId, entryId);
         }
         catch (err) {
-            console.error("Failed to get kaltura data", err.message);
+            Logger.error("Failed to get kaltura data", err.message);
             return undefined;
         }
     }

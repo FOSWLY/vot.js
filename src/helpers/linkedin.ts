@@ -4,6 +4,7 @@ import { MinimalVideoData, VideoDataSubtitle } from "../types/client";
 import * as Linkedin from "../types/helpers/linkedin";
 import { BaseHelper, VideoHelperError } from "./base";
 import { proxyMedia } from "../utils/utils";
+import Logger from "../utils/logger";
 
 export default class LinkedinHelper extends BaseHelper {
   API_ORIGIN = "https://www.linkedin.com/learning";
@@ -46,10 +47,7 @@ export default class LinkedinHelper extends BaseHelper {
         subtitles,
       };
     } catch (err: unknown) {
-      console.error(
-        "Failed to get linkedin video data",
-        (err as Error).message,
-      );
+      Logger.error("Failed to get linkedin video data", (err as Error).message);
       return undefined;
     }
   }

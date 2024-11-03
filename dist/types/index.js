@@ -4,6 +4,7 @@ export * as YandexType from "./yandex.js";
 export * as VOTBackendType from "./vot.js";
 export * as UtilsType from "./utils.js";
 export * as SubsType from "./subs.js";
+export * as LoggerType from "./logger.js";
 export * as BaseHelperType from "./helpers/base.js";
 export * as MailRuType from "./helpers/mailru.js";
 export * as WeverseType from "./helpers/weverse.js";

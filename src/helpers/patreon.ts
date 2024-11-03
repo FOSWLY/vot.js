@@ -1,6 +1,7 @@
 import { BaseHelper } from "./base";
 import * as Patreon from "../types/helpers/patreon";
 import { MinimalVideoData } from "../types/client";
+import Logger from "../utils/logger";
 
 export default class PatreonHelper extends BaseHelper {
   API_ORIGIN = "https://www.patreon.com/api";
@@ -15,7 +16,7 @@ export default class PatreonHelper extends BaseHelper {
 
       return (await res.json()) as Patreon.PostsResponse;
     } catch (err: unknown) {
-      console.error(
+      Logger.error(
         `Failed to get patreon posts by postId: ${postId}.`,
         (err as Error).message,
       );
