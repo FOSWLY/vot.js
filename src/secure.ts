@@ -1,6 +1,8 @@
 import crypto from "node:crypto";
 import config from "./config/config";
 import Logger from "./utils/logger";
+import { ClientSession } from "./types/client";
+import { SecType } from "./types/yandex";
 
 const utf8Encoder = new TextEncoder();
 type HashName = "SHA-256" | "SHA-1";
@@ -30,6 +32,27 @@ export async function getSignature(body: Uint8Array) {
     (str, byte) => str + byte.toString(16).padStart(2, "0"),
     "",
   );
+}
+
+export async function getSecYaHeaders(
+  secType: SecType,
+  session: ClientSession,
+  body: Uint8Array,
+  path: string,
+) {
+  const { secretKey, uuid } = session;
+  const sign = await getSignature(body);
+
+  // https://github.com/FOSWLY/vot.js/issues/36
+  const token = `${uuid}:${path}:${config.componentVersion}`;
+  const tokenBody = utf8Encoder.encode(token);
+  const tokenSign = await getSignature(tokenBody);
+
+  return {
+    [`${secType}-Signature`]: sign,
+    [`Sec-${secType}-Sk`]: secretKey,
+    [`Sec-${secType}-Token`]: `${tokenSign}:${token}`,
+  };
 }
 
 // yandex uuid

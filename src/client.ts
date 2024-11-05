@@ -1,7 +1,7 @@
 import config from "./config/config";
 
 import { yandexProtobuf } from "./protobuf";
-import { getSignature, getUUID } from "./secure";
+import { getSecYaHeaders, getSignature, getUUID } from "./secure";
 import type {
   VOTOpts,
   FetchFunction,
@@ -66,7 +66,6 @@ export default class VOTClient {
   responseLang: ResponseLang;
 
   userAgent: string = config.userAgent;
-  componentVersion: string = config.componentVersion;
 
   paths = {
     videoTranslation: "/video-translation/translate",
@@ -280,7 +279,7 @@ export default class VOTClient {
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
     const { url, duration = config.defaultDuration } = videoData;
 
-    const { secretKey, uuid } = await this.getSession("video-translation");
+    const session = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeTranslationRequest(
       url,
       duration,
@@ -289,11 +288,11 @@ export default class VOTClient {
       translationHelp,
     );
 
-    const sign = await getSignature(body);
-    const res = await this.request(this.paths.videoTranslation, body, {
-      "Vtrans-Signature": sign,
-      "Sec-Vtrans-Sk": secretKey,
-      "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.videoTranslation}:${this.componentVersion}`,
+    const path = this.paths.videoTranslation;
+    const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
+
+    const res = await this.request(path, body, {
+      ...vtransHeaders,
       ...headers,
     });
 
@@ -461,20 +460,20 @@ export default class VOTClient {
     translationId: string,
     headers: Record<string, string> = {},
   ) {
-    const { secretKey, uuid } = await this.getSession("video-translation");
+    const session = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeTranslationAudioRequest(
       url,
       translationId,
     );
 
-    const sign = await getSignature(body);
+    const path = this.paths.videoTranslationAudio;
+    const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
+
     const res = await this.request(
-      this.paths.videoTranslationAudio,
+      path,
       body,
       {
-        "Vtrans-Signature": sign,
-        "Sec-Vtrans-Sk": secretKey,
-        "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.videoTranslationAudio}:${this.componentVersion}`,
+        ...vtransHeaders,
         ...headers,
       },
       "PUT",
@@ -530,15 +529,14 @@ export default class VOTClient {
       throw new VOTJSError("Unsupported video URL for getting subtitles");
     }
 
-    const { secretKey, uuid } = await this.getSession("video-translation");
+    const session = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeSubtitlesRequest(url, requestLang);
 
-    const sign = await getSignature(body);
+    const path = this.paths.videoSubtitles;
+    const vsubsHeaders = await getSecYaHeaders("Vsubs", session, body, path);
 
-    const res = await this.request(this.paths.videoSubtitles, body, {
-      "Vsubs-Signature": await getSignature(body),
-      "Sec-Vsubs-Sk": secretKey,
-      "Sec-Vsubs-Token": `${sign}:${uuid}:${this.paths.videoSubtitles}:${this.componentVersion}`,
+    const res = await this.request(path, body, {
+      ...vsubsHeaders,
       ...headers,
     });
 
@@ -553,14 +551,14 @@ export default class VOTClient {
    * @includeExample examples/stream.ts:7-44
    */
   async pingStream({ pingId, headers = {} }: StreamPingOptions) {
-    const { secretKey, uuid } = await this.getSession("video-translation");
+    const session = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeStreamPingRequest(pingId);
 
-    const sign = await getSignature(body);
-    const res = await this.request(this.paths.streamPing, body, {
-      "Vtrans-Signature": await getSignature(body),
-      "Sec-Vtrans-Sk": secretKey,
-      "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.streamPing}:${this.componentVersion}`,
+    const path = this.paths.streamPing;
+    const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
+
+    const res = await this.request(path, body, {
+      ...vtransHeaders,
       ...headers,
     });
 
@@ -588,19 +586,18 @@ export default class VOTClient {
       );
     }
 
-    const { secretKey, uuid } = await this.getSession("video-translation");
-
+    const session = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeStreamRequest(
       url,
       requestLang,
       responseLang,
     );
 
-    const sign = await getSignature(body);
-    const res = await this.request(this.paths.streamTranslation, body, {
-      "Vtrans-Signature": await getSignature(body),
-      "Sec-Vtrans-Sk": secretKey,
-      "Sec-Vtrans-Token": `${sign}:${uuid}:${this.paths.streamTranslation}:${this.componentVersion}`,
+    const path = this.paths.streamTranslation;
+    const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
+
+    const res = await this.request(path, body, {
+      ...vtransHeaders,
       ...headers,
     });
 

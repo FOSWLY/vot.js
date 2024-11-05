@@ -3,6 +3,7 @@ import { availableLangs, availableTTS } from "../consts";
 
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 export type SessionModule = "video-translation" | "summarization";
+export type SecType = "Vtrans" | "Vsubs" | "Summary";
 
 export type TranslationHelp = {
   target: TranslationHelpTarget;
