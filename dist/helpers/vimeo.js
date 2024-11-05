@@ -6,7 +6,7 @@ export default class VimeoHelper extends BaseHelper {
     API_KEY = "";
     DEFAULT_SITE_ORIGIN = "https://vimeo.com";
     SITE_ORIGIN = this.isPrivatePlayer()
-        ? this.service?.url?.slice(0, -1) ?? this.DEFAULT_SITE_ORIGIN
+        ? (this.service?.url?.slice(0, -1) ?? this.DEFAULT_SITE_ORIGIN)
         : this.DEFAULT_SITE_ORIGIN;
     isErrorData(data) {
         return Object.hasOwn(data, "error");
@@ -223,6 +223,6 @@ export default class VimeoHelper extends BaseHelper {
         }
         return embedId?.startsWith("video/")
             ? embedId.replace("video/", "")
-            : embedId ?? /[^/]+$/.exec(url.pathname)?.[0];
+            : (embedId ?? /[^/]+$/.exec(url.pathname)?.[0]);
     }
 }

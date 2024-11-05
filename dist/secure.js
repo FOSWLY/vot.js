@@ -10,6 +10,18 @@ export async function getSignature(body) {
     const signature = await signHMAC("SHA-256", config.hmac, body);
     return new Uint8Array(signature).reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
 }
+export async function getSecYaHeaders(secType, session, body, path) {
+    const { secretKey, uuid } = session;
+    const sign = await getSignature(body);
+    const token = `${uuid}:${path}:${config.componentVersion}`;
+    const tokenBody = utf8Encoder.encode(token);
+    const tokenSign = await getSignature(tokenBody);
+    return {
+        [`${secType}-Signature`]: sign,
+        [`Sec-${secType}-Sk`]: secretKey,
+        [`Sec-${secType}-Token`]: `${tokenSign}:${token}`,
+    };
+}
 export function getUUID() {
     const hexDigits = "0123456789ABCDEF";
     let uuid = "";

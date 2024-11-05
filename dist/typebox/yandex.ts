@@ -16,6 +16,13 @@ Type.Literal("video-translation"),
 Type.Literal("summarization")
 ])
 
+export type SecType = Static<typeof SecType>
+export const SecType = Type.Union([
+Type.Literal("Vtrans"),
+Type.Literal("Vsubs"),
+Type.Literal("Summary")
+])
+
 export type TranslationHelp = Static<typeof TranslationHelp>
 export const TranslationHelp = Type.Object({
 target: TranslationHelpTarget,

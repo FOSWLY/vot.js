@@ -13,7 +13,6 @@ export default class VOTClient {
     requestLang: RequestLang;
     responseLang: ResponseLang;
     userAgent: string;
-    componentVersion: string;
     paths: {
         videoTranslation: string;
         videoTranslationFailAudio: string;

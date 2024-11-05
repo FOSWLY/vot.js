@@ -7,5 +7,5 @@ export default {
     hmac: "bt8xH3VOlb4mqf0nqAibnDOoiPlXsisf",
     defaultDuration: 343,
     loggerLevel: 1,
-    version: "1.3.8",
+    version: "1.3.9",
 };

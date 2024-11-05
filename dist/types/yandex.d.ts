@@ -2,6 +2,7 @@ import { VideoData } from "./client.js";
 import { availableLangs, availableTTS } from "../consts.js";
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 export type SessionModule = "video-translation" | "summarization";
+export type SecType = "Vtrans" | "Vsubs" | "Summary";
 export type TranslationHelp = {
     target: TranslationHelpTarget;
     targetUrl: string;
