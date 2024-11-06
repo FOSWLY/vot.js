@@ -1,3 +1,9 @@
+# 1.3.10
+
+- Added the ability to install extra translation options: `forceSourceLang`, `bypassCache`, `useNewModel` (read description before use!)
+- Added option to enable using new model voices in some cases ([desc](https://github.com/ilyhalight/voice-over-translation/issues/897))
+- Updated Yandex Protobuf
+
 # 1.3.9
 
 - Fixed incorrect generation of Sec-Vtrans-Token (#36)
@@ -20,7 +26,7 @@
 
 - Fixed long waiting for translation for new translation requests for YouTube (status = 6)
 - Added a blank function for video-translation/audio (now return only empty audio info for continue video translation)
-- Updated Protobuf
+- Updated Yandex Protobuf
 
 # 1.3.4
 

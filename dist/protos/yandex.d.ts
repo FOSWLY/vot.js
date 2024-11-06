@@ -26,7 +26,7 @@ export interface VideoTranslationRequest {
     unknown2: number;
     unknown3: number;
     bypassCache: boolean;
-    unknown4: number;
+    useNewModel: boolean;
 }
 export interface VideoTranslationResponse {
     url?: string | undefined;

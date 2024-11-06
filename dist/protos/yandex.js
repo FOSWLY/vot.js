@@ -118,7 +118,7 @@ function createBaseVideoTranslationRequest() {
         unknown2: 0,
         unknown3: 0,
         bypassCache: false,
-        unknown4: 0,
+        useNewModel: false,
     };
 }
 export const VideoTranslationRequest = {
@@ -162,8 +162,8 @@ export const VideoTranslationRequest = {
         if (message.bypassCache !== false) {
             writer.uint32(136).bool(message.bypassCache);
         }
-        if (message.unknown4 !== 0) {
-            writer.uint32(144).int32(message.unknown4);
+        if (message.useNewModel !== false) {
+            writer.uint32(144).bool(message.useNewModel);
         }
         return writer;
     },
@@ -256,7 +256,7 @@ export const VideoTranslationRequest = {
                     if (tag !== 144) {
                         break;
                     }
-                    message.unknown4 = reader.int32();
+                    message.useNewModel = reader.bool();
                     continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
@@ -283,7 +283,7 @@ export const VideoTranslationRequest = {
             unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
             unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
             bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
-            unknown4: isSet(object.unknown4) ? globalThis.Number(object.unknown4) : 0,
+            useNewModel: isSet(object.useNewModel) ? globalThis.Boolean(object.useNewModel) : false,
         };
     },
     toJSON(message) {
@@ -327,8 +327,8 @@ export const VideoTranslationRequest = {
         if (message.bypassCache !== false) {
             obj.bypassCache = message.bypassCache;
         }
-        if (message.unknown4 !== 0) {
-            obj.unknown4 = Math.round(message.unknown4);
+        if (message.useNewModel !== false) {
+            obj.useNewModel = message.useNewModel;
         }
         return obj;
     },
@@ -350,7 +350,7 @@ export const VideoTranslationRequest = {
         message.unknown2 = object.unknown2 ?? 0;
         message.unknown3 = object.unknown3 ?? 0;
         message.bypassCache = object.bypassCache ?? false;
-        message.unknown4 = object.unknown4 ?? 0;
+        message.useNewModel = object.useNewModel ?? false;
         return message;
     },
 };

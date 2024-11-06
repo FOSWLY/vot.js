@@ -29,6 +29,13 @@ target: TranslationHelpTarget,
 targetUrl: Type.String()
 })
 
+export type TranslationExtraOpts = Static<typeof TranslationExtraOpts>
+export const TranslationExtraOpts = Type.Object({
+forceSourceLang: Type.Optional(Type.Boolean()),
+bypassCache: Type.Optional(Type.Boolean()),
+useNewModel: Type.Optional(Type.Boolean())
+})
+
 export type RequestHeaders = Static<typeof RequestHeaders>
 export const RequestHeaders = Type.Record(Type.String(), Type.Any())
 
@@ -73,6 +80,7 @@ Type.Array(TranslationHelp),
 Type.Null()
 ])),
 headers: Type.Optional(RequestHeaders),
+extraOpts: Type.Optional(TranslationExtraOpts),
 shouldSendFailedAudio: Type.Optional(Type.Boolean())
 })
 

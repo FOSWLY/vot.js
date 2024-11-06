@@ -37,11 +37,11 @@ export default class VOTClient {
     requestJSON<T = unknown>(path: string, body?: unknown, headers?: Record<string, string>, method?: string): Promise<ClientResponse<T>>;
     requestVOT<T = unknown>(path: string, body: NonNullable<any>, headers?: Record<string, string>): Promise<ClientResponse<T>>;
     getSession(module: SessionModule): Promise<ClientSession>;
-    protected translateVideoYAImpl({ videoData, requestLang, responseLang, translationHelp, headers, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
+    protected translateVideoYAImpl({ videoData, requestLang, responseLang, translationHelp, headers, extraOpts, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     protected translateVideoVOTImpl({ url, videoId, service, requestLang, responseLang, headers, }: VideoTranslationVOTOpts): Promise<VideoTranslationResponse>;
     protected requestVtransFailAudio(url: string): Promise<ClientResponse<VideoTranslationFailAudioResponse>>;
     requestVtransAudio(url: string, translationId: string, headers?: Record<string, string>): Promise<import("./protos/yandex.js").VideoTranslationResponse>;
-    translateVideo({ videoData, requestLang, responseLang, translationHelp, headers, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
+    translateVideo({ videoData, requestLang, responseLang, translationHelp, headers, extraOpts, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     getSubtitles({ videoData, requestLang, headers, }: VideoSubtitlesOpts): Promise<import("./protos/yandex.js").SubtitlesResponse>;
     pingStream({ pingId, headers }: StreamPingOptions): Promise<boolean>;
     translateStream({ videoData, requestLang, responseLang, headers, }: StreamTranslationOpts): Promise<StreamTranslationResponse>;

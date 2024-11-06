@@ -1,21 +1,21 @@
 import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationAudioRequest, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex.js";
 import { AudioInfoMessage, } from "./types/yandex.js";
 export const yandexProtobuf = {
-    encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp) {
+    encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp, { forceSourceLang = false, bypassCache = false, useNewModel = true, } = {}) {
         return VideoTranslationRequest.encode({
             url,
             firstRequest: true,
             duration,
             unknown0: 1,
             language: requestLang,
-            forceSourceLang: false,
+            forceSourceLang,
             unknown1: 0,
             translationHelp: translationHelp ? translationHelp : [],
             responseLanguage: responseLang,
-            unknown2: 0,
+            unknown2: 1,
             unknown3: 1,
-            bypassCache: false,
-            unknown4: 1,
+            bypassCache,
+            useNewModel,
         }).finish();
     },
     decodeTranslationResponse(response) {

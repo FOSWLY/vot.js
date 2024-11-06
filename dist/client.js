@@ -154,10 +154,10 @@ export default class VOTClient {
         };
         return this.sessions[module];
     }
-    async translateVideoYAImpl({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, shouldSendFailedAudio = true, }) {
+    async translateVideoYAImpl({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, extraOpts = {}, shouldSendFailedAudio = true, }) {
         const { url, duration = config.defaultDuration } = videoData;
         const session = await this.getSession("video-translation");
-        const body = yandexProtobuf.encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp);
+        const body = yandexProtobuf.encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp, extraOpts);
         const path = this.paths.videoTranslation;
         const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
         const res = await this.request(path, body, {
@@ -266,7 +266,7 @@ export default class VOTClient {
         }
         return yandexProtobuf.decodeTranslationAudioResponse(res.data);
     }
-    async translateVideo({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, }) {
+    async translateVideo({ videoData, requestLang = this.requestLang, responseLang = this.responseLang, translationHelp = null, headers = {}, extraOpts = {}, shouldSendFailedAudio = true, }) {
         const { url, videoId, host } = videoData;
         return this.isCustomLink(url)
             ? await this.translateVideoVOTImpl({
@@ -283,6 +283,8 @@ export default class VOTClient {
                 responseLang,
                 translationHelp,
                 headers,
+                extraOpts,
+                shouldSendFailedAudio,
             });
     }
     async getSubtitles({ videoData, requestLang = this.requestLang, headers = {}, }) {
