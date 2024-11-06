@@ -2,45 +2,58 @@ syntax = "proto3";
 
 // VIDEO TRANSLATION
 message VideoTranslationHelpObject {
-  string target = 1;    // video_file_url or subtitles_file_url
-  string targetUrl = 2; // raw url to video file or subs
+  // video_file_url or subtitles_file_url
+  string target = 1;
+  // raw url to video file or subs
+  string targetUrl = 2;
 }
 
 message VideoTranslationRequest {
   string url = 3;
-  optional string deviceId = 4; // used in mobile version
-  bool firstRequest =
-      5; // true for the first request, false for subsequent ones
+  // used in mobile version
+  optional string deviceId = 4;
+  // true for the first request, false for subsequent ones
+  bool firstRequest = 5;
   double duration = 6;
-  int32 unknown0 = 7;       // 1 1
-  string language = 8;      // source language code
-  bool forceSourceLang = 9; // 0 - auto detected by yabrowser, 1 - user set his
-                            // own lang by dropdown
-  int32 unknown1 = 10;      // 0 0
-  repeated VideoTranslationHelpObject translationHelp =
-      11; // array for translation assistance ([0] -> {2: link to video, 1:
-          // "video_file_url"}, [1] -> {2: link to subtitles, 1:
-          // "subtitles_file_url"})
+  int32 unknown0 = 7; // 1 1
+  // source language code
+  string language = 8;
+  // 0 - auto detected by yabrowser, 1 - user set his
+  // (own lang by dropdown)
+  bool forceSourceLang = 9;
+  int32 unknown1 = 10; // 0 0
+  // array for translation assistance
+  // ([0] -> {2: link to video, 1: "video_file_url"},
+  // [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
+  repeated VideoTranslationHelpObject translationHelp = 11;
   string responseLanguage = 14;
-  int32 unknown2 = 15; // 0
+  // previously it was 0, now it is 1
+  int32 unknown2 = 15;
   int32 unknown3 = 16; // 1
-  bool bypassCache =
-      17; // ? maybe they have some kind of bypass limiter from one IP, because
-          // after one such request it stopped working
-  int32 unknown4 = 18; // 1
+  // they have some kind of limiter on requests from one IP
+  // because after one such request it stops working
+  bool bypassCache = 17;
+  // translates videos with higher-quality voices, but sometimes the
+  // voice of one person can constantly change
+  // (https://github.com/ilyhalight/voice-over-translation/issues/897)
+  bool useNewModel = 18;
 }
 
 message VideoTranslationResponse {
-  // if status is translated
+  // this 2 options set if status is translated
   optional string url = 1;
   optional double duration = 2;
 
   int32 status = 4;
-  optional int32 remainingTime = 5; // secs until translation is completed
-  optional int32 unknown0 = 6;  // unknown 0 (1st request) -> 10 (2nd, 3th and
-                                // etc requests). (if status is 0)
-  string translationId = 7;     // it's not a type mistake
-  optional string language = 8; // detected language (if the wrong one is set)
+  // secs until translation is completed
+  optional int32 remainingTime = 5;
+  // unknown 0 (1st request) ->
+  // 10 (2nd, 3th and etc requests). (if status is 0)
+  optional int32 unknown0 = 6;
+  // it isn't a type mistake
+  string translationId = 7;
+  // detected language (if the wrong one is set)
+  optional string language = 8;
   optional string message = 9;
 }
 
@@ -61,7 +74,8 @@ message VideoTranslationAudioRequest {
 }
 
 message VideoTranslationAudioResponse {
-  int32 status = 4; // maybe this status is VideoTranslationResponse.status
+  // maybe this status is VideoTranslationResponse.status
+  int32 status = 4;
 }
 
 // SUBTITLES
@@ -77,20 +91,23 @@ message SubtitlesObject {
 
 message SubtitlesRequest {
   string url = 1;
-  string language = 2; // source language code
+  // source language code
+  string language = 2;
 }
 
 message SubtitlesResponse {
-  bool waiting =
-      1; // 0 - finished/failed, 1 - waiting result (1 - ~10min, maybe more)
+  // 0 - finished/failed, 1 - waiting result (1 - ~10min, maybe more)
+  bool waiting = 1;
   repeated SubtitlesObject subtitles = 2;
 }
 
 // STREAM TRANSLATION
 message StreamTranslationObject {
   string url = 1;
-  string timestamp = 2; // timestamp in ms (timing of m3u8). it could have been
-                        // int64, but js requires an additional dependencies
+  // timestamp in ms (timing of m3u8).
+  // it could have been int64,
+  // but js requires an additional dependencies for this
+  string timestamp = 2;
 }
 
 message StreamTranslationRequest {
@@ -106,9 +123,10 @@ enum StreamInterval {
 }
 
 message StreamTranslationResponse {
-  StreamInterval interval =
-      1; // 20s - streaming, 10s - translating, 0s - there is no connection
-         // with the server (the broadcast is finished or deleted)
+  // 20s - streaming, 10s - translating,
+  // 0s - there is no connection with the server (the broadcast is finished or
+  // deleted)
+  StreamInterval interval = 1;
   optional StreamTranslationObject translatedInfo = 2;
   optional int32 pingId = 3;
 }
@@ -119,7 +137,8 @@ message StreamPingRequest { int32 pingId = 1; }
 // SESSIONS
 message YandexSessionRequest {
   string uuid = 1;
-  string module = 2; // e.g. video_translation
+  // e.g. video_translation or summarization
+  string module = 2;
 }
 
 message YandexSessionResponse {

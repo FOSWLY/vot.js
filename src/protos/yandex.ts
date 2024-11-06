@@ -69,29 +69,39 @@ export interface VideoTranslationRequest {
   unknown0: number;
   /** source language code */
   language: string;
-  /** 0 - auto detected by yabrowser, 1 - user set his */
-  forceSourceLang: boolean;
-  /** own lang by dropdown */
-  unknown1: number;
-  /** array for translation assistance ([0] -> {2: link to video, 1: */
-  translationHelp: VideoTranslationHelpObject[];
   /**
-   * "video_file_url"}, [1] -> {2: link to subtitles, 1:
-   * "subtitles_file_url"})
+   * 0 - auto detected by yabrowser, 1 - user set his
+   * (own lang by dropdown)
    */
+  forceSourceLang: boolean;
+  /** 0 0 */
+  unknown1: number;
+  /**
+   * array for translation assistance
+   * ([0] -> {2: link to video, 1: "video_file_url"},
+   * [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
+   */
+  translationHelp: VideoTranslationHelpObject[];
   responseLanguage: string;
   /** 0 */
   unknown2: number;
   /** 1 */
   unknown3: number;
-  /** ? maybe they have some kind of bypass limiter from one IP, because */
+  /**
+   * ? maybe they have some kind of bypass limiter from one IP, because
+   * after one such request it stopped working
+   */
   bypassCache: boolean;
-  /** after one such request it stopped working */
-  unknown4: number;
+  /**
+   * translates videos with higher-quality voices, but sometimes the
+   * voice of one person can constantly change
+   * (https://github.com/ilyhalight/voice-over-translation/issues/897)
+   */
+  useNewModel: boolean;
 }
 
 export interface VideoTranslationResponse {
-  /** if status is translated */
+  /** this 2 options set if status is translated */
   url?: string | undefined;
   duration?: number | undefined;
   status: number;
@@ -99,11 +109,14 @@ export interface VideoTranslationResponse {
   remainingTime?:
     | number
     | undefined;
-  /** unknown 0 (1st request) -> 10 (2nd, 3th and */
+  /**
+   * unknown 0 (1st request) ->
+   * 10 (2nd, 3th and etc requests). (if status is 0)
+   */
   unknown0?:
     | number
     | undefined;
-  /** etc requests). (if status is 0) */
+  /** it isn't a type mistake */
   translationId: string;
   /** detected language (if the wrong one is set) */
   language?: string | undefined;
@@ -159,7 +172,11 @@ export interface SubtitlesResponse {
 /** STREAM TRANSLATION */
 export interface StreamTranslationObject {
   url: string;
-  /** timestamp in ms (timing of m3u8). it could have been */
+  /**
+   * timestamp in ms (timing of m3u8).
+   * it could have been int64,
+   * but js requires an additional dependencies for this
+   */
   timestamp: string;
 }
 
@@ -170,9 +187,12 @@ export interface StreamTranslationRequest {
 }
 
 export interface StreamTranslationResponse {
-  /** 20s - streaming, 10s - translating, 0s - there is no connection */
+  /**
+   * 20s - streaming, 10s - translating,
+   * 0s - there is no connection with the server (the broadcast is finished or
+   * deleted)
+   */
   interval: StreamInterval;
-  /** with the server (the broadcast is finished or deleted) */
   translatedInfo?: StreamTranslationObject | undefined;
   pingId?: number | undefined;
 }
@@ -185,7 +205,7 @@ export interface StreamPingRequest {
 /** SESSIONS */
 export interface YandexSessionRequest {
   uuid: string;
-  /** e.g. video_translation */
+  /** e.g. video_translation or summarization */
   module: string;
 }
 
@@ -283,7 +303,7 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
     unknown2: 0,
     unknown3: 0,
     bypassCache: false,
-    unknown4: 0,
+    useNewModel: false,
   };
 }
 
@@ -328,8 +348,8 @@ export const VideoTranslationRequest = {
     if (message.bypassCache !== false) {
       writer.uint32(136).bool(message.bypassCache);
     }
-    if (message.unknown4 !== 0) {
-      writer.uint32(144).int32(message.unknown4);
+    if (message.useNewModel !== false) {
+      writer.uint32(144).bool(message.useNewModel);
     }
     return writer;
   },
@@ -437,7 +457,7 @@ export const VideoTranslationRequest = {
             break;
           }
 
-          message.unknown4 = reader.int32();
+          message.useNewModel = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -465,7 +485,7 @@ export const VideoTranslationRequest = {
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
       unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
       bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
-      unknown4: isSet(object.unknown4) ? globalThis.Number(object.unknown4) : 0,
+      useNewModel: isSet(object.useNewModel) ? globalThis.Boolean(object.useNewModel) : false,
     };
   },
 
@@ -510,8 +530,8 @@ export const VideoTranslationRequest = {
     if (message.bypassCache !== false) {
       obj.bypassCache = message.bypassCache;
     }
-    if (message.unknown4 !== 0) {
-      obj.unknown4 = Math.round(message.unknown4);
+    if (message.useNewModel !== false) {
+      obj.useNewModel = message.useNewModel;
     }
     return obj;
   },
@@ -534,7 +554,7 @@ export const VideoTranslationRequest = {
     message.unknown2 = object.unknown2 ?? 0;
     message.unknown3 = object.unknown3 ?? 0;
     message.bypassCache = object.bypassCache ?? false;
-    message.unknown4 = object.unknown4 ?? 0;
+    message.useNewModel = object.useNewModel ?? false;
     return message;
   },
 };
