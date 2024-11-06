@@ -6,7 +6,7 @@
 
 # 1.3.9
 
-- Fixed incorrect generation of Sec-Vtrans-Token (#36)
+- Fixed incorrect generation of Sec-{Vsubs|Vtrans}-Token (#36)
 - Yandex Sec headers generation has been combined into the getSecYaHeaders function and moved to secure.ts
 
 # 1.3.8
