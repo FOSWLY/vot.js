@@ -275,6 +275,7 @@ export default class VOTClient {
     responseLang = this.responseLang,
     translationHelp = null,
     headers = {},
+    extraOpts = {},
     shouldSendFailedAudio = true,
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
     const { url, duration = config.defaultDuration } = videoData;
@@ -286,6 +287,7 @@ export default class VOTClient {
       requestLang,
       responseLang,
       translationHelp,
+      extraOpts,
     );
 
     const path = this.paths.videoTranslation;
@@ -495,6 +497,8 @@ export default class VOTClient {
     responseLang = this.responseLang,
     translationHelp = null,
     headers = {},
+    extraOpts = {},
+    shouldSendFailedAudio = true,
   }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
     const { url, videoId, host } = videoData;
 
@@ -513,6 +517,8 @@ export default class VOTClient {
           responseLang,
           translationHelp,
           headers,
+          extraOpts,
+          shouldSendFailedAudio,
         });
   }
 

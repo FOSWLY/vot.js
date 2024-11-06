@@ -12,6 +12,7 @@ import {
 } from "./protos/yandex";
 import {
   AudioInfoMessage,
+  TranslationExtraOpts,
   type SessionModule,
   type TranslationHelp,
 } from "./types/yandex";
@@ -24,6 +25,11 @@ export const yandexProtobuf = {
     requestLang: string,
     responseLang: string,
     translationHelp: TranslationHelp[] | null,
+    {
+      forceSourceLang = false,
+      bypassCache = false,
+      useNewModel = true,
+    }: TranslationExtraOpts = {},
   ) {
     return VideoTranslationRequest.encode({
       url,
@@ -31,14 +37,14 @@ export const yandexProtobuf = {
       duration,
       unknown0: 1,
       language: requestLang,
-      forceSourceLang: false,
+      forceSourceLang,
       unknown1: 0,
       translationHelp: translationHelp ? translationHelp : [],
       responseLanguage: responseLang,
-      unknown2: 0,
+      unknown2: 1,
       unknown3: 1,
-      bypassCache: false,
-      unknown4: 1,
+      bypassCache,
+      useNewModel,
     }).finish();
   },
   decodeTranslationResponse(response: ArrayBuffer) {

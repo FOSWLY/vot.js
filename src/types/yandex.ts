@@ -10,6 +10,15 @@ export type TranslationHelp = {
   targetUrl: string;
 };
 
+/**
+ * Read description about options in src/protos/yandex.(proto|ts) -> VideoTranslationRequest
+ */
+export type TranslationExtraOpts = {
+  forceSourceLang?: boolean;
+  bypassCache?: boolean;
+  useNewModel?: boolean;
+};
+
 export type RequestHeaders = Record<string, any>;
 export type RequestLang = (typeof availableLangs)[number];
 export type ResponseLang = (typeof availableTTS)[number];
@@ -104,7 +113,14 @@ export type VideoTranslationOpts = {
   responseLang?: ResponseLang;
   translationHelp?: TranslationHelp[] | null;
   headers?: RequestHeaders;
-  shouldSendFailedAudio?: boolean; // for bypass youtube long waiting
+  /**
+   * extra translation options (doesn't work with VOT Backend API)
+   */
+  extraOpts?: TranslationExtraOpts;
+  /**
+   * for bypass youtube long waiting (doesn't work with VOT Backend API)
+   */
+  shouldSendFailedAudio?: boolean;
 };
 
 export type TranslatedVideoTranslationResponse = {
