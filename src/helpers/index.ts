@@ -43,6 +43,7 @@ import PornhubHelper from "./pornhub";
 import TikTokHelper from "./tiktok";
 import NineGAGHelper from "./nine_gag";
 import YoutubeHelper from "./youtube";
+import DzenHelper from "./dzen";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -86,6 +87,7 @@ export * as PornhubHelper from "./pornhub";
 export * as TikTokHelper from "./tiktok";
 export * as NineGAGHelper from "./nine_gag";
 export * as YoutubeHelper from "./youtube";
+export * as DzenHelper from "./dzen";
 
 export const availableHelpers = {
   [VideoService.mailru]: MailRuHelper,
@@ -135,6 +137,7 @@ export const availableHelpers = {
   [VideoService.invidious]: YoutubeHelper,
   [VideoService.poketube]: YoutubeHelper,
   [VideoService.piped]: YoutubeHelper,
+  [VideoService.dzen]: DzenHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

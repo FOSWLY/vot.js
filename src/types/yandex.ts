@@ -79,6 +79,7 @@ export enum VideoService {
   ricktube = "ricktube",
   incestflix = "incestflix",
   porntn = "porntn",
+  dzen = "dzen",
 }
 
 export type ServiceConf = {

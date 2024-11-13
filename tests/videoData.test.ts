@@ -590,3 +590,10 @@ test("porntn", async () => {
   );
   expect(normalized).toInclude("porntn.com");
 });
+
+test("dzen", async () => {
+  const normalized = await normalize(
+    "https://dzen.ru/video/watch/667d9f7f73e0bf4fe67fee32",
+  );
+  expect(normalized).toEqual(normalized);
+});
