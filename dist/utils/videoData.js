@@ -60,65 +60,6 @@ export async function getVideoID(service, videoURL, opts = {}) {
             }
             return (/(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ??
                 url.searchParams.get("v"));
-        case VideoService.nine_gag:
-        case VideoService.gag:
-            return /gag\/([^/]+)/.exec(url.pathname)?.[1];
-        case VideoService.proxitok:
-        case VideoService.tiktok:
-            return /([^/]+)\/video\/([^/]+)/.exec(url.pathname)?.[0];
-        case VideoService.xvideos:
-            return /[^/]+\/[^/]+$/.exec(url.pathname)?.[0];
-        case VideoService.pornhub:
-            return (url.searchParams.get("viewkey") ??
-                /embed\/([^/]+)/.exec(url.pathname)?.[1]);
-        case VideoService.twitter:
-            return /status\/([^/]+)/.exec(url.pathname)?.[1];
-        case VideoService.rumble:
-        case VideoService.facebook:
-            return url.pathname.slice(1);
-        case VideoService.rutube:
-            return /(?:video|embed)\/([^/]+)/.exec(url.pathname)?.[1];
-        case VideoService.bilibili: {
-            const bangumiId = /bangumi\/play\/([^/]+)/.exec(url.pathname)?.[0];
-            if (bangumiId) {
-                return bangumiId;
-            }
-            const bvid = url.searchParams.get("bvid");
-            if (bvid) {
-                return `video/${bvid}`;
-            }
-            let vid = /video\/([^/]+)/.exec(url.pathname)?.[0];
-            if (vid && url.searchParams.get("p") !== null) {
-                vid += `/?p=${url.searchParams.get("p")}`;
-            }
-            return vid;
-        }
-        case VideoService.bitchute:
-            return /(video|embed)\/([^/]+)/.exec(url.pathname)?.[2];
-        case VideoService.eporner:
-            return /video-([^/]+)\/([^/]+)/.exec(url.pathname)?.[0];
-        case VideoService.peertube:
-            return /\/w\/([^/]+)/.exec(url.pathname)?.[0];
-        case VideoService.dailymotion: {
-            return url.hostname === "dai.ly"
-                ? url.pathname.slice(1)
-                : /video\/([^/]+)/.exec(url.pathname)?.[1];
-        }
-        case VideoService.okru: {
-            return /\/video\/(\d+)/.exec(url.pathname)?.[1];
-        }
-        case VideoService.googledrive:
-            return /\/file\/d\/([^/]+)/.exec(url.pathname)?.[1];
-        case VideoService.newgrounds:
-            return /([^/]+)\/(view)\/([^/]+)/.exec(url.pathname)?.[0];
-        case VideoService.egghead:
-            return url.pathname.slice(1);
-        case VideoService.youku:
-            return /v_show\/id_[\w=]+/.exec(url.pathname)?.[0];
-        case VideoService.archive:
-            return /(details|embed)\/([^/]+)/.exec(url.pathname)?.[2];
-        case VideoService.watchpornto:
-            return /(video|embed)\/(\d+)(\/[^/]+\/)?/.exec(url.pathname)?.[0];
         default:
             return undefined;
     }

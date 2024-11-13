@@ -266,6 +266,11 @@ export default [
         needExtraData: true,
     },
     {
+        host: VideoService.dzen,
+        url: "https://dzen.ru/video/watch/",
+        match: /^dzen.ru$/,
+    },
+    {
         host: VideoService.custom,
         url: "stub",
         match: (url) => /([^.]+).(mp4|webm)/.test(url.pathname),

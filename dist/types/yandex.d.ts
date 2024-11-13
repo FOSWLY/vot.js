@@ -31,6 +31,7 @@ export declare enum VideoService {
     xvideos = "xvideos",
     pornhub = "pornhub",
     twitter = "twitter",
+    x = "twitter",
     rumble = "rumble",
     facebook = "facebook",
     rutube = "rutube",
@@ -69,7 +70,8 @@ export declare enum VideoService {
     linkedin = "linkedin",
     ricktube = "ricktube",
     incestflix = "incestflix",
-    porntn = "porntn"
+    porntn = "porntn",
+    dzen = "dzen"
 }
 export type ServiceConf = {
     host: VideoService;

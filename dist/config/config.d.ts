@@ -1,13 +1,4 @@
-declare const _default: {
-    host: string;
-    hostVOT: string;
-    mediaProxy: string;
-    userAgent: string;
-    componentVersion: string;
-    hmac: string;
-    defaultDuration: number;
-    loggerLevel: number;
-    version: string;
-};
+import { ConfigSchema } from "../types/config.js";
+declare const _default: ConfigSchema;
 export default _default;
 //# sourceMappingURL=config.d.ts.map

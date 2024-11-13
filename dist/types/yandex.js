@@ -15,6 +15,7 @@ export var VideoService;
     VideoService["xvideos"] = "xvideos";
     VideoService["pornhub"] = "pornhub";
     VideoService["twitter"] = "twitter";
+    VideoService["x"] = "twitter";
     VideoService["rumble"] = "rumble";
     VideoService["facebook"] = "facebook";
     VideoService["rutube"] = "rutube";
@@ -54,6 +55,7 @@ export var VideoService;
     VideoService["ricktube"] = "ricktube";
     VideoService["incestflix"] = "incestflix";
     VideoService["porntn"] = "porntn";
+    VideoService["dzen"] = "dzen";
 })(VideoService || (VideoService = {}));
 export var VideoTranslationStatus;
 (function (VideoTranslationStatus) {

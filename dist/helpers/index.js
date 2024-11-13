@@ -20,6 +20,28 @@ import VKHelper from "./vk.js";
 import TrovoHelper from "./trovo.js";
 import IncestflixHelper from "./incestflix.js";
 import PornTNHelper from "./porntn.js";
+import GoogleDriveHelper from "./googledrive.js";
+import BilibiliHelper from "./bilibili.js";
+import XVideosHelper from "./xvideos.js";
+import WatchPornToHelper from "./watchpornto.js";
+import ArchiveHelper from "./archive.js";
+import DailymotionHelper from "./dailymotion.js";
+import YoukuHelper from "./youku.js";
+import EggheadHelper from "./egghead.js";
+import NewgroundsHelper from "./newgrounds.js";
+import OKRuHelper from "./okru.js";
+import PeertubeHelper from "./peertube.js";
+import EpornerHelper from "./eporner.js";
+import BitchuteHelper from "./bitchute.js";
+import RutubeHelper from "./rutube.js";
+import FacebookHelper from "./facebook.js";
+import RumbleHelper from "./rumble.js";
+import TwitterHelper from "./twitter.js";
+import PornhubHelper from "./pornhub.js";
+import TikTokHelper from "./tiktok.js";
+import NineGAGHelper from "./nine_gag.js";
+import YoutubeHelper from "./youtube.js";
+import DzenHelper from "./dzen.js";
 export * as MailRuHelper from "./mailru.js";
 export * as WeverseHelper from "./weverse.js";
 export * as KodikHelper from "./kodik.js";
@@ -41,6 +63,28 @@ export * as VKHelper from "./vk.js";
 export * as TrovoHelper from "./trovo.js";
 export * as IncestflixHelper from "./incestflix.js";
 export * as PornTNHelper from "./porntn.js";
+export * as GoogleDriveHelper from "./googledrive.js";
+export * as BilibiliHelper from "./bilibili.js";
+export * as XVideosHelper from "./xvideos.js";
+export * as WatchPornToHelper from "./watchpornto.js";
+export * as ArchiveHelper from "./archive.js";
+export * as DailymotionHelper from "./dailymotion.js";
+export * as YoukuHelper from "./youku.js";
+export * as EggheadHelper from "./egghead.js";
+export * as NewgroundsHelper from "./newgrounds.js";
+export * as OKRuHelper from "./okru.js";
+export * as PeertubeHelper from "./peertube.js";
+export * as EpornerHelper from "./eporner.js";
+export * as BitchuteHelper from "./bitchute.js";
+export * as RutubeHelper from "./rutube.js";
+export * as FacebookHelper from "./facebook.js";
+export * as RumbleHelper from "./rumble.js";
+export * as TwitterHelper from "./twitter.js";
+export * as PornhubHelper from "./pornhub.js";
+export * as TikTokHelper from "./tiktok.js";
+export * as NineGAGHelper from "./nine_gag.js";
+export * as YoutubeHelper from "./youtube.js";
+export * as DzenHelper from "./dzen.js";
 export const availableHelpers = {
     [VideoService.mailru]: MailRuHelper,
     [VideoService.weverse]: WeverseHelper,
@@ -63,6 +107,33 @@ export const availableHelpers = {
     [VideoService.trovo]: TrovoHelper,
     [VideoService.incestflix]: IncestflixHelper,
     [VideoService.porntn]: PornTNHelper,
+    [VideoService.googledrive]: GoogleDriveHelper,
+    [VideoService.bilibili]: BilibiliHelper,
+    [VideoService.xvideos]: XVideosHelper,
+    [VideoService.watchpornto]: WatchPornToHelper,
+    [VideoService.archive]: ArchiveHelper,
+    [VideoService.dailymotion]: DailymotionHelper,
+    [VideoService.youku]: YoukuHelper,
+    [VideoService.egghead]: EggheadHelper,
+    [VideoService.newgrounds]: NewgroundsHelper,
+    [VideoService.okru]: OKRuHelper,
+    [VideoService.peertube]: PeertubeHelper,
+    [VideoService.eporner]: EpornerHelper,
+    [VideoService.bitchute]: BitchuteHelper,
+    [VideoService.rutube]: RutubeHelper,
+    [VideoService.facebook]: FacebookHelper,
+    [VideoService.rumble]: RumbleHelper,
+    [VideoService.twitter]: TwitterHelper,
+    [VideoService.pornhub]: PornhubHelper,
+    [VideoService.tiktok]: TikTokHelper,
+    [VideoService.proxitok]: TikTokHelper,
+    [VideoService.nine_gag]: NineGAGHelper,
+    [VideoService.youtube]: YoutubeHelper,
+    [VideoService.ricktube]: YoutubeHelper,
+    [VideoService.invidious]: YoutubeHelper,
+    [VideoService.poketube]: YoutubeHelper,
+    [VideoService.piped]: YoutubeHelper,
+    [VideoService.dzen]: DzenHelper,
 };
 export default class VideoHelper {
     helpersData;

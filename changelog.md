@@ -1,3 +1,10 @@
+# 1.4.0
+
+- All websites from getVideoID switch/case moved to separated helpers
+- Added Dzen support (dzen.ru)
+- Added config schema type
+- Removed sonarjs eslint plugin
+
 # 1.3.10
 
 - Added the ability to install extra translation options: `forceSourceLang`, `bypassCache`, `useNewModel` (read description before use!)
