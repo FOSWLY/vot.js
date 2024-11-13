@@ -53,8 +53,7 @@ export async function getVideoID(
   service: ServiceConf,
   videoURL: string,
   opts: GetVideoDataOpts = {},
-): Promise<string | null | undefined> {
-  // fix type mismatch
+): Promise<string | undefined> {
   const url = new URL(videoURL) as URL;
   const serviceHost = service.host;
   if (Object.keys(availableHelpers).includes(serviceHost)) {
@@ -64,26 +63,7 @@ export async function getVideoID(
     return await helper.getVideoId(url);
   }
 
-  switch (serviceHost) {
-    case VideoService.custom:
-      return url.href;
-    case VideoService.piped:
-    case VideoService.poketube:
-    case VideoService.invidious:
-    case VideoService.ricktube:
-    case VideoService.youtube:
-      if (url.hostname === "youtu.be") {
-        url.search = `?v=${url.pathname.replace("/", "")}`;
-        url.pathname = "/watch";
-      }
-
-      return (
-        /(?:watch|embed|shorts|live)\/([^/]+)/.exec(url.pathname)?.[1] ??
-        url.searchParams.get("v")
-      );
-    default:
-      return undefined;
-  }
+  return serviceHost === VideoService.custom ? url.href : undefined;
 }
 
 export async function getVideoData(
