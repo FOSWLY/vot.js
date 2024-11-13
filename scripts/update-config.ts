@@ -13,9 +13,11 @@ async function rewriteConfig(data: typeof config) {
   await Bun.write(
     CONFIG_ABS_PATH,
     `// This file is auto-generated.
-    // All comments are deleted when the componentVersion is updated.
+    // All comments and any code are deleted when the componentVersion is updated.
     // Write comments in scripts/update-config.ts
-    export default ${JSON.stringify(data, null, 2)}`,
+    import { ConfigSchema } from "../types/config";
+
+    export default ${JSON.stringify(data, null, 2)} as ConfigSchema`,
   );
 
   // prettify updated config
