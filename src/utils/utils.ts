@@ -158,9 +158,7 @@ export function normalizeLang(lang: string) {
 }
 
 export function proxyMedia(url: URL, format: "mp4" | "webm" = "mp4") {
-  return `https://${
-    config.mediaProxy
-  }/v1/proxy/video.${format}?url=${encodeURIComponent(url.href)}&origin=${
-    url.origin
-  }&referer=${url.origin}`;
+  return `https://${config.mediaProxy}/v1/proxy/video.${format}?url=${btoa(
+    encodeURIComponent(url.href),
+  )}&origin=${url.origin}&referer=${url.origin}&format=base64&force=true`;
 }

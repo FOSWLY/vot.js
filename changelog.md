@@ -1,3 +1,7 @@
+# 1.4.1
+
+- Added base64 encoding of url in proxyMedia function
+
 # 1.4.0
 
 - All websites from getVideoID switch/case moved to separated helpers
