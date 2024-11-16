@@ -83,13 +83,13 @@ export interface VideoTranslationRequest {
    */
   translationHelp: VideoTranslationHelpObject[];
   responseLanguage: string;
-  /** 0 */
+  /** previously it was 0, now it is 1 */
   unknown2: number;
   /** 1 */
   unknown3: number;
   /**
-   * ? maybe they have some kind of bypass limiter from one IP, because
-   * after one such request it stopped working
+   * they have some kind of limiter on requests from one IP
+   * because after one such request it stops working
    */
   bypassCache: boolean;
   /**
@@ -123,27 +123,65 @@ export interface VideoTranslationResponse {
   message?: string | undefined;
 }
 
-/** video translation audio info */
-export interface AudioObject {
+/**
+ * video translation audio info (can be part of ChunkAudioObject or used
+ * separated)
+ */
+export interface AudioBufferObject {
   /**
    * e.g:
    * 32Eߣ�B��01B��01B�04B�10B��webmB��04B��0230S�g010000000033��21M�t�M��S��25I�fS��00000000000000DM��S��26T�kS��0000000000000077M��S��34S�kS��00000000000000�25I�f�*ױ�17B@D��Gш�M��google/video-fileWA�google/video-file26T�k֮�ׁ01sŇ\����ϡ��02��00"���eng��A_OPUSc��OpusHead0105E�37�fSց�0�23�p�C\�ws�ܔ��00q]�77_�mt�26+.�y�$��31�00���J=33�34�iw�16�02�4�L�21U��30)`00000000,A+�Hv9��?C��05����º�31��
    * ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
-   * also can be empty
+   * also can be empty if it's failed audio js
    */
   audioFile: Uint8Array;
-  message: string;
+  /**
+   * if it single file u set
+   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+   * if its chunk u set chunk index (0-xxx...)
+   * fileId for faled audio js -
+   * web_api_get_all_generating_urls_data_from_iframe
+   */
+  fileId: string;
 }
 
+/** video translation audio info */
+export interface ChunkAudioObject {
+  /** 1-xxx... */
+  audioPartsLength: number;
+  audioBuffer:
+    | AudioBufferObject
+    | undefined;
+  /**
+   * I don't know why it's a fileId, but they call it that
+   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+   */
+  fileId: string;
+  /**
+   * There are several possible assignments:
+   * - version: is static 1
+   * - purpose: is enum (1 = video-translation)
+   * - fromPlayer: is boolean
+   */
+  unknown0: number;
+}
+
+/** can have only partialAudioInfo or only audioInfo */
 export interface VideoTranslationAudioRequest {
   translationId: string;
   url: string;
-  audioInfo: AudioObject | undefined;
+  partialAudioInfo?: ChunkAudioObject | undefined;
+  audioInfo?: AudioBufferObject | undefined;
 }
 
 export interface VideoTranslationAudioResponse {
-  /** maybe this status is VideoTranslationResponse.status */
+  /**
+   * something like this
+   * 1 = waiting chunks
+   * 2 = done
+   */
   status: number;
+  remainingChunks: string[];
 }
 
 /** SUBTITLES */
@@ -732,25 +770,25 @@ export const VideoTranslationResponse = {
   },
 };
 
-function createBaseAudioObject(): AudioObject {
-  return { audioFile: new Uint8Array(0), message: "" };
+function createBaseAudioBufferObject(): AudioBufferObject {
+  return { audioFile: new Uint8Array(0), fileId: "" };
 }
 
-export const AudioObject = {
-  encode(message: AudioObject, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AudioBufferObject = {
+  encode(message: AudioBufferObject, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.audioFile.length !== 0) {
       writer.uint32(18).bytes(message.audioFile);
     }
-    if (message.message !== "") {
-      writer.uint32(10).string(message.message);
+    if (message.fileId !== "") {
+      writer.uint32(10).string(message.fileId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AudioObject {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AudioBufferObject {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAudioObject();
+    const message = createBaseAudioBufferObject();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -766,7 +804,7 @@ export const AudioObject = {
             break;
           }
 
-          message.message = reader.string();
+          message.fileId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -777,37 +815,143 @@ export const AudioObject = {
     return message;
   },
 
-  fromJSON(object: any): AudioObject {
+  fromJSON(object: any): AudioBufferObject {
     return {
       audioFile: isSet(object.audioFile) ? bytesFromBase64(object.audioFile) : new Uint8Array(0),
-      message: isSet(object.message) ? globalThis.String(object.message) : "",
+      fileId: isSet(object.fileId) ? globalThis.String(object.fileId) : "",
     };
   },
 
-  toJSON(message: AudioObject): unknown {
+  toJSON(message: AudioBufferObject): unknown {
     const obj: any = {};
     if (message.audioFile.length !== 0) {
       obj.audioFile = base64FromBytes(message.audioFile);
     }
-    if (message.message !== "") {
-      obj.message = message.message;
+    if (message.fileId !== "") {
+      obj.fileId = message.fileId;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AudioObject>, I>>(base?: I): AudioObject {
-    return AudioObject.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<AudioBufferObject>, I>>(base?: I): AudioBufferObject {
+    return AudioBufferObject.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<AudioObject>, I>>(object: I): AudioObject {
-    const message = createBaseAudioObject();
+  fromPartial<I extends Exact<DeepPartial<AudioBufferObject>, I>>(object: I): AudioBufferObject {
+    const message = createBaseAudioBufferObject();
     message.audioFile = object.audioFile ?? new Uint8Array(0);
-    message.message = object.message ?? "";
+    message.fileId = object.fileId ?? "";
+    return message;
+  },
+};
+
+function createBaseChunkAudioObject(): ChunkAudioObject {
+  return { audioPartsLength: 0, audioBuffer: undefined, fileId: "", unknown0: 0 };
+}
+
+export const ChunkAudioObject = {
+  encode(message: ChunkAudioObject, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.audioPartsLength !== 0) {
+      writer.uint32(16).int32(message.audioPartsLength);
+    }
+    if (message.audioBuffer !== undefined) {
+      AudioBufferObject.encode(message.audioBuffer, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.fileId !== "") {
+      writer.uint32(26).string(message.fileId);
+    }
+    if (message.unknown0 !== 0) {
+      writer.uint32(32).int32(message.unknown0);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChunkAudioObject {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChunkAudioObject();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.audioPartsLength = reader.int32();
+          continue;
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.audioBuffer = AudioBufferObject.decode(reader, reader.uint32());
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.fileId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.unknown0 = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChunkAudioObject {
+    return {
+      audioPartsLength: isSet(object.audioPartsLength) ? globalThis.Number(object.audioPartsLength) : 0,
+      audioBuffer: isSet(object.audioBuffer) ? AudioBufferObject.fromJSON(object.audioBuffer) : undefined,
+      fileId: isSet(object.fileId) ? globalThis.String(object.fileId) : "",
+      unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
+    };
+  },
+
+  toJSON(message: ChunkAudioObject): unknown {
+    const obj: any = {};
+    if (message.audioPartsLength !== 0) {
+      obj.audioPartsLength = Math.round(message.audioPartsLength);
+    }
+    if (message.audioBuffer !== undefined) {
+      obj.audioBuffer = AudioBufferObject.toJSON(message.audioBuffer);
+    }
+    if (message.fileId !== "") {
+      obj.fileId = message.fileId;
+    }
+    if (message.unknown0 !== 0) {
+      obj.unknown0 = Math.round(message.unknown0);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(base?: I): ChunkAudioObject {
+    return ChunkAudioObject.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(object: I): ChunkAudioObject {
+    const message = createBaseChunkAudioObject();
+    message.audioPartsLength = object.audioPartsLength ?? 0;
+    message.audioBuffer = (object.audioBuffer !== undefined && object.audioBuffer !== null)
+      ? AudioBufferObject.fromPartial(object.audioBuffer)
+      : undefined;
+    message.fileId = object.fileId ?? "";
+    message.unknown0 = object.unknown0 ?? 0;
     return message;
   },
 };
 
 function createBaseVideoTranslationAudioRequest(): VideoTranslationAudioRequest {
-  return { translationId: "", url: "", audioInfo: undefined };
+  return { translationId: "", url: "", partialAudioInfo: undefined, audioInfo: undefined };
 }
 
 export const VideoTranslationAudioRequest = {
@@ -818,8 +962,11 @@ export const VideoTranslationAudioRequest = {
     if (message.url !== "") {
       writer.uint32(18).string(message.url);
     }
+    if (message.partialAudioInfo !== undefined) {
+      ChunkAudioObject.encode(message.partialAudioInfo, writer.uint32(34).fork()).ldelim();
+    }
     if (message.audioInfo !== undefined) {
-      AudioObject.encode(message.audioInfo, writer.uint32(50).fork()).ldelim();
+      AudioBufferObject.encode(message.audioInfo, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -845,12 +992,19 @@ export const VideoTranslationAudioRequest = {
 
           message.url = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.partialAudioInfo = ChunkAudioObject.decode(reader, reader.uint32());
+          continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.audioInfo = AudioObject.decode(reader, reader.uint32());
+          message.audioInfo = AudioBufferObject.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -865,7 +1019,8 @@ export const VideoTranslationAudioRequest = {
     return {
       translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      audioInfo: isSet(object.audioInfo) ? AudioObject.fromJSON(object.audioInfo) : undefined,
+      partialAudioInfo: isSet(object.partialAudioInfo) ? ChunkAudioObject.fromJSON(object.partialAudioInfo) : undefined,
+      audioInfo: isSet(object.audioInfo) ? AudioBufferObject.fromJSON(object.audioInfo) : undefined,
     };
   },
 
@@ -877,8 +1032,11 @@ export const VideoTranslationAudioRequest = {
     if (message.url !== "") {
       obj.url = message.url;
     }
+    if (message.partialAudioInfo !== undefined) {
+      obj.partialAudioInfo = ChunkAudioObject.toJSON(message.partialAudioInfo);
+    }
     if (message.audioInfo !== undefined) {
-      obj.audioInfo = AudioObject.toJSON(message.audioInfo);
+      obj.audioInfo = AudioBufferObject.toJSON(message.audioInfo);
     }
     return obj;
   },
@@ -890,21 +1048,27 @@ export const VideoTranslationAudioRequest = {
     const message = createBaseVideoTranslationAudioRequest();
     message.translationId = object.translationId ?? "";
     message.url = object.url ?? "";
+    message.partialAudioInfo = (object.partialAudioInfo !== undefined && object.partialAudioInfo !== null)
+      ? ChunkAudioObject.fromPartial(object.partialAudioInfo)
+      : undefined;
     message.audioInfo = (object.audioInfo !== undefined && object.audioInfo !== null)
-      ? AudioObject.fromPartial(object.audioInfo)
+      ? AudioBufferObject.fromPartial(object.audioInfo)
       : undefined;
     return message;
   },
 };
 
 function createBaseVideoTranslationAudioResponse(): VideoTranslationAudioResponse {
-  return { status: 0 };
+  return { status: 0, remainingChunks: [] };
 }
 
 export const VideoTranslationAudioResponse = {
   encode(message: VideoTranslationAudioResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.status !== 0) {
-      writer.uint32(32).int32(message.status);
+      writer.uint32(8).int32(message.status);
+    }
+    for (const v of message.remainingChunks) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -916,12 +1080,19 @@ export const VideoTranslationAudioResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 4:
-          if (tag !== 32) {
+        case 1:
+          if (tag !== 8) {
             break;
           }
 
           message.status = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.remainingChunks.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -933,13 +1104,21 @@ export const VideoTranslationAudioResponse = {
   },
 
   fromJSON(object: any): VideoTranslationAudioResponse {
-    return { status: isSet(object.status) ? globalThis.Number(object.status) : 0 };
+    return {
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      remainingChunks: globalThis.Array.isArray(object?.remainingChunks)
+        ? object.remainingChunks.map((e: any) => globalThis.String(e))
+        : [],
+    };
   },
 
   toJSON(message: VideoTranslationAudioResponse): unknown {
     const obj: any = {};
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
+    }
+    if (message.remainingChunks?.length) {
+      obj.remainingChunks = message.remainingChunks;
     }
     return obj;
   },
@@ -952,6 +1131,7 @@ export const VideoTranslationAudioResponse = {
   ): VideoTranslationAudioResponse {
     const message = createBaseVideoTranslationAudioResponse();
     message.status = object.status ?? 0;
+    message.remainingChunks = object.remainingChunks?.map((e) => e) || [];
     return message;
   },
 };

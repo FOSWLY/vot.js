@@ -38,17 +38,25 @@ export interface VideoTranslationResponse {
     language?: string | undefined;
     message?: string | undefined;
 }
-export interface AudioObject {
+export interface AudioBufferObject {
     audioFile: Uint8Array;
-    message: string;
+    fileId: string;
+}
+export interface ChunkAudioObject {
+    audioPartsLength: number;
+    audioBuffer: AudioBufferObject | undefined;
+    fileId: string;
+    unknown0: number;
 }
 export interface VideoTranslationAudioRequest {
     translationId: string;
     url: string;
-    audioInfo: AudioObject | undefined;
+    partialAudioInfo?: ChunkAudioObject | undefined;
+    audioInfo?: AudioBufferObject | undefined;
 }
 export interface VideoTranslationAudioResponse {
     status: number;
+    remainingChunks: string[];
 }
 export interface SubtitlesObject {
     language: string;
@@ -116,13 +124,21 @@ export declare const VideoTranslationResponse: {
     create<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(base?: I): VideoTranslationResponse;
     fromPartial<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(object: I): VideoTranslationResponse;
 };
-export declare const AudioObject: {
-    encode(message: AudioObject, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): AudioObject;
-    fromJSON(object: any): AudioObject;
-    toJSON(message: AudioObject): unknown;
-    create<I extends Exact<DeepPartial<AudioObject>, I>>(base?: I): AudioObject;
-    fromPartial<I extends Exact<DeepPartial<AudioObject>, I>>(object: I): AudioObject;
+export declare const AudioBufferObject: {
+    encode(message: AudioBufferObject, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): AudioBufferObject;
+    fromJSON(object: any): AudioBufferObject;
+    toJSON(message: AudioBufferObject): unknown;
+    create<I extends Exact<DeepPartial<AudioBufferObject>, I>>(base?: I): AudioBufferObject;
+    fromPartial<I extends Exact<DeepPartial<AudioBufferObject>, I>>(object: I): AudioBufferObject;
+};
+export declare const ChunkAudioObject: {
+    encode(message: ChunkAudioObject, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChunkAudioObject;
+    fromJSON(object: any): ChunkAudioObject;
+    toJSON(message: ChunkAudioObject): unknown;
+    create<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(base?: I): ChunkAudioObject;
+    fromPartial<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(object: I): ChunkAudioObject;
 };
 export declare const VideoTranslationAudioRequest: {
     encode(message: VideoTranslationAudioRequest, writer?: _m0.Writer): _m0.Writer;

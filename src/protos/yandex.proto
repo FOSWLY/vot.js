@@ -57,25 +57,50 @@ message VideoTranslationResponse {
   optional string message = 9;
 }
 
-// video translation audio info
-message AudioObject {
+// video translation audio info (can be part of ChunkAudioObject or used
+// separated)
+message AudioBufferObject {
   // e.g:
   // 32Eߣ�B��01B��01B�04B�10B��webmB��04B��0230S�g010000000033��21M�t�M��S��25I�fS��00000000000000DM��S��26T�kS��0000000000000077M��S��34S�kS��00000000000000�25I�f�*ױ�17B@D��Gш�M��google/video-fileWA�google/video-file26T�k֮�ׁ01sŇ\����ϡ��02��00"���eng��A_OPUSc��OpusHead0105E�37�fSց�0�23�p�C\�ws�ܔ��00q]�77_�mt�26+.�y�$��31�00���J=33�34�iw�16�02�4�L�21U��30)`00000000,A+�Hv9��?C��05����º�31��
   // ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
-  // also can be empty
+  // also can be empty if it's failed audio js
   bytes audioFile = 2;
-  string message = 1;
+  // if it single file u set
+  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+  // if its chunk u set chunk index (0-xxx...)
+  // fileId for faled audio js -
+  // web_api_get_all_generating_urls_data_from_iframe
+  string fileId = 1;
 }
 
+// video translation audio info
+message ChunkAudioObject {
+  int32 audioPartsLength = 2; // 1-xxx...
+  AudioBufferObject audioBuffer = 1;
+  // I don't know why it's a fileId, but they call it that
+  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+  string fileId = 3;
+  // There are several possible assignments:
+  // - version: is static 1
+  // - purpose: is enum (1 = video-translation)
+  // - fromPlayer: is boolean
+  int32 unknown0 = 4;
+}
+
+// can have only partialAudioInfo or only audioInfo
 message VideoTranslationAudioRequest {
   string translationId = 1;
   string url = 2;
-  AudioObject audioInfo = 6;
+  optional ChunkAudioObject partialAudioInfo = 4;
+  optional AudioBufferObject audioInfo = 6;
 }
 
 message VideoTranslationAudioResponse {
-  // maybe this status is VideoTranslationResponse.status
-  int32 status = 4;
+  // something like this
+  // 1 = waiting chunks
+  // 2 = done
+  int32 status = 1;
+  repeated string remainingChunks = 2;
 }
 
 // SUBTITLES

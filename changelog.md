@@ -1,3 +1,8 @@
+# 1.5.0 [WIP]
+
+- Added support set audio parts to requestVtransAudio
+- Updated Yandex Protobuf
+
 # 1.4.1
 
 - Added base64 encoding of url in proxyMedia function

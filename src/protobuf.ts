@@ -56,8 +56,8 @@ export const yandexProtobuf = {
       translationId,
       audioInfo: {
         audioFile: new Uint8Array(0),
-        // message: "{AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME}_itag_{d.itag}", // for real audio file
-        message:
+        // fileId: "{AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME}_itag_{d.itag}", // for real audio file
+        fileId:
           AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
       },
     }).finish();
