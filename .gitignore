@@ -1,3 +1,7 @@
+# test files
+*.webm
+*.mp4
+
 .vscode
 .pytest_cache
 .env
