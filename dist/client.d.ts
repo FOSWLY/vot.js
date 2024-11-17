@@ -1,5 +1,5 @@
 import type { VOTOpts, FetchFunction, GetVideoDataFunction, ClientSession, VOTSessions, URLSchema, ClientResponse } from "./types/client.js";
-import type { VideoTranslationOpts, VideoTranslationResponse, RequestLang, ResponseLang, VideoSubtitlesOpts, StreamPingOptions, StreamTranslationOpts, StreamTranslationResponse, SessionModule, VideoTranslationFailAudioResponse } from "./types/yandex.js";
+import type { VideoTranslationOpts, VideoTranslationResponse, RequestLang, ResponseLang, VideoSubtitlesOpts, StreamPingOptions, StreamTranslationOpts, StreamTranslationResponse, SessionModule, VideoTranslationFailAudioResponse, AudioBufferObject, PartialAudioObject } from "./types/yandex.js";
 import { VideoTranslationVOTOpts } from "./types/vot.js";
 export default class VOTClient {
     host: string;
@@ -40,7 +40,7 @@ export default class VOTClient {
     protected translateVideoYAImpl({ videoData, requestLang, responseLang, translationHelp, headers, extraOpts, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     protected translateVideoVOTImpl({ url, videoId, service, requestLang, responseLang, headers, }: VideoTranslationVOTOpts): Promise<VideoTranslationResponse>;
     protected requestVtransFailAudio(url: string): Promise<ClientResponse<VideoTranslationFailAudioResponse>>;
-    requestVtransAudio(url: string, translationId: string, headers?: Record<string, string>): Promise<import("./protos/yandex.js").VideoTranslationResponse>;
+    requestVtransAudio(url: string, translationId: string, audioBuffer: AudioBufferObject, partialAudio?: PartialAudioObject, headers?: Record<string, string>): Promise<import("./protos/yandex.js").VideoTranslationResponse>;
     translateVideo({ videoData, requestLang, responseLang, translationHelp, headers, extraOpts, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     getSubtitles({ videoData, requestLang, headers, }: VideoSubtitlesOpts): Promise<import("./protos/yandex.js").SubtitlesResponse>;
     pingStream({ pingId, headers }: StreamPingOptions): Promise<boolean>;

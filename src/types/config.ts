@@ -8,6 +8,7 @@ export type ConfigSchema = {
   componentVersion: string;
   hmac: string;
   defaultDuration: number;
+  minChunkSize: number;
   loggerLevel: LoggerLevel;
   version: string;
 };

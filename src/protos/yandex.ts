@@ -137,10 +137,8 @@ export interface AudioBufferObject {
   audioFile: Uint8Array;
   /**
    * if it single file u set
-   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxx"}
    * if its chunk u set chunk index (0-xxx...)
-   * fileId for faled audio js -
-   * web_api_get_all_generating_urls_data_from_iframe
    */
   fileId: string;
 }
@@ -154,7 +152,7 @@ export interface ChunkAudioObject {
     | undefined;
   /**
    * I don't know why it's a fileId, but they call it that
-   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
    */
   fileId: string;
   /**

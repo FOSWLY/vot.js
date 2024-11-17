@@ -66,10 +66,8 @@ message AudioBufferObject {
   // also can be empty if it's failed audio js
   bytes audioFile = 2;
   // if it single file u set
-  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxx"}
   // if its chunk u set chunk index (0-xxx...)
-  // fileId for faled audio js -
-  // web_api_get_all_generating_urls_data_from_iframe
   string fileId = 1;
 }
 
@@ -78,7 +76,7 @@ message ChunkAudioObject {
   int32 audioPartsLength = 2; // 1-xxx...
   AudioBufferObject audioBuffer = 1;
   // I don't know why it's a fileId, but they call it that
-  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"1838189"}
+  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
   string fileId = 3;
   // There are several possible assignments:
   // - version: is static 1

@@ -6,6 +6,7 @@ export default {
     componentVersion: "24.10.3.810",
     hmac: "bt8xH3VOlb4mqf0nqAibnDOoiPlXsisf",
     defaultDuration: 343,
+    minChunkSize: 5295308,
     loggerLevel: 1,
     version: "1.4.1",
 };

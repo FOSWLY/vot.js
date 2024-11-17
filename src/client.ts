@@ -23,8 +23,11 @@ import type {
   StreamTranslationObject,
   SessionModule,
   VideoTranslationFailAudioResponse,
+  AudioBufferObject,
+  PartialAudioObject,
+  FileIdObject,
 } from "./types/yandex";
-import { VideoTranslationStatus } from "./types/yandex";
+import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex";
 import { fetchWithTimeout, getTimestamp } from "./utils/utils";
 import { getVideoData } from "./utils/videoData";
 import { TranslationResponse, VideoTranslationVOTOpts } from "./types/vot";
@@ -358,7 +361,16 @@ export default class VOTClient {
         if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
           // try to fix with fake requests (only for youtube)
           await this.requestVtransFailAudio(url);
-          await this.requestVtransAudio(url, translationData.translationId);
+          await this.requestVtransAudio(url, translationData.translationId, {
+            audioFile: new Uint8Array(0),
+            fileId: JSON.stringify({
+              downloadType:
+                AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
+              itag: 251,
+              minChunkSize: config.minChunkSize,
+              fileSize: "1838189",
+            } as FileIdObject),
+          });
           return await this.translateVideoYAImpl({
             videoData,
             requestLang,
@@ -460,12 +472,16 @@ export default class VOTClient {
   async requestVtransAudio(
     url: string,
     translationId: string,
+    audioBuffer: AudioBufferObject,
+    partialAudio?: PartialAudioObject,
     headers: Record<string, string> = {},
   ) {
     const session = await this.getSession("video-translation");
     const body = yandexProtobuf.encodeTranslationAudioRequest(
       url,
       translationId,
+      audioBuffer,
+      partialAudio,
     );
 
     const path = this.paths.videoTranslationAudio;

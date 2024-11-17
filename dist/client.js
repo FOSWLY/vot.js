@@ -1,7 +1,7 @@
 import config from "./config/config.js";
 import { yandexProtobuf } from "./protobuf.js";
 import { getSecYaHeaders, getSignature, getUUID } from "./secure.js";
-import { VideoTranslationStatus } from "./types/yandex.js";
+import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex.js";
 import { fetchWithTimeout, getTimestamp } from "./utils/utils.js";
 import { getVideoData } from "./utils/videoData.js";
 import { convertVOT } from "./utils/vot.js";
@@ -190,7 +190,15 @@ export default class VOTClient {
             case VideoTranslationStatus.LONG_WAITING_2:
                 if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
                     await this.requestVtransFailAudio(url);
-                    await this.requestVtransAudio(url, translationData.translationId);
+                    await this.requestVtransAudio(url, translationData.translationId, {
+                        audioFile: new Uint8Array(0),
+                        fileId: JSON.stringify({
+                            downloadType: AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
+                            itag: 251,
+                            minChunkSize: config.minChunkSize,
+                            fileSize: "1838189",
+                        }),
+                    });
                     return await this.translateVideoYAImpl({
                         videoData,
                         requestLang,
@@ -252,9 +260,9 @@ export default class VOTClient {
         }
         return res;
     }
-    async requestVtransAudio(url, translationId, headers = {}) {
+    async requestVtransAudio(url, translationId, audioBuffer, partialAudio, headers = {}) {
         const session = await this.getSession("video-translation");
-        const body = yandexProtobuf.encodeTranslationAudioRequest(url, translationId);
+        const body = yandexProtobuf.encodeTranslationAudioRequest(url, translationId, audioBuffer, partialAudio);
         const path = this.paths.videoTranslationAudio;
         const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
         const res = await this.request(path, body, {

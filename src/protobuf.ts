@@ -11,7 +11,8 @@ import {
   YandexSessionResponse,
 } from "./protos/yandex";
 import {
-  AudioInfoMessage,
+  AudioBufferObject,
+  PartialAudioObject,
   TranslationExtraOpts,
   type SessionModule,
   type TranslationHelp,
@@ -50,16 +51,25 @@ export const yandexProtobuf = {
   decodeTranslationResponse(response: ArrayBuffer) {
     return VideoTranslationResponse.decode(new Uint8Array(response));
   },
-  encodeTranslationAudioRequest(url: string, translationId: string) {
+  encodeTranslationAudioRequest(
+    url: string,
+    translationId: string,
+    audioBuffer: AudioBufferObject,
+    partialAudio?: PartialAudioObject,
+  ) {
     return VideoTranslationAudioRequest.encode({
       url,
       translationId,
-      audioInfo: {
-        audioFile: new Uint8Array(0),
-        // fileId: "{AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME}_itag_{d.itag}", // for real audio file
-        fileId:
-          AudioInfoMessage.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
-      },
+      ...(partialAudio
+        ? {
+            partialAudioInfo: {
+              ...partialAudio,
+              audioBuffer,
+            },
+          }
+        : {
+            audioInfo: audioBuffer,
+          }),
     }).finish();
   },
   decodeTranslationAudioResponse(response: ArrayBuffer) {

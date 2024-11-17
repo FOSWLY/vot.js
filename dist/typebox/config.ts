@@ -12,6 +12,7 @@ userAgent: Type.String(),
 componentVersion: Type.String(),
 hmac: Type.String(),
 defaultDuration: Type.Number(),
+minChunkSize: Type.Number(),
 loggerLevel: LoggerLevel,
 version: Type.String()
 })

@@ -1,6 +1,7 @@
 # 1.5.0 [WIP]
 
 - Added support set audio parts to requestVtransAudio
+- Now requestVtransAudio has 3rd required param - audioBuffer
 - Updated Yandex Protobuf
 
 # 1.4.1

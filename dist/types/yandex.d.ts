@@ -12,6 +12,21 @@ export type TranslationExtraOpts = {
     bypassCache?: boolean;
     useNewModel?: boolean;
 };
+export type AudioBufferObject = {
+    audioFile: Uint8Array;
+    fileId: string;
+};
+export type PartialAudioObject = {
+    audioPartsLength: number;
+    fileId: string;
+    unknown0: 1;
+};
+export type FileIdObject = {
+    downloadType: AudioDownloadType;
+    itag: number;
+    minChunkSize: number;
+    fileSize: string;
+};
 export type RequestHeaders = Record<string, any>;
 export type RequestLang = (typeof availableLangs)[number];
 export type ResponseLang = (typeof availableTTS)[number];
@@ -89,7 +104,7 @@ export declare enum VideoTranslationStatus {
     PART_CONTENT = 5,
     LONG_WAITING_2 = 6
 }
-export declare enum AudioInfoMessage {
+export declare enum AudioDownloadType {
     WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe",
     WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe",
     WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK = "web_api_replaced_fetch_force_request_with_seek",

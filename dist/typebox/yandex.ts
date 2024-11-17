@@ -36,6 +36,27 @@ bypassCache: Type.Optional(Type.Boolean()),
 useNewModel: Type.Optional(Type.Boolean())
 })
 
+export type AudioBufferObject = Static<typeof AudioBufferObject>
+export const AudioBufferObject = Type.Object({
+audioFile: Type.Uint8Array(),
+fileId: Type.String()
+})
+
+export type PartialAudioObject = Static<typeof PartialAudioObject>
+export const PartialAudioObject = Type.Object({
+audioPartsLength: Type.Number(),
+fileId: Type.String(),
+unknown0: Type.Literal(1)
+})
+
+export type FileIdObject = Static<typeof FileIdObject>
+export const FileIdObject = Type.Object({
+downloadType: AudioDownloadType,
+itag: Type.Number(),
+minChunkSize: Type.Number(),
+fileSize: Type.String()
+})
+
 export type RequestHeaders = Static<typeof RequestHeaders>
 export const RequestHeaders = Type.Record(Type.String(), Type.Any())
 
@@ -65,10 +86,10 @@ export enum EnumVideoTranslationStatus { FAILED = 0, FINISHED = 1, WAITING = 2, 
 export type VideoTranslationStatus = Static<typeof VideoTranslationStatus>
 export const VideoTranslationStatus = Type.Enum(EnumVideoTranslationStatus)
 
-export enum EnumAudioInfoMessage { WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe", WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe", WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK = "web_api_replaced_fetch_force_request_with_seek", WEB_API_REPLACED_FETCH = "web_api_replaced_fetch", ANDROID_API = "android_api", WEB_API_SLOW = "web_api_slow" }
+export enum EnumAudioDownloadType { WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe", WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe", WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK = "web_api_replaced_fetch_force_request_with_seek", WEB_API_REPLACED_FETCH = "web_api_replaced_fetch", ANDROID_API = "android_api", WEB_API_SLOW = "web_api_slow" }
 
-export type AudioInfoMessage = Static<typeof AudioInfoMessage>
-export const AudioInfoMessage = Type.Enum(EnumAudioInfoMessage)
+export type AudioDownloadType = Static<typeof AudioDownloadType>
+export const AudioDownloadType = Type.Enum(EnumAudioDownloadType)
 
 export type VideoTranslationOpts = Static<typeof VideoTranslationOpts>
 export const VideoTranslationOpts = Type.Object({
