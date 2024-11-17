@@ -34,6 +34,7 @@ export type PartialAudioObject = {
 export type FileIdObject = {
   downloadType: AudioDownloadType;
   itag: number;
+  /** in their code its minChunkSize, but it seems to me that in fact its maxChunkSize */
   minChunkSize: number;
   fileSize: string;
 };
