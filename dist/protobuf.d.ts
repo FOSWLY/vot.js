@@ -1,10 +1,10 @@
-import { StreamTranslationResponse, SubtitlesResponse, VideoTranslationResponse, YandexSessionResponse } from "./protos/yandex.js";
+import { StreamTranslationResponse, SubtitlesResponse, VideoTranslationAudioResponse, VideoTranslationResponse, YandexSessionResponse } from "./protos/yandex.js";
 import { AudioBufferObject, PartialAudioObject, TranslationExtraOpts, type SessionModule, type TranslationHelp } from "./types/yandex.js";
 export declare const yandexProtobuf: {
     encodeTranslationRequest(url: string, duration: number, requestLang: string, responseLang: string, translationHelp: TranslationHelp[] | null, { forceSourceLang, bypassCache, useNewModel, }?: TranslationExtraOpts): Uint8Array;
     decodeTranslationResponse(response: ArrayBuffer): VideoTranslationResponse;
     encodeTranslationAudioRequest(url: string, translationId: string, audioBuffer: AudioBufferObject, partialAudio?: PartialAudioObject): Uint8Array;
-    decodeTranslationAudioResponse(response: ArrayBuffer): VideoTranslationResponse;
+    decodeTranslationAudioResponse(response: ArrayBuffer): VideoTranslationAudioResponse;
     encodeSubtitlesRequest(url: string, requestLang: string): Uint8Array;
     decodeSubtitlesResponse(response: ArrayBuffer): SubtitlesResponse;
     encodeStreamPingRequest(pingId: number): Uint8Array;

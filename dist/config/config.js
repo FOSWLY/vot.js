@@ -8,5 +8,5 @@ export default {
     defaultDuration: 343,
     minChunkSize: 5295308,
     loggerLevel: 1,
-    version: "1.4.1",
+    version: "1.5.0",
 };

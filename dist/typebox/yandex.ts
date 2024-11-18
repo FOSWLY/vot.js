@@ -81,7 +81,7 @@ needExtraData: Type.Optional(Type.Literal(true)),
 additionalData: Type.Optional(Type.String())
 })
 
-export enum EnumVideoTranslationStatus { FAILED = 0, FINISHED = 1, WAITING = 2, LONG_WAITING = 3, PART_CONTENT = 5, LONG_WAITING_2 = 6 }
+export enum EnumVideoTranslationStatus { FAILED = 0, FINISHED = 1, WAITING = 2, LONG_WAITING = 3, PART_CONTENT = 5, AUDIO_REQUESTED = 6 }
 
 export type VideoTranslationStatus = Static<typeof VideoTranslationStatus>
 export const VideoTranslationStatus = Type.Enum(EnumVideoTranslationStatus)
@@ -107,16 +107,20 @@ shouldSendFailedAudio: Type.Optional(Type.Boolean())
 
 export type TranslatedVideoTranslationResponse = Static<typeof TranslatedVideoTranslationResponse>
 export const TranslatedVideoTranslationResponse = Type.Object({
+translationId: Type.String(),
 translated: Type.Literal(true),
 url: Type.String(),
 remainingTime: Type.Number(),
+status: VideoTranslationStatus,
 message: Type.Optional(Type.String())
 })
 
 export type WaitingVideoTranslationResponse = Static<typeof WaitingVideoTranslationResponse>
 export const WaitingVideoTranslationResponse = Type.Object({
+translationId: Type.String(),
 translated: Type.Literal(false),
 remainingTime: Type.Number(),
+status: VideoTranslationStatus,
 message: Type.Optional(Type.String())
 })
 

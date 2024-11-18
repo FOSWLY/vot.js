@@ -168,7 +168,8 @@ export default class VOTClient {
             throw new VOTJSError("Failed to request video translation", res);
         }
         const translationData = yandexProtobuf.decodeTranslationResponse(res.data);
-        switch (translationData.status) {
+        const { status, translationId, } = translationData;
+        switch (status) {
             case VideoTranslationStatus.FAILED:
                 throw new VOTJSError("Yandex couldn't translate video", translationData);
             case VideoTranslationStatus.FINISHED:
@@ -177,27 +178,26 @@ export default class VOTClient {
                     throw new VOTJSError("Audio link wasn't received from Yandex response", translationData);
                 }
                 return {
+                    translationId,
                     translated: true,
                     url: translationData.url,
+                    status,
                     remainingTime: translationData.remainingTime ?? -1,
                 };
             case VideoTranslationStatus.WAITING:
+            case VideoTranslationStatus.LONG_WAITING:
                 return {
+                    translationId,
                     translated: false,
+                    status,
                     remainingTime: translationData.remainingTime,
                 };
-            case VideoTranslationStatus.LONG_WAITING:
-            case VideoTranslationStatus.LONG_WAITING_2:
+            case VideoTranslationStatus.AUDIO_REQUESTED:
                 if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
                     await this.requestVtransFailAudio(url);
                     await this.requestVtransAudio(url, translationData.translationId, {
-                        audioFile: new Uint8Array(0),
-                        fileId: JSON.stringify({
-                            downloadType: AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
-                            itag: 251,
-                            minChunkSize: config.minChunkSize,
-                            fileSize: "1838189",
-                        }),
+                        audioFile: new Uint8Array(),
+                        fileId: AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
                     });
                     return await this.translateVideoYAImpl({
                         videoData,
@@ -209,7 +209,9 @@ export default class VOTClient {
                     });
                 }
                 return {
+                    translationId,
                     translated: false,
+                    status,
                     remainingTime: translationData.remainingTime ?? -1,
                 };
             default:
@@ -239,14 +241,18 @@ export default class VOTClient {
                     throw new VOTJSError("Audio link wasn't received from VOT response", translationData);
                 }
                 return {
+                    translationId: String(translationData.id),
                     translated: true,
                     url: translationData.translatedUrl,
+                    status: 1,
                     remainingTime: -1,
                 };
             case "waiting":
                 return {
+                    translationId: "",
                     translated: false,
                     remainingTime: translationData.remainingTime,
+                    status: 2,
                     message: translationData.message,
                 };
         }

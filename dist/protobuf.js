@@ -1,4 +1,4 @@
-import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationAudioRequest, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex.js";
+import { StreamPingRequest, StreamTranslationRequest, StreamTranslationResponse, SubtitlesRequest, SubtitlesResponse, VideoTranslationAudioRequest, VideoTranslationAudioResponse, VideoTranslationRequest, VideoTranslationResponse, YandexSessionRequest, YandexSessionResponse, } from "./protos/yandex.js";
 export const yandexProtobuf = {
     encodeTranslationRequest(url, duration, requestLang, responseLang, translationHelp, { forceSourceLang = false, bypassCache = false, useNewModel = true, } = {}) {
         return VideoTranslationRequest.encode({
@@ -37,7 +37,7 @@ export const yandexProtobuf = {
         }).finish();
     },
     decodeTranslationAudioResponse(response) {
-        return VideoTranslationResponse.decode(new Uint8Array(response));
+        return VideoTranslationAudioResponse.decode(new Uint8Array(response));
     },
     encodeSubtitlesRequest(url, requestLang) {
         return SubtitlesRequest.encode({

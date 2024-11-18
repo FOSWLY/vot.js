@@ -64,7 +64,7 @@ export var VideoTranslationStatus;
     VideoTranslationStatus[VideoTranslationStatus["WAITING"] = 2] = "WAITING";
     VideoTranslationStatus[VideoTranslationStatus["LONG_WAITING"] = 3] = "LONG_WAITING";
     VideoTranslationStatus[VideoTranslationStatus["PART_CONTENT"] = 5] = "PART_CONTENT";
-    VideoTranslationStatus[VideoTranslationStatus["LONG_WAITING_2"] = 6] = "LONG_WAITING_2";
+    VideoTranslationStatus[VideoTranslationStatus["AUDIO_REQUESTED"] = 6] = "AUDIO_REQUESTED";
 })(VideoTranslationStatus || (VideoTranslationStatus = {}));
 export var AudioDownloadType;
 (function (AudioDownloadType) {

@@ -40,7 +40,7 @@ export default class VOTClient {
     protected translateVideoYAImpl({ videoData, requestLang, responseLang, translationHelp, headers, extraOpts, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     protected translateVideoVOTImpl({ url, videoId, service, requestLang, responseLang, headers, }: VideoTranslationVOTOpts): Promise<VideoTranslationResponse>;
     protected requestVtransFailAudio(url: string): Promise<ClientResponse<VideoTranslationFailAudioResponse>>;
-    requestVtransAudio(url: string, translationId: string, audioBuffer: AudioBufferObject, partialAudio?: PartialAudioObject, headers?: Record<string, string>): Promise<import("./protos/yandex.js").VideoTranslationResponse>;
+    requestVtransAudio(url: string, translationId: string, audioBuffer: AudioBufferObject, partialAudio?: PartialAudioObject, headers?: Record<string, string>): Promise<import("./protos/yandex.js").VideoTranslationAudioResponse>;
     translateVideo({ videoData, requestLang, responseLang, translationHelp, headers, extraOpts, shouldSendFailedAudio, }: VideoTranslationOpts): Promise<VideoTranslationResponse>;
     getSubtitles({ videoData, requestLang, headers, }: VideoSubtitlesOpts): Promise<import("./protos/yandex.js").SubtitlesResponse>;
     pingStream({ pingId, headers }: StreamPingOptions): Promise<boolean>;

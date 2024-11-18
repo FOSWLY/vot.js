@@ -1,1 +1,0 @@
-{"version":3,"file":"coursehunter.d.ts","sourceRoot":"","sources":["../../../src/types/helpers/coursehunter.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,MAAM,GAAG;IACnB,QAAQ,EAAE,MAAM,CAAC;IACjB,IAAI,EAAE,MAAM,CAAC;IACb,EAAE,EAAE,MAAM,CAAC;IACX,QAAQ,EAAE,MAAM,CAAC;IACjB,KAAK,EAAE,MAAM,CAAC;CACf,CAAC"}
