@@ -5,6 +5,7 @@ import {
   SubtitlesRequest,
   SubtitlesResponse,
   VideoTranslationAudioRequest,
+  VideoTranslationAudioResponse,
   VideoTranslationRequest,
   VideoTranslationResponse,
   YandexSessionRequest,
@@ -73,7 +74,7 @@ export const yandexProtobuf = {
     }).finish();
   },
   decodeTranslationAudioResponse(response: ArrayBuffer) {
-    return VideoTranslationResponse.decode(new Uint8Array(response));
+    return VideoTranslationAudioResponse.decode(new Uint8Array(response));
   },
   encodeSubtitlesRequest(url: string, requestLang: string) {
     return SubtitlesRequest.encode({
