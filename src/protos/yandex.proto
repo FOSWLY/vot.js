@@ -65,9 +65,11 @@ message AudioBufferObject {
   // ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
   // also can be empty if it's failed audio js
   bytes audioFile = 2;
-  // if it single file u set
+  // if it's single file u set json data
   // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxx"}
-  // if its chunk u set chunk index (0-xxx...)
+  // if it's chunk u set chunk index (0-xxx...)
+  // if it's error u set only downloadType
+  // (1=web_api_get_all_generating_urls_data_from_iframe)
   string fileId = 1;
 }
 

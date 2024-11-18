@@ -136,9 +136,11 @@ export interface AudioBufferObject {
    */
   audioFile: Uint8Array;
   /**
-   * if it single file u set
+   * if it's single file u set json data
    * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxx"}
-   * if its chunk u set chunk index (0-xxx...)
+   * if it's chunk u set chunk index (0-xxx...)
+   * if it's error u set only downloadType
+   * (1=web_api_get_all_generating_urls_data_from_iframe)
    */
   fileId: string;
 }
