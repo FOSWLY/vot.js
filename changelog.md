@@ -1,6 +1,9 @@
-# 1.5.0 [WIP]
+# 1.5.0
 
 - Added support set audio parts to requestVtransAudio
+- Added set status value (VideoTranslationStatus) and translationId value to translateVideo response
+- Status LONG_WAITING_2 renamed to AUDIO_REQUESTED
+- The sending of fail audio with the LONG_WAITING status code has been removed
 - Now requestVtransAudio has 3rd required param - audioBuffer
 - Updated Yandex Protobuf
 

@@ -1,4 +1,5 @@
 # test files
+tests/audioSplit.test.ts
 *.webm
 *.mp4
 
