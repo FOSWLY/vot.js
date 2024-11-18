@@ -117,7 +117,7 @@ export enum VideoTranslationStatus {
   WAITING = 2,
   LONG_WAITING = 3,
   PART_CONTENT = 5,
-  LONG_WAITING_2 = 6,
+  AUDIO_REQUESTED = 6,
 }
 
 export enum AudioDownloadType {
@@ -146,15 +146,19 @@ export type VideoTranslationOpts = {
 };
 
 export type TranslatedVideoTranslationResponse = {
+  translationId: string;
   translated: true;
   url: string;
   remainingTime: number;
+  status: VideoTranslationStatus;
   message?: string;
 };
 
 export type WaitingVideoTranslationResponse = {
+  translationId: string;
   translated: false;
   remainingTime: number;
+  status: VideoTranslationStatus;
   message?: string;
 };
 

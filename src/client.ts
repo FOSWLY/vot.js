@@ -306,8 +306,13 @@ export default class VOTClient {
     }
 
     const translationData = yandexProtobuf.decodeTranslationResponse(res.data);
+    const {
+      status,
+      translationId,
+    }: { status: VideoTranslationStatus; translationId: string } =
+      translationData;
 
-    switch (translationData.status as VideoTranslationStatus) {
+    switch (status) {
       case VideoTranslationStatus.FAILED:
         throw new VOTJSError(
           "Yandex couldn't translate video",
@@ -330,46 +335,47 @@ export default class VOTClient {
         }
 
         return {
+          translationId,
           translated: true,
           url: translationData.url,
+          status,
           remainingTime: translationData.remainingTime ?? -1,
         };
       case VideoTranslationStatus.WAITING:
-        return {
-          translated: false,
-          remainingTime: translationData.remainingTime!,
-        };
       case VideoTranslationStatus.LONG_WAITING:
-      case VideoTranslationStatus.LONG_WAITING_2:
-        /*
+        /**
           LONG_WAITING:
             Иногда, в ответе приходит статус код 3, но видео всё, так же, ожидает перевода.
             В конечном итоге, это занимает слишком много времени,
             как-будто сервер не понимает, что данное видео уже недавно было переведено
             и заместо возвращения готовой ссылки на перевод начинает переводить видео заново
             при чём у него это получается за очень длительное время.
+         */
+        return {
+          translationId,
+          translated: false,
+          status,
+          remainingTime: translationData.remainingTime!,
+        };
+      case VideoTranslationStatus.AUDIO_REQUESTED:
+        /*
+          AUDIO_REQUESTED:
+            Действует, только, для перевода новых видео на ютубе.
+            Пока не отправлено аудио каждый новый запрос перевода будет возвращать ожидание в ~120 секунд.
 
-          LONG_WAITING_2:
-            Тоже самое, что LONG_WAITING, но появляется при запросе переводе видео в режиме bypassCache=true.
-            remainingTime в этом случае залагивает и долгое время весит на одном и том же числе (обычно ~60-65).
-            В среднем перевод с этим статусом занимает более 10 минут. Вероятнее всего, чтобы так не происходило нужно делать 1 запрос с bypassCache=true,
-            а следующие с bypassCache=false, либо убирать firstRequest=true, но это, только, догадки
-            UPD: Заметил, что Яндекс в этом случае загружает видео/аудио с ютуба в webm, а после отправляет в protobuf через PUT /translate-video/audio
-            UPD 2: Или отправляет PUT /video-translation/fail-audio-js + PUT /translate-video/audio без самого аудио файла
+            Чтобы перевод продолжился, нужно:
+            А) загружать видео с ютуба в качестве 144p(?) и формате webm, а после отправлять с помощью requestVtransAudio почанково, соблюдая размер чанка (config.minChunkSize)
+            Б) Отправлять requestVtransFailAudio + requestVtransAudio без самого аудио файла (ниже есть пример)
+            В случае варианта Б remainingTime залагивает на 5 секундах и висит так примерно 5-10 минут.
         */
 
         if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
           // try to fix with fake requests (only for youtube)
           await this.requestVtransFailAudio(url);
           await this.requestVtransAudio(url, translationData.translationId, {
-            audioFile: new Uint8Array(0),
-            fileId: JSON.stringify({
-              downloadType:
-                AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
-              itag: 251,
-              minChunkSize: config.minChunkSize,
-              fileSize: "1838189",
-            } as FileIdObject),
+            audioFile: new Uint8Array(),
+            fileId:
+              AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
           });
           return await this.translateVideoYAImpl({
             videoData,
@@ -382,7 +388,9 @@ export default class VOTClient {
         }
 
         return {
+          translationId,
           translated: false,
+          status,
           remainingTime: translationData.remainingTime ?? -1,
         };
       default:
@@ -433,14 +441,19 @@ export default class VOTClient {
         }
 
         return {
+          translationId: String(translationData.id),
           translated: true,
           url: translationData.translatedUrl,
+          status: 1,
           remainingTime: -1,
         };
       case "waiting":
         return {
+          // add set id on waiting to VOT Backend
+          translationId: "",
           translated: false,
           remainingTime: translationData.remainingTime,
+          status: 2,
           message: translationData.message,
         };
     }
