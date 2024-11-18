@@ -1,7 +1,7 @@
 {
   "name": "vot.js",
   "description": "Unoffical library for interacting with the Yandex VOT API",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -46,6 +46,16 @@
       "import": "./dist/types/index.js",
       "types": "./dist/types/index.d.ts"
     },
+    "./types/*": {
+      "require": "./dist/types/*.js",
+      "import": "./dist/types/*.js",
+      "types": "./dist/types/*.d.ts"
+    },
+    "./helpers/*": {
+      "require": "./dist/helpers/*.js",
+      "import": "./dist/helpers/*.js",
+      "types": "./dist/helpers/*.d.ts"
+    },
     "./utils/videoData": {
       "require": "./dist/utils/videoData.js",
       "import": "./dist/utils/videoData.js",
@@ -75,6 +85,9 @@
       "require": "./dist/secure.js",
       "import": "./dist/secure.js",
       "types": "./dist/secure.d.ts"
+    },
+    "./typebox/*": {
+      "import": "./dist/typebox/*.ts"
     }
   },
   "engines": {
@@ -98,7 +111,9 @@
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.14.0",
     "eslint-plugin-oxlint": "^0.11.1",
+    "https-proxy-agent": "^7.0.5",
     "husky": "^9.1.6",
+    "node-fetch": "^3.3.2",
     "oxlint": "^0.11.1",
     "ts-proto": "1.181.2",
     "tsc-esm-fix": "^3.1.2",
@@ -117,11 +132,12 @@
   },
   "scripts": {
     "test": "bun test",
+    "clear": "bun run ./scripts/clear.ts",
     "build:declaration": "tsc --project tsconfig.build.json --emitDeclarationOnly --outdir ./dist",
     "build:default": "tsc --project tsconfig.build.json --outdir ./dist && tsc-esm-fix --tsconfig tsconfig.build.json",
     "build:typebox": "bun run ./scripts/typebox-gen.ts",
     "build:doc": "typedoc --options typedoc.json --tsconfig tsconfig.build.json",
-    "build:bun": "bun update-config && bun build:default && bun build:typebox && bun build:doc",
+    "build:bun": "bun clear && bun update-config && bun build:default && bun build:typebox && bun build:doc",
     "build:win": "bun build:bun",
     "build:linux": "bun build:bun",
     "build:proto-linux": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto",
