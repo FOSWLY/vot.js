@@ -26,5 +26,3 @@ jobs:
           name: ${{ github.sha }}
           draft: true
           prerelease: false
-          files: |
-            vot/vot*.user.js
