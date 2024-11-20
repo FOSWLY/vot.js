@@ -1,7 +1,7 @@
 # vot.js
 
 [![GitHub Actions](https://github.com/FOSWLY/vot.js/actions/workflows/ci.yml/badge.svg)](https://github.com/FOSWLY/vot.js/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/bundlejs/size/vot.js)](https://www.npmjs.com/package/vot.js)
+[![npm](https://img.shields.io/bundlejs/size/@vot.js/core)](https://www.npmjs.com/package/@vot.js/core)
 [![ru](https://img.shields.io/badge/%D1%8F%D0%B7%D1%8B%D0%BA-%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9%20%F0%9F%87%B7%F0%9F%87%BA-white)](README-RU.md)
 [![en](https://img.shields.io/badge/lang-English%20%F0%9F%87%AC%F0%9F%87%A7-white)](README.md)
 
@@ -11,17 +11,19 @@ The library supports working with [worker servers](https://github.com/FOSWLY/vot
 
 ## Installation
 
-Installation for Bun:
+To work with Node, Bun, or other runtimes, install the `@vot.js/node`:
 
 ```bash
-bun add vot.js
+bin install @vot.js/node
 ```
 
-Installation for NPM:
+To develop browser extensions, install the `@vot.js/ext`:
 
 ```bash
-npm install vot.js
+bin install @vot.js/ext
 ```
+
+If you only need part of the functionality, use the `@vot.js/core` and `@vot.js/shared`
 
 ## Getting started
 
@@ -50,7 +52,6 @@ You can see more code examples [here](https://github.com/FOSWLY/vot.js/tree/main
 ## Limitations
 
 1. The library can't translate videos longer than 4 hours
-2. To translate udemy, coursera, coursehunter and other sites that have authorization, you must create your own handlers
 
 ## Build
 
@@ -65,60 +66,10 @@ Don't forget to install the dependencies:
 bun install
 ```
 
-#### Build without updating .proto
-
-This build option should be used in most cases if your changes do not affect the `.proto` file.
+Start building:
 
 ```bash
-bun build:bun
-```
-
-#### Build with an update .proto
-
-If you want to build the library by updating the proto files, then you need to install protoc 3+ and add it to the Path.
-
-Building from Linux (maybe on MacOS it will work too):
-
-```bash
-bun rebuild:linux
-```
-
-Building from Windows:
-
-```bash
-bun rebuild:win
-```
-
-#### Building TypeScript types
-
-You can use this build option if you only want to build types for TypeScript:
-
-```bash
-bun build:declaration
-```
-
-#### Building a TypeBox of Types
-
-You can use this build option if you only want to build types for TypeBox:
-
-```bash
-bun build:typebox
-```
-
-#### Building only .proto file
-
-You can use this build option if you only want to convert the `.proto` file to `.ts` (this will not update the file in the /dist folder):
-
-Building from Linux (maybe on MacOS it will work too):
-
-```bash
-bun build:proto-linux
-```
-
-Building from Windows:
-
-```bash
-bun build:proto-win
+bun build:all
 ```
 
 ## Tests
