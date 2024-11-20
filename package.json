@@ -1,95 +1,35 @@
 {
   "name": "vot.js",
-  "description": "Unoffical library for interacting with the Yandex VOT API",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "Toil",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "devDependencies": {
+    "@sinclair/typebox-codegen": "^0.10.5",
+    "@types/bun": "latest",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.14.0",
+    "eslint-plugin-oxlint": "^0.11.1",
+    "husky": "^9.1.6",
+    "oxlint": "^0.11.1",
+    "typedoc": "^0.26.11",
+    "typedoc-plugin-include-example": "^1.4.1",
+    "typedoc-plugin-missing-exports": "^3.0.2",
+    "typedoc-plugin-rename-defaults": "^0.7.1",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.14.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
   "bugs": {
     "url": "https://github.com/FOSWLY/vot.js/issues"
   },
-  "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./config": {
-      "require": "./dist/config/config.js",
-      "import": "./dist/config/config.js",
-      "types": "./dist/config/config.d.ts"
-    },
-    "./sites": {
-      "require": "./dist/config/sites.js",
-      "import": "./dist/config/sites.js",
-      "types": "./dist/config/sites.d.ts"
-    },
-    "./alternativeUrls": {
-      "require": "./dist/config/alternativeUrls.js",
-      "import": "./dist/config/alternativeUrls.js",
-      "types": "./dist/config/alternativeUrls.d.ts"
-    },
-    "./consts": {
-      "require": "./dist/consts.js",
-      "import": "./dist/consts.js",
-      "types": "./dist/consts.d.ts"
-    },
-    "./types": {
-      "require": "./dist/types/index.js",
-      "import": "./dist/types/index.js",
-      "types": "./dist/types/index.d.ts"
-    },
-    "./types/*": {
-      "require": "./dist/types/*.js",
-      "import": "./dist/types/*.js",
-      "types": "./dist/types/*.d.ts"
-    },
-    "./helpers/*": {
-      "require": "./dist/helpers/*.js",
-      "import": "./dist/helpers/*.js",
-      "types": "./dist/helpers/*.d.ts"
-    },
-    "./utils/videoData": {
-      "require": "./dist/utils/videoData.js",
-      "import": "./dist/utils/videoData.js",
-      "types": "./dist/utils/videoData.d.ts"
-    },
-    "./utils/helper": {
-      "require": "./dist/utils/helper.js",
-      "import": "./dist/utils/helper.js",
-      "types": "./dist/utils/helper.d.ts"
-    },
-    "./utils/subs": {
-      "require": "./dist/utils/subs.js",
-      "import": "./dist/utils/subs.js",
-      "types": "./dist/utils/subs.d.ts"
-    },
-    "./utils/utils": {
-      "require": "./dist/utils/utils.js",
-      "import": "./dist/utils/utils.js",
-      "types": "./dist/utils/utils.d.ts"
-    },
-    "./utils/logger": {
-      "require": "./dist/utils/logger.js",
-      "import": "./dist/utils/logger.js",
-      "types": "./dist/utils/logger.d.ts"
-    },
-    "./secure": {
-      "require": "./dist/secure.js",
-      "import": "./dist/secure.js",
-      "types": "./dist/secure.d.ts"
-    },
-    "./typebox/*": {
-      "import": "./dist/typebox/*.ts"
-    }
-  },
+  "description": "Unoffical library for interacting with the Yandex VOT API",
   "engines": {
     "node": ">=18"
   },
@@ -99,51 +39,26 @@
   "homepage": "https://github.com/FOSWLY/vot.js#readme",
   "keywords": [
     "voice-over-translation",
+    "translate",
     "vot",
     "yandex",
     "foswly",
-    "vot-js",
+    "api",
     "vot.js"
   ],
-  "devDependencies": {
-    "@sinclair/typebox-codegen": "^0.10.5",
-    "@types/bun": "latest",
-    "@types/eslint__js": "^8.42.3",
-    "eslint": "^9.14.0",
-    "eslint-plugin-oxlint": "^0.11.1",
-    "husky": "^9.1.6",
-    "oxlint": "^0.11.1",
-    "ts-proto": "1.181.2",
-    "tsc-esm-fix": "^3.1.2",
-    "typedoc": "^0.26.11",
-    "typedoc-plugin-include-example": "^1.4.1",
-    "typedoc-plugin-rename-defaults": "^0.7.1",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.14.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "dom-parser": "^1.1.5",
-    "protobufjs": "^7.4.0"
-  },
+  "license": "MIT",
+  "private": true,
   "scripts": {
     "test": "bun test",
-    "clear": "bun run ./scripts/clear.ts",
-    "build:declaration": "tsc --project tsconfig.build.json --emitDeclarationOnly --outdir ./dist",
-    "build:default": "tsc --project tsconfig.build.json --outdir ./dist && tsc-esm-fix --tsconfig tsconfig.build.json",
-    "build:typebox": "bun run ./scripts/typebox-gen.ts",
-    "build:doc": "typedoc --options typedoc.json --tsconfig tsconfig.build.json",
-    "build:bun": "bun clear && bun update-config && bun build:default && bun build:typebox && bun build:doc",
-    "build:win": "bun build:bun",
-    "build:linux": "bun build:bun",
-    "build:proto-linux": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto",
-    "build:proto-win": "protoc --plugin=protoc-gen-ts_proto=\".\\node_modules\\.bin\\protoc-gen-ts_proto.exe\" --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto",
-    "rebuild:win": "bun build:proto-win && bun build:bun",
-    "rebuild:linux": "bun build:proto-linux && bun build:bun",
-    "update-config": "bun run scripts/update-config.ts",
+    "build:bun": "bun run ./scripts/build.ts",
+    "build:doc": "typedoc --options .config/typedoc.json --tsconfig tsconfig.build.json",
+    "update:config": "bun run scripts/update-config.ts",
     "lint": "bunx oxlint --ignore-path=.oxlintignore && bunx eslint",
     "prepare": "husky"
-  }
+  },
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "workspaces": [
+    "packages/*"
+  ]
 }
