@@ -1,6 +1,6 @@
 import { describe, test, expect } from "bun:test";
-import { getVideoData } from "../src/utils/videoData";
-import config from "../src/config/config";
+import { getVideoData } from "../packages/node/src/utils/videoData";
+import config from "../packages/shared/src/data/config";
 
 const normalize = async (url: string, referer?: string) => {
   const data = await getVideoData(url, { referer });

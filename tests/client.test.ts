@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import VOTClient, { VOTWorkerClient } from "../src/index";
-import { getVideoData } from "../src/utils/videoData";
+import VOTClient, { VOTWorkerClient } from "../packages/node/src/index";
+import { getVideoData } from "../packages/node/src/utils/videoData";
 
 const url = "https://youtu.be/LK6nLR1bzpI";
 const videoData = await getVideoData(url);

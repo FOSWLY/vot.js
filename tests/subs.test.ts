@@ -1,6 +1,6 @@
 import { test, expect } from "bun:test";
 
-import { convertSubs } from "../src/utils/subs";
+import { convertSubs } from "../packages/shared/src/utils/subs";
 
 const jsonSubs = {
   containsTokens: true,
