@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/node",
   "description": "package for runtimes",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -85,5 +85,9 @@
     "@vot.js/shared": "workspace:^",
     "@vot.js/core": "workspace:^",
     "dom-parser": "^1.1.5"
+  },
+  "scripts": {
+    "prepack": "bun run ../../scripts/onPrepack.ts",
+    "postpublish": "bun run ../../scripts/onPostPublish.ts"
   }
 }

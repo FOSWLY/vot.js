@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/shared",
   "description": "shared for all @vot.js package",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -106,6 +106,8 @@
     "protobufjs": "^7.4.0"
   },
   "scripts": {
+    "prepack": "bun run ../../scripts/onPrepack.ts",
+    "postpublish": "bun run ../../scripts/onPostPublish.ts",
     "proto:gen": "protoc --plugin=..\\..\\node_modules\\.bin\\protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto"
   }
 }

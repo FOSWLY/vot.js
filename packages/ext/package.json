@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/ext",
   "description": "package for web extensions",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -94,5 +94,9 @@
   "dependencies": {
     "@vot.js/shared": "workspace:^",
     "@vot.js/core": "workspace:^"
+  },
+  "scripts": {
+    "prepack": "bun run ../../scripts/onPrepack.ts",
+    "postpublish": "bun run ../../scripts/onPostPublish.ts"
   }
 }

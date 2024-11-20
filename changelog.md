@@ -1,3 +1,9 @@
+# 2.0.1
+
+## All
+
+- Fixed README for all packages
+
 # 2.0.0
 
 In this update, the library logic has been completely redesigned.

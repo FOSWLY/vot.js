@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/core",
   "description": "core package",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -88,5 +88,9 @@
   },
   "dependencies": {
     "@vot.js/shared": "workspace:^"
+  },
+  "scripts": {
+    "prepack": "bun run ../../scripts/onPrepack.ts",
+    "postpublish": "bun run ../../scripts/onPostPublish.ts"
   }
 }
