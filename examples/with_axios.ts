@@ -1,7 +1,8 @@
-import VOTClient from "../dist/client";
 import axios from "axios";
-import { ClientResponse } from "../dist/types/client";
-import { getVideoData } from "../dist/utils/videoData";
+
+import VOTClient from "../packages/node/dist/client";
+import { getVideoData } from "../packages/node/dist/utils/videoData";
+import { ClientResponse } from "../packages/core/dist/types/client";
 
 // https://github.com/axios/axios
 const client = new (class AxiosVOTClient extends VOTClient {

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import VOTClient from "../dist";
+import VOTClient from "../packages/node/dist/client";
+import { getVideoData } from "../packages/node/dist/utils/videoData";
+
 import {
   StreamTranslationResponse,
   WaitingStreamTranslationResponse,
-} from "../dist/types/yandex";
-import { getVideoData } from "../dist/utils/videoData";
+} from "../packages/core/dist/types/yandex";
 
 const client = new VOTClient();
 const videoData = await getVideoData("https://youtu.be/nA9UZF-SZoQ");
