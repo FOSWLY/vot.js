@@ -1,5 +1,5 @@
-import VOTClient, { VOTWorkerClient } from "../dist/client";
-import { getVideoData } from "../dist/utils/videoData";
+import VOTClient, { VOTWorkerClient } from "../packages/node/dist/client";
+import { getVideoData } from "../packages/node/dist/utils/videoData";
 
 const client = new VOTClient();
 const url = "https://youtu.be/LK6nLR1bzpI";

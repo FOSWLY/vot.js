@@ -4,9 +4,9 @@ import { semver } from "bun";
 import { parseFromString } from "dom-parser";
 
 import { version } from "../package.json";
-import config from "../src/config/config.ts";
+import config from "../packages/shared/src/data/config";
 
-const CONFIG_PATH = "/src/config/config.ts";
+const CONFIG_PATH = "/packages/shared/src/data/config.ts";
 const CONFIG_ABS_PATH = path.join(__dirname, "..", CONFIG_PATH);
 
 async function rewriteConfig(data: typeof config) {
@@ -15,7 +15,7 @@ async function rewriteConfig(data: typeof config) {
     `// This file is auto-generated.
     // All comments and any code are deleted when the componentVersion is updated.
     // Write comments in scripts/update-config.ts
-    import { ConfigSchema } from "../types/config";
+    import { ConfigSchema } from "../types/data";
 
     export default ${JSON.stringify(data, null, 2)} as ConfigSchema`,
   );
@@ -27,12 +27,12 @@ async function rewriteConfig(data: typeof config) {
     "--pattern",
     `".${CONFIG_PATH}"`,
   ]);
-  const text = await new Response(proc.stdout).text();
+  await new Response(proc.stdout).text();
   // pretty-quick output
-  console.log(text);
+  // console.log(text);
   proc.kill();
 
-  console.log("Successfully wrote config");
+  console.log("Successfully rewrited config");
 }
 
 async function getActualVersion(version: string) {

@@ -1,0 +1,111 @@
+{
+  "name": "@vot.js/shared",
+  "description": "shared for all @vot.js package",
+  "version": "2.0.0",
+  "author": "Toil",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FOSWLY/vot.js",
+    "directory": "packages/shared"
+  },
+  "bugs": {
+    "url": "https://github.com/FOSWLY/vot.js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./config": {
+      "require": "./dist/data/config.js",
+      "import": "./dist/data/config.js",
+      "types": "./dist/data/config.d.ts"
+    },
+    "./alternativeUrls": {
+      "require": "./dist/data/alternativeUrls.js",
+      "import": "./dist/data/alternativeUrls.js",
+      "types": "./dist/data/alternativeUrls.d.ts"
+    },
+    "./consts": {
+      "require": "./dist/data/consts.js",
+      "import": "./dist/data/consts.js",
+      "types": "./dist/data/consts.d.ts"
+    },
+    "./protos": {
+      "require": "./dist/protos/yandex.js",
+      "import": "./dist/protos/yandex.js",
+      "types": "./dist/protos/yandex.d.ts"
+    },
+    "./secure": {
+      "require": "./dist/secure.js",
+      "import": "./dist/secure.js",
+      "types": "./dist/secure.d.ts"
+    },
+    "./types": {
+      "require": "./dist/types/index.js",
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./types/*": {
+      "require": "./dist/types/*.js",
+      "import": "./dist/types/*.js",
+      "types": "./dist/types/*.d.ts"
+    },
+    "./utils/logger": {
+      "require": "./dist/utils/logger.js",
+      "import": "./dist/utils/logger.js",
+      "types": "./dist/utils/logger.d.ts"
+    },
+    "./utils/subs": {
+      "require": "./dist/utils/subs.js",
+      "import": "./dist/utils/subs.js",
+      "types": "./dist/utils/subs.d.ts"
+    },
+    "./utils/utils": {
+      "require": "./dist/utils/utils.js",
+      "import": "./dist/utils/utils.js",
+      "types": "./dist/utils/utils.d.ts"
+    },
+    "./typebox/*": {
+      "import": "./dist/typebox/*.ts"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/FOSWLY/vot.js#readme",
+  "keywords": [
+    "translate",
+    "vot",
+    "yandex",
+    "foswly",
+    "api",
+    "vot.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "tsc-esm-fix": "^3.1.2",
+    "ts-proto": "1.181.2",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "protobufjs": "^7.4.0"
+  },
+  "scripts": {
+    "proto:gen": "protoc --plugin=..\\..\\node_modules\\.bin\\protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_out=. ./src/protos/yandex.proto"
+  }
+}

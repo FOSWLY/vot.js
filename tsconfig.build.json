@@ -25,16 +25,15 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
 
-    "rootDir": "src",
     "outDir": "./dist",
     "removeComments": true
   },
   "exclude": [
-    "./dist",
-    "./tests",
+    "**/dist",
+    "**/tests",
     "./examples",
     "./scripts",
-    "node_modules",
+    "**/node_modules",
     "./test-scripts"
   ]
 }

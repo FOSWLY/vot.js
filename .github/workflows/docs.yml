@@ -1,0 +1,31 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+  pages: write # to deploy to Pages
+  id-token: write # to verify the deployment originates from an appropriate source
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+
+  deploy:
+    needs: build
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

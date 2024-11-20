@@ -3,6 +3,7 @@
   "compilerOptions": {
     // Enable latest features
     "lib": ["ESNext"],
+    "types": ["bun-types"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
@@ -25,5 +26,5 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "exclude": ["./dist", "node_modules", "./scripts", "./test-scripts"]
+  "exclude": ["**/dist", "**/node_modules"]
 }

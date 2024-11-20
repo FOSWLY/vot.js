@@ -1,0 +1,92 @@
+{
+  "name": "@vot.js/core",
+  "description": "core package",
+  "version": "2.0.0",
+  "author": "Toil",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FOSWLY/vot.js",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/FOSWLY/vot.js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./sites": {
+      "require": "./dist/data/sites.js",
+      "import": "./dist/data/sites.js",
+      "types": "./dist/data/sites.d.ts"
+    },
+    "./client": {
+      "require": "./dist/client.js",
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    },
+    "./types": {
+      "require": "./dist/types/index.js",
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./types/*": {
+      "require": "./dist/types/*.js",
+      "import": "./dist/types/*.js",
+      "types": "./dist/types/*.d.ts"
+    },
+    "./utils/videoData": {
+      "require": "./dist/utils/videoData.js",
+      "import": "./dist/utils/videoData.js",
+      "types": "./dist/utils/videoData.d.ts"
+    },
+    "./utils/vot": {
+      "require": "./dist/utils/vot.js",
+      "import": "./dist/utils/vot.js",
+      "types": "./dist/utils/vot.d.ts"
+    },
+    "./protobuf": {
+      "require": "./dist/protobuf.js",
+      "import": "./dist/protobuf.js",
+      "types": "./dist/protobuf.d.ts"
+    },
+    "./typebox/*": {
+      "import": "./dist/typebox/*.ts"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/FOSWLY/vot.js#readme",
+  "keywords": [
+    "translate",
+    "vot",
+    "yandex",
+    "foswly",
+    "api",
+    "vot.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "tsc-esm-fix": "^3.1.2",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@vot.js/shared": "workspace:^"
+  }
+}
