@@ -34,6 +34,7 @@ jobs:
           path: packages/*/dist/*
 
       - name: Upload Docs artifact 🚀
-        uses: actions/upload-artifact@v4
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
         with:
           path: docs
