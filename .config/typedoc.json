@@ -1,0 +1,12 @@
+{
+  "entryPoints": ["../packages/*"],
+  "entryPointStrategy": "packages",
+  "name": "vot.js",
+  "out": "../docs",
+  "includeVersion": true,
+  "plugin": [
+    "typedoc-plugin-rename-defaults",
+    "typedoc-plugin-include-example",
+    "typedoc-plugin-missing-exports"
+  ]
+}

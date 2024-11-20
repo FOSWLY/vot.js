@@ -52,6 +52,7 @@
     "test": "bun test",
     "build:bun": "bun run ./scripts/build.ts",
     "build:doc": "typedoc --options .config/typedoc.json --tsconfig tsconfig.build.json",
+    "build:all": "bun build:bun && bun build:doc",
     "update:config": "bun run scripts/update-config.ts",
     "lint": "bunx oxlint --ignore-path=.oxlintignore && bunx eslint",
     "prepare": "husky"
