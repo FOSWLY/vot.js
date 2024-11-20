@@ -1,0 +1,172 @@
+syntax = "proto3";
+
+// VIDEO TRANSLATION
+message VideoTranslationHelpObject {
+  // video_file_url or subtitles_file_url
+  string target = 1;
+  // raw url to video file or subs
+  string targetUrl = 2;
+}
+
+message VideoTranslationRequest {
+  string url = 3;
+  // used in mobile version
+  optional string deviceId = 4;
+  // true for the first request, false for subsequent ones
+  bool firstRequest = 5;
+  double duration = 6;
+  int32 unknown0 = 7; // 1 1
+  // source language code
+  string language = 8;
+  // 0 - auto detected by yabrowser, 1 - user set his
+  // (own lang by dropdown)
+  bool forceSourceLang = 9;
+  int32 unknown1 = 10; // 0 0
+  // array for translation assistance
+  // ([0] -> {2: link to video, 1: "video_file_url"},
+  // [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
+  repeated VideoTranslationHelpObject translationHelp = 11;
+  string responseLanguage = 14;
+  // previously it was 0, now it is 1
+  int32 unknown2 = 15;
+  int32 unknown3 = 16; // 1
+  // they have some kind of limiter on requests from one IP
+  // because after one such request it stops working
+  bool bypassCache = 17;
+  // translates videos with higher-quality voices, but sometimes the
+  // voice of one person can constantly change
+  // (https://github.com/ilyhalight/voice-over-translation/issues/897)
+  bool useNewModel = 18;
+}
+
+message VideoTranslationResponse {
+  // this 2 options set if status is translated
+  optional string url = 1;
+  optional double duration = 2;
+
+  int32 status = 4;
+  // secs until translation is completed
+  optional int32 remainingTime = 5;
+  // unknown 0 (1st request) ->
+  // 10 (2nd, 3th and etc requests). (if status is 0)
+  optional int32 unknown0 = 6;
+  // it isn't a type mistake
+  string translationId = 7;
+  // detected language (if the wrong one is set)
+  optional string language = 8;
+  optional string message = 9;
+}
+
+// video translation audio info (can be part of ChunkAudioObject or used
+// separated)
+message AudioBufferObject {
+  // e.g:
+  // 32Eߣ�B��01B��01B�04B�10B��webmB��04B��0230S�g010000000033��21M�t�M��S��25I�fS��00000000000000DM��S��26T�kS��0000000000000077M��S��34S�kS��00000000000000�25I�f�*ױ�17B@D��Gш�M��google/video-fileWA�google/video-file26T�k֮�ׁ01sŇ\����ϡ��02��00"���eng��A_OPUSc��OpusHead0105E�37�fSց�0�23�p�C\�ws�ܔ��00q]�77_�mt�26+.�y�$��31�00���J=33�34�iw�16�02�4�L�21U��30)`00000000,A+�Hv9��?C��05����º�31��
+  // ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
+  // also can be empty if it's failed audio js
+  bytes audioFile = 2;
+  // if it's single file u set json data
+  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxx"}
+  // if it's chunk u set chunk index (0-xxx...)
+  // if it's error u set only downloadType
+  // (1=web_api_get_all_generating_urls_data_from_iframe)
+  string fileId = 1;
+}
+
+// video translation audio info
+message ChunkAudioObject {
+  int32 audioPartsLength = 2; // 1-xxx...
+  AudioBufferObject audioBuffer = 1;
+  // I don't know why it's a fileId, but they call it that
+  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
+  string fileId = 3;
+  // There are several possible assignments:
+  // - version: is static 1
+  // - purpose: is enum (1 = video-translation)
+  // - fromPlayer: is boolean
+  int32 unknown0 = 4;
+}
+
+// can have only partialAudioInfo or only audioInfo
+message VideoTranslationAudioRequest {
+  string translationId = 1;
+  string url = 2;
+  optional ChunkAudioObject partialAudioInfo = 4;
+  optional AudioBufferObject audioInfo = 6;
+}
+
+message VideoTranslationAudioResponse {
+  // something like this
+  // 1 = waiting chunks
+  // 2 = done
+  int32 status = 1;
+  repeated string remainingChunks = 2;
+}
+
+// SUBTITLES
+message SubtitlesObject {
+  string language = 1;
+  string url = 2;
+  int32 unknown0 = 3;
+  string translatedLanguage = 4;
+  string translatedUrl = 5;
+  int32 unknown1 = 6;
+  int32 unknown2 = 7;
+}
+
+message SubtitlesRequest {
+  string url = 1;
+  // source language code
+  string language = 2;
+}
+
+message SubtitlesResponse {
+  // 0 - finished/failed, 1 - waiting result (1 - ~10min, maybe more)
+  bool waiting = 1;
+  repeated SubtitlesObject subtitles = 2;
+}
+
+// STREAM TRANSLATION
+message StreamTranslationObject {
+  string url = 1;
+  // timestamp in ms (timing of m3u8).
+  // it could have been int64,
+  // but js requires an additional dependencies for this
+  string timestamp = 2;
+}
+
+message StreamTranslationRequest {
+  string url = 1;
+  string language = 2;
+  string responseLanguage = 3;
+}
+
+enum StreamInterval {
+  NO_CONNECTION = 0;
+  TRANSLATING = 10;
+  STREAMING = 20;
+}
+
+message StreamTranslationResponse {
+  // 20s - streaming, 10s - translating,
+  // 0s - there is no connection with the server (the broadcast is finished or
+  // deleted)
+  StreamInterval interval = 1;
+  optional StreamTranslationObject translatedInfo = 2;
+  optional int32 pingId = 3;
+}
+
+// doesn't have response proto
+message StreamPingRequest { int32 pingId = 1; }
+
+// SESSIONS
+message YandexSessionRequest {
+  string uuid = 1;
+  // e.g. video_translation or summarization
+  string module = 2;
+}
+
+message YandexSessionResponse {
+  string secretKey = 1;
+  int32 expires = 2;
+}
