@@ -1,3 +1,33 @@
+# 2.0.0
+
+In this update, the library logic has been completely redesigned.
+
+**Now, the vot.js package is considered obsolete, and his place was taken by @vot.js/shared, @vot.js/core, @vot.js/node and @vot.js/ext**
+
+## Ext
+
+- Added support Udemy and Coursera (copied from patches from [voice-over-translation](https://github.com/ilyhalight/voice-over-translation) extension)
+- Rewrited AppleDeveloper, CoursehunterLike, Dailymotion, GoogleDrive, Incestflix, Kodik, Linkedin, 9AnimeTV, PornTN, Reddit, Sap, Twitch, Vimeo, Weverse, YandexDisk helpers for better perfomance and compatibility with DOM API (copied from patches from [voice-over-translation](https://github.com/ilyhalight/voice-over-translation) extension)
+- The logic used in Node is adapted to work in the browser extension
+
+## Core
+
+- The range 192.168.x.x has been added to the local address check
+- The ability to pass "getVideoDataFn" in VOTOpts has been removed (it hasn't been used for a long time)
+- Added description and missing exported functions/variables
+
+## Node
+
+- Protobuf export has been moved to @vot.js/shared
+- Helper types export has been moved to @vot.js/shared
+- The check of the local address has been moved to @vot.js/core
+- Updated examples
+
+## Shared
+
+- Added support for using a string url in proxyMedia
+- Added description and missing exported functions/variables
+
 # 1.5.0
 
 - Added support set audio parts to requestVtransAudio
