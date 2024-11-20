@@ -2,6 +2,7 @@
 tests/audioSplit.test.ts
 *.webm
 *.mp4
+docs
 
 .vscode
 .pytest_cache
