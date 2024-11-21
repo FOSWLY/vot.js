@@ -1,3 +1,15 @@
+# 2.0.3
+
+## All
+
+- Fix @vot.js/\* depends
+
+# 2.0.2
+
+## Shared
+
+- Fix get crypto
+
 # 2.0.1
 
 ## All
