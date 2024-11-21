@@ -2,18 +2,18 @@ import config from "./data/config";
 import Logger from "./utils/logger";
 import { SecType, ClientSession, HashName } from "./types/secure";
 
-function getCrypto() {
+async function getCrypto() {
   if (typeof window !== "undefined" && window.crypto) {
     return window.crypto;
   }
 
-  return import("node:crypto").then((res) => res) as unknown as Crypto;
+  return (await import("node:crypto")) as unknown as Crypto;
 }
 
 const utf8Encoder = new TextEncoder();
-const crypto = getCrypto();
 
 async function signHMAC(hashName: HashName, hmac: string, data: BufferSource) {
+  const crypto = await getCrypto();
   const key = await crypto.subtle.importKey(
     "raw",
     utf8Encoder.encode(hmac),
