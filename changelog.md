@@ -1,3 +1,23 @@
+# 2.0.4
+
+## Core
+
+- Added debug log in translateVideoYaImpl function
+
+## Ext
+
+- Added support new VK Video domain (vkvideo.ru)
+- Fixed OK.ru selector ([voice-over-translation#900](https://github.com/ilyhalight/voice-over-translation/issues/900))
+
+## Node
+
+- Added support new VK Video domain (vkvideo.ru)
+
+## Workspace
+
+- Bump oxlint depends
+- Removed generated code which shouldn't have been originally
+
 # 2.0.3
 
 ## All
