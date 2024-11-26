@@ -300,6 +300,7 @@ export default class VOTClient {
     }
 
     const translationData = yandexProtobuf.decodeTranslationResponse(res.data);
+    Logger.log("translateVideo", translationData);
     const {
       status,
       translationId,
