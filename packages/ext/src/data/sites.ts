@@ -76,7 +76,7 @@ export default [
   {
     host: CoreVideoService.vk,
     url: "https://vk.com/video?z=",
-    match: /^(www.|m.)?vk.(com|ru)$/,
+    match: [/^(www.|m.)?vk.(com|ru)$/, /^(www.|m.)?vkvideo.ru$/],
     selector: ".videoplayer_media",
   },
   {
@@ -253,7 +253,8 @@ export default [
     host: CoreVideoService.okru,
     url: "https://ok.ru/video/",
     match: /^ok.ru$/,
-    selector: ".html5-vpl_vid",
+    selector: "vk-video-player",
+    shadowRoot: true,
   },
   {
     host: CoreVideoService.googledrive,

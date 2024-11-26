@@ -44,7 +44,7 @@ export default [
   {
     host: CoreVideoService.vk,
     url: "https://vk.com/video?z=",
-    match: /^(www.|m.)?vk.(com|ru)$/,
+    match: [/^(www.|m.)?vk.(com|ru)$/, /^(www.|m.)?vkvideo.ru$/],
   },
   {
     host: CoreVideoService.nine_gag,

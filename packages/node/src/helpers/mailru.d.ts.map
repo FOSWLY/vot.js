@@ -1,1 +1,0 @@
-{"version":3,"file":"mailru.d.ts","sourceRoot":"","sources":["mailru.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,QAAQ,CAAC;AAKpC,MAAM,CAAC,OAAO,OAAO,YAAa,SAAQ,UAAU;IAClD,UAAU,SAAwB;IAE5B,YAAY,CAAC,OAAO,EAAE,MAAM;IAc5B,UAAU,CAAC,GAAG,EAAE,GAAG;CAkB1B"}
