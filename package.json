@@ -17,7 +17,7 @@
     "husky": "^9.1.6",
     "oxlint": "^0.13.0",
     "typedoc": "^0.26.11",
-    "typedoc-plugin-include-example": "^1.4.1",
+    "typedoc-plugin-include-example": "^2.0.2",
     "typedoc-plugin-missing-exports": "^3.0.2",
     "typedoc-plugin-rename-defaults": "^0.7.1",
     "typescript": "^5.6.3",
