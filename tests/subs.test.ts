@@ -141,6 +141,18 @@ const jsonSubsWithoutTokens = {
   ],
 };
 
+const jsonSubsFromVTTWithBigMeta = {
+  containsTokens: false,
+  subtitles: [
+    {
+      text: "Важнейшая<00:00:03.326><c> новость</c><00:00:03.568><c> прошедшей</c><00:00:04.133><c> недели</c>",
+      startMs: 0,
+      durationMs: 4536,
+      speakerId: "0",
+    },
+  ],
+};
+
 const vttSubs2 = `WEBVTT
 
 00:06:01.120 --> 00:06:06.379
@@ -186,6 +198,13 @@ const vttSubsMultiLine = `WEBVTT
 00:00:01.415 --> 00:00:02.608
 MATHEW WADSTEIN:
 Now that we are prepared to`;
+
+const vttSubsWithBigMeta = `WEBVTT
+Language: ru
+Test: 123
+
+00:00:00.000 --> 00:00:04.536
+Важнейшая<00:00:03.326><c> новость</c><00:00:03.568><c> прошедшей</c><00:00:04.133><c> недели</c>`;
 
 const srtSubsMultiLine = `1
 00:00:00,000 --> 00:00:01,415
@@ -293,4 +312,9 @@ test("Convert VTT (multi-line) -> SRT", () => {
 test("Convert VTT (multi-line with paragraphs + with short timestamp format) -> SRT", () => {
   const subs = convertSubs(cursedVTT, "srt") as string;
   expect(subs).toEqual(srtMultilineWithParagraphs);
+});
+
+test("Convert VTT (with big metadata) -> JSON", () => {
+  const subs = convertSubs(vttSubsWithBigMeta, "json");
+  expect(subs).toEqual(jsonSubsFromVTTWithBigMeta);
 });

@@ -119,7 +119,7 @@ export function getSubsFormat(data: SubtitlesData | string): SubtitleFormat {
     return "json";
   }
 
-  if (/(WEBVTT)(\r?\n\r?\n)/.exec(data)) {
+  if (/^(WEBVTT)(\r?\n)/.exec(data)) {
     return "vtt";
   }
 
