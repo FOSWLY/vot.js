@@ -1,3 +1,18 @@
+# 2.0.6
+
+## Ext
+
+- Added getVideoData for VK
+- Added source param for subtitles in getVideoData
+
+## Node
+
+- Added source param for subtitles in getVideoData
+
+## Core
+
+- Added required source param and optional translatedFromLanguage param for VideoDataSubtitle
+
 # 2.0.5
 
 ## Ext
