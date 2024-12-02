@@ -65,6 +65,7 @@ export default [
     match: /^m.vk.(com|ru)$/,
     selector: "vk-video-player",
     shadowRoot: true,
+    needExtraData: true,
   },
   {
     additionalData: "clips",
@@ -72,12 +73,14 @@ export default [
     url: "https://vk.com/video?z=",
     match: /^(www.|m.)?vk.(com|ru)$/,
     selector: 'div[data-testid="clipcontainer-video"]',
+    needExtraData: true,
   },
   {
     host: CoreVideoService.vk,
     url: "https://vk.com/video?z=",
     match: [/^(www.|m.)?vk.(com|ru)$/, /^(www.|m.)?vkvideo.ru$/],
     selector: ".videoplayer_media",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.nine_gag,
