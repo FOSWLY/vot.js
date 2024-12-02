@@ -1,3 +1,18 @@
+# 2.0.7
+
+## Ext
+
+- Enabled always use getVideoData for VK
+- Added support VK Video Playlists
+
+## Node
+
+- Added support VK Video Playlists
+
+## Shared
+
+- Fix detect VTT subtitles type => fix convert VTT subs with multilang metadata
+
 # 2.0.6
 
 ## Ext
