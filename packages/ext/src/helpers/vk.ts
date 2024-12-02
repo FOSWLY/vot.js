@@ -81,7 +81,14 @@ export default class VKHelper extends BaseHelper {
   async getVideoId(url: URL) {
     const pathID = /^\/(video|clip)-?\d{8,9}_\d{9}$/.exec(url.pathname);
     if (pathID) {
-      return (pathID as RegExpMatchArray)[0].slice(1);
+      return pathID[0].slice(1);
+    }
+
+    const idInsidePlaylist = /\/playlist\/[^/]+\/(video-\d{8,9}_\d{9})/.exec(
+      url.pathname,
+    );
+    if (idInsidePlaylist) {
+      return idInsidePlaylist[1];
     }
 
     const paramZ = url.searchParams.get("z");
