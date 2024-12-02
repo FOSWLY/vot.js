@@ -80,6 +80,13 @@ describe("vk", () => {
       expected,
     );
   });
+  test("vk video playlist", async () => {
+    expect(
+      await normalize(
+        "https://vkvideo.ru/playlist/-36637441_9/video-36637441_456240372",
+      ),
+    ).toEqual("https://vk.com/video?z=video-36637441_456240372");
+  });
 });
 
 test("9gag", async () => {
@@ -573,15 +580,15 @@ test("linkedin", async () => {
     `${expected}?autoplay=true&trk=course_preview&upsellOrderOrigin=default_guest_learning`,
   );
   expect(normalized).toStartWith(`https://${config.mediaProxy}`);
-  expect(normalized).toIncludeRepeated(`.mp4`, 2);
+  expect(normalized).toIncludeRepeated(`dms.licdn.com`, 2);
 });
 
 test("incestflix", async () => {
   const normalized = await normalize(
-    // eslint-disable-next-line sonarjs/no-clear-text-protocols
     "http://www.incestflix.com/watch/deviant-kat-waking-mommy-up-blowjob",
   );
-  expect(normalized).toInclude("deviant-kat-waking-mommy-up-blowjob");
+  expect(normalized).toStartWith(`https://${config.mediaProxy}`);
+  expect(normalized).toIncludeRepeated("incestflix.net", 2);
 });
 
 test("porntn", async () => {
