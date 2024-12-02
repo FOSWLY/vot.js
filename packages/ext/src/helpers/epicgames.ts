@@ -38,14 +38,13 @@ export default class EpicGamesHelper extends BaseHelper {
     }
 
     const { title, description } = postInfo;
-    const subtitles = videoBlock?.video_captions?.map(
-      (caption) =>
-        ({
-          language: normalizeLang(caption.locale),
-          format: "vtt",
-          url: caption.signed_url,
-        }) as VideoDataSubtitle,
-    );
+    const subtitles: VideoDataSubtitle[] | undefined =
+      videoBlock?.video_captions?.map((caption) => ({
+        language: normalizeLang(caption.locale),
+        source: "epicgames",
+        format: "vtt",
+        url: caption.signed_url,
+      }));
 
     // url returns a json containing a dash playlist (in base64) in the playlist field
     return {

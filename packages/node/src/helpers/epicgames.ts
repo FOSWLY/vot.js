@@ -42,6 +42,7 @@ export default class EpicGamesHelper extends BaseHelper {
       (caption) =>
         ({
           language: normalizeLang(caption.locale),
+          source: "epicgames",
           format: "vtt",
           url: caption.signed_url,
         }) as VideoDataSubtitle,

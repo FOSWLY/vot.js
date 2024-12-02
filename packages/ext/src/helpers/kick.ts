@@ -17,7 +17,7 @@ export default class KickHelper extends BaseHelper {
         duration,
         title,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get kick clip info by clipId: ${clipId}.`,
         (err as Error).message,
@@ -37,7 +37,7 @@ export default class KickHelper extends BaseHelper {
         duration: Math.round(duration / 1000),
         title,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get kick video info by videoId: ${videoId}.`,
         (err as Error).message,

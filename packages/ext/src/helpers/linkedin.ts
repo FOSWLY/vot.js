@@ -34,6 +34,7 @@ export default class LinkedinHelper extends BaseHelper {
         ? ([
             {
               language: "en",
+              source: "linkedin",
               format: "vtt",
               url: captionUrl,
             },

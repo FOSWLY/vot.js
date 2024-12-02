@@ -122,6 +122,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
 
       result.push({
         language,
+        source: "nineanimetv",
         format: "vtt",
         url: track.file,
       });
