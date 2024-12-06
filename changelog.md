@@ -1,3 +1,17 @@
+# 2.0.8
+
+## Ext
+
+- Added support Cloudflare Stream
+
+## Node
+
+- Added support Cloudflare Strems
+
+## Core
+
+- Added Cloudflare Stream to VideoService enum
+
 # 2.0.7
 
 ## Ext
