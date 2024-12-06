@@ -48,6 +48,7 @@ import YoutubeHelper from "./youtube";
 import DzenHelper from "./dzen";
 import UdemyHelper from "./udemy";
 import CourseraHelper from "./coursera";
+import CloudflareStreamHelper from "./cloudflarestream";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -94,6 +95,7 @@ export * as YoutubeHelper from "./youtube";
 export * as DzenHelper from "./dzen";
 export * as UdemyHelper from "./udemy";
 export * as CourseraHelper from "./coursera";
+export * as CloudflareStreamHelper from "./cloudflarestream";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -144,6 +146,7 @@ export const availableHelpers = {
   [CoreVideoService.poketube]: YoutubeHelper,
   [CoreVideoService.piped]: YoutubeHelper,
   [CoreVideoService.dzen]: DzenHelper,
+  [CoreVideoService.cloudflarestream]: CloudflareStreamHelper,
   [ExtVideoService.udemy]: UdemyHelper,
   [ExtVideoService.coursera]: CourseraHelper,
 };

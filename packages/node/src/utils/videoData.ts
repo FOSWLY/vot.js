@@ -78,9 +78,11 @@ export async function getVideoData(
 
   const origin = new URL(url).origin;
   if (
-    [CoreVideoService.peertube, CoreVideoService.coursehunterLike].includes(
-      service.host,
-    )
+    [
+      CoreVideoService.peertube,
+      CoreVideoService.coursehunterLike,
+      CoreVideoService.cloudflarestream,
+    ].includes(service.host)
   ) {
     service.url = origin; // set the url of the current site for peertube
   }

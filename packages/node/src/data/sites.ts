@@ -289,6 +289,11 @@ export default [
     match: /^dzen.ru$/,
   },
   {
+    host: CoreVideoService.cloudflarestream,
+    url: "stub",
+    match: /^(watch|embed|iframe|customer-[^.]+).cloudflarestream.com$/,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),

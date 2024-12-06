@@ -46,6 +46,7 @@ import TikTokHelper from "./tiktok";
 import NineGAGHelper from "./nine_gag";
 import YoutubeHelper from "./youtube";
 import DzenHelper from "./dzen";
+import CloudflareStreamHelper from "./cloudflarestream";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -90,6 +91,7 @@ export * as TikTokHelper from "./tiktok";
 export * as NineGAGHelper from "./nine_gag";
 export * as YoutubeHelper from "./youtube";
 export * as DzenHelper from "./dzen";
+export * as CloudflareStreamHelper from "./cloudflarestream";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -140,6 +142,7 @@ export const availableHelpers = {
   [CoreVideoService.poketube]: YoutubeHelper,
   [CoreVideoService.piped]: YoutubeHelper,
   [CoreVideoService.dzen]: DzenHelper,
+  [CoreVideoService.cloudflarestream]: CloudflareStreamHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
