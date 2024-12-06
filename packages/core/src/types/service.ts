@@ -55,6 +55,7 @@ export enum VideoService {
   incestflix = "incestflix",
   porntn = "porntn",
   dzen = "dzen",
+  cloudflarestream = "cloudflarestream",
 }
 
 export type ServiceConf<T = VideoService> = {
