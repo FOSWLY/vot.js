@@ -1,7 +1,15 @@
 export type VideoCaption = {
-  signed_url: string;
-  locale: string; // en-us
+  srclang: string;
+  type: "captions";
+  src: string;
 };
+
+export type VideoSources =
+  | VideoCaption
+  | {
+      src: string;
+      type: "quicksilver";
+    };
 
 export type VideoBlock = {
   type: "video";
@@ -9,9 +17,6 @@ export type VideoBlock = {
   provider: string;
   caption: string;
   autoplay: boolean;
-  video_url: string; // startswith qsep://
-  video_captions: VideoCaption[];
-  video_thumbnail_large_url: string;
 };
 
 export type Link = {
@@ -33,6 +38,6 @@ export type Post = {
   title: string;
   description: string;
   locale: string; // en-us
-  blocks: [VideoBlock, LinkGroupBlock];
+  blocks: [VideoBlock, LinkGroupBlock]; // now useless
   status: "published";
 };

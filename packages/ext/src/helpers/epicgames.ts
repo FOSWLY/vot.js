@@ -25,26 +25,76 @@ export default class EpicGamesHelper extends BaseHelper {
     }
   }
 
+  getVideoBlock() {
+    const videoUrlRe = /videoUrl\s?=\s"([^"]+)"?/;
+    const script = Array.from(document.body.querySelectorAll("script")).find(
+      (s) => videoUrlRe.exec(s.innerHTML),
+    );
+    if (!script) {
+      return undefined;
+    }
+
+    const content = script.innerHTML.trim();
+    const playlistUrl = videoUrlRe
+      .exec(content)?.[1]
+      ?.replace("qsep://", "https://");
+    if (!playlistUrl) {
+      return undefined;
+    }
+
+    let subtitlesString = /sources\s?=\s(\[([^\]]+)\])?/.exec(content)?.[1];
+    if (!subtitlesString) {
+      return {
+        playlistUrl,
+        subtitles: [],
+      };
+    }
+
+    try {
+      subtitlesString = (
+        subtitlesString
+          .replace(/src:(\s)+?(videoUrl)/g, 'src:"removed"')
+          .substring(0, subtitlesString.lastIndexOf("},")) + "]"
+      )
+        .split("\n")
+        .map((line) => line.replace(/([^\s]+):\s?(?!.*\1)/, '"$1":'))
+        .join("\n");
+      const subtitlesObj = JSON.parse(
+        subtitlesString,
+      ) as EpicGames.VideoSources[];
+      const subtitles = subtitlesObj.filter((sub) => sub.type === "captions");
+
+      return {
+        playlistUrl,
+        subtitles,
+      };
+    } catch {
+      return {
+        playlistUrl,
+        subtitles: [],
+      };
+    }
+  }
+
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const postInfo = await this.getPostInfo(videoId);
     if (!postInfo) {
       return undefined;
     }
 
-    const videoBlock = postInfo.blocks.find((block) => block.type === "video");
-    const playlistUrl = videoBlock?.video_url?.replace("qsep://", "https://");
-    if (!playlistUrl) {
+    const videoBlock = this.getVideoBlock();
+    if (!videoBlock) {
       return undefined;
     }
 
+    const { playlistUrl, subtitles: videoSubtitles } = videoBlock;
     const { title, description } = postInfo;
-    const subtitles: VideoDataSubtitle[] | undefined =
-      videoBlock?.video_captions?.map((caption) => ({
-        language: normalizeLang(caption.locale),
-        source: "epicgames",
-        format: "vtt",
-        url: caption.signed_url,
-      }));
+    const subtitles: VideoDataSubtitle[] = videoSubtitles.map((caption) => ({
+      language: normalizeLang(caption.srclang),
+      source: "epicgames",
+      format: "vtt",
+      url: caption.src,
+    }));
 
     // url returns a json containing a dash playlist (in base64) in the playlist field
     return {
@@ -55,8 +105,22 @@ export default class EpicGamesHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async getVideoId(url: URL) {
-    return /\/(\w{3,5})\/[^/]+$/.exec(url.pathname)?.[1];
+  async getVideoId(url: URL): Promise<string | undefined> {
+    return new Promise((resolve) => {
+      const origin = "https://dev.epicgames.com";
+      window.addEventListener("message", (e) => {
+        if (e.origin !== origin) {
+          return undefined;
+        }
+
+        if (typeof e.data === "string" && e.data.startsWith("getVideoId:")) {
+          const videoId = e.data.replace("getVideoId:", "");
+          return resolve(videoId);
+        }
+
+        return undefined;
+      });
+      window.top!.postMessage("getVideoId", origin);
+    });
   }
 }

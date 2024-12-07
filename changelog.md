@@ -1,3 +1,13 @@
+# 2.0.9
+
+## Ext
+
+- Fix EpicGames helper
+
+## Node
+
+- Fix EpicGames helper
+
 # 2.0.8
 
 ## Ext

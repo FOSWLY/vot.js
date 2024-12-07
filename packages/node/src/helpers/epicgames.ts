@@ -25,6 +25,24 @@ export default class EpicGamesHelper extends BaseHelper {
     }
   }
 
+  async fetchPlaylistUrl(embedId: string) {
+    try {
+      const res = await this.fetch(
+        `https://dev.epicgames.com/community/api/cms/videos/${embedId}/embed.html`,
+      );
+      const content = await res.text();
+      const playlistUrl = /videoUrl\s?=\s"([^"]+)"?/.exec(content);
+      return playlistUrl?.[1]?.replace("qsep://", "https://");
+    } catch (err) {
+      Logger.error(
+        `Failed to get playlist url by embed Id ${embedId}, because: ${
+          (err as Error).message
+        }`,
+      );
+      return undefined;
+    }
+  }
+
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const postInfo = await this.getPostInfo(videoId);
     if (!postInfo) {
@@ -32,28 +50,22 @@ export default class EpicGamesHelper extends BaseHelper {
     }
 
     const videoBlock = postInfo.blocks.find((block) => block.type === "video");
-    const playlistUrl = videoBlock?.video_url?.replace("qsep://", "https://");
+    if (!videoBlock) {
+      return undefined;
+    }
+
+    const playlistUrl = await this.fetchPlaylistUrl(videoBlock.video_id);
     if (!playlistUrl) {
       return undefined;
     }
 
     const { title, description } = postInfo;
-    const subtitles = videoBlock?.video_captions?.map(
-      (caption) =>
-        ({
-          language: normalizeLang(caption.locale),
-          source: "epicgames",
-          format: "vtt",
-          url: caption.signed_url,
-        }) as VideoDataSubtitle,
-    );
 
     // url returns a json containing a dash playlist (in base64) in the playlist field
     return {
       url: playlistUrl,
       title,
       description,
-      subtitles,
     };
   }
 

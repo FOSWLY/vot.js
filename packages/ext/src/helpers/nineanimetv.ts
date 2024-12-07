@@ -144,10 +144,8 @@ export default class NineAnimeTVHelper extends BaseHelper {
           return undefined;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        if (e.data?.startsWith("getVideoId:")) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-          const videoId = e.data.replace("getVideoId:", "") as string;
+        if (typeof e.data === "string" && e.data.startsWith("getVideoId:")) {
+          const videoId = e.data.replace("getVideoId:", "");
           return resolve(videoId);
         }
 
