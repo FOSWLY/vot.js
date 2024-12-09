@@ -2,9 +2,9 @@ import { parseFromString } from "dom-parser";
 
 import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import * as Linkedin from "../types/helpers/linkedin";
 
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import * as Linkedin from "@vot.js/shared/types/helpers/linkedin";
 import { proxyMedia } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
 
