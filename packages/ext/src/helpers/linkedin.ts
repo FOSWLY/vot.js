@@ -1,51 +1,55 @@
 import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import * as Linkedin from "../types/helpers/linkedin";
 
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import * as Linkedin from "@vot.js/shared/types/helpers/linkedin";
-import { proxyMedia } from "@vot.js/shared/utils/utils";
+// import * as Linkedin from "@vot.js/shared/types/helpers/linkedin";
+import { normalizeLang, proxyMedia } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
 
 export default class LinkedinHelper extends BaseHelper {
-  API_ORIGIN = "https://www.linkedin.com/learning";
+  static getPlayer() {
+    const videoEl = document.querySelector<Linkedin.PlayerElement>(".video-js");
+    if (!videoEl) {
+      return undefined;
+    }
+
+    return videoEl.player;
+  }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      const videoEl = document.querySelector(".video-js");
-      if (!videoEl) {
-        throw new VideoHelperError(
-          `Failed to find video element for videoID ${videoId}`,
+      const player = LinkedinHelper.getPlayer();
+      if (!player) {
+        throw new Error(
+          `Video player doesn't have player option, videoId ${videoId}`,
         );
       }
 
-      const dataSource = (videoEl.getAttribute("data-sources") ?? "[]")
-        .replaceAll("&quot;", '"')
-        .replaceAll("&amp;", "&");
-      const sources = JSON.parse(dataSource) as Linkedin.Source[];
-      const videoUrl = sources.find((source) => source.src.includes(".mp4"));
+      const {
+        cache_: { sources, duration },
+        textTracks_: { tracks_ },
+      } = player;
+      const videoUrl = sources.find((source) => source.type === "video/mp4");
       if (!videoUrl) {
         throw new Error(`Failed to find video url for videoID ${videoId}`);
       }
 
       const url = new URL(videoUrl.src);
-      const captionUrl = videoEl.getAttribute("data-captions-url");
-      const subtitles = captionUrl
-        ? ([
-            {
-              language: "en",
-              source: "linkedin",
-              format: "vtt",
-              url: captionUrl,
-            },
-          ] as VideoDataSubtitle[])
-        : undefined;
+      const subtitles: VideoDataSubtitle[] = tracks_.map((track) => ({
+        language: normalizeLang(track.language),
+        source: "linkedin",
+        format: "vtt",
+        url: track.src,
+      }));
 
       return {
         url: proxyMedia(url),
+        duration,
         subtitles,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error("Failed to get linkedin video data", (err as Error).message);
       return undefined;
     }
