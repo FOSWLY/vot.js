@@ -1,3 +1,19 @@
+# 2.0.10
+
+## Ext
+
+- Changed linkedin subtitles and video url logic
+- Added support linkedin logined
+- Added linkedin player types
+
+## Node
+
+- Added linkedin types
+
+## Shared
+
+- Removed linkedin types
+
 # 2.0.9
 
 ## Ext
