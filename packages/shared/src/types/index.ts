@@ -14,7 +14,6 @@ export * as CoursehunterLikeType from "./helpers/coursehunterLike";
 export * as EpicGamesType from "./helpers/epicgames";
 export * as NineAnimeTVType from "./helpers/nineanimetv";
 export * as SapType from "./helpers/sap";
-export * as LinkedinType from "./helpers/linkedin";
 export * as VimeoType from "./helpers/vimeo";
 export * as PornTNType from "./helpers/porntn";
 export * as UdemyType from "./helpers/udemy";
