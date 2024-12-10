@@ -9,6 +9,7 @@ import type {
 export enum ExtVideoService {
   udemy = "udemy",
   coursera = "coursera",
+  douyin = "douyin",
 }
 
 export type VideoService = CoreVideoService | ExtVideoService;

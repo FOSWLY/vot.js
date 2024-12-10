@@ -112,6 +112,14 @@ export default [
     selector: null,
   },
   {
+    host: ExtVideoService.douyin,
+    url: "https://www.douyin.com/",
+    match: /^(www.)?douyin.com/,
+    selector: ".xg-video-container",
+    needExtraData: true,
+    needBypassCSP: true,
+  },
+  {
     host: CoreVideoService.vimeo,
     url: "https://vimeo.com/",
     match: /^vimeo.com$/,
