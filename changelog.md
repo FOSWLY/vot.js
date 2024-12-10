@@ -1,3 +1,10 @@
+# 2.0.11
+
+## Ext
+
+- Added support Douyin
+- Added export linkedin types
+
 # 2.0.10
 
 ## Ext
