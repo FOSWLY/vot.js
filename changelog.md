@@ -1,3 +1,9 @@
+# 2.0.12
+
+## Ext
+
+- Fixed invalid douyin helper in available helpers
+
 # 2.0.11
 
 ## Ext
