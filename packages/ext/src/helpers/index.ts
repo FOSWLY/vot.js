@@ -49,7 +49,7 @@ import DzenHelper from "./dzen";
 import UdemyHelper from "./udemy";
 import CourseraHelper from "./coursera";
 import CloudflareStreamHelper from "./cloudflarestream";
-import DouyinHelper from "./cloudflarestream";
+import DouyinHelper from "./douyin";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";

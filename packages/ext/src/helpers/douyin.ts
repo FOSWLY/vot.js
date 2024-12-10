@@ -6,7 +6,7 @@ import { proxyMedia } from "@vot.js/shared/utils/utils";
 import { RequestLang } from "@vot.js/shared/types/data";
 import { availableLangs } from "@vot.js/shared/consts";
 
-export default class TikTokHelper extends BaseHelper {
+export default class DouyinHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string) {
     // @ts-expect-error var from page scripts
