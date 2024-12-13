@@ -139,7 +139,7 @@ export default [
     host: CoreVideoService.xvideos,
     url: "https://www.xvideos.com/",
     match: /^(www.)?(xvideos|xv-ru).com$/,
-    selector: ".video-bg-pic",
+    selector: "#hlsplayer",
     needBypassCSP: true,
   },
   {
