@@ -10,8 +10,12 @@ export default class DouyinHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string) {
     // @ts-expect-error var from page scripts
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const xgPlayer: Douyin.Player = player; // window.player
+    if (typeof player === "undefined") {
+      return undefined;
+    }
+
+    // @ts-expect-error var from page scripts
+    const xgPlayer = player as Douyin.Player; // window.player
 
     const { url: sources, duration, lang, isLive: isStream } = xgPlayer.config;
     if (!sources) {

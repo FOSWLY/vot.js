@@ -8,13 +8,17 @@ import Logger from "@vot.js/shared/utils/logger";
 export default class PornTNHelper extends BaseHelper {
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // @ts-expect-error var from page scripts
+      if (typeof flashvars === "undefined") {
+        return undefined;
+      }
+
       const {
         rnd,
         video_url: source,
         video_title: title,
-      }: // @ts-expect-error var from page scripts
-      PornTN.FlashVars = flashvars; // window.flashvars
+        // @ts-expect-error var from page scripts
+      } = flashvars as PornTN.FlashVars; // window.flashvars
       if (!source || !rnd) {
         throw new VideoHelperError("Failed to find video source or rnd");
       }

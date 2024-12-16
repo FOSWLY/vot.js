@@ -121,9 +121,15 @@ export default class VimeoHelper extends BaseHelper {
 
   async getPrivateVideoInfo(videoId: string) {
     try {
+      // @ts-expect-error var from page scripts
+      if (typeof playerConfig === "undefined") {
+        return undefined;
+      }
+
+      // @ts-expect-error var from page scripts
+      const vimeoPlayerConfig = playerConfig as Vimeo.PlayerConfig;
       const videoSource = await this.getPrivateVideoSource(
-        // @ts-expect-error var from page scripts
-        (playerConfig as Vimeo.PlayerConfig).request.files,
+        vimeoPlayerConfig.request.files,
       );
       if (!videoSource) {
         throw new VideoHelperError("Failed to get private video source");
@@ -132,8 +138,7 @@ export default class VimeoHelper extends BaseHelper {
       const {
         video: { title, duration },
         request: { text_tracks: subs },
-        // @ts-expect-error var from page scripts
-      } = playerConfig as Vimeo.PlayerConfig;
+      } = vimeoPlayerConfig;
       return {
         url: `${this.SITE_ORIGIN}/${videoId}`,
         video_url: videoSource,
