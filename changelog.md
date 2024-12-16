@@ -1,3 +1,10 @@
+# 2.0.14
+
+## Ext
+
+- Fix VK Mobile getVideoData
+- Added extra checks for global variables from window
+
 # 2.0.13
 
 ## Ext
