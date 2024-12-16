@@ -9,11 +9,12 @@ import { normalizeLang } from "@vot.js/shared/utils/utils";
 export default class VKHelper extends BaseHelper {
   static getPlayer() {
     // @ts-expect-error var from page scripts
-    const videoView = Videoview as VK.Videoview;
-    if (!videoView) {
+    if (typeof Videoview === "undefined") {
       return undefined;
     }
 
+    // @ts-expect-error var from page scripts
+    const videoView = Videoview as VK.Videoview;
     return videoView.getPlayerObject
       ? videoView.getPlayerObject.call(undefined)
       : undefined;
