@@ -1,3 +1,20 @@
+# 2.0.15
+
+## Ext
+
+- Added support Loom
+- Fix get video ID for VK Playlist with videoXXXXX_XXXXXXX
+
+## Node
+
+- Added support Loom
+- Fix get video ID for VK Playlist with videoXXXXX_XXXXXXX
+
+## Shared
+
+- Added GraphQL placeholder type
+- Bannedvideo helper type GraphQLResponse renamed to GetVideoResponse
+
 # 2.0.14
 
 ## Ext
