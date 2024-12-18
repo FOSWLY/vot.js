@@ -8,7 +8,7 @@ export default class VKHelper extends BaseHelper {
       return pathID[0].slice(1);
     }
 
-    const idInsidePlaylist = /\/playlist\/[^/]+\/(video-\d{8,9}_\d{9})/.exec(
+    const idInsidePlaylist = /\/playlist\/[^/]+\/(video-?\d{8,9}_\d{9})/.exec(
       url.pathname,
     );
     if (idInsidePlaylist) {
