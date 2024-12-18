@@ -274,6 +274,48 @@ Siate belle e zelanti</b>
 00:04:06,750 --> 00:04:08,760
 Ieri è stato incredibile, vero?`;
 
+const vttWithIds = `WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.520
+<v 0>What is up guys? In this video you're gonna learn exactly what you will</v>
+
+2
+00:00:03.520 --> 00:00:05.800
+get by joining the gift funders university,
+
+3
+00:00:05.900 --> 00:00:09.700
+okay? So the first question is why join and learn from me in the
+
+4
+00:00:09.700 --> 00:00:12.840
+first place? Well, you're gonna get the GFU trading course,
+
+5
+00:00:12.980 --> 00:00:16.660
+okay? It's gonna show you how to get funded capital and we're actually gonna`;
+
+const srtForVTTWithIds = `1
+00:00:00,000 --> 00:00:03,520
+<v 0>What is up guys? In this video you're gonna learn exactly what you will</v>
+
+2
+00:00:03,520 --> 00:00:05,800
+get by joining the gift funders university,
+
+3
+00:00:05,900 --> 00:00:09,700
+okay? So the first question is why join and learn from me in the
+
+4
+00:00:09,700 --> 00:00:12,840
+first place? Well, you're gonna get the GFU trading course,
+
+5
+00:00:12,980 --> 00:00:16,660
+okay? It's gonna show you how to get funded capital and we're actually gonna`;
+
 test("Convert JSON (with tokens) -> SRT", () => {
   const subs = convertSubs(jsonSubs, "srt");
   expect(subs).toEqual(srtSubs);
@@ -317,4 +359,9 @@ test("Convert VTT (multi-line with paragraphs + with short timestamp format) -> 
 test("Convert VTT (with big metadata) -> JSON", () => {
   const subs = convertSubs(vttSubsWithBigMeta, "json");
   expect(subs).toEqual(jsonSubsFromVTTWithBigMeta);
+});
+
+test("Convert VTT (with IDs) -> SRT", () => {
+  const subs = convertSubs(vttWithIds, "srt");
+  expect(subs).toEqual(srtForVTTWithIds);
 });

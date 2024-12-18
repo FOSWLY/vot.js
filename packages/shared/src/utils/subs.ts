@@ -72,6 +72,10 @@ function convertSubsToJSON(
     parts.shift();
   }
 
+  if (/^\d+\n/.exec(parts?.[0] ?? "")) {
+    from = "srt";
+  }
+
   const offset = +(from === "srt");
   const subtitles = parts.reduce((result, part) => {
     // for work with multi-line subs
