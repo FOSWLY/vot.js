@@ -1,3 +1,13 @@
+# 2.0.16
+
+## Ext
+
+- Enabled needExtraData for Loom
+
+## Shared
+
+- Added support convert VTT subs with IDs
+
 # 2.0.15
 
 ## Ext
