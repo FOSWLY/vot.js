@@ -450,6 +450,13 @@ export default [
     host: CoreVideoService.cloudflarestream,
     url: "stub",
     match: /^(watch|embed|iframe|customer-[^.]+).cloudflarestream.com$/,
+    selector: null,
+  },
+  {
+    host: CoreVideoService.loom,
+    url: "https://www.loom.com/share/",
+    match: /^(www.)?loom.com$/,
+    selector: ".VideoLayersContainer",
   },
   {
     host: CoreVideoService.custom,

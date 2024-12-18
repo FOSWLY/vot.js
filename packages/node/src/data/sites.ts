@@ -294,6 +294,11 @@ export default [
     match: /^(watch|embed|iframe|customer-[^.]+).cloudflarestream.com$/,
   },
   {
+    host: CoreVideoService.loom,
+    url: "https://www.loom.com/share/",
+    match: /^(www.)?loom.com$/,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),

@@ -624,3 +624,18 @@ describe("cloudflare stream", () => {
     expect(normalized).toEqual(expected);
   });
 });
+
+describe("loom", () => {
+  const expected =
+    "https://www.loom.com/share/a0c5fd9e3e5f4beb9151b076b20f77fb";
+  test("embed", async () => {
+    const videoUrl =
+      "https://www.loom.com/embed/a0c5fd9e3e5f4beb9151b076b20f77fb";
+    const normalized = await normalize(videoUrl);
+    expect(normalized).toEqual(expected);
+  });
+  test("customer", async () => {
+    const normalized = await normalize(expected);
+    expect(normalized).toEqual(expected);
+  });
+});
