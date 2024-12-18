@@ -457,6 +457,7 @@ export default [
     url: "https://www.loom.com/share/",
     match: /^(www.)?loom.com$/,
     selector: ".VideoLayersContainer",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.custom,
