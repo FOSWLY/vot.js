@@ -8,7 +8,7 @@ export default class BannedVideoHelper extends BaseHelper {
 
   async getVideoInfo(
     videoId: string,
-  ): Promise<false | BannedVideo.GraphQLResponse> {
+  ): Promise<false | BannedVideo.GetVideoResponse> {
     try {
       const res = await this.fetch(`${this.API_ORIGIN}/graphql`, {
         method: "POST",
@@ -35,7 +35,7 @@ export default class BannedVideoHelper extends BaseHelper {
         },
       });
 
-      return (await res.json()) as BannedVideo.GraphQLResponse;
+      return (await res.json()) as BannedVideo.GetVideoResponse;
     } catch (err: unknown) {
       console.error(
         `Failed to get bannedvideo video info by videoId: ${videoId}.`,

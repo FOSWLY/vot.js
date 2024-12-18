@@ -1,3 +1,5 @@
+import { GraphQL } from "../utils";
+
 export enum TypeName {
   Channel = "Channel",
   Video = "Video",
@@ -21,7 +23,4 @@ export type VideoInfo = {
   isStream: boolean;
 };
 
-export type GraphQLResponse = {
-  data: Record<OperationName, VideoInfo>;
-  extensions: unknown;
-};
+export type GetVideoResponse = GraphQL<Record<OperationName, VideoInfo>>;
