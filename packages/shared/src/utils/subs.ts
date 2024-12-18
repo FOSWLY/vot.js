@@ -72,7 +72,7 @@ function convertSubsToJSON(
     parts.shift();
   }
 
-  if (/^\d+\n/.exec(parts?.[0] ?? "")) {
+  if (/^\d+\r?\n/.exec(parts?.[0] ?? "")) {
     from = "srt";
   }
 
