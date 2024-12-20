@@ -51,6 +51,7 @@ import CourseraHelper from "./coursera";
 import CloudflareStreamHelper from "./cloudflarestream";
 import DouyinHelper from "./douyin";
 import LoomHelper from "./loom";
+import ArtstationHelper from "./artstation";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -100,6 +101,7 @@ export * as CourseraHelper from "./coursera";
 export * as CloudflareStreamHelper from "./cloudflarestream";
 export * as DouyinHelper from "./douyin";
 export * as LoomHelper from "./loom";
+export * as ArtstationHelper from "./artstation";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -155,6 +157,7 @@ export const availableHelpers = {
   [ExtVideoService.udemy]: UdemyHelper,
   [ExtVideoService.coursera]: CourseraHelper,
   [ExtVideoService.douyin]: DouyinHelper,
+  [ExtVideoService.artstation]: ArtstationHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

@@ -460,6 +460,13 @@ export default [
     needExtraData: true,
   },
   {
+    host: ExtVideoService.artstation,
+    url: "https://www.artstation.com/learning/",
+    match: /^(www.)?artstation.com$/,
+    selector: ".vjs-v7",
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),
