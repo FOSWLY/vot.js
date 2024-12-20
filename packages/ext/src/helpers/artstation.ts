@@ -9,10 +9,22 @@ import Logger from "@vot.js/shared/utils/logger";
 export default class ArtstationHelper extends BaseHelper {
   API_ORIGIN = "https://www.artstation.com/api/v2/learning";
 
+  getCSRFToken() {
+    return document.querySelector<HTMLMetaElement>(
+      'meta[name="public-csrf-token"]',
+    )?.content;
+  }
+
   async getCourseInfo(courseId: string) {
     try {
       const res = await this.fetch(
         `${this.API_ORIGIN}/courses/${courseId}/autoplay.json`,
+        {
+          method: "POST",
+          headers: {
+            "PUBLIC-CSRF-TOKEN": this.getCSRFToken(),
+          },
+        },
       );
 
       return (await res.json()) as Artstation.Course;
@@ -43,7 +55,7 @@ export default class ArtstationHelper extends BaseHelper {
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    const [, courseId, , , chapterId] = videoId.split("/")?.[1];
+    const [, courseId, , , chapterId] = videoId.split("/");
     const courseInfo = await this.getCourseInfo(courseId);
     if (!courseInfo) {
       return undefined;
