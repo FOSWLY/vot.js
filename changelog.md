@@ -1,3 +1,18 @@
+# 2.0.17
+
+## Ext
+
+- Added support Artstation
+- Removed extra unknown type for try/catch in EpicGames helepr
+
+## Node
+
+- Removed extra unknown type for try/catch in EpicGames helepr
+
+## Shared
+
+- Fix detect VTT subs with IDs if ID ends with `\r\n`
+
 # 2.0.16
 
 ## Ext
