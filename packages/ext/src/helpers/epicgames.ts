@@ -16,7 +16,7 @@ export default class EpicGamesHelper extends BaseHelper {
       );
 
       return (await res.json()) as EpicGames.Post;
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get epicgames post info by videoId: ${videoId}.`,
         (err as Error).message,
