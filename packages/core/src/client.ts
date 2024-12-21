@@ -686,6 +686,11 @@ export default class VOTClient {
 }
 
 export class VOTWorkerClient extends VOTClient {
+  constructor(opts: VOTOpts = {}) {
+    opts.host = opts.host ?? config.hostWorker;
+    super(opts);
+  }
+
   async request<T = ArrayBuffer>(
     path: string,
     body: Uint8Array,
