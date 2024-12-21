@@ -1,3 +1,13 @@
+# 2.0.19
+
+## Core
+
+- Fixed default host for VOTWorkerClient
+
+## Shared
+
+- Added `hostWorker` to config
+
 # 2.0.18
 
 ## Ext
