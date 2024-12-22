@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { FetchFunction } from "@vot.js/core/types/client";
-import { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
 
+import type { BaseHelperOpts } from "../types/helpers/base";
 import type { MinimalVideoData } from "../types/client";
 import { ServiceConf } from "../types/service";
 
@@ -20,7 +20,8 @@ export class BaseHelper {
   extraInfo: boolean;
   referer: string;
   origin: string;
-  service: ServiceConf | undefined;
+  service?: ServiceConf;
+  video?: HTMLVideoElement;
 
   constructor({
     fetchFn = fetchWithTimeout,
@@ -28,7 +29,8 @@ export class BaseHelper {
     referer = document.referrer ?? window.location.origin + "/",
     origin = window.location.origin,
     service,
-  }: BaseHelperOpts<ServiceConf> = {}) {
+    video,
+  }: BaseHelperOpts = {}) {
     this.fetch = fetchFn;
     this.extraInfo = extraInfo;
     this.referer = referer;
@@ -36,6 +38,7 @@ export class BaseHelper {
       ? origin
       : window.location.origin;
     this.service = service;
+    this.video = video;
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {

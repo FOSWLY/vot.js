@@ -39,7 +39,6 @@ export function getService() {
 
 export async function getVideoID(
   service: ServiceConf,
-  video: HTMLVideoElement,
   opts: GetVideoDataOpts = {},
 ) {
   const url = new URL(window.location.href);
@@ -55,10 +54,9 @@ export async function getVideoID(
 
 export async function getVideoData(
   service: ServiceConf,
-  video: HTMLVideoElement,
   opts: GetVideoDataOpts = {},
 ): Promise<VideoData<VideoService>> {
-  const videoId = await getVideoID(service, video, opts);
+  const videoId = await getVideoID(service, opts);
   if (!videoId) {
     throw new VideoDataError(`Entered unsupported link: "${service.host}"`);
   }
@@ -71,7 +69,7 @@ export async function getVideoData(
       CoreVideoService.cloudflarestream,
     ].includes(service.host as CoreVideoService)
   ) {
-    service.url = origin; // set the url of the current site for peertube
+    service.url = origin; // set the url of the current site
   }
 
   if (service.rawResult) {
