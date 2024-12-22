@@ -1,3 +1,19 @@
+# 2.1.0
+
+## Ext
+
+> [!WARNING]
+> Breaking changes in getVideoId and getVideoData params
+
+- Added support getVideoId for Twitter feed
+- Added export Artstation and Loom helper types
+- Added param `video` to BaseHelperOpts
+- Removed param `video` for `getVideoId` and `getVideoData` funcs
+
+## Workspace
+
+- Update depends
+
 # 2.0.19
 
 ## Core
