@@ -1,3 +1,9 @@
+# 2.1.1
+
+## Ext
+
+- Fix client Yandex Disk duration
+
 # 2.1.0
 
 ## Ext
