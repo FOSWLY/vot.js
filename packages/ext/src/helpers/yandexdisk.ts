@@ -80,7 +80,7 @@ export default class YandexDiskHelper extends BaseHelper {
       return {
         url: short_url,
         title,
-        duration: video_info.duration,
+        duration: Math.round(video_info.duration / 1000),
       };
     } catch (err) {
       console.error(
