@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/shared",
   "description": "shared for all @vot.js package",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "Toil",
   "license": "MIT",
   "repository": {

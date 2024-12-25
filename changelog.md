@@ -1,3 +1,9 @@
+# 2.1.2
+
+## Ext
+
+- Added getVideoId by player for Douyin
+
 # 2.1.1
 
 ## Ext
