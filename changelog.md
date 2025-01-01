@@ -1,3 +1,14 @@
+# 2.1.3
+
+## Ext
+
+- Fixed mobile VKVideo
+
+## Workspace
+
+- Updated vot-worker domain in readme
+- Removed useless fields from workspace package.json
+
 # 2.1.2
 
 ## Ext
