@@ -43,7 +43,7 @@ Proxying via [vot-worker](https://github.com/FOSWLY/vot-worker):
 
 ```ts
 const client = new VOTWorkerClient({
-  host: "vot.toil.cc",
+  host: "vot-worker.toil.cc",
 });
 ```
 

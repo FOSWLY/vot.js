@@ -43,7 +43,7 @@ const result = await client.translateVideo({ videoData });
 
 ```ts
 const client = new VOTWorkerClient({
-  host: "vot.toil.cc",
+  host: "vot-worker.toil.cc",
 });
 ```
 
