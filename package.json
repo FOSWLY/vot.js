@@ -6,8 +6,6 @@
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "devDependencies": {
     "@sinclair/typebox-codegen": "^0.10.5",
     "@types/bun": "latest",
@@ -30,12 +28,6 @@
     "url": "https://github.com/FOSWLY/vot.js/issues"
   },
   "description": "Unoffical library for interacting with the Yandex VOT API",
-  "engines": {
-    "node": ">=18"
-  },
-  "files": [
-    "dist"
-  ],
   "homepage": "https://github.com/FOSWLY/vot.js#readme",
   "keywords": [
     "voice-over-translation",
@@ -58,7 +50,6 @@
     "prepare": "husky"
   },
   "type": "module",
-  "types": "dist/index.d.ts",
   "workspaces": [
     "packages/*"
   ]
