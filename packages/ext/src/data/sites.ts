@@ -62,7 +62,7 @@ export default [
     additionalData: "mobile",
     host: CoreVideoService.vk,
     url: "https://vk.com/video?z=",
-    match: /^m.vk.(com|ru)$/,
+    match: [/^m.vk.(com|ru)$/, /^m.vkvideo.ru$/],
     selector: "vk-video-player",
     shadowRoot: true,
     needExtraData: true,
