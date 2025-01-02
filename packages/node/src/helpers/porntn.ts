@@ -11,7 +11,7 @@ export default class PornTNHelper extends BaseHelper {
     try {
       const res = await this.fetch(this.service?.url + videoId);
       const content = await res.text();
-      const doc = parseFromString(content.replace("<!DOCTYPE html>", ""));
+      const doc = parseFromString(content.replace(/<!DOCTYPE html>/i, ""));
       const varDelimiter = /var flashvars\s=\s/;
       const dataScript = doc
         .getElementsByTagName("script")

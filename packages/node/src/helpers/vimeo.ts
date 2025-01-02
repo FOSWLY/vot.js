@@ -130,7 +130,7 @@ export default class VimeoHelper extends BaseHelper {
       });
 
       const content = await res.text();
-      const doc = parseFromString(content.replace("<!DOCTYPE html>", ""));
+      const doc = parseFromString(content.replace(/<!DOCTYPE html>/i, ""));
       const playerConfigScript = doc
         .getElementsByTagName("script")
         .filter((s) => s.innerHTML.startsWith(`window.playerConfig`))?.[0];

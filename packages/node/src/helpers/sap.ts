@@ -84,7 +84,7 @@ export default class SapHelper extends BaseHelper {
       }
 
       const [, kalturaDomain, partnerId] = sapData;
-      const doc = parseFromString(content.replace("<!DOCTYPE html>", ""));
+      const doc = parseFromString(content.replace(/<!DOCTYPE html>/i, ""));
       let entryId = doc
         .getElementById("shadow")
         ?.firstChild?.getAttribute("id");

@@ -15,7 +15,7 @@ export default class LinkedinHelper extends BaseHelper {
     try {
       const res = await this.fetch(`${this.API_ORIGIN}/${videoId}`);
       const content = await res.text();
-      const doc = parseFromString(content.replace("<!DOCTYPE html>", ""));
+      const doc = parseFromString(content.replace(/<!DOCTYPE html>/i, ""));
       const videoEl = doc.getElementsByClassName("video-js")?.[0];
       if (!videoEl) {
         throw new VideoHelperError(
