@@ -254,7 +254,8 @@ export default [
   {
     host: CoreVideoService.yandexdisk,
     url: "https://yadi.sk/",
-    match: /^disk.yandex.ru$/,
+    match:
+      /^disk.yandex.(ru|kz|com(\.(am|ge|tr))?|by|az|co\.il|ee|lt|lv|md|net|tj|tm|uz)$/,
     selector: ".video-player__player > div:nth-child(1)",
     eventSelector: ".video-player__player",
     needBypassCSP: true,

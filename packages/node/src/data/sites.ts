@@ -153,8 +153,10 @@ export default [
   },
   {
     host: CoreVideoService.yandexdisk,
-    url: "https://yadi.sk/i/",
-    match: /^disk.yandex.ru|yadi.sk$/,
+    url: "https://yadi.sk/",
+    match:
+      /^disk.yandex.(ru|kz|com(\.(am|ge|tr))?|by|az|co\.il|ee|lt|lv|md|net|tj|tm|uz)|yadi.sk$/,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.okru,
