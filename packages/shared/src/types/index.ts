@@ -18,3 +18,4 @@ export * as VimeoType from "./helpers/vimeo";
 export * as PornTNType from "./helpers/porntn";
 export * as UdemyType from "./helpers/udemy";
 export * as CourseraType from "./helpers/coursera";
+export * as YandexDiskType from "./helpers/yandexdisk";
