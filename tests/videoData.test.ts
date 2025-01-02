@@ -339,13 +339,52 @@ test("trovo", async () => {
 
 describe("yandex disk", () => {
   const expected = "https://yadi.sk/i/hbqmQQTZAWB8Mw";
-  test("normal", async () => {
-    expect(await normalize("https://disk.yandex.ru/i/hbqmQQTZAWB8Mw")).toEqual(
-      expected,
-    );
-  });
+  const tlds = [
+    "ru",
+    "kz",
+    "com",
+    "com.am",
+    "com.ge",
+    "com.tr",
+    "by",
+    "az",
+    "co.il",
+    "ee",
+    "lt",
+    "lv",
+    "md",
+    "net",
+    "tj",
+    "tm",
+    "uz",
+  ];
+
+  for (const tld of tlds) {
+    test(`normal (tld .${tld})`, async () => {
+      expect(
+        await normalize(`https://disk.yandex.${tld}/i/hbqmQQTZAWB8Mw`),
+      ).toEqual(expected);
+    });
+  }
+
   test("short", async () => {
     expect(await normalize(expected)).toEqual(expected);
+  });
+
+  test("/d/ -> short", async () => {
+    expect(
+      await normalize(
+        "https://disk.yandex.ru/d/v5S3KvwKt3v7yA/youtube_BpMUCLduj4w_1920x1080_h264.mp4",
+      ),
+    ).toEqual("https://yadi.sk/i/v4oEo0ctFDGMJw");
+  });
+
+  test("/d/ -> mp4", async () => {
+    expect(
+      await normalize(
+        "https://disk.yandex.ru/d/v5S3KvwKt3v7yA/test/%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%BF%D0%B0%D0%BF%D0%BA%D0%B0/ntcn.mp4",
+      ),
+    ).toStartWith("https://media-proxy.toil.cc/v1/proxy/video.mp4");
   });
 });
 
