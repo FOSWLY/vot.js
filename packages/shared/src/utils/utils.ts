@@ -175,7 +175,7 @@ export function proxyMedia(url: URL | string, format: "mp4" | "webm" = "mp4") {
   if (!(url instanceof URL)) {
     return `${generalUrl}&url=${btoa(url)}`;
   }
-  return `${generalUrl}&url=${btoa(encodeURIComponent(url.href))}&origin=${
+  return `${generalUrl}&url=${btoa(url.href)}&origin=${url.origin}&referer=${
     url.origin
-  }&referer=${url.origin}`;
+  }`;
 }
