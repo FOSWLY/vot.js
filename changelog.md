@@ -1,3 +1,20 @@
+# 2.1.4
+
+## Ext
+
+- Added support all yandex disk tlds
+- Added support yandex disk /d/
+
+## Node
+
+- Added support all yandex disk tlds
+- Added support yandex disk /d/
+- Replaced all `replace("<!DOCTYPE html>", "")` to case insensitive variant
+
+## Shared
+
+- Removed encodeURIComponent for href in proxyMedia
+
 # 2.1.3
 
 ## Ext
