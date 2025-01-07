@@ -10,6 +10,10 @@
 - Added support RT News (rt.com)
 - Added support some new domains for XVideos
 
+## Core
+
+- Added RT News service
+
 ## Workspace
 
 - Added prettier to dev depends to work properly with the IDEs Auto Formatter
