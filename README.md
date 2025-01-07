@@ -14,13 +14,13 @@ The library supports working with [worker servers](https://github.com/FOSWLY/vot
 To work with Node, Bun, or other runtimes, install the `@vot.js/node`:
 
 ```bash
-bin install @vot.js/node
+bun install @vot.js/node
 ```
 
 To develop browser extensions, install the `@vot.js/ext`:
 
 ```bash
-bin install @vot.js/ext
+bun install @vot.js/ext
 ```
 
 If you only need part of the functionality, use the `@vot.js/core` and `@vot.js/shared`
