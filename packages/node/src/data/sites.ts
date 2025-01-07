@@ -87,7 +87,11 @@ export default [
   {
     host: CoreVideoService.xvideos,
     url: "https://www.xvideos.com/",
-    match: /^(www.)?(xvideos|xv-ru).com$/,
+    match: [
+      /^(www.)?xvideos(-ar)?.com$/,
+      /^(www.)?xvideos(\d\d\d).com$/,
+      /^(www.)?xv-ru.com$/,
+    ],
   },
   {
     host: CoreVideoService.pornhub,
@@ -299,6 +303,12 @@ export default [
     host: CoreVideoService.loom,
     url: "https://www.loom.com/share/",
     match: /^(www.)?loom.com$/,
+  },
+  {
+    host: CoreVideoService.rtnews,
+    url: "https://www.rt.com/",
+    match: /^(www.)?rt.com$/,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.custom,
