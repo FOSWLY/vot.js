@@ -1,3 +1,19 @@
+# 2.1.5
+
+## Ext
+
+- Added support RT News (rt.com)
+- Added support some new domains for XVideos
+
+## Node
+
+- Added support RT News (rt.com)
+- Added support some new domains for XVideos
+
+## Workspace
+
+- Added prettier to dev depends to work properly with the IDEs Auto Formatter
+
 # 2.1.4
 
 ## Ext
