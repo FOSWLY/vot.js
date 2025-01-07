@@ -188,9 +188,25 @@ describe("vimeo", () => {
   });
 });
 
-test("xvideos", async () => {
-  const expected = "https://www.xvideos.com/video.iulmvlvbaff/_";
-  expect(await normalize(expected)).toEqual(expected);
+describe("xvideos", () => {
+  const pathname = "video.iulmvlvbaff/_";
+  const expected = `https://www.xvideos.com/${pathname}`;
+  test("normal", async () => {
+    expect(await normalize(expected)).toEqual(expected);
+  });
+  test("xv-ru", async () => {
+    expect(await normalize(`https://xv-ru.com/${pathname}`)).toEqual(expected);
+  });
+  test("xvideos-ar", async () => {
+    expect(await normalize(`https://xvideos-ar.com/${pathname}`)).toEqual(
+      expected,
+    );
+  });
+  test("xvideos with numbers", async () => {
+    expect(await normalize(`https://xvideos005.com/${pathname}`)).toEqual(
+      expected,
+    );
+  });
 });
 
 describe("pornhub", () => {
@@ -677,4 +693,11 @@ describe("loom", () => {
     const normalized = await normalize(expected);
     expect(normalized).toEqual(expected);
   });
+});
+
+test("rt news", async () => {
+  const normalized = await normalize(
+    "https://www.rt.com/russia/610519-putin-attends-mass-christmas/",
+  );
+  expect(normalized).toInclude(".mp4");
 });
