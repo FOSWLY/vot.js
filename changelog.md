@@ -1,3 +1,13 @@
+# 2.1.6
+
+## Ext
+
+- Added default values for `sec-ch-ua` and `sec-ch-ua-full-version-list` headers
+
+## Shared
+
+- Updated Yandex UserAgent
+
 # 2.1.5
 
 ## Ext
