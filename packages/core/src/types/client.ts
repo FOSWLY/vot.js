@@ -31,6 +31,7 @@ export type VideoData<T = VideoService> = {
   // for compatibility with extension / your own detect request lang logic
   isStream?: boolean;
   title?: string;
+  localizedTitle?: string;
   description?: string;
   subtitles?: VideoDataSubtitle[];
   detectedLanguage?: RequestLang;
@@ -65,6 +66,4 @@ export type ClientResponse<T = unknown> =
   | ClientFailedResponse
   | ClientSuccessResponse<T>;
 
-export type VOTSessions = {
-  [K in SessionModule]?: ClientSession;
-};
+export type VOTSessions = Partial<Record<SessionModule, ClientSession>>;
