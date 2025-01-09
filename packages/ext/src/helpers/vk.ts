@@ -15,27 +15,14 @@ export default class VKHelper extends BaseHelper {
 
     // @ts-expect-error var from page scripts
     const videoView = Videoview as VK.Videoview;
-    return videoView.getPlayerObject
-      ? videoView.getPlayerObject.call(undefined)
-      : undefined;
-  }
-
-  getDefault(videoId: string) {
-    if (!this.service) {
-      return undefined;
-    }
-
-    return {
-      url: this.service.url + videoId,
-      duration: undefined,
-    };
+    return videoView?.getPlayerObject?.call(undefined);
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const player = VKHelper.getPlayer();
     if (!player) {
-      return this.getDefault(videoId);
+      return this.returnBaseData(videoId);
     }
 
     try {
@@ -74,7 +61,7 @@ export default class VKHelper extends BaseHelper {
       Logger.error(
         `Failed to get VK video data, because: ${(err as Error).message}`,
       );
-      return this.getDefault(videoId);
+      return this.returnBaseData(videoId);
     }
   }
 

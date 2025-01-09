@@ -18,17 +18,6 @@ export default class LoomHelper extends BaseHelper {
     return release?.id;
   }
 
-  getDefault(videoId: string) {
-    if (!this.service) {
-      return undefined;
-    }
-
-    return {
-      url: this.service.url + videoId,
-      duration: undefined,
-    };
-  }
-
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
       const clientVer = this.getClientVersion();
@@ -74,7 +63,7 @@ export default class LoomHelper extends BaseHelper {
       Logger.error(
         `Failed to get Loom video data, because: ${(err as Error).message}`,
       );
-      return this.getDefault(videoId);
+      return this.returnBaseData(videoId);
     }
   }
 
