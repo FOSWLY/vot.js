@@ -1,3 +1,15 @@
+# 2.1.7
+
+## Ext
+
+- Added getVideoData for YouTube
+- Added support jsapi embed YouTube
+
+## Core
+
+- Added optional language property to getVideoData options
+- Added optional localizedTitle property to VideoData
+
 # 2.1.6
 
 ## Ext
