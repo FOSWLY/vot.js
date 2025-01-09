@@ -18,6 +18,7 @@ export default [
     url: "https://youtu.be/",
     match: /^m.youtube.com$/,
     selector: "shorts-video #player",
+    needExtraData: true,
   },
   {
     additionalData: "mobile",
@@ -25,12 +26,14 @@ export default [
     url: "https://youtu.be/",
     match: /^m.youtube.com$/,
     selector: ".player-container",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.youtube,
     url: "https://youtu.be/",
     match: /^(www.)?youtube(-nocookie|kids)?.com$/,
     selector: ".html5-video-container:not(#inline-player *)",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.invidious,
