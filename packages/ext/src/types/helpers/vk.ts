@@ -48,5 +48,5 @@ export type PlayerObject = {
 };
 
 export type Videoview = {
-  getPlayerObject(): PlayerObject;
+  getPlayerObject?(): PlayerObject;
 };
