@@ -2,9 +2,10 @@
 import { FetchFunction } from "@vot.js/core/types/client";
 import { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
+import { ResponseLang } from "@vot.js/shared/types/data";
 
 import type { MinimalVideoData } from "../types/client";
-import { ServiceConf } from "../types/service";
+import type { ServiceConf } from "../types/service";
 
 export class VideoHelperError extends Error {
   constructor(message: string) {
@@ -20,7 +21,8 @@ export class BaseHelper {
   extraInfo: boolean;
   referer: string;
   origin: string;
-  service: ServiceConf | undefined;
+  service?: ServiceConf;
+  language: ResponseLang;
 
   constructor({
     fetchFn = fetchWithTimeout,
@@ -28,12 +30,14 @@ export class BaseHelper {
     referer = "",
     origin = "",
     service,
+    language = "en",
   }: BaseHelperOpts<ServiceConf> = {}) {
     this.fetch = fetchFn;
     this.extraInfo = extraInfo;
     this.referer = referer;
     this.origin = /^(http(s)?):\/\//.test(String(origin)) ? origin : "";
     this.service = service;
+    this.language = language;
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {

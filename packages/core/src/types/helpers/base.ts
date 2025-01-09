@@ -1,6 +1,8 @@
 import type { FetchFunction } from "../client";
 import type { ServiceConf } from "../service";
 
+import type { ResponseLang } from "@vot.js/shared/types/data";
+
 export type BaseHelperOpts<T = ServiceConf> = {
   /**
    * Fetch function
@@ -17,5 +19,6 @@ export type BaseHelperOpts<T = ServiceConf> = {
    * Domain from url, it's used e.g. for api domain
    */
   origin?: string;
+  language?: ResponseLang;
   service?: T;
 };
