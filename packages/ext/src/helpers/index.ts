@@ -104,6 +104,7 @@ export * as DouyinHelper from "./douyin";
 export * as LoomHelper from "./loom";
 export * as ArtstationHelper from "./artstation";
 export * as RtNewsHelper from "./rtnews";
+export * as VideoJSHelper from "./videojs";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,

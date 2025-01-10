@@ -5,11 +5,11 @@ export type Source = {
 
 export type TextTrackMode = "disabled";
 
-export type TextTrack = {
+export type TextTrackV7 = {
   // not full typed
   default: boolean;
   id: string;
-  kind: "captions";
+  kind: "captions"; // v7 - captions | v8 - subtitles ???
   label: string;
   language: string; // e.g. en
   loaded_: boolean;
@@ -17,6 +17,18 @@ export type TextTrack = {
   preload_: boolean;
   src: string;
 };
+
+export type TextTrackV8 = {
+  // not full typed
+  id: string;
+  kind: "subtitles";
+  label: string;
+  language: string; // e.g. en
+  mode: TextTrackMode;
+  src?: string;
+};
+
+export type TextTrack = TextTrackV7 | TextTrackV8;
 
 export type TextTrackObj = {
   length: number;
@@ -38,23 +50,38 @@ export type PlayerCache = {
   volume: number;
 };
 
-export type Player = {
+export type PlayerLanguages = Record<string, Record<string, string>>; // translations?
+
+export type PlayerOptions = {
+  // not full typed
+  language: string;
+  languages: PlayerLanguages;
+  muted: boolean;
+};
+
+export type Player<T extends PlayerOptions = PlayerOptions> = {
   // not full typed
   cache_: PlayerCache;
-  el_: PlayerElement;
+  el_: PlayerElement<T>;
   isAudio_: boolean;
   isDisposed_: boolean;
   isFullscreen_: boolean;
   isPosterFromTech_: boolean;
   isReady_: boolean;
   language_: string; // user language
-  languages_: Record<string, Record<string, string>>; // translations?
+  languages_: PlayerLanguages;
   lastSource_: Record<string, string>;
   player_: Player;
   poster_: string;
-  textTracks_: TextTrackObj;
+  options_: T;
+  textTracks_?: TextTrackObj;
+  currentSources?: Source[];
+  textTracks(): TextTrackObj;
+  getCache(): PlayerCache;
+  duration(): number;
 };
 
-export interface PlayerElement extends HTMLDivElement {
-  player: Player;
+export interface PlayerElement<T extends PlayerOptions = PlayerOptions>
+  extends HTMLDivElement {
+  player: Player<T>;
 }

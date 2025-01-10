@@ -1,14 +1,18 @@
-import { BaseHelper } from "./base.js";
+import { MinimalVideoData } from "../types/client";
+import VideoJSHelper from "./videojs";
+import * as CourseraPlayer from "../types/helpers/coursera";
+import * as VideoJS from "../types/helpers/videojs";
 
 import * as Coursera from "@vot.js/shared/types/helpers/coursera";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 import { availableLangs } from "@vot.js/shared/consts";
 import { RequestLang } from "@vot.js/shared/types/data";
 import Logger from "@vot.js/shared/utils/logger";
-import { MinimalVideoData } from "../types/client.js";
+import { VideoDataSubtitle } from "@vot.js/core/types/client";
 
-export default class CourseraHelper extends BaseHelper {
+export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";
+  SUBTITLE_SOURCE = "coursera";
 
   async getCourseData(courseId: string | number) {
     try {
@@ -27,93 +31,92 @@ export default class CourseraHelper extends BaseHelper {
     }
   }
 
-  getPlayer() {
-    return document.querySelector(".vjs-v8") as HTMLElement | undefined;
-  }
-
-  getPlayerData() {
-    return (this.getPlayer() as any)?.player as Coursera.PlayerData;
-  }
-
-  findVideoUrl(sources: Coursera.Source[]) {
-    return sources?.find((src) => src.type === "video/mp4")?.src;
-  }
-
-  findSubtitleUrl(captions: Coursera.Track[], detectedLanguage: string) {
-    let subtitle = captions?.find(
-      (caption) => normalizeLang(caption.srclang) === detectedLanguage,
-    );
-
-    if (!subtitle) {
-      subtitle =
-        captions?.find((caption) => normalizeLang(caption.srclang) === "en") ||
-        captions?.[0];
-    }
-
-    return subtitle?.src;
+  static getPlayer<
+    T extends VideoJS.PlayerOptions = CourseraPlayer.PlayerOptions,
+  >() {
+    return super.getPlayer<T>();
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    const playerData = this.getPlayerData();
-    if (!playerData) {
-      Logger.error("Failed to find player data");
+    const data = this.getVideoDataByPlayer(videoId);
+    if (!data) {
       return undefined;
     }
 
-    const {
-      cache_: { duration },
-      options_: { courseId, tracks, sources },
-    } = playerData;
-
-    const videoUrl = this.findVideoUrl(sources);
-    if (!videoUrl) {
-      Logger.error("Failed to find .mp4 video file in sources", sources);
-      return undefined;
+    const { options_: options } = CourseraHelper.getPlayer() ?? {};
+    if (!data.subtitles?.length && options) {
+      data.subtitles = options.tracks.map(
+        (track) =>
+          ({
+            url: track.src,
+            language: normalizeLang(track.srclang),
+            source: this.SUBTITLE_SOURCE,
+            format: this.SUBTITLE_FORMAT,
+          }) as VideoDataSubtitle,
+      );
     }
 
-    let courseLang = "en";
+    const courseId = options?.courseId;
+    if (!courseId) {
+      return data;
+    }
+
+    let courseLang: RequestLang = "en";
     const courseData = await this.getCourseData(courseId);
     if (courseData) {
       const {
         primaryLanguageCodes: [primaryLangauge],
       } = courseData;
-      courseLang = primaryLangauge ? normalizeLang(primaryLangauge) : "en";
+      courseLang = primaryLangauge
+        ? (normalizeLang(primaryLangauge) as RequestLang)
+        : "en";
     }
 
-    if (!availableLangs.includes(courseLang as RequestLang)) {
+    if (!availableLangs.includes(courseLang)) {
       courseLang = "en";
     }
 
-    const subtitleUrl = this.findSubtitleUrl(tracks, courseLang);
+    const subtitleItem =
+      data.subtitles.find((subtitle) => subtitle.language === courseLang) ??
+      data.subtitles?.[0];
+    const subtitleUrl = subtitleItem?.url;
     if (!subtitleUrl) {
-      Logger.warn("Failed to find subtitle file in tracks", tracks);
+      Logger.warn("Failed to find any subtitle file");
     }
 
+    const { url, duration } = data;
+    const translationHelp = subtitleUrl
+      ? [
+          {
+            target: "subtitles_file_url" as const,
+            targetUrl: subtitleUrl,
+          },
+          {
+            target: "video_file_url" as const,
+            targetUrl: url,
+          },
+        ]
+      : null;
     return {
       ...(subtitleUrl
         ? {
             url: this.service?.url + videoId,
-            translationHelp: [
-              {
-                target: "subtitles_file_url",
-                targetUrl: subtitleUrl,
-              },
-              {
-                target: "video_file_url",
-                targetUrl: videoUrl,
-              },
-            ],
+            translationHelp,
           }
         : {
-            url: videoUrl,
-            translationHelp: null,
+            url,
+            translationHelp,
           }),
-      detectedLanguage: courseLang as RequestLang,
+      detectedLanguage: courseLang,
       duration,
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return /learn\/([^/]+)\/lecture\/([^/]+)/.exec(url.pathname)?.[0]; // <-- COURSE PASSING (IF YOU LOGINED TO COURSERA)
+    const matched =
+      /learn\/([^/]+)\/lecture\/([^/]+)/.exec(url.pathname) ??
+      /lecture\/([^/]+)\/([^/]+)/.exec(url.pathname);
+    return matched?.[0];
   }
 }
