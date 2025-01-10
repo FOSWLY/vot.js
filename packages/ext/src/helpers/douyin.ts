@@ -7,7 +7,7 @@ import { RequestLang } from "@vot.js/shared/types/data";
 import { availableLangs } from "@vot.js/shared/consts";
 
 export default class DouyinHelper extends BaseHelper {
-  getPlayer() {
+  static getPlayer() {
     // @ts-expect-error var from page scripts
     if (typeof player === "undefined") {
       return undefined;
@@ -19,12 +19,14 @@ export default class DouyinHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string) {
-    const xgPlayer = this.getPlayer();
+    const xgPlayer = DouyinHelper.getPlayer();
     if (!xgPlayer) {
       return undefined;
     }
 
-    const { url: sources, duration, lang, isLive: isStream } = xgPlayer.config;
+    const {
+      config: { url: sources, duration, lang, isLive: isStream },
+    } = xgPlayer;
     if (!sources) {
       return undefined;
     }
@@ -53,11 +55,6 @@ export default class DouyinHelper extends BaseHelper {
       return pathId;
     }
 
-    const xgPlayer = this.getPlayer();
-    if (!xgPlayer) {
-      return undefined;
-    }
-
-    return xgPlayer.config.vid;
+    return DouyinHelper.getPlayer()?.config.vid;
   }
 }
