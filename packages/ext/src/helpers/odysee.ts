@@ -16,7 +16,7 @@ export default class OdyseeHelper extends BaseHelper {
       }
 
       return { url };
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get odysee video data by video ID: ${videoId}`,
         (err as Error).message,

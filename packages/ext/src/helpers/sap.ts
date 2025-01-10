@@ -60,7 +60,7 @@ export default class SapHelper extends BaseHelper {
         },
       );
       return (await res.json()) as Sap.Response;
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error("Failed to request kaltura data", (err as Error).message);
       return undefined;
     }
@@ -68,9 +68,9 @@ export default class SapHelper extends BaseHelper {
 
   async getKalturaData(videoId: string) {
     try {
-      const scriptEl = document.querySelector(
+      const scriptEl = document.querySelector<HTMLScriptElement>(
         'script[data-nscript="beforeInteractive"]',
-      ) as HTMLScriptElement | undefined;
+      );
       if (!scriptEl) {
         throw new VideoHelperError("Failed to find script element");
       }
@@ -91,9 +91,8 @@ export default class SapHelper extends BaseHelper {
       )?.getAttribute("id");
       if (!entryId) {
         // for course demo
-        const nextDataEl = document.querySelector("#__NEXT_DATA__") as
-          | HTMLScriptElement
-          | undefined;
+        const nextDataEl =
+          document.querySelector<HTMLScriptElement>("#__NEXT_DATA__");
         if (!nextDataEl) {
           throw new VideoHelperError("Failed to find next data element");
         }
@@ -107,7 +106,7 @@ export default class SapHelper extends BaseHelper {
       }
 
       return await this.requestKaltura(kalturaDomain, partnerId, entryId);
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error("Failed to get kaltura data", (err as Error).message);
       return undefined;
     }

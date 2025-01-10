@@ -23,9 +23,8 @@ export default class YandexDiskHelper extends BaseHelper {
       return undefined;
     }
 
-    const preloadedScript = document.querySelector("#preloaded-data") as
-      | HTMLScriptElement
-      | undefined;
+    const preloadedScript =
+      document.querySelector<HTMLScriptElement>("#preloaded-data");
     if (!preloadedScript) {
       return undefined;
     }

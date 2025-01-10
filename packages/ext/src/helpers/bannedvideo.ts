@@ -36,7 +36,7 @@ export default class BannedVideoHelper extends BaseHelper {
       });
 
       return (await res.json()) as BannedVideo.GetVideoResponse;
-    } catch (err: unknown) {
+    } catch (err) {
       console.error(
         `Failed to get bannedvideo video info by videoId: ${videoId}.`,
         (err as Error).message,

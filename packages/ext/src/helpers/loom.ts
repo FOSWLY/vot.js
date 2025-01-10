@@ -15,7 +15,7 @@ export default class LoomHelper extends BaseHelper {
 
     // @ts-expect-error var from page scripts
     const release = SENTRY_RELEASE as Loom.SentryRelease;
-    return release?.id;
+    return release.id;
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {

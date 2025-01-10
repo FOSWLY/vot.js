@@ -14,7 +14,7 @@ export default class MailRuHelper extends BaseHelper {
         }/+/video/meta/${videoId}?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=${new Date().getTime()}`,
       );
       return (await res.json()) as MailRu.VideoInfo;
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error("Failed to get mail.ru video data", (err as Error).message);
       return undefined;
     }

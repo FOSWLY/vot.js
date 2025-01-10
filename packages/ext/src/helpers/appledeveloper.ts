@@ -9,10 +9,8 @@ export default class AppleDeveloperHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      const contentUrl = (
-        document.querySelector("meta[property='og:video']") as
-          | HTMLMetaElement
-          | undefined
+      const contentUrl = document.querySelector<HTMLMetaElement>(
+        "meta[property='og:video']",
       )?.content;
       if (!contentUrl) {
         throw new VideoHelperError("Failed to find content url");
@@ -21,7 +19,7 @@ export default class AppleDeveloperHelper extends BaseHelper {
       return {
         url: contentUrl,
       };
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get apple developer video data by video ID: ${videoId}`,
         (err as Error).message,

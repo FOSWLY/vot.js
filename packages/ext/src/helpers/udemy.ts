@@ -11,9 +11,9 @@ export default class UdemyHelper extends BaseHelper {
   API_ORIGIN = "https://www.udemy.com/api-2.0";
 
   getModuleData() {
-    const appLoaderEl = document.querySelector(
+    const appLoaderEl = document.querySelector<HTMLElement>(
       ".ud-app-loader[data-module-id='course-taking']",
-    ) as HTMLElement | undefined;
+    );
     const moduleData = appLoaderEl?.dataset?.moduleArgs;
     if (!moduleData) {
       return undefined;

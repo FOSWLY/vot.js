@@ -8,10 +8,7 @@ export default class RedditHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getContentUrl(videoId: string) {
-    if (
-      !this.service!.additionalData ||
-      this.service!.additionalData !== "old"
-    ) {
+    if (this.service?.additionalData !== "old") {
       // this isn't a video element, but nevertheless let it be so
       return (
         document.querySelector("shreddit-player-2") as
@@ -20,10 +17,7 @@ export default class RedditHelper extends BaseHelper {
       )?.src;
     }
 
-    const playerEl = document.querySelector("[data-hls-url]") as
-      | HTMLElement
-      | undefined;
-
+    const playerEl = document.querySelector<HTMLElement>("[data-hls-url]");
     return playerEl?.dataset.hlsUrl?.replaceAll("&amp;", "&");
   }
 
@@ -37,7 +31,7 @@ export default class RedditHelper extends BaseHelper {
       return {
         url: decodeURIComponent(contentUrl),
       };
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get reddit video data by video ID: ${videoId}`,
         (err as Error).message,

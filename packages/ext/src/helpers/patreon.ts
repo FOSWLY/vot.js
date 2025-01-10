@@ -16,7 +16,7 @@ export default class PatreonHelper extends BaseHelper {
       );
 
       return (await res.json()) as Patreon.PostsResponse;
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get patreon posts by postId: ${postId}.`,
         (err as Error).message,

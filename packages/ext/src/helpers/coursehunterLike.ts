@@ -15,11 +15,8 @@ export default class CoursehunterLikeHelper extends BaseHelper {
       return String(courseId);
     }
 
-    const inputEl = document.querySelector('input[name="course_id"]') as
-      | HTMLInputElement
-      | undefined;
-
-    return inputEl ? inputEl.value : undefined;
+    return document.querySelector<HTMLInputElement>('input[name="course_id"]')
+      ?.value;
   }
 
   async getLessonsData(courseId: string) {

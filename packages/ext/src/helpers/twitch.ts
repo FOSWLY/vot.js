@@ -7,9 +7,9 @@ export default class TwitchHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getClipLink(pathname: string, clipId: string | null) {
-    const schema = document.querySelector(
+    const schema = document.querySelector<HTMLScriptElement>(
       "script[type='application/ld+json']",
-    ) as HTMLScriptElement | undefined;
+    );
     const clearPathname = pathname.slice(1);
     if (schema) {
       const schemaJSON = JSON.parse(schema.innerText) as Sap.Schema;
@@ -24,11 +24,11 @@ export default class TwitchHelper extends BaseHelper {
       return `${channelName}/clip/${clearPathname}`;
     }
     const isEmbed = clearPathname === "embed";
-    const channelLink = document.querySelector(
+    const channelLink = document.querySelector<HTMLLinkElement>(
       isEmbed
         ? ".tw-link[data-test-selector='stream-info-card-component__stream-avatar-link']"
         : ".clips-player a:not([class])",
-    ) as HTMLLinkElement | undefined;
+    );
     if (!channelLink) {
       return undefined;
     }

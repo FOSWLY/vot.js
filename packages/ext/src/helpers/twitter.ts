@@ -9,10 +9,8 @@ export default class TwitterHelper extends BaseHelper {
     }
 
     const postEl = this.video?.closest('[data-testid="tweet"]');
-    const newLink = (
-      postEl?.querySelector('a[role="link"][aria-label]') as
-        | HTMLLinkElement
-        | undefined
+    const newLink = postEl?.querySelector<HTMLLinkElement>(
+      'a[role="link"][aria-label]',
     )?.href;
     return newLink ? /status\/([^/]+)/.exec(newLink)?.[1] : undefined;
   }

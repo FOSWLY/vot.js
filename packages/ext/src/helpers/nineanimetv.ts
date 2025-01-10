@@ -22,7 +22,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
       }
 
       return /data-id="(\d+)"/.exec(content.html)?.[1];
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get 9animetv servers info by episodeId: ${episodeId}.`,
         (err as Error).message,
@@ -42,7 +42,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
       }
 
       return content.link;
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get player link by sourceId: ${sourceId}.`,
         (err as Error).message,
@@ -68,7 +68,7 @@ export default class NineAnimeTVHelper extends BaseHelper {
       }
 
       return content;
-    } catch (err: unknown) {
+    } catch (err) {
       Logger.error(
         `Failed to get rapid cloud data by rapidId: ${rapidId}.`,
         (err as Error).message,
