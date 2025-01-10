@@ -1,3 +1,24 @@
+# 2.1.8
+
+## Ext
+
+> [!CAUTION]
+> BREAKING CHANGES! Some helpers types have been removed or modified!
+
+- Added shared VideoJS Helper class
+- Added Coursera player types
+- Added support Coursera lecture preview
+- Merged linkedin and coursera types to videojs
+- Set getPlayerObject optional for VK Player type
+- getDefault methods inside helpers replaced with returnBaseData method
+- Now DouyinHelper.getPlayer is static method
+- Improved some typings
+- Removed linkedin types
+
+## Shared
+
+- Removed Coursera player types
+
 # 2.1.7
 
 ## Ext
