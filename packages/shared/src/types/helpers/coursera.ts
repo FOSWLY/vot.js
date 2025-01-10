@@ -21,42 +21,6 @@ export type Course = {
   verificationEnabledAt: number;
 };
 
-export type Source = {
-  src: string;
-  type: string;
-};
-
-// not fully typed
-export type PlayerCache = {
-  duration: number;
-  currentTime: number;
-  volume: number;
-  // it's better to get the source from the player opts
-  source: Source | undefined;
-  sources: Source[];
-};
-
-export type Track = {
-  kind: "captions";
-  label: string;
-  src: string;
-  srclang: string;
-};
-
-// not fully typed
-export type PlayerOptions = {
-  // it also contains localized names, etc., but it is useless for us
-  courseId: string;
-  sources: Source[];
-  tracks: Track[];
-};
-
-// not fully typed
-export type PlayerData = {
-  cache_: PlayerCache;
-  options_: PlayerOptions;
-};
-
 export type CourseData = {
   elements: [
     {
