@@ -1,3 +1,14 @@
+# 2.1.9
+
+## Ext
+
+- Updated Developer EpicGames logic for support multi iframes
+
+## Node
+
+- Added headers for Yandex Disk to try to avoid triggering captcha
+- Added use clear link to Yandex Disk /d/ if getVideoData failed
+
 # 2.1.8
 
 ## Ext

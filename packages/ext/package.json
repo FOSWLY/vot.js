@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/ext",
   "description": "package for web extensions",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "author": "Toil",
   "license": "MIT",
   "repository": {
