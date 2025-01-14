@@ -54,7 +54,12 @@ export default class YandexDiskHelper extends BaseHelper {
 
   async getDiskVideoData(videoId: string) {
     try {
-      const res = await this.fetch(this.API_ORIGIN + videoId);
+      const res = await this.fetch(this.API_ORIGIN + videoId, {
+        headers: {
+          Origin: this.API_ORIGIN,
+          Referer: this.API_ORIGIN + "/client/disk",
+        },
+      });
       if (res.status !== 200) {
         throw new VideoHelperError("Failed to fetch document");
       }
@@ -64,7 +69,12 @@ export default class YandexDiskHelper extends BaseHelper {
 
       const prefetchEl = doc.getElementById("store-prefetch");
       if (!prefetchEl) {
-        throw new VideoHelperError("Failed to get prefetch data");
+        const reason = doc.getElementById("checkbox-captcha-form")
+          ? "page contains Captcha"
+          : "no prefetch data on page";
+        throw new VideoHelperError(
+          `Failed to get prefetch data. Reason: ${reason}`,
+        );
       }
 
       const resourcePaths = videoId.split("/").slice(3);
@@ -131,11 +141,15 @@ export default class YandexDiskHelper extends BaseHelper {
         title,
       };
     } catch (err) {
-      Logger.error(
-        `Failed to get yandex disk video data by disk video ID: ${videoId}`,
-        (err as Error).message,
+      Logger.warn(
+        `Failed to get yandex disk video data by disk video ID: ${videoId}, because ${
+          (err as Error).message
+        }. Using clear link instead...`,
       );
-      return undefined;
+      // some /d/ links is valid (https://github.com/FOSWLY/vot-cli/pull/50)
+      return {
+        url: this.service!.url + videoId.slice(1),
+      };
     }
   }
 
