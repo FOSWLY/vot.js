@@ -77,7 +77,8 @@ export default class EpicGamesHelper extends BaseHelper {
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    const postInfo = await this.getPostInfo(videoId);
+    const courseId = videoId.split(":")?.[1];
+    const postInfo = await this.getPostInfo(courseId);
     if (!postInfo) {
       return undefined;
     }
@@ -108,19 +109,21 @@ export default class EpicGamesHelper extends BaseHelper {
   async getVideoId(url: URL): Promise<string | undefined> {
     return new Promise((resolve) => {
       const origin = "https://dev.epicgames.com";
+      const reqId = btoa(window.location.href);
       window.addEventListener("message", (e) => {
         if (e.origin !== origin) {
           return undefined;
         }
 
-        if (typeof e.data === "string" && e.data.startsWith("getVideoId:")) {
-          const videoId = e.data.replace("getVideoId:", "");
-          return resolve(videoId);
+        if (!(typeof e.data === "string" && e.data.startsWith("getVideoId:"))) {
+          return undefined;
         }
 
-        return undefined;
+        // e.data is getVideoId:base64IframeLink:videoId for support multi frames on page
+        const videoId = e.data.replace("getVideoId:", "");
+        return resolve(videoId);
       });
-      window.top!.postMessage("getVideoId", origin);
+      window.top!.postMessage(`getVideoId:${reqId}`, origin);
     });
   }
 }
