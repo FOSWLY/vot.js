@@ -53,6 +53,7 @@ import DouyinHelper from "./douyin";
 import LoomHelper from "./loom";
 import ArtstationHelper from "./artstation";
 import RtNewsHelper from "./rtnews";
+import BitviewHelper from "./bitview";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -105,6 +106,7 @@ export * as LoomHelper from "./loom";
 export * as ArtstationHelper from "./artstation";
 export * as RtNewsHelper from "./rtnews";
 export * as VideoJSHelper from "./videojs";
+export * as BitviewHelper from "./bitview";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -158,6 +160,7 @@ export const availableHelpers = {
   [CoreVideoService.cloudflarestream]: CloudflareStreamHelper,
   [CoreVideoService.loom]: LoomHelper,
   [CoreVideoService.rtnews]: RtNewsHelper,
+  [CoreVideoService.bitview]: BitviewHelper,
   [ExtVideoService.udemy]: UdemyHelper,
   [ExtVideoService.coursera]: CourseraHelper,
   [ExtVideoService.douyin]: DouyinHelper,

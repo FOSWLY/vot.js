@@ -311,6 +311,12 @@ export default [
     needExtraData: true,
   },
   {
+    host: CoreVideoService.bitview,
+    url: "https://www.bitview.net/watch?v=",
+    match: /^(www.)?bitview.net$/,
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),

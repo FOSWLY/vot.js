@@ -708,3 +708,10 @@ test("rt news", async () => {
   );
   expect(normalized).toInclude(".mp4");
 });
+
+test("bitview", async () => {
+  const normalized = await normalize(
+    "https://www.bitview.net/watch?v=0rnJ4lQr",
+  );
+  expect(normalized).toInclude(".mp4");
+});

@@ -49,6 +49,7 @@ import DzenHelper from "./dzen";
 import CloudflareStreamHelper from "./cloudflarestream";
 import LoomHelper from "./loom";
 import RtNewsHelper from "./rtnews";
+import BitviewHelper from "./bitview";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -96,6 +97,7 @@ export * as DzenHelper from "./dzen";
 export * as CloudflareStreamHelper from "./cloudflarestream";
 export * as LoomHelper from "./loom";
 export * as RtNewsHelper from "./rtnews";
+export * as BitviewHelper from "./bitview";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -149,6 +151,7 @@ export const availableHelpers = {
   [CoreVideoService.cloudflarestream]: CloudflareStreamHelper,
   [CoreVideoService.loom]: LoomHelper,
   [CoreVideoService.rtnews]: RtNewsHelper,
+  [CoreVideoService.bitview]: BitviewHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
