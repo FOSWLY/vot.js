@@ -1,3 +1,13 @@
+# 2.1.10
+
+## Ext
+
+- Added support Bitview
+
+## Node
+
+- Added support Bitview
+
 # 2.1.9
 
 ## Ext
