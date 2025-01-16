@@ -1,3 +1,9 @@
+# 2.x (unreleased)
+
+## Ext
+
+- Added selector for Bitview
+
 # 2.1.10
 
 ## Ext

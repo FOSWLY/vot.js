@@ -485,6 +485,7 @@ export default [
     host: CoreVideoService.bitview,
     url: "https://www.bitview.net/watch?v=",
     match: /^(www.)?bitview.net$/,
+    selector: ".vlScreen",
     needExtraData: true,
   },
   {
