@@ -1,8 +1,27 @@
-# 2.x (unreleased)
+# 2.1.11
 
 ## Ext
 
+- Added exports from client file
 - Added selector for Bitview
+
+## Node
+
+- Added exports from client file
+- Added exports VOTProxyAgent to set HTTP/HTTPS proxy for node fetch (wrapper of undici ProxyAgent)
+- Fixed get video translations and get subtitles via Node.js (402 error)
+
+## Core
+
+- Added exports from client file
+
+## Shared
+
+- Fixed compatibility with running javascript files via Node.js (renamed autogen `protobufjs/minimal` -> `protobufjs/minimal.js`)
+
+## Workspace
+
+- Bump depends
 
 # 2.1.10
 
