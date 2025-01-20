@@ -22,15 +22,15 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./sites": {
-      "require": "./dist/data/sites.js",
-      "import": "./dist/data/sites.js",
-      "types": "./dist/data/sites.d.ts"
-    },
     "./client": {
       "require": "./dist/client.js",
       "import": "./dist/client.js",
       "types": "./dist/client.d.ts"
+    },
+    "./sites": {
+      "require": "./dist/data/sites.js",
+      "import": "./dist/data/sites.js",
+      "types": "./dist/data/sites.d.ts"
     },
     "./types": {
       "require": "./dist/types/index.js",

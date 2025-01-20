@@ -22,6 +22,11 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./client": {
+      "require": "./dist/client.js",
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    },
     "./sites": {
       "require": "./dist/data/sites.js",
       "import": "./dist/data/sites.js",
@@ -51,6 +56,11 @@
       "require": "./dist/utils/videoData.js",
       "import": "./dist/utils/videoData.js",
       "types": "./dist/utils/videoData.d.ts"
+    },
+    "./utils/fetchAgent": {
+      "require": "./dist/utils/fetchAgent.js",
+      "import": "./dist/utils/fetchAgent.js",
+      "types": "./dist/utils/fetchAgent.d.ts"
     },
     "./typebox/*": {
       "import": "./dist/typebox/*.ts"
@@ -82,9 +92,10 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@vot.js/shared": "workspace:^",
     "@vot.js/core": "workspace:^",
-    "dom-parser": "^1.1.5"
+    "@vot.js/shared": "workspace:^",
+    "dom-parser": "^1.1.5",
+    "undici": "^7.2.3"
   },
   "scripts": {
     "prepack": "bun run ../../scripts/onPrepack.ts",
