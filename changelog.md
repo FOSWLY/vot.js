@@ -1,3 +1,9 @@
+# 2.1.12
+
+## Ext
+
+- Fix YouTube Helper methods for early loading ([voice-over-translation#1055](https://github.com/ilyhalight/voice-over-translation/issues/1055))
+
 # 2.1.11
 
 ## Ext
