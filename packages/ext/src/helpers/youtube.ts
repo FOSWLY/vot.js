@@ -27,11 +27,11 @@ export default class YoutubeHelper extends BaseHelper {
   }
 
   static getPlayerResponse() {
-    return YoutubeHelper.getPlayer()?.getPlayerResponse();
+    return YoutubeHelper.getPlayer()?.getPlayerResponse?.call(undefined);
   }
 
   static getPlayerData() {
-    return YoutubeHelper.getPlayer()?.getVideoData();
+    return YoutubeHelper.getPlayer()?.getVideoData?.call(undefined);
   }
 
   /**
@@ -39,7 +39,7 @@ export default class YoutubeHelper extends BaseHelper {
    */
   static getVolume() {
     const player = YoutubeHelper.getPlayer();
-    if (player) {
+    if (player?.getVolume) {
       return player.getVolume() / 100;
     }
 
@@ -48,7 +48,7 @@ export default class YoutubeHelper extends BaseHelper {
 
   static setVolume(volume: number) {
     const player = YoutubeHelper.getPlayer();
-    if (player) {
+    if (player?.setVolume) {
       player.setVolume(Math.round(volume * 100));
       return true;
     }
@@ -58,7 +58,7 @@ export default class YoutubeHelper extends BaseHelper {
 
   static isMuted() {
     const player = YoutubeHelper.getPlayer();
-    if (player) {
+    if (player?.isMuted) {
       return player.isMuted();
     }
 
@@ -177,7 +177,8 @@ export default class YoutubeHelper extends BaseHelper {
     if (detectedLanguage && !availableLangs.includes(detectedLanguage)) {
       detectedLanguage = undefined;
     }
-    const duration = YoutubeHelper.getPlayer()?.getDuration() ?? undefined;
+    const duration =
+      YoutubeHelper.getPlayer()?.getDuration?.call(undefined) ?? undefined;
 
     return {
       url: this.service!.url + videoId,
