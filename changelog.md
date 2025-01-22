@@ -1,3 +1,13 @@
+# 2.1.13
+
+## Core
+
+- Added option to set videoTitle and wasStream to TranslationExtraOpts
+
+## Shared
+
+- Updated Yandex Protobuf
+
 # 2.1.12
 
 ## Ext
