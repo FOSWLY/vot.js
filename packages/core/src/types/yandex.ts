@@ -17,8 +17,10 @@ export type TranslationHelp = {
  */
 export type TranslationExtraOpts = {
   forceSourceLang?: boolean;
+  wasStream?: boolean;
   bypassCache?: boolean;
   useNewModel?: boolean;
+  videoTitle?: string;
 };
 
 export type AudioBufferObject = {

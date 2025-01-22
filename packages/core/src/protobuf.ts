@@ -30,6 +30,8 @@ export const yandexProtobuf = {
     translationHelp: TranslationHelp[] | null,
     {
       forceSourceLang = false,
+      wasStream = false,
+      videoTitle = "",
       bypassCache = false,
       useNewModel = true,
     }: TranslationExtraOpts = {},
@@ -44,10 +46,12 @@ export const yandexProtobuf = {
       unknown1: 0,
       translationHelp: translationHelp ? translationHelp : [],
       responseLanguage: responseLang,
+      wasStream,
       unknown2: 1,
       unknown3: 1,
       bypassCache,
       useNewModel,
+      videoTitle,
     }).finish();
   },
   decodeTranslationResponse(response: ArrayBuffer) {
