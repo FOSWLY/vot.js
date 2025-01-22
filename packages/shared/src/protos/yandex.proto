@@ -26,6 +26,8 @@ message VideoTranslationRequest {
   // ([0] -> {2: link to video, 1: "video_file_url"},
   // [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
   repeated VideoTranslationHelpObject translationHelp = 11;
+  // set true if it's ended stream else don't add it
+  bool wasStream = 13;
   string responseLanguage = 14;
   // previously it was 0, now it is 1
   int32 unknown2 = 15;
@@ -37,6 +39,7 @@ message VideoTranslationRequest {
   // voice of one person can constantly change
   // (https://github.com/ilyhalight/voice-over-translation/issues/897)
   bool useNewModel = 18;
+  string videoTitle = 19;
 }
 
 message VideoTranslationResponse {

@@ -80,6 +80,8 @@ export interface VideoTranslationRequest {
    * [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
    */
   translationHelp: VideoTranslationHelpObject[];
+  /** set true if it's ended stream else don't add it */
+  wasStream: boolean;
   responseLanguage: string;
   /** previously it was 0, now it is 1 */
   unknown2: number;
@@ -96,6 +98,7 @@ export interface VideoTranslationRequest {
    * (https://github.com/ilyhalight/voice-over-translation/issues/897)
    */
   useNewModel: boolean;
+  videoTitle: string;
 }
 
 export interface VideoTranslationResponse {
@@ -342,11 +345,13 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
     forceSourceLang: false,
     unknown1: 0,
     translationHelp: [],
+    wasStream: false,
     responseLanguage: "",
     unknown2: 0,
     unknown3: 0,
     bypassCache: false,
     useNewModel: false,
+    videoTitle: "",
   };
 }
 
@@ -382,6 +387,9 @@ export const VideoTranslationRequest = {
     for (const v of message.translationHelp) {
       VideoTranslationHelpObject.encode(v!, writer.uint32(90).fork()).ldelim();
     }
+    if (message.wasStream !== false) {
+      writer.uint32(104).bool(message.wasStream);
+    }
     if (message.responseLanguage !== "") {
       writer.uint32(114).string(message.responseLanguage);
     }
@@ -396,6 +404,9 @@ export const VideoTranslationRequest = {
     }
     if (message.useNewModel !== false) {
       writer.uint32(144).bool(message.useNewModel);
+    }
+    if (message.videoTitle !== "") {
+      writer.uint32(154).string(message.videoTitle);
     }
     return writer;
   },
@@ -476,6 +487,13 @@ export const VideoTranslationRequest = {
             VideoTranslationHelpObject.decode(reader, reader.uint32()),
           );
           continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.wasStream = reader.bool();
+          continue;
         case 14:
           if (tag !== 114) {
             break;
@@ -511,6 +529,13 @@ export const VideoTranslationRequest = {
 
           message.useNewModel = reader.bool();
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.videoTitle = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -543,6 +568,9 @@ export const VideoTranslationRequest = {
             VideoTranslationHelpObject.fromJSON(e),
           )
         : [],
+      wasStream: isSet(object.wasStream)
+        ? globalThis.Boolean(object.wasStream)
+        : false,
       responseLanguage: isSet(object.responseLanguage)
         ? globalThis.String(object.responseLanguage)
         : "",
@@ -554,6 +582,9 @@ export const VideoTranslationRequest = {
       useNewModel: isSet(object.useNewModel)
         ? globalThis.Boolean(object.useNewModel)
         : false,
+      videoTitle: isSet(object.videoTitle)
+        ? globalThis.String(object.videoTitle)
+        : "",
     };
   },
 
@@ -588,6 +619,9 @@ export const VideoTranslationRequest = {
         VideoTranslationHelpObject.toJSON(e),
       );
     }
+    if (message.wasStream !== false) {
+      obj.wasStream = message.wasStream;
+    }
     if (message.responseLanguage !== "") {
       obj.responseLanguage = message.responseLanguage;
     }
@@ -602,6 +636,9 @@ export const VideoTranslationRequest = {
     }
     if (message.useNewModel !== false) {
       obj.useNewModel = message.useNewModel;
+    }
+    if (message.videoTitle !== "") {
+      obj.videoTitle = message.videoTitle;
     }
     return obj;
   },
@@ -627,11 +664,13 @@ export const VideoTranslationRequest = {
       object.translationHelp?.map((e) =>
         VideoTranslationHelpObject.fromPartial(e),
       ) || [];
+    message.wasStream = object.wasStream ?? false;
     message.responseLanguage = object.responseLanguage ?? "";
     message.unknown2 = object.unknown2 ?? 0;
     message.unknown3 = object.unknown3 ?? 0;
     message.bypassCache = object.bypassCache ?? false;
     message.useNewModel = object.useNewModel ?? false;
+    message.videoTitle = object.videoTitle ?? "";
     return message;
   },
 };
