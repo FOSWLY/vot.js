@@ -1,3 +1,18 @@
+# 2.2.0 [WIP]
+
+## Core
+
+> [!CAUTION]
+> BREAKING CHANGES! Protobuf export was devided into 2 abstract classes
+
+- Added MinimalClient with only request method and sessions logic for your own logic
+- Added export VOTJSError
+- (!) Export yandexProtobuf was devided into 2 abstract classes (YandexVOTProtobuf, YandexSessionProtobuf)
+- (!) Renamed Protobuf methods:
+  - `encodeYandexSessionRequest` -> `encodeSessionRequest` (YandexSessionProtobuf)
+  - `decodeYandexSessionResponse` -> `decodeSessionResponse` (YandexSessionProtobuf)
+- Now VOTClient extends MinimalClient
+
 # 2.1.13
 
 ## Core
