@@ -8,7 +8,7 @@ import { fetchWithTimeout, getTimestamp } from "@vot.js/shared/utils/utils";
 import type { ClientSession, SessionModule } from "@vot.js/shared/types/secure";
 import type { RequestLang, ResponseLang } from "@vot.js/shared/types/data";
 
-import { yandexProtobuf } from "./protobuf";
+import { YandexVOTProtobuf, YandexSessionProtobuf } from "./protobuf";
 import type {
   VOTOpts,
   FetchFunction,
@@ -32,7 +32,7 @@ import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex";
 import type { TranslationResponse, VideoTranslationVOTOpts } from "./types/vot";
 import { convertVOT } from "./utils/vot";
 
-class VOTJSError extends Error {
+export class VOTJSError extends Error {
   constructor(
     message: string,
     public data: unknown = undefined,
@@ -43,12 +43,9 @@ class VOTJSError extends Error {
   }
 }
 
-export default class VOTClient {
+export class MinimalClient {
   host: string;
-  hostVOT: string;
-
   schema: URLSchema;
-  schemaVOT: URLSchema;
 
   /**
    * If you don't want to use the classic fetch
@@ -59,33 +56,7 @@ export default class VOTClient {
 
   // sessions
   sessions: VOTSessions = {};
-
-  // default langs
-  requestLang: RequestLang;
-  responseLang: ResponseLang;
-
   userAgent: string = config.userAgent;
-
-  paths = {
-    videoTranslation: "/video-translation/translate",
-    videoTranslationFailAudio: "/video-translation/fail-audio-js",
-    videoTranslationAudio: "/video-translation/audio",
-    videoSubtitles: "/video-subtitles/get-subtitles",
-    streamPing: "/stream-translation/ping-stream",
-    streamTranslation: "/stream-translation/translate-stream",
-    createSession: "/session/create",
-  };
-
-  /**
-   * Media with this format use VOT Backend API
-   * Not all video files in .mpd format are currently supported!
-   */
-  isCustomLink(url: string): boolean {
-    return !!(
-      /\.(m3u8|m4(a|v)|mpd)/.exec(url) ??
-      /^https:\/\/cdn\.qstv\.on\.epicgames\.com/.exec(url)
-    );
-  }
 
   /**
    * Headers for interacting with Yandex API
@@ -97,60 +68,22 @@ export default class VOTClient {
     "Content-Type": "application/x-protobuf",
     Pragma: "no-cache",
     "Cache-Control": "no-cache",
-    "Sec-Fetch-Mode": "no-cors",
-    // node fetch doesn't support sec-ch
-    // "sec-ch-ua": null,
-    // "sec-ch-ua-mobile": null,
-    // "sec-ch-ua-platform": null,
   };
 
-  /**
-   * Headers for interacting with VOT Backend API
-   */
-  headersVOT: Record<string, string> = {
-    "User-Agent": `vot.js/${config.version}`,
-    "Content-Type": "application/json",
-    Pragma: "no-cache",
-    "Cache-Control": "no-cache",
-  };
+  hostSchemaRe = /(http(s)?):\/\//;
 
   constructor({
     host = config.host,
-    hostVOT = config.hostVOT,
     fetchFn = fetchWithTimeout,
     fetchOpts = {},
-    requestLang = "en",
-    responseLang = "ru",
     headers = {},
   }: VOTOpts = {}) {
-    const schemaRe = /(http(s)?):\/\//;
-    const schema = schemaRe.exec(host)?.[1] as URLSchema | undefined;
+    const schema = this.hostSchemaRe.exec(host)?.[1] as URLSchema | undefined;
     this.host = schema ? host.replace(`${schema}://`, "") : host;
     this.schema = schema ?? "https";
-    const schemaVOT = schemaRe.exec(hostVOT)?.[1] as URLSchema | undefined;
-    this.hostVOT = schemaVOT ? hostVOT.replace(`${schemaVOT}://`, "") : hostVOT;
-    this.schemaVOT = schemaVOT ?? "https";
     this.fetch = fetchFn;
     this.fetchOpts = fetchOpts;
-    this.requestLang = requestLang;
-    this.responseLang = responseLang;
     this.headers = { ...this.headers, ...headers };
-  }
-
-  getOpts(
-    body: unknown,
-    headers: Record<string, string> = {},
-    method = "POST",
-  ) {
-    return {
-      method,
-      headers: {
-        ...this.headers,
-        ...headers,
-      },
-      body,
-      ...this.fetchOpts,
-    };
   }
 
   /**
@@ -217,6 +150,125 @@ export default class VOTClient {
     }
   }
 
+  getOpts(
+    body: unknown,
+    headers: Record<string, string> = {},
+    method = "POST",
+  ) {
+    return {
+      method,
+      headers: {
+        ...this.headers,
+        ...headers,
+      },
+      body,
+      ...this.fetchOpts,
+    };
+  }
+
+  async getSession(module: SessionModule): Promise<ClientSession> {
+    const timestamp = getTimestamp();
+    const session = this.sessions[module];
+    if (session && session.timestamp + session.expires > timestamp) {
+      return session;
+    }
+
+    const { secretKey, expires, uuid } = await this.createSession(module);
+    this.sessions[module] = {
+      secretKey,
+      expires,
+      timestamp,
+      uuid,
+    };
+
+    return this.sessions[module];
+  }
+
+  async createSession(module: SessionModule) {
+    const uuid = getUUID();
+    const body = YandexSessionProtobuf.encodeSessionRequest(uuid, module);
+    const res = await this.request("/session/create", body, {
+      "Vtrans-Signature": await getSignature(body),
+    });
+
+    if (!res.success) {
+      throw new VOTJSError("Failed to request create session", res);
+    }
+
+    const sessionResponse = YandexSessionProtobuf.decodeSessionResponse(
+      res.data,
+    );
+
+    return {
+      ...sessionResponse,
+      uuid,
+    };
+  }
+}
+
+export default class VOTClient extends MinimalClient {
+  hostVOT: string;
+  schemaVOT: URLSchema;
+
+  // default langs
+  requestLang: RequestLang;
+  responseLang: ResponseLang;
+
+  paths = {
+    videoTranslation: "/video-translation/translate",
+    videoTranslationFailAudio: "/video-translation/fail-audio-js",
+    videoTranslationAudio: "/video-translation/audio",
+    videoSubtitles: "/video-subtitles/get-subtitles",
+    streamPing: "/stream-translation/ping-stream",
+    streamTranslation: "/stream-translation/translate-stream",
+  };
+
+  /**
+   * Media with this format use VOT Backend API
+   * Not all video files in .mpd format are currently supported!
+   */
+  isCustomLink(url: string): boolean {
+    return !!(
+      /\.(m3u8|m4(a|v)|mpd)/.exec(url) ??
+      /^https:\/\/cdn\.qstv\.on\.epicgames\.com/.exec(url)
+    );
+  }
+
+  /**
+   * Headers for interacting with VOT Backend API
+   */
+  headersVOT: Record<string, string> = {
+    "User-Agent": `vot.js/${config.version}`,
+    "Content-Type": "application/json",
+    Pragma: "no-cache",
+    "Cache-Control": "no-cache",
+  };
+
+  constructor({
+    host,
+    hostVOT = config.hostVOT,
+    fetchFn,
+    fetchOpts,
+    requestLang = "en",
+    responseLang = "ru",
+    headers,
+  }: VOTOpts = {}) {
+    super({
+      host,
+      fetchFn,
+      fetchOpts,
+      headers,
+    });
+
+    const schemaVOT = this.hostSchemaRe.exec(hostVOT)?.[1] as
+      | URLSchema
+      | undefined;
+    this.hostVOT = schemaVOT ? hostVOT.replace(`${schemaVOT}://`, "") : hostVOT;
+    this.schemaVOT = schemaVOT ?? "https";
+    this.requestLang = requestLang;
+    this.responseLang = responseLang;
+  }
+
   /**
    * The standard method for requesting the VOT Backend API
    */
@@ -248,24 +300,6 @@ export default class VOTClient {
     }
   }
 
-  async getSession(module: SessionModule): Promise<ClientSession> {
-    const timestamp = getTimestamp();
-    const session = this.sessions[module];
-    if (session && session.timestamp + session.expires > timestamp) {
-      return session;
-    }
-
-    const { secretKey, expires, uuid } = await this.createSession(module);
-    this.sessions[module] = {
-      secretKey,
-      expires,
-      timestamp,
-      uuid,
-    };
-
-    return this.sessions[module];
-  }
-
   protected async translateVideoYAImpl({
     videoData,
     requestLang = this.requestLang,
@@ -278,7 +312,7 @@ export default class VOTClient {
     const { url, duration = config.defaultDuration } = videoData;
 
     const session = await this.getSession("video-translation");
-    const body = yandexProtobuf.encodeTranslationRequest(
+    const body = YandexVOTProtobuf.encodeTranslationRequest(
       url,
       duration,
       requestLang,
@@ -299,7 +333,9 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video translation", res);
     }
 
-    const translationData = yandexProtobuf.decodeTranslationResponse(res.data);
+    const translationData = YandexVOTProtobuf.decodeTranslationResponse(
+      res.data,
+    );
     Logger.log("translateVideo", translationData);
     const {
       status,
@@ -485,7 +521,7 @@ export default class VOTClient {
     headers: Record<string, string> = {},
   ) {
     const session = await this.getSession("video-translation");
-    const body = yandexProtobuf.encodeTranslationAudioRequest(
+    const body = YandexVOTProtobuf.encodeTranslationAudioRequest(
       url,
       translationId,
       audioBuffer,
@@ -509,7 +545,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video translation audio", res);
     }
 
-    return yandexProtobuf.decodeTranslationAudioResponse(res.data);
+    return YandexVOTProtobuf.decodeTranslationAudioResponse(res.data);
   }
 
   /**
@@ -560,7 +596,7 @@ export default class VOTClient {
     }
 
     const session = await this.getSession("video-translation");
-    const body = yandexProtobuf.encodeSubtitlesRequest(url, requestLang);
+    const body = YandexVOTProtobuf.encodeSubtitlesRequest(url, requestLang);
 
     const path = this.paths.videoSubtitles;
     const vsubsHeaders = await getSecYaHeaders("Vsubs", session, body, path);
@@ -574,7 +610,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request video subtitles", res);
     }
 
-    return yandexProtobuf.decodeSubtitlesResponse(res.data);
+    return YandexVOTProtobuf.decodeSubtitlesResponse(res.data);
   }
 
   /**
@@ -582,7 +618,7 @@ export default class VOTClient {
    */
   async pingStream({ pingId, headers = {} }: StreamPingOptions) {
     const session = await this.getSession("video-translation");
-    const body = yandexProtobuf.encodeStreamPingRequest(pingId);
+    const body = YandexVOTProtobuf.encodeStreamPingRequest(pingId);
 
     const path = this.paths.streamPing;
     const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
@@ -617,7 +653,7 @@ export default class VOTClient {
     }
 
     const session = await this.getSession("video-translation");
-    const body = yandexProtobuf.encodeStreamRequest(
+    const body = YandexVOTProtobuf.encodeStreamRequest(
       url,
       requestLang,
       responseLang,
@@ -635,7 +671,7 @@ export default class VOTClient {
       throw new VOTJSError("Failed to request stream translation", res);
     }
 
-    const translateResponse = yandexProtobuf.decodeStreamResponse(res.data);
+    const translateResponse = YandexVOTProtobuf.decodeStreamResponse(res.data);
 
     const interval: StreamInterval = translateResponse.interval;
     switch (interval) {
@@ -661,27 +697,6 @@ export default class VOTClient {
         Logger.error("Unknown response", translateResponse);
         throw new VOTJSError("Unknown response from Yandex", translateResponse);
     }
-  }
-
-  async createSession(module: SessionModule) {
-    const uuid = getUUID();
-    const body = yandexProtobuf.encodeYandexSessionRequest(uuid, module);
-    const res = await this.request(this.paths.createSession, body, {
-      "Vtrans-Signature": await getSignature(body),
-    });
-
-    if (!res.success) {
-      throw new VOTJSError("Failed to request create session", res);
-    }
-
-    const sessionResponse = yandexProtobuf.decodeYandexSessionResponse(
-      res.data,
-    );
-
-    return {
-      ...sessionResponse,
-      uuid,
-    };
   }
 }
 

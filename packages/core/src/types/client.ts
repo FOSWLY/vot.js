@@ -42,14 +42,17 @@ export type MinimalVideoData<T = VideoService> = AtLeast<VideoData<T>, "url">;
 
 export type GetVideoDataOpts = Omit<BaseHelperOpts, "service">;
 
-export type VOTOpts = {
+export type MinimalClientOpts = {
   host?: string;
-  hostVOT?: string;
   fetchFn?: FetchFunction; // e.g. GM_fetch, ofetch.native and etc
   fetchOpts?: Record<string, unknown>; // e.g. { dispatcher: ... }
+  headers?: Record<string, string>;
+};
+
+export type VOTOpts = MinimalClientOpts & {
+  hostVOT?: string;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
-  headers?: Record<string, string>;
 };
 
 export type ClientSuccessResponse<T = unknown> = {
