@@ -1,6 +1,6 @@
-export { yandexProtobuf } from "./protobuf";
+export { YandexVOTProtobuf, YandexSessionProtobuf } from "./protobuf";
 
-export { default, VOTWorkerClient } from "./client";
+export { default, VOTWorkerClient, VOTJSError, MinimalClient } from "./client";
 export * as videoData from "./utils/videoData";
 export * as votUtils from "./utils/vot";
 

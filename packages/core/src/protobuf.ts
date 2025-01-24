@@ -20,9 +20,8 @@ import type {
   TranslationHelp,
 } from "./types/yandex";
 
-// Export the encoding and decoding functions
-export const yandexProtobuf = {
-  encodeTranslationRequest(
+export abstract class YandexVOTProtobuf {
+  static encodeTranslationRequest(
     url: string,
     duration: number,
     requestLang: string,
@@ -53,11 +52,13 @@ export const yandexProtobuf = {
       useNewModel,
       videoTitle,
     }).finish();
-  },
-  decodeTranslationResponse(response: ArrayBuffer) {
+  }
+
+  static decodeTranslationResponse(response: ArrayBuffer) {
     return VideoTranslationResponse.decode(new Uint8Array(response));
-  },
-  encodeTranslationAudioRequest(
+  }
+
+  static encodeTranslationAudioRequest(
     url: string,
     translationId: string,
     audioBuffer: AudioBufferObject,
@@ -77,41 +78,55 @@ export const yandexProtobuf = {
             audioInfo: audioBuffer,
           }),
     }).finish();
-  },
-  decodeTranslationAudioResponse(response: ArrayBuffer) {
+  }
+
+  static decodeTranslationAudioResponse(response: ArrayBuffer) {
     return VideoTranslationAudioResponse.decode(new Uint8Array(response));
-  },
-  encodeSubtitlesRequest(url: string, requestLang: string) {
+  }
+
+  static encodeSubtitlesRequest(url: string, requestLang: string) {
     return SubtitlesRequest.encode({
       url,
       language: requestLang,
     }).finish();
-  },
-  decodeSubtitlesResponse(response: ArrayBuffer) {
+  }
+
+  static decodeSubtitlesResponse(response: ArrayBuffer) {
     return SubtitlesResponse.decode(new Uint8Array(response));
-  },
-  encodeStreamPingRequest(pingId: number) {
+  }
+
+  static encodeStreamPingRequest(pingId: number) {
     return StreamPingRequest.encode({
       pingId,
     }).finish();
-  },
-  encodeStreamRequest(url: string, requestLang: string, responseLang: string) {
+  }
+
+  static encodeStreamRequest(
+    url: string,
+    requestLang: string,
+    responseLang: string,
+  ) {
     return StreamTranslationRequest.encode({
       url,
       language: requestLang,
       responseLanguage: responseLang,
     }).finish();
-  },
-  decodeStreamResponse(response: ArrayBuffer) {
+  }
+
+  static decodeStreamResponse(response: ArrayBuffer) {
     return StreamTranslationResponse.decode(new Uint8Array(response));
-  },
-  encodeYandexSessionRequest(uuid: string, module: SessionModule) {
+  }
+}
+
+export abstract class YandexSessionProtobuf {
+  static encodeSessionRequest(uuid: string, module: SessionModule) {
     return YandexSessionRequest.encode({
       uuid,
       module,
     }).finish();
-  },
-  decodeYandexSessionResponse(response: ArrayBuffer) {
+  }
+
+  static decodeSessionResponse(response: ArrayBuffer) {
     return YandexSessionResponse.decode(new Uint8Array(response));
-  },
-};
+  }
+}
