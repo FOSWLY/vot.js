@@ -15,5 +15,5 @@ export default {
   defaultDuration: 343,
   minChunkSize: 5295308,
   loggerLevel: 1,
-  version: "2.1.13",
+  version: "2.2.0",
 } as ConfigSchema;
