@@ -13,6 +13,19 @@
   - `decodeYandexSessionResponse` -> `decodeSessionResponse` (YandexSessionProtobuf)
 - Now VOTClient extends MinimalClient
 
+## Shared
+
+> [!CAUTION]
+> BREAKING CHANGES! ProtobufJS replaced to `@bufbuild/protobuf`
+
+- (!) ProtobufJS replaced to `@bufbuild/protobuf`
+- Added new values to SecType and to SessionModule
+- (dev) ts-proto bumped to 2.6.1
+
+## Workspace
+
+- Bump depends
+
 # 2.1.13
 
 ## Core
