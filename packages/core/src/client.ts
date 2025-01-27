@@ -78,7 +78,7 @@ export class MinimalClient {
     fetchOpts = {},
     headers = {},
   }: VOTOpts = {}) {
-    const schema = this.hostSchemaRe.exec(host)?.[1] as URLSchema | undefined;
+    const schema = this.hostSchemaRe.exec(host)?.[1] as URLSchema | null;
     this.host = schema ? host.replace(`${schema}://`, "") : host;
     this.schema = schema ?? "https";
     this.fetch = fetchFn;
