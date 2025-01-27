@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "Toil",
   "repository": {
     "type": "git",
@@ -44,6 +44,7 @@
   "scripts": {
     "test": "bun test",
     "build:bun": "bun run ./scripts/build.ts",
+    "build:skip-proto": "bun run ./scripts/build.ts --skip-proto",
     "build:doc": "typedoc --options .config/typedoc.json --tsconfig tsconfig.build.json",
     "build:all": "bun build:bun && bun build:doc",
     "update:config": "bun run scripts/update-config.ts",

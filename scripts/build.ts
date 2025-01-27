@@ -1,8 +1,20 @@
 import path from "node:path";
+import { parseArgs } from "node:util";
 import { $ } from "bun";
 
 import { version } from "../package.json";
 import { generateTypebox } from "./typebox-gen";
+
+const {
+  values: { ["skip-proto"]: skipProto },
+} = parseArgs({
+  options: {
+    "skip-proto": {
+      type: "boolean",
+      short: "s",
+    },
+  },
+});
 
 async function updatePackgeVersion(root: string) {
   const packageInfoPath = path.join(root, "package.json");
@@ -30,7 +42,7 @@ async function build(packageName: string, extraScripts: string[] = []) {
 
 await $`bun update:config`;
 
-await build("shared", [`proto:gen`]);
+await build("shared", skipProto ? undefined : [`proto:gen`]);
 await build("core");
 await build("node");
 await build("ext");

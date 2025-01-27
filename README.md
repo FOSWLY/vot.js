@@ -72,6 +72,12 @@ Start building:
 bun build:all
 ```
 
+Build without updating proto and without generating docs:
+
+```bash
+bun build:skip-proto
+```
+
 ## Tests
 
 The library has minimal test coverage to check its performance.
