@@ -1,3 +1,3 @@
 dist
 docs
-src/protos/*.ts
+packages/shared/src/protos/*.ts
