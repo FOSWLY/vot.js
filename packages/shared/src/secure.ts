@@ -2,6 +2,8 @@ import config from "./data/config";
 import Logger from "./utils/logger";
 import { SecType, ClientSession, HashName } from "./types/secure";
 
+const { componentVersion } = config;
+
 async function getCrypto() {
   if (typeof window !== "undefined" && window.crypto) {
     return window.crypto;
@@ -80,3 +82,9 @@ export async function getHmacSha1(hmacKey: string, salt: string) {
     return false;
   }
 }
+
+export const browserSecHeaders = {
+  "sec-ch-ua": `"Chromium";v="130", "YaBrowser";v="${componentVersion.slice(0, 5)}", "Not?A_Brand";v="99", "Yowser";v="2.5"`,
+  "sec-ch-ua-full-version-list": `"Chromium";v="130.0.6723.152", "YaBrowser";v="${componentVersion}", "Not?A_Brand";v="99.0.0.0", "Yowser";v="2.5"`,
+  "Sec-Fetch-Mode": "no-cors",
+};
