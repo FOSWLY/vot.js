@@ -1,3 +1,21 @@
+# 2.2.1
+
+## Ext
+
+- Removed export secure browser headers
+
+## Core
+
+- Small typings improvements
+
+## Shared
+
+- Added export browser secure headers
+
+## Workspace
+
+- Added build without updating proto
+
 # 2.2.0
 
 ## Core
