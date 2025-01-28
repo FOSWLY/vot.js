@@ -9,6 +9,9 @@ An unofficial library for interacting with the Yandex VOT API, which supports wo
 
 The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTWorkerClient` client and specify the domain of the worker server, for example `vot-worker.toil.cc`.
 
+> [!WARNING]
+> The library was created exclusively for research purposes and isn't intended for commercial use. All rights to the original software belong to their respective right holders. The library isn't affiliated with the original rights holders
+
 ## Installation
 
 To work with Node, Bun, or other runtimes, install the `@vot.js/node`:
