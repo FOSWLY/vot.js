@@ -59,7 +59,9 @@ export interface VideoTranslationHelpObject {
 export interface VideoTranslationRequest {
   url: string;
   /** used in mobile version */
-  deviceId?: string | undefined;
+  deviceId?:
+    | string
+    | undefined;
   /** true for the first request, false for subsequent ones */
   firstRequest: boolean;
   duration: number;
@@ -107,12 +109,16 @@ export interface VideoTranslationResponse {
   duration?: number | undefined;
   status: number;
   /** secs until translation is completed */
-  remainingTime?: number | undefined;
+  remainingTime?:
+    | number
+    | undefined;
   /**
    * unknown 0 (1st request) ->
    * 10 (2nd, 3th and etc requests). (if status is 0)
    */
-  unknown0?: number | undefined;
+  unknown0?:
+    | number
+    | undefined;
   /** it isn't a type mistake */
   translationId: string;
   /** detected language (if the wrong one is set) */
@@ -146,7 +152,9 @@ export interface AudioBufferObject {
 export interface ChunkAudioObject {
   /** 1-xxx... */
   audioPartsLength: number;
-  audioBuffer: AudioBufferObject | undefined;
+  audioBuffer:
+    | AudioBufferObject
+    | undefined;
   /**
    * I don't know why it's a fileId, but they call it that
    * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
@@ -251,91 +259,77 @@ function createBaseVideoTranslationHelpObject(): VideoTranslationHelpObject {
   return { target: "", targetUrl: "" };
 }
 
-export const VideoTranslationHelpObject: MessageFns<VideoTranslationHelpObject> =
-  {
-    encode(
-      message: VideoTranslationHelpObject,
-      writer: BinaryWriter = new BinaryWriter(),
-    ): BinaryWriter {
-      if (message.target !== "") {
-        writer.uint32(10).string(message.target);
-      }
-      if (message.targetUrl !== "") {
-        writer.uint32(18).string(message.targetUrl);
-      }
-      return writer;
-    },
+export const VideoTranslationHelpObject: MessageFns<VideoTranslationHelpObject> = {
+  encode(message: VideoTranslationHelpObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.target !== "") {
+      writer.uint32(10).string(message.target);
+    }
+    if (message.targetUrl !== "") {
+      writer.uint32(18).string(message.targetUrl);
+    }
+    return writer;
+  },
 
-    decode(
-      input: BinaryReader | Uint8Array,
-      length?: number,
-    ): VideoTranslationHelpObject {
-      const reader =
-        input instanceof BinaryReader ? input : new BinaryReader(input);
-      let end = length === undefined ? reader.len : reader.pos + length;
-      const message = createBaseVideoTranslationHelpObject();
-      while (reader.pos < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1: {
-            if (tag !== 10) {
-              break;
-            }
-
-            message.target = reader.string();
-            continue;
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationHelpObject {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationHelpObject();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
           }
-          case 2: {
-            if (tag !== 18) {
-              break;
-            }
 
-            message.targetUrl = reader.string();
-            continue;
+          message.target = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
           }
+
+          message.targetUrl = reader.string();
+          continue;
         }
-        if ((tag & 7) === 4 || tag === 0) {
-          break;
-        }
-        reader.skip(tag & 7);
       }
-      return message;
-    },
-
-    fromJSON(object: any): VideoTranslationHelpObject {
-      return {
-        target: isSet(object.target) ? globalThis.String(object.target) : "",
-        targetUrl: isSet(object.targetUrl)
-          ? globalThis.String(object.targetUrl)
-          : "",
-      };
-    },
-
-    toJSON(message: VideoTranslationHelpObject): unknown {
-      const obj: any = {};
-      if (message.target !== "") {
-        obj.target = message.target;
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
       }
-      if (message.targetUrl !== "") {
-        obj.targetUrl = message.targetUrl;
-      }
-      return obj;
-    },
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
 
-    create<I extends Exact<DeepPartial<VideoTranslationHelpObject>, I>>(
-      base?: I,
-    ): VideoTranslationHelpObject {
-      return VideoTranslationHelpObject.fromPartial(base ?? ({} as any));
-    },
-    fromPartial<I extends Exact<DeepPartial<VideoTranslationHelpObject>, I>>(
-      object: I,
-    ): VideoTranslationHelpObject {
-      const message = createBaseVideoTranslationHelpObject();
-      message.target = object.target ?? "";
-      message.targetUrl = object.targetUrl ?? "";
-      return message;
-    },
-  };
+  fromJSON(object: any): VideoTranslationHelpObject {
+    return {
+      target: isSet(object.target) ? globalThis.String(object.target) : "",
+      targetUrl: isSet(object.targetUrl) ? globalThis.String(object.targetUrl) : "",
+    };
+  },
+
+  toJSON(message: VideoTranslationHelpObject): unknown {
+    const obj: any = {};
+    if (message.target !== "") {
+      obj.target = message.target;
+    }
+    if (message.targetUrl !== "") {
+      obj.targetUrl = message.targetUrl;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationHelpObject>, I>>(base?: I): VideoTranslationHelpObject {
+    return VideoTranslationHelpObject.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationHelpObject>, I>>(object: I): VideoTranslationHelpObject {
+    const message = createBaseVideoTranslationHelpObject();
+    message.target = object.target ?? "";
+    message.targetUrl = object.targetUrl ?? "";
+    return message;
+  },
+};
 
 function createBaseVideoTranslationRequest(): VideoTranslationRequest {
   return {
@@ -359,10 +353,7 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
 }
 
 export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
-  encode(
-    message: VideoTranslationRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: VideoTranslationRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.url !== "") {
       writer.uint32(26).string(message.url);
     }
@@ -414,12 +405,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number,
-  ): VideoTranslationRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVideoTranslationRequest();
     while (reader.pos < end) {
@@ -494,9 +481,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
             break;
           }
 
-          message.translationHelp.push(
-            VideoTranslationHelpObject.decode(reader, reader.uint32()),
-          );
+          message.translationHelp.push(VideoTranslationHelpObject.decode(reader, reader.uint32()));
           continue;
         }
         case 13: {
@@ -567,43 +552,23 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
   fromJSON(object: any): VideoTranslationRequest {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      deviceId: isSet(object.deviceId)
-        ? globalThis.String(object.deviceId)
-        : undefined,
-      firstRequest: isSet(object.firstRequest)
-        ? globalThis.Boolean(object.firstRequest)
-        : false,
+      deviceId: isSet(object.deviceId) ? globalThis.String(object.deviceId) : undefined,
+      firstRequest: isSet(object.firstRequest) ? globalThis.Boolean(object.firstRequest) : false,
       duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
       unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
-      language: isSet(object.language)
-        ? globalThis.String(object.language)
-        : "",
-      forceSourceLang: isSet(object.forceSourceLang)
-        ? globalThis.Boolean(object.forceSourceLang)
-        : false,
+      language: isSet(object.language) ? globalThis.String(object.language) : "",
+      forceSourceLang: isSet(object.forceSourceLang) ? globalThis.Boolean(object.forceSourceLang) : false,
       unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
       translationHelp: globalThis.Array.isArray(object?.translationHelp)
-        ? object.translationHelp.map((e: any) =>
-            VideoTranslationHelpObject.fromJSON(e),
-          )
+        ? object.translationHelp.map((e: any) => VideoTranslationHelpObject.fromJSON(e))
         : [],
-      wasStream: isSet(object.wasStream)
-        ? globalThis.Boolean(object.wasStream)
-        : false,
-      responseLanguage: isSet(object.responseLanguage)
-        ? globalThis.String(object.responseLanguage)
-        : "",
+      wasStream: isSet(object.wasStream) ? globalThis.Boolean(object.wasStream) : false,
+      responseLanguage: isSet(object.responseLanguage) ? globalThis.String(object.responseLanguage) : "",
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
       unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
-      bypassCache: isSet(object.bypassCache)
-        ? globalThis.Boolean(object.bypassCache)
-        : false,
-      useNewModel: isSet(object.useNewModel)
-        ? globalThis.Boolean(object.useNewModel)
-        : false,
-      videoTitle: isSet(object.videoTitle)
-        ? globalThis.String(object.videoTitle)
-        : "",
+      bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
+      useNewModel: isSet(object.useNewModel) ? globalThis.Boolean(object.useNewModel) : false,
+      videoTitle: isSet(object.videoTitle) ? globalThis.String(object.videoTitle) : "",
     };
   },
 
@@ -634,9 +599,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
       obj.unknown1 = Math.round(message.unknown1);
     }
     if (message.translationHelp?.length) {
-      obj.translationHelp = message.translationHelp.map((e) =>
-        VideoTranslationHelpObject.toJSON(e),
-      );
+      obj.translationHelp = message.translationHelp.map((e) => VideoTranslationHelpObject.toJSON(e));
     }
     if (message.wasStream !== false) {
       obj.wasStream = message.wasStream;
@@ -662,14 +625,10 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VideoTranslationRequest>, I>>(
-    base?: I,
-  ): VideoTranslationRequest {
+  create<I extends Exact<DeepPartial<VideoTranslationRequest>, I>>(base?: I): VideoTranslationRequest {
     return VideoTranslationRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VideoTranslationRequest>, I>>(
-    object: I,
-  ): VideoTranslationRequest {
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationRequest>, I>>(object: I): VideoTranslationRequest {
     const message = createBaseVideoTranslationRequest();
     message.url = object.url ?? "";
     message.deviceId = object.deviceId ?? undefined;
@@ -679,10 +638,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     message.language = object.language ?? "";
     message.forceSourceLang = object.forceSourceLang ?? false;
     message.unknown1 = object.unknown1 ?? 0;
-    message.translationHelp =
-      object.translationHelp?.map((e) =>
-        VideoTranslationHelpObject.fromPartial(e),
-      ) || [];
+    message.translationHelp = object.translationHelp?.map((e) => VideoTranslationHelpObject.fromPartial(e)) || [];
     message.wasStream = object.wasStream ?? false;
     message.responseLanguage = object.responseLanguage ?? "";
     message.unknown2 = object.unknown2 ?? 0;
@@ -708,10 +664,7 @@ function createBaseVideoTranslationResponse(): VideoTranslationResponse {
 }
 
 export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
-  encode(
-    message: VideoTranslationResponse,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: VideoTranslationResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.url !== undefined) {
       writer.uint32(10).string(message.url);
     }
@@ -739,12 +692,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number,
-  ): VideoTranslationResponse {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVideoTranslationResponse();
     while (reader.pos < end) {
@@ -826,25 +775,13 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
   fromJSON(object: any): VideoTranslationResponse {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : undefined,
-      duration: isSet(object.duration)
-        ? globalThis.Number(object.duration)
-        : undefined,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      remainingTime: isSet(object.remainingTime)
-        ? globalThis.Number(object.remainingTime)
-        : undefined,
-      unknown0: isSet(object.unknown0)
-        ? globalThis.Number(object.unknown0)
-        : undefined,
-      translationId: isSet(object.translationId)
-        ? globalThis.String(object.translationId)
-        : "",
-      language: isSet(object.language)
-        ? globalThis.String(object.language)
-        : undefined,
-      message: isSet(object.message)
-        ? globalThis.String(object.message)
-        : undefined,
+      remainingTime: isSet(object.remainingTime) ? globalThis.Number(object.remainingTime) : undefined,
+      unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : undefined,
+      translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
+      language: isSet(object.language) ? globalThis.String(object.language) : undefined,
+      message: isSet(object.message) ? globalThis.String(object.message) : undefined,
     };
   },
 
@@ -877,14 +814,10 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(
-    base?: I,
-  ): VideoTranslationResponse {
+  create<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(base?: I): VideoTranslationResponse {
     return VideoTranslationResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(
-    object: I,
-  ): VideoTranslationResponse {
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationResponse>, I>>(object: I): VideoTranslationResponse {
     const message = createBaseVideoTranslationResponse();
     message.url = object.url ?? undefined;
     message.duration = object.duration ?? undefined;
@@ -903,10 +836,7 @@ function createBaseAudioBufferObject(): AudioBufferObject {
 }
 
 export const AudioBufferObject: MessageFns<AudioBufferObject> = {
-  encode(
-    message: AudioBufferObject,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: AudioBufferObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.audioFile.length !== 0) {
       writer.uint32(18).bytes(message.audioFile);
     }
@@ -917,8 +847,7 @@ export const AudioBufferObject: MessageFns<AudioBufferObject> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): AudioBufferObject {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAudioBufferObject();
     while (reader.pos < end) {
@@ -951,9 +880,7 @@ export const AudioBufferObject: MessageFns<AudioBufferObject> = {
 
   fromJSON(object: any): AudioBufferObject {
     return {
-      audioFile: isSet(object.audioFile)
-        ? bytesFromBase64(object.audioFile)
-        : new Uint8Array(0),
+      audioFile: isSet(object.audioFile) ? bytesFromBase64(object.audioFile) : new Uint8Array(0),
       fileId: isSet(object.fileId) ? globalThis.String(object.fileId) : "",
     };
   },
@@ -969,14 +896,10 @@ export const AudioBufferObject: MessageFns<AudioBufferObject> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AudioBufferObject>, I>>(
-    base?: I,
-  ): AudioBufferObject {
+  create<I extends Exact<DeepPartial<AudioBufferObject>, I>>(base?: I): AudioBufferObject {
     return AudioBufferObject.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<AudioBufferObject>, I>>(
-    object: I,
-  ): AudioBufferObject {
+  fromPartial<I extends Exact<DeepPartial<AudioBufferObject>, I>>(object: I): AudioBufferObject {
     const message = createBaseAudioBufferObject();
     message.audioFile = object.audioFile ?? new Uint8Array(0);
     message.fileId = object.fileId ?? "";
@@ -985,27 +908,16 @@ export const AudioBufferObject: MessageFns<AudioBufferObject> = {
 };
 
 function createBaseChunkAudioObject(): ChunkAudioObject {
-  return {
-    audioPartsLength: 0,
-    audioBuffer: undefined,
-    fileId: "",
-    unknown0: 0,
-  };
+  return { audioPartsLength: 0, audioBuffer: undefined, fileId: "", unknown0: 0 };
 }
 
 export const ChunkAudioObject: MessageFns<ChunkAudioObject> = {
-  encode(
-    message: ChunkAudioObject,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: ChunkAudioObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.audioPartsLength !== 0) {
       writer.uint32(16).int32(message.audioPartsLength);
     }
     if (message.audioBuffer !== undefined) {
-      AudioBufferObject.encode(
-        message.audioBuffer,
-        writer.uint32(10).fork(),
-      ).join();
+      AudioBufferObject.encode(message.audioBuffer, writer.uint32(10).fork()).join();
     }
     if (message.fileId !== "") {
       writer.uint32(26).string(message.fileId);
@@ -1017,8 +929,7 @@ export const ChunkAudioObject: MessageFns<ChunkAudioObject> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ChunkAudioObject {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChunkAudioObject();
     while (reader.pos < end) {
@@ -1037,10 +948,7 @@ export const ChunkAudioObject: MessageFns<ChunkAudioObject> = {
             break;
           }
 
-          message.audioBuffer = AudioBufferObject.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.audioBuffer = AudioBufferObject.decode(reader, reader.uint32());
           continue;
         }
         case 3: {
@@ -1070,12 +978,8 @@ export const ChunkAudioObject: MessageFns<ChunkAudioObject> = {
 
   fromJSON(object: any): ChunkAudioObject {
     return {
-      audioPartsLength: isSet(object.audioPartsLength)
-        ? globalThis.Number(object.audioPartsLength)
-        : 0,
-      audioBuffer: isSet(object.audioBuffer)
-        ? AudioBufferObject.fromJSON(object.audioBuffer)
-        : undefined,
+      audioPartsLength: isSet(object.audioPartsLength) ? globalThis.Number(object.audioPartsLength) : 0,
+      audioBuffer: isSet(object.audioBuffer) ? AudioBufferObject.fromJSON(object.audioBuffer) : undefined,
       fileId: isSet(object.fileId) ? globalThis.String(object.fileId) : "",
       unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
     };
@@ -1098,20 +1002,15 @@ export const ChunkAudioObject: MessageFns<ChunkAudioObject> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(
-    base?: I,
-  ): ChunkAudioObject {
+  create<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(base?: I): ChunkAudioObject {
     return ChunkAudioObject.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(
-    object: I,
-  ): ChunkAudioObject {
+  fromPartial<I extends Exact<DeepPartial<ChunkAudioObject>, I>>(object: I): ChunkAudioObject {
     const message = createBaseChunkAudioObject();
     message.audioPartsLength = object.audioPartsLength ?? 0;
-    message.audioBuffer =
-      object.audioBuffer !== undefined && object.audioBuffer !== null
-        ? AudioBufferObject.fromPartial(object.audioBuffer)
-        : undefined;
+    message.audioBuffer = (object.audioBuffer !== undefined && object.audioBuffer !== null)
+      ? AudioBufferObject.fromPartial(object.audioBuffer)
+      : undefined;
     message.fileId = object.fileId ?? "";
     message.unknown0 = object.unknown0 ?? 0;
     return message;
@@ -1119,264 +1018,203 @@ export const ChunkAudioObject: MessageFns<ChunkAudioObject> = {
 };
 
 function createBaseVideoTranslationAudioRequest(): VideoTranslationAudioRequest {
-  return {
-    translationId: "",
-    url: "",
-    partialAudioInfo: undefined,
-    audioInfo: undefined,
-  };
+  return { translationId: "", url: "", partialAudioInfo: undefined, audioInfo: undefined };
 }
 
-export const VideoTranslationAudioRequest: MessageFns<VideoTranslationAudioRequest> =
-  {
-    encode(
-      message: VideoTranslationAudioRequest,
-      writer: BinaryWriter = new BinaryWriter(),
-    ): BinaryWriter {
-      if (message.translationId !== "") {
-        writer.uint32(10).string(message.translationId);
-      }
-      if (message.url !== "") {
-        writer.uint32(18).string(message.url);
-      }
-      if (message.partialAudioInfo !== undefined) {
-        ChunkAudioObject.encode(
-          message.partialAudioInfo,
-          writer.uint32(34).fork(),
-        ).join();
-      }
-      if (message.audioInfo !== undefined) {
-        AudioBufferObject.encode(
-          message.audioInfo,
-          writer.uint32(50).fork(),
-        ).join();
-      }
-      return writer;
-    },
+export const VideoTranslationAudioRequest: MessageFns<VideoTranslationAudioRequest> = {
+  encode(message: VideoTranslationAudioRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.translationId !== "") {
+      writer.uint32(10).string(message.translationId);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    if (message.partialAudioInfo !== undefined) {
+      ChunkAudioObject.encode(message.partialAudioInfo, writer.uint32(34).fork()).join();
+    }
+    if (message.audioInfo !== undefined) {
+      AudioBufferObject.encode(message.audioInfo, writer.uint32(50).fork()).join();
+    }
+    return writer;
+  },
 
-    decode(
-      input: BinaryReader | Uint8Array,
-      length?: number,
-    ): VideoTranslationAudioRequest {
-      const reader =
-        input instanceof BinaryReader ? input : new BinaryReader(input);
-      let end = length === undefined ? reader.len : reader.pos + length;
-      const message = createBaseVideoTranslationAudioRequest();
-      while (reader.pos < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1: {
-            if (tag !== 10) {
-              break;
-            }
-
-            message.translationId = reader.string();
-            continue;
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationAudioRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationAudioRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
           }
-          case 2: {
-            if (tag !== 18) {
-              break;
-            }
 
-            message.url = reader.string();
-            continue;
-          }
-          case 4: {
-            if (tag !== 34) {
-              break;
-            }
-
-            message.partialAudioInfo = ChunkAudioObject.decode(
-              reader,
-              reader.uint32(),
-            );
-            continue;
-          }
-          case 6: {
-            if (tag !== 50) {
-              break;
-            }
-
-            message.audioInfo = AudioBufferObject.decode(
-              reader,
-              reader.uint32(),
-            );
-            continue;
-          }
+          message.translationId = reader.string();
+          continue;
         }
-        if ((tag & 7) === 4 || tag === 0) {
-          break;
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
         }
-        reader.skip(tag & 7);
-      }
-      return message;
-    },
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
 
-    fromJSON(object: any): VideoTranslationAudioRequest {
-      return {
-        translationId: isSet(object.translationId)
-          ? globalThis.String(object.translationId)
-          : "",
-        url: isSet(object.url) ? globalThis.String(object.url) : "",
-        partialAudioInfo: isSet(object.partialAudioInfo)
-          ? ChunkAudioObject.fromJSON(object.partialAudioInfo)
-          : undefined,
-        audioInfo: isSet(object.audioInfo)
-          ? AudioBufferObject.fromJSON(object.audioInfo)
-          : undefined,
-      };
-    },
+          message.partialAudioInfo = ChunkAudioObject.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
 
-    toJSON(message: VideoTranslationAudioRequest): unknown {
-      const obj: any = {};
-      if (message.translationId !== "") {
-        obj.translationId = message.translationId;
+          message.audioInfo = AudioBufferObject.decode(reader, reader.uint32());
+          continue;
+        }
       }
-      if (message.url !== "") {
-        obj.url = message.url;
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
       }
-      if (message.partialAudioInfo !== undefined) {
-        obj.partialAudioInfo = ChunkAudioObject.toJSON(
-          message.partialAudioInfo,
-        );
-      }
-      if (message.audioInfo !== undefined) {
-        obj.audioInfo = AudioBufferObject.toJSON(message.audioInfo);
-      }
-      return obj;
-    },
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
 
-    create<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(
-      base?: I,
-    ): VideoTranslationAudioRequest {
-      return VideoTranslationAudioRequest.fromPartial(base ?? ({} as any));
-    },
-    fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(
-      object: I,
-    ): VideoTranslationAudioRequest {
-      const message = createBaseVideoTranslationAudioRequest();
-      message.translationId = object.translationId ?? "";
-      message.url = object.url ?? "";
-      message.partialAudioInfo =
-        object.partialAudioInfo !== undefined &&
-        object.partialAudioInfo !== null
-          ? ChunkAudioObject.fromPartial(object.partialAudioInfo)
-          : undefined;
-      message.audioInfo =
-        object.audioInfo !== undefined && object.audioInfo !== null
-          ? AudioBufferObject.fromPartial(object.audioInfo)
-          : undefined;
-      return message;
-    },
-  };
+  fromJSON(object: any): VideoTranslationAudioRequest {
+    return {
+      translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      partialAudioInfo: isSet(object.partialAudioInfo) ? ChunkAudioObject.fromJSON(object.partialAudioInfo) : undefined,
+      audioInfo: isSet(object.audioInfo) ? AudioBufferObject.fromJSON(object.audioInfo) : undefined,
+    };
+  },
+
+  toJSON(message: VideoTranslationAudioRequest): unknown {
+    const obj: any = {};
+    if (message.translationId !== "") {
+      obj.translationId = message.translationId;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.partialAudioInfo !== undefined) {
+      obj.partialAudioInfo = ChunkAudioObject.toJSON(message.partialAudioInfo);
+    }
+    if (message.audioInfo !== undefined) {
+      obj.audioInfo = AudioBufferObject.toJSON(message.audioInfo);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(base?: I): VideoTranslationAudioRequest {
+    return VideoTranslationAudioRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioRequest>, I>>(object: I): VideoTranslationAudioRequest {
+    const message = createBaseVideoTranslationAudioRequest();
+    message.translationId = object.translationId ?? "";
+    message.url = object.url ?? "";
+    message.partialAudioInfo = (object.partialAudioInfo !== undefined && object.partialAudioInfo !== null)
+      ? ChunkAudioObject.fromPartial(object.partialAudioInfo)
+      : undefined;
+    message.audioInfo = (object.audioInfo !== undefined && object.audioInfo !== null)
+      ? AudioBufferObject.fromPartial(object.audioInfo)
+      : undefined;
+    return message;
+  },
+};
 
 function createBaseVideoTranslationAudioResponse(): VideoTranslationAudioResponse {
   return { status: 0, remainingChunks: [] };
 }
 
-export const VideoTranslationAudioResponse: MessageFns<VideoTranslationAudioResponse> =
-  {
-    encode(
-      message: VideoTranslationAudioResponse,
-      writer: BinaryWriter = new BinaryWriter(),
-    ): BinaryWriter {
-      if (message.status !== 0) {
-        writer.uint32(8).int32(message.status);
-      }
-      for (const v of message.remainingChunks) {
-        writer.uint32(18).string(v!);
-      }
-      return writer;
-    },
+export const VideoTranslationAudioResponse: MessageFns<VideoTranslationAudioResponse> = {
+  encode(message: VideoTranslationAudioResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.status !== 0) {
+      writer.uint32(8).int32(message.status);
+    }
+    for (const v of message.remainingChunks) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
 
-    decode(
-      input: BinaryReader | Uint8Array,
-      length?: number,
-    ): VideoTranslationAudioResponse {
-      const reader =
-        input instanceof BinaryReader ? input : new BinaryReader(input);
-      let end = length === undefined ? reader.len : reader.pos + length;
-      const message = createBaseVideoTranslationAudioResponse();
-      while (reader.pos < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1: {
-            if (tag !== 8) {
-              break;
-            }
-
-            message.status = reader.int32();
-            continue;
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationAudioResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationAudioResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
           }
-          case 2: {
-            if (tag !== 18) {
-              break;
-            }
 
-            message.remainingChunks.push(reader.string());
-            continue;
+          message.status = reader.int32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
           }
+
+          message.remainingChunks.push(reader.string());
+          continue;
         }
-        if ((tag & 7) === 4 || tag === 0) {
-          break;
-        }
-        reader.skip(tag & 7);
       }
-      return message;
-    },
-
-    fromJSON(object: any): VideoTranslationAudioResponse {
-      return {
-        status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-        remainingChunks: globalThis.Array.isArray(object?.remainingChunks)
-          ? object.remainingChunks.map((e: any) => globalThis.String(e))
-          : [],
-      };
-    },
-
-    toJSON(message: VideoTranslationAudioResponse): unknown {
-      const obj: any = {};
-      if (message.status !== 0) {
-        obj.status = Math.round(message.status);
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
       }
-      if (message.remainingChunks?.length) {
-        obj.remainingChunks = message.remainingChunks;
-      }
-      return obj;
-    },
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
 
-    create<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(
-      base?: I,
-    ): VideoTranslationAudioResponse {
-      return VideoTranslationAudioResponse.fromPartial(base ?? ({} as any));
-    },
-    fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(
-      object: I,
-    ): VideoTranslationAudioResponse {
-      const message = createBaseVideoTranslationAudioResponse();
-      message.status = object.status ?? 0;
-      message.remainingChunks = object.remainingChunks?.map((e) => e) || [];
-      return message;
-    },
-  };
+  fromJSON(object: any): VideoTranslationAudioResponse {
+    return {
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      remainingChunks: globalThis.Array.isArray(object?.remainingChunks)
+        ? object.remainingChunks.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: VideoTranslationAudioResponse): unknown {
+    const obj: any = {};
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.remainingChunks?.length) {
+      obj.remainingChunks = message.remainingChunks;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(base?: I): VideoTranslationAudioResponse {
+    return VideoTranslationAudioResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationAudioResponse>, I>>(
+    object: I,
+  ): VideoTranslationAudioResponse {
+    const message = createBaseVideoTranslationAudioResponse();
+    message.status = object.status ?? 0;
+    message.remainingChunks = object.remainingChunks?.map((e) => e) || [];
+    return message;
+  },
+};
 
 function createBaseSubtitlesObject(): SubtitlesObject {
-  return {
-    language: "",
-    url: "",
-    unknown0: 0,
-    translatedLanguage: "",
-    translatedUrl: "",
-    unknown1: 0,
-    unknown2: 0,
-  };
+  return { language: "", url: "", unknown0: 0, translatedLanguage: "", translatedUrl: "", unknown1: 0, unknown2: 0 };
 }
 
 export const SubtitlesObject: MessageFns<SubtitlesObject> = {
-  encode(
-    message: SubtitlesObject,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: SubtitlesObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.language !== "") {
       writer.uint32(10).string(message.language);
     }
@@ -1402,8 +1240,7 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SubtitlesObject {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubtitlesObject();
     while (reader.pos < end) {
@@ -1476,17 +1313,11 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
 
   fromJSON(object: any): SubtitlesObject {
     return {
-      language: isSet(object.language)
-        ? globalThis.String(object.language)
-        : "",
+      language: isSet(object.language) ? globalThis.String(object.language) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
-      translatedLanguage: isSet(object.translatedLanguage)
-        ? globalThis.String(object.translatedLanguage)
-        : "",
-      translatedUrl: isSet(object.translatedUrl)
-        ? globalThis.String(object.translatedUrl)
-        : "",
+      translatedLanguage: isSet(object.translatedLanguage) ? globalThis.String(object.translatedLanguage) : "",
+      translatedUrl: isSet(object.translatedUrl) ? globalThis.String(object.translatedUrl) : "",
       unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
     };
@@ -1518,14 +1349,10 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SubtitlesObject>, I>>(
-    base?: I,
-  ): SubtitlesObject {
+  create<I extends Exact<DeepPartial<SubtitlesObject>, I>>(base?: I): SubtitlesObject {
     return SubtitlesObject.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SubtitlesObject>, I>>(
-    object: I,
-  ): SubtitlesObject {
+  fromPartial<I extends Exact<DeepPartial<SubtitlesObject>, I>>(object: I): SubtitlesObject {
     const message = createBaseSubtitlesObject();
     message.language = object.language ?? "";
     message.url = object.url ?? "";
@@ -1543,10 +1370,7 @@ function createBaseSubtitlesRequest(): SubtitlesRequest {
 }
 
 export const SubtitlesRequest: MessageFns<SubtitlesRequest> = {
-  encode(
-    message: SubtitlesRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: SubtitlesRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
@@ -1557,8 +1381,7 @@ export const SubtitlesRequest: MessageFns<SubtitlesRequest> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SubtitlesRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubtitlesRequest();
     while (reader.pos < end) {
@@ -1592,9 +1415,7 @@ export const SubtitlesRequest: MessageFns<SubtitlesRequest> = {
   fromJSON(object: any): SubtitlesRequest {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      language: isSet(object.language)
-        ? globalThis.String(object.language)
-        : "",
+      language: isSet(object.language) ? globalThis.String(object.language) : "",
     };
   },
 
@@ -1609,14 +1430,10 @@ export const SubtitlesRequest: MessageFns<SubtitlesRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SubtitlesRequest>, I>>(
-    base?: I,
-  ): SubtitlesRequest {
+  create<I extends Exact<DeepPartial<SubtitlesRequest>, I>>(base?: I): SubtitlesRequest {
     return SubtitlesRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SubtitlesRequest>, I>>(
-    object: I,
-  ): SubtitlesRequest {
+  fromPartial<I extends Exact<DeepPartial<SubtitlesRequest>, I>>(object: I): SubtitlesRequest {
     const message = createBaseSubtitlesRequest();
     message.url = object.url ?? "";
     message.language = object.language ?? "";
@@ -1629,10 +1446,7 @@ function createBaseSubtitlesResponse(): SubtitlesResponse {
 }
 
 export const SubtitlesResponse: MessageFns<SubtitlesResponse> = {
-  encode(
-    message: SubtitlesResponse,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: SubtitlesResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.waiting !== false) {
       writer.uint32(8).bool(message.waiting);
     }
@@ -1643,8 +1457,7 @@ export const SubtitlesResponse: MessageFns<SubtitlesResponse> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SubtitlesResponse {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubtitlesResponse();
     while (reader.pos < end) {
@@ -1663,9 +1476,7 @@ export const SubtitlesResponse: MessageFns<SubtitlesResponse> = {
             break;
           }
 
-          message.subtitles.push(
-            SubtitlesObject.decode(reader, reader.uint32()),
-          );
+          message.subtitles.push(SubtitlesObject.decode(reader, reader.uint32()));
           continue;
         }
       }
@@ -1679,9 +1490,7 @@ export const SubtitlesResponse: MessageFns<SubtitlesResponse> = {
 
   fromJSON(object: any): SubtitlesResponse {
     return {
-      waiting: isSet(object.waiting)
-        ? globalThis.Boolean(object.waiting)
-        : false,
+      waiting: isSet(object.waiting) ? globalThis.Boolean(object.waiting) : false,
       subtitles: globalThis.Array.isArray(object?.subtitles)
         ? object.subtitles.map((e: any) => SubtitlesObject.fromJSON(e))
         : [],
@@ -1699,18 +1508,13 @@ export const SubtitlesResponse: MessageFns<SubtitlesResponse> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SubtitlesResponse>, I>>(
-    base?: I,
-  ): SubtitlesResponse {
+  create<I extends Exact<DeepPartial<SubtitlesResponse>, I>>(base?: I): SubtitlesResponse {
     return SubtitlesResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SubtitlesResponse>, I>>(
-    object: I,
-  ): SubtitlesResponse {
+  fromPartial<I extends Exact<DeepPartial<SubtitlesResponse>, I>>(object: I): SubtitlesResponse {
     const message = createBaseSubtitlesResponse();
     message.waiting = object.waiting ?? false;
-    message.subtitles =
-      object.subtitles?.map((e) => SubtitlesObject.fromPartial(e)) || [];
+    message.subtitles = object.subtitles?.map((e) => SubtitlesObject.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1720,10 +1524,7 @@ function createBaseStreamTranslationObject(): StreamTranslationObject {
 }
 
 export const StreamTranslationObject: MessageFns<StreamTranslationObject> = {
-  encode(
-    message: StreamTranslationObject,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: StreamTranslationObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
@@ -1733,12 +1534,8 @@ export const StreamTranslationObject: MessageFns<StreamTranslationObject> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number,
-  ): StreamTranslationObject {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): StreamTranslationObject {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamTranslationObject();
     while (reader.pos < end) {
@@ -1772,9 +1569,7 @@ export const StreamTranslationObject: MessageFns<StreamTranslationObject> = {
   fromJSON(object: any): StreamTranslationObject {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      timestamp: isSet(object.timestamp)
-        ? globalThis.String(object.timestamp)
-        : "",
+      timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : "",
     };
   },
 
@@ -1789,14 +1584,10 @@ export const StreamTranslationObject: MessageFns<StreamTranslationObject> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamTranslationObject>, I>>(
-    base?: I,
-  ): StreamTranslationObject {
+  create<I extends Exact<DeepPartial<StreamTranslationObject>, I>>(base?: I): StreamTranslationObject {
     return StreamTranslationObject.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamTranslationObject>, I>>(
-    object: I,
-  ): StreamTranslationObject {
+  fromPartial<I extends Exact<DeepPartial<StreamTranslationObject>, I>>(object: I): StreamTranslationObject {
     const message = createBaseStreamTranslationObject();
     message.url = object.url ?? "";
     message.timestamp = object.timestamp ?? "";
@@ -1809,10 +1600,7 @@ function createBaseStreamTranslationRequest(): StreamTranslationRequest {
 }
 
 export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
-  encode(
-    message: StreamTranslationRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: StreamTranslationRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
@@ -1825,12 +1613,8 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number,
-  ): StreamTranslationRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): StreamTranslationRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamTranslationRequest();
     while (reader.pos < end) {
@@ -1872,12 +1656,8 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
   fromJSON(object: any): StreamTranslationRequest {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      language: isSet(object.language)
-        ? globalThis.String(object.language)
-        : "",
-      responseLanguage: isSet(object.responseLanguage)
-        ? globalThis.String(object.responseLanguage)
-        : "",
+      language: isSet(object.language) ? globalThis.String(object.language) : "",
+      responseLanguage: isSet(object.responseLanguage) ? globalThis.String(object.responseLanguage) : "",
     };
   },
 
@@ -1895,14 +1675,10 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamTranslationRequest>, I>>(
-    base?: I,
-  ): StreamTranslationRequest {
+  create<I extends Exact<DeepPartial<StreamTranslationRequest>, I>>(base?: I): StreamTranslationRequest {
     return StreamTranslationRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamTranslationRequest>, I>>(
-    object: I,
-  ): StreamTranslationRequest {
+  fromPartial<I extends Exact<DeepPartial<StreamTranslationRequest>, I>>(object: I): StreamTranslationRequest {
     const message = createBaseStreamTranslationRequest();
     message.url = object.url ?? "";
     message.language = object.language ?? "";
@@ -1915,132 +1691,104 @@ function createBaseStreamTranslationResponse(): StreamTranslationResponse {
   return { interval: 0, translatedInfo: undefined, pingId: undefined };
 }
 
-export const StreamTranslationResponse: MessageFns<StreamTranslationResponse> =
-  {
-    encode(
-      message: StreamTranslationResponse,
-      writer: BinaryWriter = new BinaryWriter(),
-    ): BinaryWriter {
-      if (message.interval !== 0) {
-        writer.uint32(8).int32(message.interval);
-      }
-      if (message.translatedInfo !== undefined) {
-        StreamTranslationObject.encode(
-          message.translatedInfo,
-          writer.uint32(18).fork(),
-        ).join();
-      }
-      if (message.pingId !== undefined) {
-        writer.uint32(24).int32(message.pingId);
-      }
-      return writer;
-    },
+export const StreamTranslationResponse: MessageFns<StreamTranslationResponse> = {
+  encode(message: StreamTranslationResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.interval !== 0) {
+      writer.uint32(8).int32(message.interval);
+    }
+    if (message.translatedInfo !== undefined) {
+      StreamTranslationObject.encode(message.translatedInfo, writer.uint32(18).fork()).join();
+    }
+    if (message.pingId !== undefined) {
+      writer.uint32(24).int32(message.pingId);
+    }
+    return writer;
+  },
 
-    decode(
-      input: BinaryReader | Uint8Array,
-      length?: number,
-    ): StreamTranslationResponse {
-      const reader =
-        input instanceof BinaryReader ? input : new BinaryReader(input);
-      let end = length === undefined ? reader.len : reader.pos + length;
-      const message = createBaseStreamTranslationResponse();
-      while (reader.pos < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1: {
-            if (tag !== 8) {
-              break;
-            }
-
-            message.interval = reader.int32() as any;
-            continue;
+  decode(input: BinaryReader | Uint8Array, length?: number): StreamTranslationResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStreamTranslationResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
           }
-          case 2: {
-            if (tag !== 18) {
-              break;
-            }
 
-            message.translatedInfo = StreamTranslationObject.decode(
-              reader,
-              reader.uint32(),
-            );
-            continue;
-          }
-          case 3: {
-            if (tag !== 24) {
-              break;
-            }
-
-            message.pingId = reader.int32();
-            continue;
-          }
+          message.interval = reader.int32() as any;
+          continue;
         }
-        if ((tag & 7) === 4 || tag === 0) {
-          break;
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.translatedInfo = StreamTranslationObject.decode(reader, reader.uint32());
+          continue;
         }
-        reader.skip(tag & 7);
-      }
-      return message;
-    },
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
 
-    fromJSON(object: any): StreamTranslationResponse {
-      return {
-        interval: isSet(object.interval)
-          ? streamIntervalFromJSON(object.interval)
-          : 0,
-        translatedInfo: isSet(object.translatedInfo)
-          ? StreamTranslationObject.fromJSON(object.translatedInfo)
-          : undefined,
-        pingId: isSet(object.pingId)
-          ? globalThis.Number(object.pingId)
-          : undefined,
-      };
-    },
+          message.pingId = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
 
-    toJSON(message: StreamTranslationResponse): unknown {
-      const obj: any = {};
-      if (message.interval !== 0) {
-        obj.interval = streamIntervalToJSON(message.interval);
-      }
-      if (message.translatedInfo !== undefined) {
-        obj.translatedInfo = StreamTranslationObject.toJSON(
-          message.translatedInfo,
-        );
-      }
-      if (message.pingId !== undefined) {
-        obj.pingId = Math.round(message.pingId);
-      }
-      return obj;
-    },
+  fromJSON(object: any): StreamTranslationResponse {
+    return {
+      interval: isSet(object.interval) ? streamIntervalFromJSON(object.interval) : 0,
+      translatedInfo: isSet(object.translatedInfo)
+        ? StreamTranslationObject.fromJSON(object.translatedInfo)
+        : undefined,
+      pingId: isSet(object.pingId) ? globalThis.Number(object.pingId) : undefined,
+    };
+  },
 
-    create<I extends Exact<DeepPartial<StreamTranslationResponse>, I>>(
-      base?: I,
-    ): StreamTranslationResponse {
-      return StreamTranslationResponse.fromPartial(base ?? ({} as any));
-    },
-    fromPartial<I extends Exact<DeepPartial<StreamTranslationResponse>, I>>(
-      object: I,
-    ): StreamTranslationResponse {
-      const message = createBaseStreamTranslationResponse();
-      message.interval = object.interval ?? 0;
-      message.translatedInfo =
-        object.translatedInfo !== undefined && object.translatedInfo !== null
-          ? StreamTranslationObject.fromPartial(object.translatedInfo)
-          : undefined;
-      message.pingId = object.pingId ?? undefined;
-      return message;
-    },
-  };
+  toJSON(message: StreamTranslationResponse): unknown {
+    const obj: any = {};
+    if (message.interval !== 0) {
+      obj.interval = streamIntervalToJSON(message.interval);
+    }
+    if (message.translatedInfo !== undefined) {
+      obj.translatedInfo = StreamTranslationObject.toJSON(message.translatedInfo);
+    }
+    if (message.pingId !== undefined) {
+      obj.pingId = Math.round(message.pingId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StreamTranslationResponse>, I>>(base?: I): StreamTranslationResponse {
+    return StreamTranslationResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StreamTranslationResponse>, I>>(object: I): StreamTranslationResponse {
+    const message = createBaseStreamTranslationResponse();
+    message.interval = object.interval ?? 0;
+    message.translatedInfo = (object.translatedInfo !== undefined && object.translatedInfo !== null)
+      ? StreamTranslationObject.fromPartial(object.translatedInfo)
+      : undefined;
+    message.pingId = object.pingId ?? undefined;
+    return message;
+  },
+};
 
 function createBaseStreamPingRequest(): StreamPingRequest {
   return { pingId: 0 };
 }
 
 export const StreamPingRequest: MessageFns<StreamPingRequest> = {
-  encode(
-    message: StreamPingRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: StreamPingRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.pingId !== 0) {
       writer.uint32(8).int32(message.pingId);
     }
@@ -2048,8 +1796,7 @@ export const StreamPingRequest: MessageFns<StreamPingRequest> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): StreamPingRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamPingRequest();
     while (reader.pos < end) {
@@ -2073,9 +1820,7 @@ export const StreamPingRequest: MessageFns<StreamPingRequest> = {
   },
 
   fromJSON(object: any): StreamPingRequest {
-    return {
-      pingId: isSet(object.pingId) ? globalThis.Number(object.pingId) : 0,
-    };
+    return { pingId: isSet(object.pingId) ? globalThis.Number(object.pingId) : 0 };
   },
 
   toJSON(message: StreamPingRequest): unknown {
@@ -2086,14 +1831,10 @@ export const StreamPingRequest: MessageFns<StreamPingRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamPingRequest>, I>>(
-    base?: I,
-  ): StreamPingRequest {
+  create<I extends Exact<DeepPartial<StreamPingRequest>, I>>(base?: I): StreamPingRequest {
     return StreamPingRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamPingRequest>, I>>(
-    object: I,
-  ): StreamPingRequest {
+  fromPartial<I extends Exact<DeepPartial<StreamPingRequest>, I>>(object: I): StreamPingRequest {
     const message = createBaseStreamPingRequest();
     message.pingId = object.pingId ?? 0;
     return message;
@@ -2105,10 +1846,7 @@ function createBaseYandexSessionRequest(): YandexSessionRequest {
 }
 
 export const YandexSessionRequest: MessageFns<YandexSessionRequest> = {
-  encode(
-    message: YandexSessionRequest,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: YandexSessionRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.uuid !== "") {
       writer.uint32(10).string(message.uuid);
     }
@@ -2118,12 +1856,8 @@ export const YandexSessionRequest: MessageFns<YandexSessionRequest> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number,
-  ): YandexSessionRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): YandexSessionRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseYandexSessionRequest();
     while (reader.pos < end) {
@@ -2172,14 +1906,10 @@ export const YandexSessionRequest: MessageFns<YandexSessionRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<YandexSessionRequest>, I>>(
-    base?: I,
-  ): YandexSessionRequest {
+  create<I extends Exact<DeepPartial<YandexSessionRequest>, I>>(base?: I): YandexSessionRequest {
     return YandexSessionRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<YandexSessionRequest>, I>>(
-    object: I,
-  ): YandexSessionRequest {
+  fromPartial<I extends Exact<DeepPartial<YandexSessionRequest>, I>>(object: I): YandexSessionRequest {
     const message = createBaseYandexSessionRequest();
     message.uuid = object.uuid ?? "";
     message.module = object.module ?? "";
@@ -2192,10 +1922,7 @@ function createBaseYandexSessionResponse(): YandexSessionResponse {
 }
 
 export const YandexSessionResponse: MessageFns<YandexSessionResponse> = {
-  encode(
-    message: YandexSessionResponse,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
+  encode(message: YandexSessionResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.secretKey !== "") {
       writer.uint32(10).string(message.secretKey);
     }
@@ -2205,12 +1932,8 @@ export const YandexSessionResponse: MessageFns<YandexSessionResponse> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number,
-  ): YandexSessionResponse {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): YandexSessionResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseYandexSessionResponse();
     while (reader.pos < end) {
@@ -2243,9 +1966,7 @@ export const YandexSessionResponse: MessageFns<YandexSessionResponse> = {
 
   fromJSON(object: any): YandexSessionResponse {
     return {
-      secretKey: isSet(object.secretKey)
-        ? globalThis.String(object.secretKey)
-        : "",
+      secretKey: isSet(object.secretKey) ? globalThis.String(object.secretKey) : "",
       expires: isSet(object.expires) ? globalThis.Number(object.expires) : 0,
     };
   },
@@ -2261,14 +1982,10 @@ export const YandexSessionResponse: MessageFns<YandexSessionResponse> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<YandexSessionResponse>, I>>(
-    base?: I,
-  ): YandexSessionResponse {
+  create<I extends Exact<DeepPartial<YandexSessionResponse>, I>>(base?: I): YandexSessionResponse {
     return YandexSessionResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<YandexSessionResponse>, I>>(
-    object: I,
-  ): YandexSessionResponse {
+  fromPartial<I extends Exact<DeepPartial<YandexSessionResponse>, I>>(object: I): YandexSessionResponse {
     const message = createBaseYandexSessionResponse();
     message.secretKey = object.secretKey ?? "";
     message.expires = object.expires ?? 0;
@@ -2301,31 +2018,17 @@ function base64FromBytes(arr: Uint8Array): string {
   }
 }
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends globalThis.Array<infer U>
-    ? globalThis.Array<DeepPartial<U>>
-    : T extends ReadonlyArray<infer U>
-      ? ReadonlyArray<DeepPartial<U>>
-      : T extends {}
-        ? { [K in keyof T]?: DeepPartial<T[K]> }
-        : Partial<T>;
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
