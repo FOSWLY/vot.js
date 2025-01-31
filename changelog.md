@@ -1,3 +1,13 @@
+# 2.2.2
+
+## Core
+
+- Set new fields for stream requests
+
+## Shared
+
+- Updated Stream Yandex Protobuf
+
 # 2.2.1
 
 ## Ext

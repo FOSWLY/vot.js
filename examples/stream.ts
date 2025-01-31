@@ -8,7 +8,7 @@ import {
 } from "../packages/core/dist/types/yandex";
 
 const client = new VOTClient();
-const videoData = await getVideoData("https://youtu.be/nA9UZF-SZoQ");
+const videoData = await getVideoData("https://youtu.be/JRi2sYaPsjc");
 
 let response: StreamTranslationResponse;
 let inter: Timer;
