@@ -110,6 +110,8 @@ export abstract class YandexVOTProtobuf {
       url,
       language: requestLang,
       responseLanguage: responseLang,
+      unknown0: 1,
+      unknown1: 0,
     }).finish();
   }
 
