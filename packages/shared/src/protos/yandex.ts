@@ -214,8 +214,8 @@ export interface SubtitlesResponse {
 export interface StreamTranslationObject {
   url: string;
   /**
-   * timestamp in ms (timing of m3u8).
-   * it could have been int64,
+   * timestamp in ms (timing of start m3u8).
+   * it could have been big float,
    * but js requires an additional dependencies for this
    */
   timestamp: string;
@@ -225,6 +225,8 @@ export interface StreamTranslationRequest {
   url: string;
   language: string;
   responseLanguage: string;
+  unknown0: number;
+  unknown1: number;
 }
 
 export interface StreamTranslationResponse {
@@ -1596,7 +1598,7 @@ export const StreamTranslationObject: MessageFns<StreamTranslationObject> = {
 };
 
 function createBaseStreamTranslationRequest(): StreamTranslationRequest {
-  return { url: "", language: "", responseLanguage: "" };
+  return { url: "", language: "", responseLanguage: "", unknown0: 0, unknown1: 0 };
 }
 
 export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
@@ -1609,6 +1611,12 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
     }
     if (message.responseLanguage !== "") {
       writer.uint32(26).string(message.responseLanguage);
+    }
+    if (message.unknown0 !== 0) {
+      writer.uint32(40).int32(message.unknown0);
+    }
+    if (message.unknown1 !== 0) {
+      writer.uint32(48).int32(message.unknown1);
     }
     return writer;
   },
@@ -1644,6 +1652,22 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
           message.responseLanguage = reader.string();
           continue;
         }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.unknown0 = reader.int32();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.unknown1 = reader.int32();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1658,6 +1682,8 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       language: isSet(object.language) ? globalThis.String(object.language) : "",
       responseLanguage: isSet(object.responseLanguage) ? globalThis.String(object.responseLanguage) : "",
+      unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
+      unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
     };
   },
 
@@ -1672,6 +1698,12 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
     if (message.responseLanguage !== "") {
       obj.responseLanguage = message.responseLanguage;
     }
+    if (message.unknown0 !== 0) {
+      obj.unknown0 = Math.round(message.unknown0);
+    }
+    if (message.unknown1 !== 0) {
+      obj.unknown1 = Math.round(message.unknown1);
+    }
     return obj;
   },
 
@@ -1683,6 +1715,8 @@ export const StreamTranslationRequest: MessageFns<StreamTranslationRequest> = {
     message.url = object.url ?? "";
     message.language = object.language ?? "";
     message.responseLanguage = object.responseLanguage ?? "";
+    message.unknown0 = object.unknown0 ?? 0;
+    message.unknown1 = object.unknown1 ?? 0;
     return message;
   },
 };

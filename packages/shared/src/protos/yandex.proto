@@ -132,8 +132,8 @@ message SubtitlesResponse {
 // STREAM TRANSLATION
 message StreamTranslationObject {
   string url = 1;
-  // timestamp in ms (timing of m3u8).
-  // it could have been int64,
+  // timestamp in ms (timing of start m3u8).
+  // it could have been big float,
   // but js requires an additional dependencies for this
   string timestamp = 2;
 }
@@ -142,6 +142,8 @@ message StreamTranslationRequest {
   string url = 1;
   string language = 2;
   string responseLanguage = 3;
+  int32 unknown0 = 5;
+  int32 unknown1 = 6;
 }
 
 enum StreamInterval {
