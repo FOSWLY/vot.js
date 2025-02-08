@@ -41,17 +41,23 @@ export async function getSignature(body: Uint8Array) {
 export async function getSecYaHeaders<T extends SecType>(
   secType: T,
   session: ClientSession,
-  body: Uint8Array,
+  body: T extends "Ya-Summary" ? undefined : Uint8Array,
   path: string,
 ): Promise<SecYaHeaders<T>> {
   const { secretKey, uuid } = session;
-  const sign = await getSignature(body);
 
   // https://github.com/FOSWLY/vot.js/issues/36
   const token = `${uuid}:${path}:${config.componentVersion}`;
   const tokenBody = utf8Encoder.encode(token);
   const tokenSign = await getSignature(tokenBody);
+  if (secType === "Ya-Summary") {
+    return {
+      [`X-${secType}-Sk`]: secretKey,
+      [`X-${secType}-Token`]: `${tokenSign}:${token}`,
+    } as SecYaHeaders<T>;
+  }
 
+  const sign = await getSignature(body!);
   return {
     [`${secType}-Signature`]: sign,
     [`Sec-${secType}-Sk`]: secretKey,
