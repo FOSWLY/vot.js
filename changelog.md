@@ -1,3 +1,15 @@
+# 2.2.4
+
+## Shared
+
+- Fix invalid token name for `Ya-Summary`
+- Removed generating signature header for `Ya-Summary`
+- Now body in `getSecYaHeaders` required undefined for `Ya-Summary`
+
+## Workspace
+
+- Bump dev depends
+
 # 2.2.3
 
 ## Shared
