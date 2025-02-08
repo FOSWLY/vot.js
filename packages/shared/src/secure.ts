@@ -1,6 +1,6 @@
 import config from "./data/config";
 import Logger from "./utils/logger";
-import { SecType, ClientSession, HashName } from "./types/secure";
+import { SecType, ClientSession, HashName, SecYaHeaders } from "./types/secure";
 
 const { componentVersion } = config;
 
@@ -38,12 +38,12 @@ export async function getSignature(body: Uint8Array) {
   );
 }
 
-export async function getSecYaHeaders(
-  secType: SecType,
+export async function getSecYaHeaders<T extends SecType>(
+  secType: T,
   session: ClientSession,
   body: Uint8Array,
   path: string,
-) {
+): Promise<SecYaHeaders<T>> {
   const { secretKey, uuid } = session;
   const sign = await getSignature(body);
 
@@ -56,7 +56,7 @@ export async function getSecYaHeaders(
     [`${secType}-Signature`]: sign,
     [`Sec-${secType}-Sk`]: secretKey,
     [`Sec-${secType}-Token`]: `${tokenSign}:${token}`,
-  };
+  } as SecYaHeaders<T>;
 }
 
 // yandex uuid
@@ -87,4 +87,4 @@ export const browserSecHeaders = {
   "sec-ch-ua": `"Chromium";v="130", "YaBrowser";v="${componentVersion.slice(0, 5)}", "Not?A_Brand";v="99", "Yowser";v="2.5"`,
   "sec-ch-ua-full-version-list": `"Chromium";v="130.0.6723.152", "YaBrowser";v="${componentVersion}", "Not?A_Brand";v="99.0.0.0", "Yowser";v="2.5"`,
   "Sec-Fetch-Mode": "no-cors",
-};
+} as const;

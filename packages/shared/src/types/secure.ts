@@ -13,3 +13,9 @@ export type ClientSession = {
   uuid: string;
   secretKey: string;
 };
+
+export type SecYaHeader<T extends SecType> =
+  | `${T}-Signature`
+  | `Sec-${T}-Sk`
+  | `Sec-${T}-Token`;
+export type SecYaHeaders<T extends SecType> = Record<SecYaHeader<T>, string>;
