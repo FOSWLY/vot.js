@@ -1,3 +1,10 @@
+# 2.2.3
+
+## Shared
+
+- Added better typings for getSecYaHeaders function
+- Added `SecYaHeader` & `SecYaHeaders` typings
+
 # 2.2.2
 
 ## Core
