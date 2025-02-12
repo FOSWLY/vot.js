@@ -100,6 +100,7 @@ export default [
       /^clips.twitch.tv$/,
       /^player.twitch.tv$/,
     ],
+    needExtraData: true,
     selector: ".video-ref, main > div > section > div > div > div",
   },
   {

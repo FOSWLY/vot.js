@@ -1,4 +1,5 @@
 import { BaseHelper, VideoHelperError } from "./base";
+import { MinimalVideoData } from "../types/client";
 
 import * as Sap from "@vot.js/shared/types/helpers/sap";
 
@@ -38,7 +39,23 @@ export default class TwitchHelper extends BaseHelper {
     return `${channelName}/clip/${isEmbed ? clipId : clearPathname}`;
   }
 
-  async getVideoId(url: URL) {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
+    const title = document.querySelector<HTMLElement>(
+      '[data-a-target="stream-title"], [data-test-selector="stream-info-card-component__subtitle"]',
+    )?.innerText;
+    const isStream = !!document.querySelector(
+      '[data-a-target="animated-channel-viewers-count"], .channel-status-info--live, .top-bar--pointer-enabled .tw-channel-status-text-indicator',
+    );
+
+    return {
+      url: this.service!.url + videoId,
+      isStream,
+      title,
+    };
+  }
+
+  async getVideoId(url: URL): Promise<string | undefined> {
     const pathname = url.pathname;
     if (/^m\.twitch\.tv$/.test(pathname)) {
       return /videos\/([^/]+)/.exec(url.href)?.[0] ?? pathname.slice(1);
@@ -56,6 +73,19 @@ export default class TwitchHelper extends BaseHelper {
       return await this.getClipLink(pathname, url.searchParams.get("clip"));
     }
 
-    return /(?:videos)\/([^/]+)/.exec(pathname)?.[0];
+    const videoPath = /(?:videos)\/([^/]+)/.exec(pathname);
+    if (videoPath) {
+      return videoPath[0];
+    }
+
+    const isUserOfflinePage = document.querySelector<HTMLLinkElement>(
+      ".home-offline-hero .tw-link",
+    );
+    if (isUserOfflinePage?.href) {
+      const pageUrl = new URL(isUserOfflinePage.href);
+      return /(?:videos)\/([^/]+)/.exec(pageUrl.pathname)?.[0];
+    }
+
+    return document.querySelector(".persistent-player") ? pathname : undefined;
   }
 }
