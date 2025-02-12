@@ -1,3 +1,11 @@
+# 2.2.5
+
+## Ext
+
+- Added support last VOD on user offline page for Twitch
+- Added support getVideoData for Twitch
+- Added getVideoId for Twitch live stream
+
 # 2.2.4
 
 ## Shared
