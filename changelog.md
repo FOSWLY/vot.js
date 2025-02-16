@@ -1,3 +1,14 @@
+# 2.2.6
+
+## Shared
+
+- Updated Ya component version
+- Updated Ya user agent and sec-ua-\* headers
+
+## Workspace
+
+- Rewritted typebox generation logic with `@toil/typebox-genx`
+
 # 2.2.5
 
 ## Ext
