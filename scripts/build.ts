@@ -3,18 +3,11 @@ import { parseArgs } from "node:util";
 import { $ } from "bun";
 
 import { version } from "../package.json";
-import { generateTypebox } from "./typebox-gen";
+import { GenX } from "@toil/typebox-genx";
 
 const {
   values: { ["skip-proto"]: skipProto },
-} = parseArgs({
-  options: {
-    "skip-proto": {
-      type: "boolean",
-      short: "s",
-    },
-  },
-});
+} = parseArgs({ options: { "skip-proto": { type: "boolean", short: "s" } } });
 
 async function updatePackgeVersion(root: string) {
   const packageInfoPath = path.join(root, "package.json");
@@ -36,7 +29,13 @@ async function build(packageName: string, extraScripts: string[] = []) {
   }
 
   await $`tsc --project tsconfig.build.json --outdir ./dist && tsc-esm-fix --tsconfig tsconfig.build.json`;
-  await generateTypebox(packagePath);
+  const genx = new GenX({ root: packagePath });
+  await $`mkdir dist/typebox`;
+  await genx.generateByDir(
+    path.resolve(packagePath, "src", "types"),
+    path.resolve(packagePath, "dist", "typebox"),
+  );
+
   $.cwd("./");
 }
 
