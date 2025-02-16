@@ -44,11 +44,7 @@ async function getActualVersion(version: string) {
         custo: "yes",
         reason: "browser_updater",
       }).toString(),
-    {
-      headers: {
-        "User-Agent": config.userAgent,
-      },
-    },
+    { headers: { "User-Agent": config.userAgent } },
   );
 
   let content = await res.text();
