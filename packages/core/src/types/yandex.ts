@@ -141,3 +141,15 @@ export type StreamTranslationResponse =
 export type VideoTranslationFailAudioResponse = {
   status: number; // 1 - success (maybe it's tinyint)
 };
+
+export type SubtitleItem = {
+  language: string;
+  url: string;
+  translatedLanguage: string;
+  translatedUrl: string;
+};
+
+export type GetSubtitlesResponse = {
+  waiting: boolean;
+  subtitles: SubtitleItem[];
+};

@@ -43,7 +43,7 @@ export abstract class YandexVOTProtobuf {
       language: requestLang,
       forceSourceLang,
       unknown1: 0,
-      translationHelp: translationHelp ? translationHelp : [],
+      translationHelp: translationHelp ?? [],
       responseLanguage: responseLang,
       wasStream,
       unknown2: 1,

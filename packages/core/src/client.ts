@@ -27,9 +27,15 @@ import type {
   VideoTranslationFailAudioResponse,
   AudioBufferObject,
   PartialAudioObject,
+  GetSubtitlesResponse,
 } from "./types/yandex";
 import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex";
-import type { TranslationResponse, VideoTranslationVOTOpts } from "./types/vot";
+import type {
+  GetSubtitlesVOTOpts,
+  SubtitleItem,
+  TranslationResponse,
+  VideoTranslationVOTOpts,
+} from "./types/vot";
 import { convertVOT } from "./utils/vot";
 
 export class VOTJSError extends Error {
@@ -444,12 +450,15 @@ export default class VOTClient extends MinimalClient {
       {
         provider: "yandex",
         service: votData.service,
-        videoId: votData.videoId,
-        fromLang: requestLang,
-        toLang: responseLang,
-        rawVideo: url,
+        video_id: votData.videoId,
+        from_lang: requestLang,
+        to_lang: responseLang,
+        raw_video: url,
       },
-      headers,
+      {
+        "X-Use-Snake-Case": "Yes",
+        ...headers,
+      },
     );
 
     if (!res.success) {
@@ -464,7 +473,7 @@ export default class VOTClient extends MinimalClient {
           translationData,
         );
       case "success":
-        if (!translationData.translatedUrl) {
+        if (!translationData.translated_url) {
           throw new VOTJSError(
             "Audio link wasn't received from VOT response",
             translationData,
@@ -474,7 +483,7 @@ export default class VOTClient extends MinimalClient {
         return {
           translationId: String(translationData.id),
           translated: true,
-          url: translationData.translatedUrl,
+          url: translationData.translated_url,
           status: 1,
           remainingTime: -1,
         };
@@ -483,7 +492,7 @@ export default class VOTClient extends MinimalClient {
           // add set id on waiting to VOT Backend
           translationId: "",
           translated: false,
-          remainingTime: translationData.remainingTime,
+          remainingTime: translationData.remaining_time,
           status: 2,
           message: translationData.message,
         };
@@ -582,19 +591,12 @@ export default class VOTClient extends MinimalClient {
         });
   }
 
-  /**
-   * @includeExample examples/basic.ts:4-5,48-56
-   */
-  async getSubtitles({
+  protected async getSubtitlesYAImpl({
     videoData,
     requestLang = this.requestLang,
     headers = {},
-  }: VideoSubtitlesOpts) {
+  }: VideoSubtitlesOpts): Promise<GetSubtitlesResponse> {
     const { url } = videoData;
-    if (this.isCustomLink(url)) {
-      throw new VOTJSError("Unsupported video URL for getting subtitles");
-    }
-
     const session = await this.getSession("video-translation");
     const body = YandexVOTProtobuf.encodeSubtitlesRequest(url, requestLang);
 
@@ -610,7 +612,96 @@ export default class VOTClient extends MinimalClient {
       throw new VOTJSError("Failed to request video subtitles", res);
     }
 
-    return YandexVOTProtobuf.decodeSubtitlesResponse(res.data);
+    const subtitlesData = YandexVOTProtobuf.decodeSubtitlesResponse(res.data);
+    const subtitles = subtitlesData.subtitles.map((subtitle) => {
+      const { language, url, translatedLanguage, translatedUrl } = subtitle;
+      return {
+        language,
+        url,
+        translatedLanguage,
+        translatedUrl,
+      };
+    });
+    return {
+      waiting: subtitlesData.waiting,
+      subtitles,
+    };
+  }
+
+  protected async getSubtitlesVOTImpl({
+    url,
+    videoId,
+    service,
+    headers = {},
+  }: GetSubtitlesVOTOpts): Promise<GetSubtitlesResponse> {
+    const votData = convertVOT(service, videoId, url);
+    const res = await this.requestVOT<SubtitleItem[]>(
+      this.paths.videoSubtitles,
+      {
+        provider: "yandex",
+        service: votData.service,
+        video_id: votData.videoId,
+      },
+      headers,
+    );
+
+    if (!res.success) {
+      throw new VOTJSError("Failed to request video subtitles", res);
+    }
+
+    const subtitlesData = res.data;
+    const subtitles = subtitlesData.reduce<GetSubtitlesResponse["subtitles"]>(
+      (result, subtitle) => {
+        if (!subtitle.lang_from) {
+          return result;
+        }
+
+        const originalSubtitle = subtitlesData.find(
+          (sub) => sub.lang === subtitle.lang_from,
+        );
+        if (!originalSubtitle) {
+          return result;
+        }
+
+        result.push({
+          language: originalSubtitle.lang,
+          url: originalSubtitle.subtitle_url,
+          translatedLanguage: subtitle.lang,
+          translatedUrl: subtitle.subtitle_url,
+        });
+        return result;
+      },
+      [],
+    );
+
+    return {
+      waiting: false,
+      subtitles,
+    };
+  }
+
+  /**
+   * @includeExample examples/basic.ts:4-5,48-56
+   */
+  async getSubtitles({
+    videoData,
+    requestLang = this.requestLang,
+    headers = {},
+  }: VideoSubtitlesOpts) {
+    const { url, videoId, host } = videoData;
+
+    return this.isCustomLink(url)
+      ? await this.getSubtitlesVOTImpl({
+          url,
+          videoId,
+          service: host,
+          headers,
+        })
+      : await this.getSubtitlesYAImpl({
+          videoData,
+          requestLang,
+          headers,
+        });
   }
 
   /**

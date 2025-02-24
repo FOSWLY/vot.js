@@ -20,7 +20,7 @@ export type VideoTranslationVOTOpts<T = VideoService> = {
 
 export type TranslationWaitingResponse = {
   status: "waiting";
-  remainingTime: number;
+  remaining_time: number;
   message: string;
 };
 
@@ -28,21 +28,44 @@ export type TranslationSuccessResponse = {
   id: number;
   status: "success";
   provider: TranslationProvider;
-  translatedUrl: string;
+  translated_url: string;
   message: string;
-  createdAt: string;
+  created_at: string;
 };
 
 export type TranslationFailedResponse = {
   id: number;
   status: "failed";
   provider: TranslationProvider;
-  translatedUrl: null;
+  translated_url: null;
   message: string;
-  createdAt: string;
+  created_at: string;
+};
+
+export type GetSubtitlesVOTOpts<T = VideoService> = {
+  url: string; // video url
+  videoId: string;
+  service: T;
+  headers?: RequestHeaders;
 };
 
 export type TranslationResponse =
   | TranslationWaitingResponse
   | TranslationSuccessResponse
   | TranslationFailedResponse;
+
+export type SubtitleItem = {
+  id: number;
+  service: string;
+  video_id: string;
+  provider: TranslationProvider;
+  lang: string;
+  lang_from: string | null;
+  subtitle_url: string;
+  created_at: string;
+};
+
+export type SubtitlesResponse = {
+  waiting: boolean;
+  subtitles: SubtitleItem[];
+};

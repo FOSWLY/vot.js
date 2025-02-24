@@ -100,6 +100,22 @@ test("Get subtitles", async () => {
   expect(response.waiting).toEqual(false);
 });
 
+test("Get subtitles (with VOT Backend API)", async () => {
+  const client = new VOTClient();
+  const videoData = await getVideoData(
+    "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
+  );
+
+  const response = await client.getSubtitles({
+    videoData,
+    requestLang: "ru",
+  });
+
+  console.log("Get subtitles (with VOT Backend API)", response);
+
+  expect(response.waiting).toEqual(false);
+});
+
 test("Get subtitles (worker)", async () => {
   const client = new VOTWorkerClient({
     host: "vot-worker.toil.cc",
