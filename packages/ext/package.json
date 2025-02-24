@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/ext",
   "description": "package for web extensions",
-  "version": "2.2.6",
+  "version": "2.3.0",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -91,7 +91,7 @@
   },
   "devDependencies": {
     "tsc-esm-fix": "^3.1.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

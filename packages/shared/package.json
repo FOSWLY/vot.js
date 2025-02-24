@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/shared",
   "description": "shared for all @vot.js package",
-  "version": "2.2.6",
+  "version": "2.3.0",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -97,7 +97,7 @@
   "devDependencies": {
     "tsc-esm-fix": "^3.1.2",
     "ts-proto": "^2.6.1",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
