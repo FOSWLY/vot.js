@@ -1,3 +1,15 @@
+# 2.3.0
+
+## Core
+
+- Added support get subtitles for m3u8 urls with VOTBackend
+- (!) Removed "unknown" fields from get subtitles yandex response. It needs for unified response with VOTBackend
+- VOTBackend `/translate` migrated to snake_case body style
+
+## Workspace
+
+- Bump depends
+
 # 2.2.6
 
 ## Shared
