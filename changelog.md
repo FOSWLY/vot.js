@@ -1,8 +1,9 @@
-# 2.x (WIP)
+# 2.3.1
 
 ## Ext
 
 - Added error handling for Udemy helper
+- Updated YT shorts selector & match logic
 
 ## Shared
 
