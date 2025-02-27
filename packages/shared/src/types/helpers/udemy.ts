@@ -54,3 +54,7 @@ export type Course = {
 export type ModuleData = {
   courseId: number;
 };
+
+export type ErrorData = {
+  detail: string;
+};

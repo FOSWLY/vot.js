@@ -1,3 +1,13 @@
+# 2.x (WIP)
+
+## Ext
+
+- Added error handling for Udemy helper
+
+## Shared
+
+- Added Udemy data error type
+
 # 2.3.0
 
 ## Core

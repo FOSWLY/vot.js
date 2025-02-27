@@ -1,4 +1,4 @@
-import { BaseHelper } from "./base.js";
+import { BaseHelper, VideoHelperError } from "./base.js";
 import { MinimalVideoData } from "../types/client.js";
 
 import * as Udemy from "@vot.js/shared/types/helpers/udemy";
@@ -26,6 +26,12 @@ export default class UdemyHelper extends BaseHelper {
     return /learn\/lecture\/([^/]+)/.exec(window.location.pathname)?.[1];
   }
 
+  isErrorData<T extends object>(
+    data: T | Udemy.ErrorData,
+  ): data is Udemy.ErrorData {
+    return !Object.hasOwn(data, "error");
+  }
+
   async getLectureData(courseId: number | string, lectureId: number | string) {
     try {
       const res = await this.fetch(
@@ -36,7 +42,12 @@ export default class UdemyHelper extends BaseHelper {
           }).toString(),
       );
 
-      return (await res.json()) as Udemy.Lecture;
+      const data = (await res.json()) as Udemy.Lecture | Udemy.ErrorData;
+      if (this.isErrorData(data)) {
+        throw new VideoHelperError(data.detail ?? "unknown error");
+      }
+
+      return data;
     } catch (err) {
       Logger.error(
         `Failed to get lecture data by courseId: ${courseId} and lectureId: ${lectureId}`,
@@ -54,7 +65,13 @@ export default class UdemyHelper extends BaseHelper {
             "fields[course]": "locale",
           }).toString(),
       );
-      return (await res.json()) as Udemy.Course;
+
+      const data = (await res.json()) as Udemy.Course | Udemy.ErrorData;
+      if (this.isErrorData(data)) {
+        throw new VideoHelperError(data.detail ?? "unknown error");
+      }
+
+      return data;
     } catch (err) {
       Logger.error(
         `Failed to get course lang by courseId: ${courseId}`,
