@@ -16,8 +16,10 @@ export default [
     additionalData: "mobile",
     host: CoreVideoService.youtube,
     url: "https://youtu.be/",
-    match: /^m.youtube.com$/,
-    selector: "shorts-video #player",
+    match: (url: URL) =>
+      /^m.youtube.com$/.test(url.hostname) &&
+      url.pathname.startsWith("/shorts/"),
+    selector: "shorts-video",
     needExtraData: true,
   },
   {
