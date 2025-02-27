@@ -1,3 +1,9 @@
+# 2.3.2
+
+## Ext
+
+- Removed extra YT Shorts service instead of this we use more stable YT Mobile service
+
 # 2.3.1
 
 ## Ext
