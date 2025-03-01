@@ -1,3 +1,17 @@
+# 2.3.3
+
+## Ext
+
+- Added support /d/VIDEO_ID for Yandex Disk
+
+## Node
+
+- Added support /d/VIDEO_ID for Yandex Disk
+
+## Workspace
+
+- Bump depends
+
 # 2.3.2
 
 ## Ext
