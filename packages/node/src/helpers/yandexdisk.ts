@@ -154,7 +154,10 @@ export default class YandexDiskHelper extends BaseHelper {
   }
 
   async getVideoData(videoId: string) {
-    if (videoId.startsWith(this.INLINE_PREFIX)) {
+    if (
+      videoId.startsWith(this.INLINE_PREFIX) ||
+      /^\/d\/([^/]+)$/.exec(videoId)
+    ) {
       return {
         url: this.service!.url + videoId.slice(1),
       };
@@ -172,8 +175,6 @@ export default class YandexDiskHelper extends BaseHelper {
     }
 
     // we return the pathname because the path can have a huge nesting
-    return /\/d\/([^/]+)\/([^/]+)/.exec(url.pathname)
-      ? url.pathname
-      : undefined;
+    return /\/d\/([^/]+)/.exec(url.pathname) ? url.pathname : undefined;
   }
 }
