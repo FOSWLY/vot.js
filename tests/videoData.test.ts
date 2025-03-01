@@ -387,6 +387,12 @@ describe("yandex disk", () => {
     expect(await normalize(expected)).toEqual(expected);
   });
 
+  test("direct /d/ to file", async () => {
+    expect(await normalize("https://disk.yandex.ru/d/XK2xRGsn1UVwDQ")).toEqual(
+      "https://yadi.sk/d/XK2xRGsn1UVwDQ",
+    );
+  });
+
   test("/d/ -> short", async () => {
     expect(
       await normalize(
