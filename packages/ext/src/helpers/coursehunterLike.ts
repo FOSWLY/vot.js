@@ -47,9 +47,9 @@ export default class CoursehunterLikeHelper extends BaseHelper {
       return +lessondId;
     }
 
-    const activeLessondEl = document.querySelector(".lessons-item_active") as
-      | HTMLElement
-      | undefined;
+    const activeLessondEl = document.querySelector<HTMLElement>(
+      ".lessons-item_active",
+    );
     lessondId = activeLessondEl?.dataset?.index;
     if (lessondId) {
       return +lessondId;

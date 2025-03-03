@@ -54,6 +54,7 @@ import LoomHelper from "./loom";
 import ArtstationHelper from "./artstation";
 import RtNewsHelper from "./rtnews";
 import BitviewHelper from "./bitview";
+import KickstarterHelper from "./kickstarter";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -107,6 +108,7 @@ export * as ArtstationHelper from "./artstation";
 export * as RtNewsHelper from "./rtnews";
 export * as VideoJSHelper from "./videojs";
 export * as BitviewHelper from "./bitview";
+export * as KickstarterHelper from "./kickstarter";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -165,6 +167,7 @@ export const availableHelpers = {
   [ExtVideoService.coursera]: CourseraHelper,
   [ExtVideoService.douyin]: DouyinHelper,
   [ExtVideoService.artstation]: ArtstationHelper,
+  [ExtVideoService.kickstarter]: KickstarterHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

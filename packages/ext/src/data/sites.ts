@@ -482,6 +482,13 @@ export default [
     needExtraData: true,
   },
   {
+    host: ExtVideoService.kickstarter,
+    url: "https://www.kickstarter.com/",
+    match: /^(www.)?kickstarter.com/,
+    selector: ".ksr-video-player",
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),

@@ -1,4 +1,4 @@
-import { BaseHelper } from "./base";
+import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
 
 import Logger from "@vot.js/shared/utils/logger";
@@ -12,7 +12,7 @@ export default class OdyseeHelper extends BaseHelper {
       const content = await res.text();
       const url = /"contentUrl":(\s)?"([^"]+)"/.exec(content)?.[2];
       if (!url) {
-        throw new Error("Odysee url doesn't parsed");
+        throw new VideoHelperError("Odysee url doesn't parsed");
       }
 
       return { url };

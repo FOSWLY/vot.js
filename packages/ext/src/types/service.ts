@@ -11,6 +11,7 @@ export enum ExtVideoService {
   coursera = "coursera",
   douyin = "douyin",
   artstation = "artstation",
+  kickstarter = "kickstarter",
 }
 
 export type VideoService = CoreVideoService | ExtVideoService;
