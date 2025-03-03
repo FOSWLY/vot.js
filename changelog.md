@@ -1,3 +1,18 @@
+# 2.3.4
+
+## Ext
+
+- Added support Kickstarter
+- Some type improves in CoursehunterLike and Odysee helpers
+
+## Shared
+
+- Added support detect VTT subs with text after WEBVTT word on first line (e.g. `WEBVTT -- English`)
+
+## Workspace
+
+- Bump depends
+
 # 2.3.3
 
 ## Ext
