@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "author": "Toil",
   "repository": {
     "type": "git",
@@ -14,13 +14,13 @@
     "eslint-plugin-oxlint": "^0.15.12",
     "husky": "^9.1.7",
     "oxlint": "^0.15.12",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "typedoc": "^0.27.9",
     "typedoc-plugin-include-example": "^2.0.2",
     "typedoc-plugin-missing-exports": "^3.1.0",
     "typedoc-plugin-rename-defaults": "^0.7.2",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.25.0"
+    "typescript-eslint": "^8.26.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
