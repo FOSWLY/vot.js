@@ -1,6 +1,6 @@
 import { test, expect } from "bun:test";
 
-import { convertSubs } from "../packages/shared/src/utils/subs";
+import { convertSubs, getSubsFormat } from "../packages/shared/src/utils/subs";
 
 const jsonSubs = {
   containsTokens: true,
@@ -316,6 +316,11 @@ first place? Well, you're gonna get the GFU trading course,
 00:00:12,980 --> 00:00:16,660
 okay? It's gonna show you how to get funded capital and we're actually gonna`;
 
+const vttWithInitialText = `WEBVTT -- English
+
+00:00:03.520 --> 00:00:05.800
+get by joining the gift funders university,`;
+
 test("Convert JSON (with tokens) -> SRT", () => {
   const subs = convertSubs(jsonSubs, "srt");
   expect(subs).toEqual(srtSubs);
@@ -364,4 +369,9 @@ test("Convert VTT (with big metadata) -> JSON", () => {
 test("Convert VTT (with IDs) -> SRT", () => {
   const subs = convertSubs(vttWithIds, "srt");
   expect(subs).toEqual(srtForVTTWithIds);
+});
+
+test("Detect VTT (with text after WEBVTT)", () => {
+  const subFormat = getSubsFormat(vttWithInitialText);
+  expect(subFormat).toEqual("vtt");
 });
