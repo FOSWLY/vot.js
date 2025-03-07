@@ -29,7 +29,10 @@ async function build(packageName: string, extraScripts: string[] = []) {
   }
 
   await $`tsc --project tsconfig.build.json --outdir ./dist && tsc-esm-fix --tsconfig tsconfig.build.json`;
-  const genx = new GenX({ root: packagePath });
+  const genx = new GenX({
+    root: packagePath,
+    workspaceRoot: path.join(__dirname, ".."),
+  });
   await $`mkdir dist/typebox`;
   await genx.generateByDir(
     path.resolve(packagePath, "src", "types"),
