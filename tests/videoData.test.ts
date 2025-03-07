@@ -721,3 +721,14 @@ test("bitview", async () => {
   );
   expect(normalized).toInclude(".mp4");
 });
+
+describe("thisvid", () => {
+  test("videos", async () => {
+    const expected = "https://thisvid.com/videos/any-video";
+    expect(await normalize(expected)).toBe(expected);
+  });
+  test("embed", async () => {
+    const expected = "https://thisvid.com/embed/234234324324";
+    expect(await normalize(expected)).toBe(expected);
+  });
+});

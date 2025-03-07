@@ -46,7 +46,7 @@ export abstract class YandexVOTProtobuf {
       translationHelp: translationHelp ?? [],
       responseLanguage: responseLang,
       wasStream,
-      unknown2: 1,
+      unknown2: 0,
       unknown3: 1,
       bypassCache,
       useNewModel,

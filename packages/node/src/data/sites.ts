@@ -317,6 +317,11 @@ export default [
     needExtraData: true,
   },
   {
+    host: CoreVideoService.thisvid,
+    url: "https://thisvid.com/",
+    match: /^(www.)?thisvid.com$/,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),
