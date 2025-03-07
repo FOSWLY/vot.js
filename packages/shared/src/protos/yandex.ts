@@ -85,7 +85,7 @@ export interface VideoTranslationRequest {
   /** set true if it's ended stream else don't add it */
   wasStream: boolean;
   responseLanguage: string;
-  /** previously it was 0, now it is 1 */
+  /** 0 */
   unknown2: number;
   /** 1 */
   unknown3: number;
@@ -123,7 +123,13 @@ export interface VideoTranslationResponse {
   translationId: string;
   /** detected language (if the wrong one is set) */
   language?: string | undefined;
-  message?: string | undefined;
+  message?:
+    | string
+    | undefined;
+  /** always 0? */
+  unknown1: number;
+  /** added if status=1 (sucess) can be equal to 0 or 1 */
+  unknown2?: number | undefined;
 }
 
 /**
@@ -662,6 +668,8 @@ function createBaseVideoTranslationResponse(): VideoTranslationResponse {
     translationId: "",
     language: undefined,
     message: undefined,
+    unknown1: 0,
+    unknown2: undefined,
   };
 }
 
@@ -690,6 +698,12 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     }
     if (message.message !== undefined) {
       writer.uint32(74).string(message.message);
+    }
+    if (message.unknown1 !== 0) {
+      writer.uint32(80).int32(message.unknown1);
+    }
+    if (message.unknown2 !== undefined) {
+      writer.uint32(88).int32(message.unknown2);
     }
     return writer;
   },
@@ -765,6 +779,22 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
           message.message = reader.string();
           continue;
         }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.unknown1 = reader.int32();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.unknown2 = reader.int32();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -784,6 +814,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
       translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
       language: isSet(object.language) ? globalThis.String(object.language) : undefined,
       message: isSet(object.message) ? globalThis.String(object.message) : undefined,
+      unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
+      unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : undefined,
     };
   },
 
@@ -813,6 +845,12 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     if (message.message !== undefined) {
       obj.message = message.message;
     }
+    if (message.unknown1 !== 0) {
+      obj.unknown1 = Math.round(message.unknown1);
+    }
+    if (message.unknown2 !== undefined) {
+      obj.unknown2 = Math.round(message.unknown2);
+    }
     return obj;
   },
 
@@ -829,6 +867,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     message.translationId = object.translationId ?? "";
     message.language = object.language ?? undefined;
     message.message = object.message ?? undefined;
+    message.unknown1 = object.unknown1 ?? 0;
+    message.unknown2 = object.unknown2 ?? undefined;
     return message;
   },
 };

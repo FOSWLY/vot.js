@@ -29,8 +29,7 @@ message VideoTranslationRequest {
   // set true if it's ended stream else don't add it
   bool wasStream = 13;
   string responseLanguage = 14;
-  // previously it was 0, now it is 1
-  int32 unknown2 = 15;
+  int32 unknown2 = 15; // 0
   int32 unknown3 = 16; // 1
   // they have some kind of limiter on requests from one IP
   // because after one such request it stops working
@@ -58,6 +57,10 @@ message VideoTranslationResponse {
   // detected language (if the wrong one is set)
   optional string language = 8;
   optional string message = 9;
+  // always 0?
+  int32 unknown1 = 10;
+  // added if status=1 (sucess) can be equal to 0 or 1
+  optional int32 unknown2 = 11;
 }
 
 // video translation audio info (can be part of ChunkAudioObject or used
