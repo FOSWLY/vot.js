@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "author": "Toil",
   "repository": {
     "type": "git",
@@ -8,12 +8,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@toil/typebox-genx": "^0.0.1",
+    "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
     "eslint": "^9.21.0",
-    "eslint-plugin-oxlint": "^0.15.12",
+    "eslint-plugin-oxlint": "^0.15.13",
     "husky": "^9.1.7",
-    "oxlint": "^0.15.12",
+    "oxlint": "^0.15.13",
     "prettier": "^3.5.3",
     "typedoc": "^0.27.9",
     "typedoc-plugin-include-example": "^2.0.2",
