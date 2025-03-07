@@ -1,3 +1,17 @@
+# 2.3.5
+
+## Ext, Node, Core
+
+- Added support ThisVid
+
+## Shared
+
+- Updated Yandex protobuf
+
+## Workspace
+
+- Bump depends
+
 # 2.3.4
 
 ## Ext
