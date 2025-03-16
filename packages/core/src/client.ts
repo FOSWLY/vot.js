@@ -558,7 +558,7 @@ export default class VOTClient extends MinimalClient {
   }
 
   /**
-   * @includeExample examples/basic.ts:4-11,21-37,55-65
+   * @includeExample examples/basic.ts:4-11,23-39
    */
   async translateVideo({
     videoData,
@@ -681,7 +681,7 @@ export default class VOTClient extends MinimalClient {
   }
 
   /**
-   * @includeExample examples/basic.ts:4-5,48-56
+   * @includeExample examples/basic.ts:4-6,52-58
    */
   async getSubtitles({
     videoData,
