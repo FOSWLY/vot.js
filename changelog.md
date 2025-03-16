@@ -1,3 +1,9 @@
+# 2.3.6
+
+## Ext
+
+- Fixed invalid isErrorData check in Udemy helper
+
 # 2.3.5
 
 ## Ext, Node, Core

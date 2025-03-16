@@ -29,7 +29,7 @@ export default class UdemyHelper extends BaseHelper {
   isErrorData<T extends object>(
     data: T | Udemy.ErrorData,
   ): data is Udemy.ErrorData {
-    return !Object.hasOwn(data, "error");
+    return Object.hasOwn(data, "error");
   }
 
   async getLectureData(courseId: number | string, lectureId: number | string) {
