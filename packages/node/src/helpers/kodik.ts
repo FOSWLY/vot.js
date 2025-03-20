@@ -24,10 +24,13 @@ export default class KodikHelper extends BaseHelper {
       const content = await res.text();
       const [videoType, videoId, hash] = videoPath.split("/").filter((a) => a);
 
-      const doc = parseFromString(content);
-      const secureScript = Array.from(
-        doc.getElementsByTagName("script"),
-      ).filter((s) => s.innerHTML.includes(`videoId = "${videoId}"`));
+      const doc = parseFromString(content.replace(/<!DOCTYPE html>/i, ""));
+      const allScripts = Array.from(doc.getElementsByTagName("script"));
+      const secureScript = allScripts.filter(
+        (s) =>
+          s.innerHTML.includes(`videoId = "${videoId}"`) ||
+          s.innerHTML.includes(`serialId = Number(${videoId})`),
+      );
       if (!secureScript.length) {
         throw new VideoHelperError("Failed to find secure script");
       }
@@ -42,10 +45,40 @@ export default class KodikHelper extends BaseHelper {
       const secureJSON = JSON.parse(
         secureContent.replaceAll("'", ""),
       ) as Kodik.SecureContent;
+      if (videoType !== "serial") {
+        return {
+          videoType: videoType as Kodik.VideoType,
+          videoId,
+          hash,
+          ...secureJSON,
+        };
+      }
+
+      const videoInfoContent = allScripts
+        .filter((s) => s.innerHTML.includes(`var videoInfo = {}`))?.[0]
+        ?.textContent?.trim();
+      if (!videoInfoContent) {
+        throw new VideoHelperError("Failed to find videoInfo content");
+      }
+
+      const realVideoType = /videoInfo\.type\s+?=\s+?'([^']+)'/.exec(
+        videoInfoContent,
+      )?.[1] as Kodik.VideoType;
+      const realVideoId = /videoInfo\.id\s+?=\s+?'([^']+)'/.exec(
+        videoInfoContent,
+      )?.[1];
+      const realHash = /videoInfo\.hash\s+?=\s+?'([^']+)'/.exec(
+        videoInfoContent,
+      )?.[1];
+
+      if (!realVideoType || !realVideoId || !realHash) {
+        throw new VideoHelperError("Failed to parse videoInfo content");
+      }
+
       return {
-        videoType: videoType as Kodik.VideoType,
-        videoId,
-        hash,
+        videoType: realVideoType,
+        videoId: realVideoId,
+        hash: realHash,
         ...secureJSON,
       };
     } catch (err: unknown) {
@@ -121,6 +154,7 @@ export default class KodikHelper extends BaseHelper {
     return "https:" + decryptedUrl;
   }
 
+  // maybe now api return only default url, but who knows
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const secureData = await this.getSecureData(videoId);
     if (!secureData) {
@@ -144,13 +178,15 @@ export default class KodikHelper extends BaseHelper {
     }
 
     return {
-      url: this.decryptUrl(videoLink.src),
+      url: videoLink.src.startsWith("//")
+        ? `https:${videoLink.src}`
+        : this.decryptUrl(videoLink.src),
     };
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return /\/(seria|video)\/([^/]+)\/([^/]+)\/([\d]+)p/.exec(
+    return /\/(uv|video|seria|episode|season|serial)\/([^/]+)\/([^/]+)\/([\d]+)p/.exec(
       url.pathname,
     )?.[0];
   }
