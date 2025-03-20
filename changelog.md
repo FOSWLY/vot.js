@@ -1,3 +1,22 @@
+# 2.3.7
+
+## Node
+
+- Fix Kodik
+- Added support `.org` tld for PornHub
+- Added support `uv`, `episode`, `season`, `serial` video type for Kodik
+
+## Ext
+
+- Fix Kodik
+- Added support `.org` tld for PornHub
+- Added support `uv`, `episode`, `season`, `serial` video type for Kodik
+- Removed extra request for Kodik
+
+## Shared
+
+- Updated Kodik types
+
 # 2.3.6
 
 ## Ext
