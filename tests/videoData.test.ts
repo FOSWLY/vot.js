@@ -212,12 +212,22 @@ describe("xvideos", () => {
 describe("pornhub", () => {
   const expected =
     "https://rt.pornhub.com/view_video.php?viewkey=63fbab152b987";
-  test("normal", async () => {
+  const embedUrl = "https://rt.pornhub.com/embed/63fbab152b987";
+
+  test("normal (tld .com)", async () => {
     expect(await normalize(expected)).toEqual(expected);
   });
-  test("embed", async () => {
+  test("normal (tld .org)", async () => {
     expect(
-      await normalize("https://rt.pornhub.com/embed/63fbab152b987"),
+      await normalize(expected.replace("pornhub.com", "pornhub.org")),
+    ).toEqual(expected);
+  });
+  test("embed (tld .com)", async () => {
+    expect(await normalize(embedUrl)).toEqual(expected);
+  });
+  test("embed (tld .org)", async () => {
+    expect(
+      await normalize(embedUrl.replace("pornhub.com", "pornhub.org")),
     ).toEqual(expected);
   });
 });
@@ -494,6 +504,13 @@ describe("kodik", () => {
     expect(
       await normalize(
         "https://kodik.info/seria/864861/1f1f70ee75bbb2f1806e90db27ec151b/720p?translations=false&min_age=18",
+      ),
+    ).toEndWith(".mp4:hls:manifest.m3u8");
+  });
+  test("serial", async () => {
+    expect(
+      await normalize(
+        "https://kodik.info/serial/31656/60a52cca719ac3447cdba400c1b80b40/720p",
       ),
     ).toEndWith(".mp4:hls:manifest.m3u8");
   });
