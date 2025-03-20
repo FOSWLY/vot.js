@@ -1,4 +1,10 @@
-export type VideoType = "seria" | "video";
+export type VideoType =
+  | "uv"
+  | "video"
+  | "seria"
+  | "episode"
+  | "season"
+  | "serial";
 export type VideoId = string;
 export type Hash = string;
 
