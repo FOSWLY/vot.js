@@ -145,7 +145,7 @@ export default [
   {
     host: CoreVideoService.pornhub,
     url: "https://rt.pornhub.com/view_video.php?viewkey=",
-    match: /^[a-z]+.pornhub.com$/,
+    match: /^[a-z]+.pornhub.(com|org)$/,
     selector: ".mainPlayerDiv > .video-element-wrapper-js > div",
     eventSelector: ".mgp_eventCatcher",
   },
@@ -154,7 +154,8 @@ export default [
     host: CoreVideoService.pornhub,
     url: "https://rt.pornhub.com/view_video.php?viewkey=",
     match: (url: URL) =>
-      url.host.includes("pornhub.com") && url.pathname.startsWith("/embed/"),
+      /^[a-z]+.pornhub.(com|org)$/.exec(url.host) &&
+      url.pathname.startsWith("/embed/"),
     selector: "#player",
   },
   {

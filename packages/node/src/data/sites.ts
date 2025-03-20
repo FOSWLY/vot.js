@@ -96,7 +96,7 @@ export default [
   {
     host: CoreVideoService.pornhub,
     url: "https://rt.pornhub.com/view_video.php?viewkey=",
-    match: /^[a-z]+.pornhub.com$/,
+    match: /^[a-z]+.pornhub.(com|org)$/,
   },
   {
     host: CoreVideoService.twitter,
