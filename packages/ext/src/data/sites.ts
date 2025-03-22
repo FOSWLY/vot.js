@@ -460,6 +460,7 @@ export default [
     match: /^(www.)?loom.com$/,
     selector: ".VideoLayersContainer",
     needExtraData: true,
+    needBypassCSP: true,
   },
   {
     host: ExtVideoService.artstation,

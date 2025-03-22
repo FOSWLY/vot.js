@@ -1,3 +1,9 @@
+# 2.x
+
+## Ext
+
+- Enabled bypass CSP for Loom
+
 # 2.3.7
 
 ## Node
