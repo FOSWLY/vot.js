@@ -1,8 +1,12 @@
-# 2.x
+# 2.3.8
 
 ## Ext
 
 - Enabled bypass CSP for Loom
+
+## Workspace
+
+- Bump depends
 
 # 2.3.7
 
