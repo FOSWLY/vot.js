@@ -322,6 +322,12 @@ export default [
     match: /^(www.)?thisvid.com$/,
   },
   {
+    host: CoreVideoService.ign,
+    url: "https://de.ign.com/",
+    match: /^(\w{2}.)?ign.com$/,
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),

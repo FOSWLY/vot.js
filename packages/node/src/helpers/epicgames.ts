@@ -1,9 +1,7 @@
 import { BaseHelper } from "./base";
 import type { MinimalVideoData } from "../types/client";
 
-import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import * as EpicGames from "@vot.js/shared/types/helpers/epicgames";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
 
 export default class EpicGamesHelper extends BaseHelper {

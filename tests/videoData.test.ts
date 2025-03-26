@@ -749,3 +749,19 @@ describe("thisvid", () => {
     expect(await normalize(expected)).toBe(expected);
   });
 });
+
+describe("ign", () => {
+  test("video", async () => {
+    const expected = "https://de.ign.com/destiny-2/146053/video/embed";
+    expect(await normalize(expected)).toStartWith(
+      `https://${config.mediaProxy}`,
+    );
+  });
+  test("embed", async () => {
+    const expected =
+      "https://de.ign.com/destiny-2/146053/video/destiny-2-heresy-offizieller-high-heresy-cinematic-trailer";
+    expect(await normalize(expected)).toStartWith(
+      `https://${config.mediaProxy}`,
+    );
+  });
+});
