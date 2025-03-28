@@ -765,3 +765,8 @@ describe("ign", () => {
     );
   });
 });
+
+test("bunkr", async () => {
+  const normalized = await normalize("https://bunkr.cr/f/Ry0ahg2JHhCHX");
+  expect(normalized).toInclude(".mp4");
+});

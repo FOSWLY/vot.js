@@ -61,6 +61,7 @@ export enum VideoService {
   bitview = "bitview",
   thisvid = "thisvid",
   ign = "ign",
+  bunkr = "bunkr",
 }
 
 export type ServiceConf<T = VideoService> = {

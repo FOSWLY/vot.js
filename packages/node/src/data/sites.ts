@@ -328,6 +328,14 @@ export default [
     needExtraData: true,
   },
   {
+    host: CoreVideoService.bunkr,
+    url: "https://bunkr.site/",
+    // https://github.com/mikf/gallery-dl/blob/master/gallery_dl/extractor/bunkr.py
+    match:
+      /^bunkr.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),
