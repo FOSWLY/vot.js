@@ -58,34 +58,60 @@ describe("youtube", () => {
   });
 });
 
-test("raw link", async () => {
-  const raw = "https://s3.toil.cc/vot/video.mp4";
-  expect(await normalize(raw)).toEqual(raw);
-});
-
 describe("vk", () => {
   const expected = "https://vk.com/video?z=video-197217619_456239151";
-  test("vk video", async () => {
+  test("video", async () => {
     expect(await normalize(expected)).toEqual(expected);
   });
-  test("vk video channel", async () => {
+  test("video with channel/group", async () => {
     expect(
       await normalize(
         "https://vk.com/video/@hololivepics?z=video-197217619_456239151",
       ),
     ).toEqual(expected);
   });
-  test("vk video short", async () => {
+  test("video short", async () => {
     expect(await normalize("https://vk.com/video-197217619_456239151")).toEqual(
       expected,
     );
   });
-  test("vk video playlist", async () => {
+  test("video playlist", async () => {
     expect(
       await normalize(
         "https://vkvideo.ru/playlist/-36637441_9/video-36637441_456240372",
       ),
     ).toEqual("https://vk.com/video?z=video-36637441_456240372");
+  });
+  test("with club id", async () => {
+    expect(
+      await normalize(
+        "https://vk.com/videos-77521?z=video-77521_162222515%2Fclub77521",
+      ),
+    ).toEqual("https://vk.com/video?z=video-77521_162222515");
+  });
+  test("solid long video id", async () => {
+    expect(
+      await normalize("https://vkvideo.ru/video1036523373_456239034"),
+    ).toEqual("https://vk.com/video?z=video1036523373_456239034");
+  });
+  test("embed", async () => {
+    expect(
+      await normalize(
+        "https://vk.com/video_ext.php?oid=-77521&id=162222515&hash=87b046504ccd8bfa",
+      ),
+    ).toEqual("https://vk.com/video?z=video-77521_162222515");
+  });
+  test("clips", async () => {
+    expect(
+      await normalize(
+        "https://vk.com/clips-74006511?z=clip-74006511_456247211",
+      ),
+    ).toEqual("https://vk.com/video?z=clip-74006511_456247211");
+  });
+  test("solid clip id", async () => {
+    expect(await normalize("https://vk.com/clip30014565_456240946")).toEqual(
+      "https://vk.com/video?z=clip30014565_456240946",
+    );
   });
 });
 

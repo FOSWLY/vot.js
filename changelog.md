@@ -1,3 +1,13 @@
+# 2.3.11
+
+## Ext
+
+- Fixed some GetVideoId for some VK videos
+
+## Node
+
+- Fixed some GetVideoId for some VK videos
+
 # 2.3.10
 
 ## Ext
