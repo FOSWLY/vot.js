@@ -2,10 +2,13 @@
 
 ## Ext
 
+- Added support `/videos/VIDEO_ID` with Global IGN (`www.ign.com`)
 - Fixed some GetVideoId for some VK videos
 
 ## Node
 
+- Added support `/videos/VIDEO_ID` with Global IGN (`www.ign.com`)
+- Fixed Regional IGN
 - Fixed some GetVideoId for some VK videos
 
 # 2.3.10
