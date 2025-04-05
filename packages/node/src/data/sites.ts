@@ -324,7 +324,13 @@ export default [
   {
     host: CoreVideoService.ign,
     url: "https://de.ign.com/",
-    match: /^(\w{2}.)?ign.com$/,
+    match: /^(\w{2}.)ign.com$/,
+    needExtraData: true,
+  },
+  {
+    host: CoreVideoService.ign,
+    url: "https://www.ign.com/",
+    match: /^(www.)?ign.com$/,
     needExtraData: true,
   },
   {

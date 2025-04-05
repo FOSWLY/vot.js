@@ -1,9 +1,25 @@
 import { describe, test, expect } from "bun:test";
 import { getVideoData } from "../packages/node/src/utils/videoData";
 import config from "../packages/shared/src/data/config";
+import { fetchWithTimeout } from "../packages/shared/src/utils/utils";
+
+// de.ign.com returns 403 in Russia and maybe in some other countries
+const proxied = Bun.env.HTTP_PROXY ?? Bun.env.HTTPS_PROXY;
+
+const fetchWithProxy = (
+  url: string | URL | Request,
+  options: Record<string, any> = {
+    headers: {
+      "User-Agent": config.userAgent,
+    },
+    proxy: proxied,
+  },
+) => {
+  return fetchWithTimeout(url, options);
+};
 
 const normalize = async (url: string, referer?: string) => {
-  const data = await getVideoData(url, { referer });
+  const data = await getVideoData(url, { referer, fetchFn: fetchWithProxy });
   // console.log(data);
   return data?.url;
 };
@@ -777,15 +793,28 @@ describe("thisvid", () => {
 });
 
 describe("ign", () => {
-  test("video", async () => {
+  test("post video", async () => {
     const expected = "https://de.ign.com/destiny-2/146053/video/embed";
-    expect(await normalize(expected)).toStartWith(
-      `https://${config.mediaProxy}`,
-    );
+    const normalized = await normalize(expected);
+    if (proxied) {
+      expect(normalized).toStartWith(`https://${config.mediaProxy}`);
+    } else {
+      expect(normalized).toBe(expected);
+    }
   });
-  test("embed", async () => {
+  test("post video embed", async () => {
     const expected =
       "https://de.ign.com/destiny-2/146053/video/destiny-2-heresy-offizieller-high-heresy-cinematic-trailer";
+    const normalized = await normalize(expected);
+    if (proxied) {
+      expect(normalized).toStartWith(`https://${config.mediaProxy}`);
+    } else {
+      expect(normalized).toBe(expected);
+    }
+  });
+  test("video", async () => {
+    const expected =
+      "https://www.ign.com/videos/5-things-to-know-about-atomfall";
     expect(await normalize(expected)).toStartWith(
       `https://${config.mediaProxy}`,
     );

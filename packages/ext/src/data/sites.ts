@@ -497,11 +497,19 @@ export default [
     selector: ".fp-player",
   },
   {
+    additionalData: "regional",
     host: CoreVideoService.ign,
     url: "https://de.ign.com/",
     match: /^(\w{2}.)?ign.com$/,
     needExtraData: true,
     selector: ".video-container",
+  },
+  {
+    host: CoreVideoService.ign,
+    url: "https://www.ign.com/",
+    match: /^(www.)?ign.com$/,
+    selector: ".player",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.bunkr,

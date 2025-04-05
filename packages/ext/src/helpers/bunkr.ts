@@ -10,6 +10,7 @@ export default class BunkrHelper extends BaseHelper {
       return undefined;
     }
 
+    // TODO: add media proxy if url domain has "bunkr-cache." (ADD SUPPORT custom headers to proxy)
     return {
       url,
     };
