@@ -11,6 +11,10 @@
 - Fixed Regional IGN
 - Fixed some GetVideoId for some VK videos
 
+## Shared
+
+- Added IGN types
+
 # 2.3.10
 
 ## Ext
