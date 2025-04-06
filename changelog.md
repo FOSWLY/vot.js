@@ -1,3 +1,17 @@
+# 2.3.12
+
+Now RapidCloud use wasm and fake file types for video player... no comments
+
+## Ext
+
+- Added support IMDb
+- Removed broken 9AnimeTV (RapidCloud)
+
+## Node
+
+- Added support IMDb
+- Removed broken 9AnimeTV (RapidCloud)
+
 # 2.3.11
 
 ## Ext
