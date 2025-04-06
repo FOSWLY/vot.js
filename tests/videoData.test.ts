@@ -629,13 +629,6 @@ test("epicgames", async () => {
   expect(normalized).toStartWith("https://cdn.qstv.on.epicgames.com/");
 });
 
-test("nineanimetv", async () => {
-  const normalized = await normalize(
-    "https://9animetv.to/watch/narenare-cheer-for-you-19220?ep=126180",
-  );
-  expect(normalized).toEndWith("master.m3u8");
-});
-
 test("odysee", async () => {
   const normalized = await normalize(
     "https://odysee.com/@fort_boyard:b/%C3%89mission-du-mercredi-14-ao%C3%BBt-2024-en-replay---Fort-Boyard---toujours-plus-fort-!:5",
@@ -824,4 +817,10 @@ describe("ign", () => {
 test("bunkr", async () => {
   const normalized = await normalize("https://bunkr.cr/f/Ry0ahg2JHhCHX");
   expect(normalized).toInclude(".mp4");
+});
+
+test("imdb", async () => {
+  const expected = "https://www.imdb.com/video/vi2443363097";
+  const normalized = await normalize(expected);
+  expect(normalized).toBe(expected);
 });

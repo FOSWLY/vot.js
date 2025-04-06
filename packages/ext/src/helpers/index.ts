@@ -12,7 +12,6 @@ import BannedVideoHelper from "./bannedvideo";
 import KickHelper from "./kick";
 import AppleDeveloperHelper from "./appledeveloper";
 import EpicGamesHelper from "./epicgames";
-import NineAnimeTVHelper from "./nineanimetv";
 import OdyseeHelper from "./odysee";
 import CoursehunterLikeHelper from "./coursehunterLike";
 import TwitchHelper from "./twitch";
@@ -58,6 +57,7 @@ import KickstarterHelper from "./kickstarter";
 import ThisVidHelper from "./thisvid";
 import IgnHelper from "./ign";
 import BunkrHelper from "./bunkr";
+import IMDBHelper from "./imdb";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -68,7 +68,6 @@ export * as BannedVideoHelper from "./bannedvideo";
 export * as KickHelper from "./kick";
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as EpicGamesHelper from "./epicgames";
-export * as NineAnimeTVHelper from "./nineanimetv";
 export * as OdyseeHelper from "./odysee";
 export * as CoursehunterLikeHelper from "./coursehunterLike";
 export * as TwitchHelper from "./twitch";
@@ -115,6 +114,7 @@ export * as KickstarterHelper from "./kickstarter";
 export * as ThisVidHelper from "./thisvid";
 export * as IgnHelper from "./ign";
 export * as BunkrHelper from "./bunkr";
+export * as IMDBHelper from "./imdb";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -126,7 +126,6 @@ export const availableHelpers = {
   [CoreVideoService.kick]: KickHelper,
   [CoreVideoService.appledeveloper]: AppleDeveloperHelper,
   [CoreVideoService.epicgames]: EpicGamesHelper,
-  [CoreVideoService.nineanimetv]: NineAnimeTVHelper,
   [CoreVideoService.odysee]: OdyseeHelper,
   [CoreVideoService.coursehunterLike]: CoursehunterLikeHelper,
   [CoreVideoService.twitch]: TwitchHelper,
@@ -172,6 +171,7 @@ export const availableHelpers = {
   [CoreVideoService.thisvid]: ThisVidHelper,
   [CoreVideoService.ign]: IgnHelper,
   [CoreVideoService.bunkr]: BunkrHelper,
+  [CoreVideoService.imdb]: IMDBHelper,
   [ExtVideoService.udemy]: UdemyHelper,
   [ExtVideoService.coursera]: CourseraHelper,
   [ExtVideoService.douyin]: DouyinHelper,

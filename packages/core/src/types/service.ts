@@ -45,7 +45,6 @@ export enum VideoService {
   appledeveloper = apple_developer,
   poketube = "poketube",
   epicgames = "epicgames",
-  nineanimetv = "nineanimetv",
   odysee = "odysee",
   coursehunterLike = "coursehunterLike",
   sap = "sap",
@@ -62,6 +61,7 @@ export enum VideoService {
   thisvid = "thisvid",
   ign = "ign",
   bunkr = "bunkr",
+  imdb = "imdb",
 }
 
 export type ServiceConf<T = VideoService> = {

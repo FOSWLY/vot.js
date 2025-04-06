@@ -243,12 +243,6 @@ export default [
     needExtraData: true,
   },
   {
-    host: CoreVideoService.nineanimetv,
-    url: "https://9animetv.to/watch/",
-    match: /^9animetv.to$/,
-    needExtraData: true,
-  },
-  {
     host: CoreVideoService.odysee,
     url: "stub",
     match: /^odysee.com$/,
@@ -340,6 +334,11 @@ export default [
     match:
       /^bunkr.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
+  },
+  {
+    host: CoreVideoService.imdb,
+    url: "https://www.imdb.com/video/",
+    match: /^(www.)?imdb.com$/,
   },
   {
     host: CoreVideoService.custom,

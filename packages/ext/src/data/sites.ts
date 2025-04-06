@@ -369,13 +369,6 @@ export default [
     needExtraData: true,
   },
   {
-    host: CoreVideoService.nineanimetv,
-    url: "https://9animetv.to/watch/",
-    match: /^rapid-cloud.co$/,
-    selector: ".jw-media",
-    needExtraData: true,
-  },
-  {
     host: CoreVideoService.odysee,
     url: "stub",
     match: /^odysee.com$/,
@@ -519,6 +512,12 @@ export default [
       /^bunkr.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
     selector: ".plyr__video-wrapper",
+  },
+  {
+    host: CoreVideoService.imdb,
+    url: "https://www.imdb.com/video/",
+    match: /^(www.)?imdb.com$/,
+    selector: ".jw-media",
   },
   {
     host: CoreVideoService.custom,
