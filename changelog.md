@@ -1,3 +1,55 @@
+# 2.4.0 (WIP)
+
+## Ext
+
+- Added export VideoService as enum (earlier only as type)
+- Fixed invalid VideoService type in videoData property
+- Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+
+## Node
+
+- Added export VideoService as enum (earlier only as type)
+- Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+
+## Core
+
+- Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+
+```ts
+import VOTClient from "@vot.js/node";
+
+// enum
+enum CustomVideoService {
+  example = "example",
+  test = "test",
+}
+const client = new VOTClient<CustomVideoService>();
+await client.translateVideo({
+  videoData: {
+    url: "https://example.com/123",
+    host: CustomVideoService.example,
+    videoId: "123",
+  },
+});
+
+// literal union
+type OtherVideoService = "example" | "test";
+const otherClient = new VOTClient<OtherVideoService>();
+await otherClient.translateVideo({
+  videoData: {
+    url: "https://example.com/123",
+    host: "test",
+    videoId: "123",
+  },
+});
+```
+
+- Removed `"X-Use-Snake-Case": "Yes"` for VOT Backend
+
+## Shared
+
+- Bump component version
+
 # 2.3.12
 
 Now RapidCloud use wasm and fake file types for video player... no comments
