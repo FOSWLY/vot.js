@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import VOTClient, { VOTWorkerClient } from "../packages/node/src/index";
 import { getVideoData } from "../packages/node/src/utils/videoData";
+import { VideoService } from "../packages/node/src/types/service";
 
 const url = "https://youtu.be/LK6nLR1bzpI";
 const videoData = await getVideoData(url);
@@ -34,9 +35,12 @@ test("Translate video (worker)", async () => {
 test("Translate video (with translationHelp)", async () => {
   const client = new VOTClient();
 
-  const videoData = await getVideoData("https://s3.toil.cc/vot/video.mp4");
   const response = await client.translateVideo({
-    videoData,
+    videoData: {
+      url: "https://s3.toil.cc/vot/video",
+      videoId: "vot/video",
+      host: VideoService.custom,
+    },
     // just for example
     translationHelp: [
       {

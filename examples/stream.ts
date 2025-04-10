@@ -29,7 +29,7 @@ const fn = async () => {
   console.log(response);
   clearTimeout(inter);
   if (!response.translated && response.interval === 10) {
-    inter = setTimeout(fn, 10000);
+    inter = setTimeout(fn, response.interval * 1000);
     return;
   }
 
@@ -38,11 +38,13 @@ const fn = async () => {
     return;
   }
 
-  await client.pingStream({
-    pingId: response.pingId,
-  });
-
   console.log(`Success! URL: ${response.result.url}`);
+  const pingId = response.pingId;
+  setInterval(async () => {
+    await client.pingStream({
+      pingId,
+    });
+  }, response.interval * 1000);
 };
 
 inter = setTimeout(fn, 10000);
