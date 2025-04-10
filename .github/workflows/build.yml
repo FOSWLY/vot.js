@@ -18,14 +18,18 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v3
+      # Often ratelimited
+      # - name: Install Protoc
+      #   uses: arduino/setup-protoc@v3
 
       - name: Install packages 🔧
         run: bun install
 
-      - name: Build 🚧
-        run: bun build:all
+      - name: Build Libs 🚧
+        run: bun build:skip-proto
+
+      - name: Build Docs 🚧
+        run: bun build:doc
 
       - name: Upload Package artifact 🚀
         uses: actions/upload-artifact@v4

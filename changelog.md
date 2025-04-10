@@ -50,6 +50,10 @@ await otherClient.translateVideo({
 
 - Bump component version
 
+## Workspace
+
+- Disabled update proto file in Github Actions build
+
 # 2.3.12
 
 Now RapidCloud use wasm and fake file types for video player... no comments
