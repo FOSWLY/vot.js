@@ -593,11 +593,11 @@ export default class VOTClient<
         });
   }
 
-  protected async getSubtitlesYAImpl<T extends string = V>({
+  protected async getSubtitlesYAImpl({
     videoData,
     requestLang = this.requestLang,
     headers = {},
-  }: VideoSubtitlesOpts<T>): Promise<GetSubtitlesResponse> {
+  }: VideoSubtitlesOpts<V>): Promise<GetSubtitlesResponse> {
     const { url } = videoData;
     const session = await this.getSession("video-translation");
     const body = YandexVOTProtobuf.encodeSubtitlesRequest(url, requestLang);
@@ -630,12 +630,12 @@ export default class VOTClient<
     };
   }
 
-  protected async getSubtitlesVOTImpl<T extends string = V>({
+  protected async getSubtitlesVOTImpl({
     url,
     videoId,
     service,
     headers = {},
-  }: GetSubtitlesVOTOpts<T>): Promise<GetSubtitlesResponse> {
+  }: GetSubtitlesVOTOpts<V>): Promise<GetSubtitlesResponse> {
     const votData = convertVOT(service, videoId, url);
     const res = await this.requestVOT<SubtitleItem[]>(
       this.paths.videoSubtitles,
@@ -685,11 +685,11 @@ export default class VOTClient<
   /**
    * @includeExample examples/basic.ts:4-6,52-58
    */
-  async getSubtitles<T extends string = V>({
+  async getSubtitles({
     videoData,
     requestLang = this.requestLang,
     headers = {},
-  }: VideoSubtitlesOpts<T>) {
+  }: VideoSubtitlesOpts<V>) {
     const { url, videoId, host } = videoData;
 
     return this.isCustomLink(url)
@@ -732,12 +732,12 @@ export default class VOTClient<
   /**
    * @includeExample examples/stream.ts:7-44
    */
-  async translateStream<T extends string = V>({
+  async translateStream({
     videoData,
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
-  }: StreamTranslationOpts<T>): Promise<StreamTranslationResponse> {
+  }: StreamTranslationOpts<V>): Promise<StreamTranslationResponse> {
     const { url } = videoData;
     if (this.isCustomLink(url)) {
       throw new VOTJSError(
