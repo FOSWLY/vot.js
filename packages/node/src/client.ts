@@ -4,8 +4,11 @@ import VOTCoreClient, {
 import type { VOTOpts } from "@vot.js/core/types/client";
 
 import { VOTAgent } from "./utils/fetchAgent";
+import { VideoService } from "./types/service";
 
-export default class VOTClient extends VOTCoreClient {
+export default class VOTClient<
+  V extends string = VideoService,
+> extends VOTCoreClient<V> {
   constructor(opts?: VOTOpts) {
     super(opts);
     this.fetchOpts = {
@@ -15,7 +18,9 @@ export default class VOTClient extends VOTCoreClient {
   }
 }
 
-export class VOTWorkerClient extends VOTCoreWorkerClient {
+export class VOTWorkerClient<
+  V extends string = VideoService,
+> extends VOTCoreWorkerClient<V> {
   constructor(opts?: VOTOpts) {
     super(opts);
     this.fetchOpts = {

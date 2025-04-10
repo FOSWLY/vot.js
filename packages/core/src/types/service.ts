@@ -64,7 +64,7 @@ export enum VideoService {
   imdb = "imdb",
 }
 
-export type ServiceConf<T = VideoService> = {
+export type ServiceConf<T extends string = VideoService> = {
   host: T;
   url?: string;
   match?: any;

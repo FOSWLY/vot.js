@@ -23,7 +23,7 @@ export type VideoDataSubtitle = {
   translatedFromLanguage?: string;
 };
 
-export type VideoData<T = VideoService> = {
+export type VideoData<T extends string = VideoService> = {
   url: string;
   videoId: string;
   host: T;
@@ -38,7 +38,10 @@ export type VideoData<T = VideoService> = {
   translationHelp?: TranslationHelp[] | null;
 };
 
-export type MinimalVideoData<T = VideoService> = AtLeast<VideoData<T>, "url">;
+export type MinimalVideoData<T extends string = VideoService> = AtLeast<
+  VideoData<T>,
+  "url"
+>;
 
 export type GetVideoDataOpts = Omit<BaseHelperOpts, "service">;
 

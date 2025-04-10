@@ -1,5 +1,5 @@
-import type {
-  ServiceConf as CoreServiceConf,
+import {
+  type ServiceConf as CoreServiceConf,
   VideoService as CoreVideoService,
 } from "@vot.js/core/types/service";
 
@@ -14,9 +14,14 @@ export enum ExtVideoService {
   kickstarter = "kickstarter",
 }
 
+export const VideoService = {
+  ...CoreVideoService,
+  ...ExtVideoService,
+};
 export type VideoService = CoreVideoService | ExtVideoService;
 
-export interface ServiceConf extends CoreServiceConf<VideoService> {
+export interface ServiceConf<T extends string = VideoService>
+  extends CoreServiceConf<T> {
   selector?: string;
   shadowRoot?: true;
   needBypassCSP?: true;

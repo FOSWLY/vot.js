@@ -4,6 +4,7 @@ import type {
   RequestHeaders,
 } from "@vot.js/shared/types/data";
 import type { VideoData } from "./client";
+import { VideoService } from "./service";
 
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 
@@ -61,8 +62,8 @@ export enum AudioDownloadType {
   WEB_API_SLOW = "web_api_slow",
 }
 
-export type VideoTranslationOpts = {
-  videoData: VideoData;
+export type VideoTranslationOpts<T extends string = VideoService> = {
+  videoData: VideoData<T>;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   translationHelp?: TranslationHelp[] | null;
@@ -98,8 +99,8 @@ export type VideoTranslationResponse =
   | TranslatedVideoTranslationResponse
   | WaitingVideoTranslationResponse;
 
-export type VideoSubtitlesOpts = {
-  videoData: VideoData;
+export type VideoSubtitlesOpts<T extends string = VideoService> = {
+  videoData: VideoData<T>;
   requestLang?: RequestLang;
   headers?: RequestHeaders;
 };
@@ -109,8 +110,8 @@ export type StreamPingOptions = {
   headers?: RequestHeaders;
 };
 
-export type StreamTranslationOpts = {
-  videoData: VideoData;
+export type StreamTranslationOpts<T extends string = VideoService> = {
+  videoData: VideoData<T>;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   headers?: RequestHeaders;

@@ -37,6 +37,7 @@ import type {
   VideoTranslationVOTOpts,
 } from "./types/vot";
 import { convertVOT } from "./utils/vot";
+import { VideoService } from "./types/service";
 
 export class VOTJSError extends Error {
   constructor(
@@ -212,7 +213,9 @@ export class MinimalClient {
   }
 }
 
-export default class VOTClient extends MinimalClient {
+export default class VOTClient<
+  V extends string = VideoService,
+> extends MinimalClient {
   hostVOT: string;
   schemaVOT: URLSchema;
 
@@ -314,7 +317,7 @@ export default class VOTClient extends MinimalClient {
     headers = {},
     extraOpts = {},
     shouldSendFailedAudio = true,
-  }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
+  }: VideoTranslationOpts<V>): Promise<VideoTranslationResponse> {
     const { url, duration = config.defaultDuration } = videoData;
 
     const session = await this.getSession("video-translation");
@@ -443,8 +446,8 @@ export default class VOTClient extends MinimalClient {
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
-  }: VideoTranslationVOTOpts): Promise<VideoTranslationResponse> {
-    const votData = convertVOT(service, videoId, url);
+  }: VideoTranslationVOTOpts<V>): Promise<VideoTranslationResponse> {
+    const votData = convertVOT<V>(service, videoId, url);
     const res = await this.requestVOT<TranslationResponse>(
       this.paths.videoTranslation,
       {
@@ -456,7 +459,6 @@ export default class VOTClient extends MinimalClient {
         raw_video: url,
       },
       {
-        "X-Use-Snake-Case": "Yes",
         ...headers,
       },
     );
@@ -568,7 +570,7 @@ export default class VOTClient extends MinimalClient {
     headers = {},
     extraOpts = {},
     shouldSendFailedAudio = true,
-  }: VideoTranslationOpts): Promise<VideoTranslationResponse> {
+  }: VideoTranslationOpts<V>): Promise<VideoTranslationResponse> {
     const { url, videoId, host } = videoData;
 
     return this.isCustomLink(url)
@@ -591,11 +593,11 @@ export default class VOTClient extends MinimalClient {
         });
   }
 
-  protected async getSubtitlesYAImpl({
+  protected async getSubtitlesYAImpl<T extends string = V>({
     videoData,
     requestLang = this.requestLang,
     headers = {},
-  }: VideoSubtitlesOpts): Promise<GetSubtitlesResponse> {
+  }: VideoSubtitlesOpts<T>): Promise<GetSubtitlesResponse> {
     const { url } = videoData;
     const session = await this.getSession("video-translation");
     const body = YandexVOTProtobuf.encodeSubtitlesRequest(url, requestLang);
@@ -628,12 +630,12 @@ export default class VOTClient extends MinimalClient {
     };
   }
 
-  protected async getSubtitlesVOTImpl({
+  protected async getSubtitlesVOTImpl<T extends string = V>({
     url,
     videoId,
     service,
     headers = {},
-  }: GetSubtitlesVOTOpts): Promise<GetSubtitlesResponse> {
+  }: GetSubtitlesVOTOpts<T>): Promise<GetSubtitlesResponse> {
     const votData = convertVOT(service, videoId, url);
     const res = await this.requestVOT<SubtitleItem[]>(
       this.paths.videoSubtitles,
@@ -683,11 +685,11 @@ export default class VOTClient extends MinimalClient {
   /**
    * @includeExample examples/basic.ts:4-6,52-58
    */
-  async getSubtitles({
+  async getSubtitles<T extends string = V>({
     videoData,
     requestLang = this.requestLang,
     headers = {},
-  }: VideoSubtitlesOpts) {
+  }: VideoSubtitlesOpts<T>) {
     const { url, videoId, host } = videoData;
 
     return this.isCustomLink(url)
@@ -730,12 +732,12 @@ export default class VOTClient extends MinimalClient {
   /**
    * @includeExample examples/stream.ts:7-44
    */
-  async translateStream({
+  async translateStream<T extends string = V>({
     videoData,
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
-  }: StreamTranslationOpts): Promise<StreamTranslationResponse> {
+  }: StreamTranslationOpts<T>): Promise<StreamTranslationResponse> {
     const { url } = videoData;
     if (this.isCustomLink(url)) {
       throw new VOTJSError(
@@ -791,7 +793,9 @@ export default class VOTClient extends MinimalClient {
   }
 }
 
-export class VOTWorkerClient extends VOTClient {
+export class VOTWorkerClient<
+  V extends string = VideoService,
+> extends VOTClient<V> {
   constructor(opts: VOTOpts = {}) {
     opts.host = opts.host ?? config.hostWorker;
     super(opts);

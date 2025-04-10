@@ -3,4 +3,7 @@ import { VideoData } from "@vot.js/core/types/client";
 
 import { VideoService } from "./service";
 
-export type MinimalVideoData<T = VideoService> = AtLeast<VideoData<T>, "url">;
+export type MinimalVideoData<T extends string = VideoService> = AtLeast<
+  VideoData<T>,
+  "url"
+>;

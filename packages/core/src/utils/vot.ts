@@ -3,8 +3,8 @@ import { VideoService } from "../types/service";
 /**
  * Convert vot.js data to vot-backend compatible data
  */
-export function convertVOT(
-  service: VideoService,
+export function convertVOT<T extends string = VideoService>(
+  service: T,
   videoId: string | number,
   url: string,
 ) {
