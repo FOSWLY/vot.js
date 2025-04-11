@@ -6,16 +6,17 @@ import { config } from "@vot.js/shared";
 import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 
+declare global {
+  const SENTRY_RELEASE: Loom.SentryRelease | undefined;
+}
+
 export default class LoomHelper extends BaseHelper {
   getClientVersion() {
-    // @ts-expect-error var from page scripts
     if (typeof SENTRY_RELEASE === "undefined") {
       return undefined;
     }
 
-    // @ts-expect-error var from page scripts
-    const release = SENTRY_RELEASE as Loom.SentryRelease;
-    return release.id;
+    return SENTRY_RELEASE.id;
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {

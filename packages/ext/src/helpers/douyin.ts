@@ -6,15 +6,17 @@ import { proxyMedia } from "@vot.js/shared/utils/utils";
 import { RequestLang } from "@vot.js/shared/types/data";
 import { availableLangs } from "@vot.js/shared/consts";
 
+declare global {
+  const player: Douyin.Player | undefined;
+}
+
 export default class DouyinHelper extends BaseHelper {
   static getPlayer() {
-    // @ts-expect-error var from page scripts
     if (typeof player === "undefined") {
       return undefined;
     }
 
-    // @ts-expect-error var from page scripts
-    return player as Douyin.Player;
+    return player;
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

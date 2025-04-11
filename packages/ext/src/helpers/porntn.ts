@@ -5,20 +5,18 @@ import { proxyMedia } from "@vot.js/shared/utils/utils";
 import * as PornTN from "@vot.js/shared/types/helpers/porntn";
 import Logger from "@vot.js/shared/utils/logger";
 
+declare global {
+  const flashvars: PornTN.FlashVars | undefined;
+}
+
 export default class PornTNHelper extends BaseHelper {
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      // @ts-expect-error var from page scripts
       if (typeof flashvars === "undefined") {
         return undefined;
       }
 
-      const {
-        rnd,
-        video_url: source,
-        video_title: title,
-        // @ts-expect-error var from page scripts
-      } = flashvars as PornTN.FlashVars; // window.flashvars
+      const { rnd, video_url: source, video_title: title } = flashvars;
       if (!source || !rnd) {
         throw new VideoHelperError("Failed to find video source or rnd");
       }

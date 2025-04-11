@@ -6,16 +6,17 @@ import Logger from "@vot.js/shared/utils/logger";
 import { VideoDataSubtitle } from "@vot.js/core/types/client";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 
+declare global {
+  const Videoview: VK.Videoview | undefined;
+}
+
 export default class VKHelper extends BaseHelper {
   static getPlayer() {
-    // @ts-expect-error var from page scripts
     if (typeof Videoview === "undefined") {
       return undefined;
     }
 
-    // @ts-expect-error var from page scripts
-    const videoView = Videoview as VK.Videoview;
-    return videoView?.getPlayerObject?.call(undefined);
+    return Videoview?.getPlayerObject?.call(undefined);
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
