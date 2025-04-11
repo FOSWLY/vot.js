@@ -77,10 +77,12 @@ export type ResourceModelMeta = {
   versioning_status: "versionable";
   public: number;
   size: number;
+  photoslice_time: number;
+  etime: number;
 };
 
 export type ResourceModelData = {
-  ctime: 1713525624;
+  ctime: number;
   meta: ResourceModelMeta;
   mtime: number;
   path: string;
@@ -99,6 +101,14 @@ export type ResourceErrorModelData = {
     statusCode: number;
     code: number;
     title: string;
+  };
+};
+
+export type APIAccessErrorData = {
+  error: {
+    code: string;
+    uid: string;
+    ckey: string;
   };
 };
 
@@ -237,4 +247,16 @@ export type DownloadUrlResponse = {
   statusCode: number;
   code: string;
   data: Record<"url", string>;
+};
+
+export type ResourceInfo = {
+  ctime: number;
+  etime: number;
+  meta: ResourceModelMeta;
+  mtime: number;
+  path: string;
+  utime: number;
+  type: "file";
+  id: "string";
+  name: string;
 };

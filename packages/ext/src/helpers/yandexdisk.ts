@@ -11,7 +11,7 @@ export default class YandexDiskHelper extends BaseHelper {
   DISK_PREFIX = "/d/";
 
   isErrorData(
-    data: YandexDisk.ResourceModelData | YandexDisk.ResourceErrorModelData,
+    data: YandexDisk.ResourceInfo | YandexDisk.ResourceErrorModelData,
   ): data is YandexDisk.ResourceErrorModelData {
     return Object.hasOwn(data, "error");
   }
@@ -34,36 +34,34 @@ export default class YandexDiskHelper extends BaseHelper {
         preloadedScript.innerText,
       ) as YandexDisk.PreloadedData;
       const { idClient, sk } = preloadedData.config;
-      const res = await this.fetch(this.API_ORIGIN + "/models/?_m=resource", {
+      const res = await this.fetch(this.API_ORIGIN + "/models-v2?m=mpfs/info", {
         method: "POST",
-        body: new URLSearchParams({
-          idClient,
+        body: JSON.stringify({
+          apiMethod: "mpfs/info",
+          connection_id: idClient,
+          requestParams: {
+            path: dialogId.replaceAll(" ", "+"),
+          },
           sk,
-          "_model.0": "resource",
-          "id.0": dialogId.replaceAll(" ", "+"),
-        })
-          .toString()
-          .replaceAll(/%2B/g, "+"), // yandex requires this
+        }),
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Content-Type": "application/json",
         },
       });
 
-      const data = (await res.json()) as YandexDisk.ResourceModels;
-      if (!data.models) {
-        throw new VideoHelperError("Failed to get resource info");
+      const data = (await res.json()) as YandexDisk.ResourceInfo;
+      if (this.isErrorData(data)) {
+        throw new VideoHelperError(data.error?.message ?? data.error?.code);
       }
 
-      const model = data.models[0];
-      const modelData = model.data;
-      if (this.isErrorData(modelData)) {
-        throw new VideoHelperError(modelData.error?.message);
+      if (data?.type !== "file") {
+        throw new VideoHelperError("Failed to get resource info");
       }
 
       const {
         meta: { short_url, video_info },
         name,
-      } = modelData;
+      } = data;
       if (!video_info) {
         throw new VideoHelperError("There's no video open right now");
       }

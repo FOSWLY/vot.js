@@ -3,8 +3,9 @@
 ## Ext
 
 - Added export VideoService as enum (earlier only as type)
-- Fixed invalid VideoService type in videoData property
 - Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+- Fixed invalid VideoService type in videoData property
+- Fixed `/client/disk` for Yandex Disk
 
 ## Node
 
