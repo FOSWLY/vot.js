@@ -1,7 +1,7 @@
 import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
 import { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
 
-import { ServiceConf, VideoService } from "../types/service";
+import { ServiceConf } from "../types/service";
 
 import MailRuHelper from "./mailru";
 import WeverseHelper from "./weverse";
@@ -53,7 +53,6 @@ import ThisVidHelper from "./thisvid";
 import IgnHelper from "./ign";
 import BunkrHelper from "./bunkr";
 import IMDBHelper from "./imdb";
-import { BaseHelper } from "./base";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -166,30 +165,10 @@ export const availableHelpers = {
 
 export type AvailableVideoHelpers = typeof availableHelpers;
 
-export type HelperMap<T extends string = keyof typeof CoreVideoService> =
-  Partial<Record<T, new (...args: any[]) => BaseHelper>>;
-
-// Пример: строго типизированный объект
-const helpers = {
-  [CoreVideoService.weverse]: WeverseHelper,
-  [CoreVideoService.mailru]: MailRuHelper,
-} as const satisfies HelperMap;
-
-// Тип с извлечением нужного класса:
-type SpecificHelper<T extends CoreVideoService> = T extends keyof typeof helpers
-  ? InstanceType<(typeof helpers)[T]>
-  : never;
-
-// Пример использования:
-const h = new helpers[CoreVideoService.weverse](); // тип: WeverseHelper
-type T = SpecificHelper<typeof CoreVideoService.weverse>; // тоже WeverseHelper
-
 /**
  * A convenient wrapper over the rest of the helpers
  */
-export default class VideoHelper<
-  T extends string = keyof AvailableVideoHelpers,
-> {
+export default class VideoHelper {
   helpersData: BaseHelperOpts<ServiceConf>;
 
   constructor(helpersData: BaseHelperOpts<ServiceConf> = {}) {
