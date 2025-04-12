@@ -1,6 +1,7 @@
 import * as path from "node:path";
 import { semver } from "bun";
 
+import * as prettier from "prettier";
 import { parseFromString } from "dom-parser";
 
 import { version } from "../package.json";
@@ -10,27 +11,18 @@ const CONFIG_PATH = "/packages/shared/src/data/config.ts";
 const CONFIG_ABS_PATH = path.join(__dirname, "..", CONFIG_PATH);
 
 async function rewriteConfig(data: typeof config) {
-  await Bun.write(
-    CONFIG_ABS_PATH,
-    `// This file is auto-generated.
+  const rawCode = `// This file is auto-generated.
     // All comments and any code are deleted when the componentVersion is updated.
     // Write comments in scripts/update-config.ts
     import { ConfigSchema } from "../types/data";
 
-    export default ${JSON.stringify(data, null, 2)} as ConfigSchema`,
-  );
+    export default ${JSON.stringify(data, null, 2)} as ConfigSchema`;
 
-  // prettify updated config
-  const proc = Bun.spawn([
-    "bunx",
-    "pretty-quick",
-    "--pattern",
-    `".${CONFIG_PATH}"`,
-  ]);
-  await new Response(proc.stdout).text();
-  // pretty-quick output
-  // console.log(text);
-  proc.kill();
+  const code = await prettier.format(rawCode, {
+    filepath: CONFIG_ABS_PATH,
+  });
+
+  await Bun.write(CONFIG_ABS_PATH, code);
 
   console.log("Successfully rewrited config");
 }
@@ -61,7 +53,7 @@ async function getActualVersion(version: string) {
   const newVersion = versions?.[0]?.textContent;
   const isNewer = semver.satisfies(newVersion, `^${version}`);
   if (!isNewer) {
-    console.error("Yandex returned old component version!");
+    console.error(`Yandex returned old component version "${newVersion}"!`);
   }
 
   return isNewer ? newVersion : version;
