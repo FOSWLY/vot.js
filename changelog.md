@@ -1,16 +1,25 @@
-# 2.4.0 (WIP)
+# 2.4.0
 
 ## Ext
 
 - Added export VideoService as enum (earlier only as type)
 - Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+- Added support unlisted embed and groups/channels/album/showcase videos for Vimeo
 - Fixed invalid VideoService type in videoData property
 - Fixed `/client/disk` for Yandex Disk
+- Fixed Kodik decrypt url
+- Replaced disable eslint rules to declare global for global vars from page
+- Fixed Vimeo bug where getVideoData didn’t retrieve the correct data for private players when extraInfo was disabled.
+- Rework getVideoId for Vimeo Helper
 
 ## Node
 
 - Added export VideoService as enum (earlier only as type)
 - Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+- Added support unlisted embed and groups/channels/album/showcase videos for Vimeo
+- Fixed Kodik decrypt url
+- Fixed Vimeo bug where getVideoData didn’t retrieve the correct data for private players when extraInfo was disabled.
+- Rework getVideoId for Vimeo Helper
 
 ## Core
 
@@ -54,6 +63,10 @@ await otherClient.translateVideo({
 ## Workspace
 
 - Disabled update proto file in Github Actions build
+- Updated PornTN test url
+- Updated Vimeo test urls
+- Replaced bun spawn `pretty-quick` to `prettier` in `update:config` script
+- Bump depends
 
 # 2.3.12
 
