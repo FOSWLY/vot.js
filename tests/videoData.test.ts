@@ -202,31 +202,57 @@ describe("tiktok", () => {
 });
 
 describe("vimeo", () => {
-  const expected = "https://vimeo.com/149640932";
-  test("normal", async () => {
+  const expected = "https://vimeo.com/1074816435";
+  const expectedUnlisted = "https://vimeo.com/1074813550/af636e7a9d";
+  test("public", async () => {
     expect(await normalize(expected)).toEqual(expected);
   });
-  test("normal double id", async () => {
-    expect(await normalize("https://vimeo.com/807245860/4bb6b8c22a")).toEqual(
-      "https://vimeo.com/807245860/4bb6b8c22a",
-    );
+  test("unlisted", async () => {
+    expect(await normalize(expectedUnlisted)).toEqual(expectedUnlisted);
   });
   test("embed", async () => {
-    expect(await normalize("https://player.vimeo.com/video/149640932")).toEqual(
-      expected,
-    );
+    expect(
+      await normalize("https://player.vimeo.com/video/1074816435"),
+    ).toEqual(expected);
   });
-  test("embed private", async () => {
+  test("embed unlisted", async () => {
+    const expected = "https://player.vimeo.com/video/1074813550?h=af636e7a9d";
+    expect(await normalize(expected)).toEqual(expectedUnlisted);
+  });
+  test("embed hidden", async () => {
     const expected = "https://player.vimeo.com/video/722299957";
     expect(await normalize(expected, "https://leetcode.com/")).toEqual(
       expected,
     );
   });
-  test("embed private 2", async () => {
+  test("embed hidden 2", async () => {
     const expected = "https://player.vimeo.com/video/994752187";
     expect(await normalize(expected, "https://laracasts.com/")).toEqual(
       expected,
     );
+  });
+  test("channels video", async () => {
+    expect(
+      await normalize("https://vimeo.com/channels/keypeele/75629013"),
+    ).toEqual("https://vimeo.com/75629013");
+  });
+  test("groups video", async () => {
+    expect(
+      await normalize("https://vimeo.com/groups/travelhd/videos/22439234"),
+    ).toBeOneOf([
+      "https://vimeo.com/terjes/themountain",
+      "https://vimeo.com/22439234",
+    ]);
+  });
+  test("album video", async () => {
+    expect(
+      await normalize("https://vimeo.com/album/2632481/video/79010983"),
+    ).toEqual("https://vimeo.com/79010983");
+  });
+  test("showcase video", async () => {
+    expect(
+      await normalize("https://vimeo.com/showcase/2632481/video/79010983"),
+    ).toEqual("https://vimeo.com/79010983");
   });
 });
 
@@ -713,7 +739,7 @@ test("incestflix", async () => {
 
 test("porntn", async () => {
   const normalized = await normalize(
-    "https://porntn.com/videos/15443/diddly-asmr-15-september-2024-tits-massage-youtube-video-gone-wrong/",
+    "https://porntn.com/videos/23452/maimy-asmr-9-april-2025-kissing-you/",
   );
   expect(normalized).toInclude("porntn.com");
 });
