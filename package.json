@@ -1,26 +1,26 @@
 {
   "name": "vot.js",
-  "version": "2.3.12",
+  "version": "2.4.0",
   "author": "Toil",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
+    "@eslint/js": "^9.24.0",
     "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
-    "eslint": "^9.23.0",
-    "eslint-plugin-oxlint": "^0.16.2",
+    "eslint": "^9.24.0",
+    "eslint-plugin-oxlint": "^0.16.6",
     "husky": "^9.1.7",
-    "oxlint": "^0.16.2",
+    "oxlint": "^0.16.6",
     "prettier": "^3.5.3",
-    "typedoc": "^0.28.1",
-    "typedoc-plugin-include-example": "^2.0.2",
+    "typedoc": "^0.28.2",
+    "typedoc-plugin-include-example": "^2.0.3",
     "typedoc-plugin-missing-exports": "^4.0.0",
     "typedoc-plugin-rename-defaults": "^0.7.3",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.27.0"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.30.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
