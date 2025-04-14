@@ -128,12 +128,12 @@ export default class KodikHelper extends BaseHelper {
     }
   }
 
-  // maybe now api return only default url, but who knows
   decryptUrl(encryptedUrl: string) {
-    // app.player_single.js
+    // check app.serial.HASH.js with query "? 90 : 122"
     const decryptedUrl = atob(
       encryptedUrl.replace(/[a-zA-Z]/g, function (e) {
-        const charCode = e.charCodeAt(0) + 13;
+        // old value 13
+        const charCode = e.charCodeAt(0) + 18;
         const pos = e <= "Z" ? 90 : 122;
         return String.fromCharCode(pos >= charCode ? charCode : charCode - 26);
       }),
