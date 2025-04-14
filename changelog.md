@@ -3,7 +3,7 @@
 ## Ext
 
 - Added export VideoService as enum (earlier only as type)
-- Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+- Added support custom VideoService type for VOTClient
 - Added support unlisted embed and groups/channels/album/showcase videos for Vimeo
 - Fixed invalid VideoService type in videoData property
 - Fixed `/client/disk` for Yandex Disk
@@ -15,7 +15,7 @@
 ## Node
 
 - Added export VideoService as enum (earlier only as type)
-- Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+- Added support custom VideoService type for VOTClient
 - Added support unlisted embed and groups/channels/album/showcase videos for Vimeo
 - Fixed Kodik decrypt url
 - Fixed Vimeo bug where getVideoData didn’t retrieve the correct data for private players when extraInfo was disabled.
@@ -23,7 +23,7 @@
 
 ## Core
 
-- Added support custom VideoService type for VOTClient and translation, subtitles and stream types
+- Added support custom VideoService type for VOTClient
 
 ```ts
 import VOTClient from "@vot.js/node";
