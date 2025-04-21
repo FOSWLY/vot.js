@@ -17,6 +17,8 @@ import type {
   ClientResponse,
 } from "./types/client";
 import type {
+  VideoTranslationCacheOpts,
+  VideoTranslationCacheResponse,
   VideoTranslationOpts,
   VideoTranslationResponse,
   VideoSubtitlesOpts,
@@ -227,6 +229,7 @@ export default class VOTClient<
     videoTranslation: "/video-translation/translate",
     videoTranslationFailAudio: "/video-translation/fail-audio-js",
     videoTranslationAudio: "/video-translation/audio",
+    videoTranslationCache: "/video-translation/cache",
     videoSubtitles: "/video-subtitles/get-subtitles",
     streamPing: "/stream-translation/ping-stream",
     streamTranslation: "/stream-translation/translate-stream",
@@ -345,6 +348,7 @@ export default class VOTClient<
     const translationData = YandexVOTProtobuf.decodeTranslationResponse(
       res.data,
     );
+    console.log(translationData);
     Logger.log("translateVideo", translationData);
     const {
       status,
@@ -557,6 +561,42 @@ export default class VOTClient<
     }
 
     return YandexVOTProtobuf.decodeTranslationAudioResponse(res.data);
+  }
+
+  async translateVideoCache({
+    videoData,
+    requestLang = this.requestLang,
+    responseLang = this.responseLang,
+    headers = {},
+  }: VideoTranslationCacheOpts<V>): Promise<VideoTranslationCacheResponse> {
+    const { url, duration = config.defaultDuration } = videoData;
+
+    const session = await this.getSession("video-translation");
+    const body = YandexVOTProtobuf.encodeTranslationCacheRequest(
+      url,
+      duration,
+      requestLang,
+      responseLang,
+    );
+
+    const path = this.paths.videoTranslationCache;
+    const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
+
+    const res = await this.request(
+      path,
+      body,
+      {
+        ...vtransHeaders,
+        ...headers,
+      },
+      "POST",
+    );
+
+    if (!res.success) {
+      throw new VOTJSError("Failed to request video translation cache", res);
+    }
+
+    return YandexVOTProtobuf.decodeTranslationCacheResponse(res.data);
   }
 
   /**

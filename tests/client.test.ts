@@ -134,3 +134,15 @@ test("Get subtitles (worker)", async () => {
 
   expect(response.waiting).toEqual(false);
 });
+
+test("Translate video cache", async () => {
+  const client = new VOTClient();
+
+  const response = await client.translateVideoCache({
+    videoData,
+  });
+
+  console.log("Translate video cache", response);
+
+  expect(response).not.toBeNull();
+});

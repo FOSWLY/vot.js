@@ -67,3 +67,10 @@ response = await client.translateVideo({
 });
 
 console.log(response);
+
+// get translate video cache
+const translateCache = await client.translateVideoCache({
+  videoData,
+});
+
+console.log("Translate video cache", translateCache);

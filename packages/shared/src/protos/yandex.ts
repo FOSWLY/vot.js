@@ -87,7 +87,7 @@ export interface VideoTranslationRequest {
   responseLanguage: string;
   /** 0 */
   unknown2: number;
-  /** 1 */
+  /** before april 2025 is 1, but now it's 2 */
   unknown3: number;
   /**
    * they have some kind of limiter on requests from one IP
@@ -99,7 +99,7 @@ export interface VideoTranslationRequest {
    * voice of one person can constantly change
    * (https://github.com/ilyhalight/voice-over-translation/issues/897)
    */
-  useNewModel: boolean;
+  useLivelyVoice: boolean;
   videoTitle: string;
 }
 
@@ -123,13 +123,28 @@ export interface VideoTranslationResponse {
   translationId: string;
   /** detected language (if the wrong one is set) */
   language?: string | undefined;
-  message?:
-    | string
-    | undefined;
-  /** always 0? */
-  unknown1: number;
+  message?: string | undefined;
+  isLivelyVoice: boolean;
   /** added if status=1 (sucess) can be equal to 0 or 1 */
   unknown2?: number | undefined;
+}
+
+export interface VideoTranslationCacheItem {
+  status: number;
+  remainingTime?: number | undefined;
+}
+
+export interface VideoTranslationCacheRequest {
+  url: string;
+  duration: number;
+  /** source language code */
+  language: string;
+  responseLanguage: string;
+}
+
+export interface VideoTranslationCacheResponse {
+  default: VideoTranslationCacheItem | undefined;
+  cloning: VideoTranslationCacheItem | undefined;
 }
 
 /**
@@ -355,7 +370,7 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
     unknown2: 0,
     unknown3: 0,
     bypassCache: false,
-    useNewModel: false,
+    useLivelyVoice: false,
     videoTitle: "",
   };
 }
@@ -404,8 +419,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.bypassCache !== false) {
       writer.uint32(136).bool(message.bypassCache);
     }
-    if (message.useNewModel !== false) {
-      writer.uint32(144).bool(message.useNewModel);
+    if (message.useLivelyVoice !== false) {
+      writer.uint32(144).bool(message.useLivelyVoice);
     }
     if (message.videoTitle !== "") {
       writer.uint32(154).string(message.videoTitle);
@@ -537,7 +552,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
             break;
           }
 
-          message.useNewModel = reader.bool();
+          message.useLivelyVoice = reader.bool();
           continue;
         }
         case 19: {
@@ -575,7 +590,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
       unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
       bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
-      useNewModel: isSet(object.useNewModel) ? globalThis.Boolean(object.useNewModel) : false,
+      useLivelyVoice: isSet(object.useLivelyVoice) ? globalThis.Boolean(object.useLivelyVoice) : false,
       videoTitle: isSet(object.videoTitle) ? globalThis.String(object.videoTitle) : "",
     };
   },
@@ -624,8 +639,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.bypassCache !== false) {
       obj.bypassCache = message.bypassCache;
     }
-    if (message.useNewModel !== false) {
-      obj.useNewModel = message.useNewModel;
+    if (message.useLivelyVoice !== false) {
+      obj.useLivelyVoice = message.useLivelyVoice;
     }
     if (message.videoTitle !== "") {
       obj.videoTitle = message.videoTitle;
@@ -652,7 +667,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     message.unknown2 = object.unknown2 ?? 0;
     message.unknown3 = object.unknown3 ?? 0;
     message.bypassCache = object.bypassCache ?? false;
-    message.useNewModel = object.useNewModel ?? false;
+    message.useLivelyVoice = object.useLivelyVoice ?? false;
     message.videoTitle = object.videoTitle ?? "";
     return message;
   },
@@ -668,7 +683,7 @@ function createBaseVideoTranslationResponse(): VideoTranslationResponse {
     translationId: "",
     language: undefined,
     message: undefined,
-    unknown1: 0,
+    isLivelyVoice: false,
     unknown2: undefined,
   };
 }
@@ -699,8 +714,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     if (message.message !== undefined) {
       writer.uint32(74).string(message.message);
     }
-    if (message.unknown1 !== 0) {
-      writer.uint32(80).int32(message.unknown1);
+    if (message.isLivelyVoice !== false) {
+      writer.uint32(80).bool(message.isLivelyVoice);
     }
     if (message.unknown2 !== undefined) {
       writer.uint32(88).int32(message.unknown2);
@@ -784,7 +799,7 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
             break;
           }
 
-          message.unknown1 = reader.int32();
+          message.isLivelyVoice = reader.bool();
           continue;
         }
         case 11: {
@@ -814,7 +829,7 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
       translationId: isSet(object.translationId) ? globalThis.String(object.translationId) : "",
       language: isSet(object.language) ? globalThis.String(object.language) : undefined,
       message: isSet(object.message) ? globalThis.String(object.message) : undefined,
-      unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
+      isLivelyVoice: isSet(object.isLivelyVoice) ? globalThis.Boolean(object.isLivelyVoice) : false,
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : undefined,
     };
   },
@@ -845,8 +860,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     if (message.message !== undefined) {
       obj.message = message.message;
     }
-    if (message.unknown1 !== 0) {
-      obj.unknown1 = Math.round(message.unknown1);
+    if (message.isLivelyVoice !== false) {
+      obj.isLivelyVoice = message.isLivelyVoice;
     }
     if (message.unknown2 !== undefined) {
       obj.unknown2 = Math.round(message.unknown2);
@@ -867,8 +882,274 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     message.translationId = object.translationId ?? "";
     message.language = object.language ?? undefined;
     message.message = object.message ?? undefined;
-    message.unknown1 = object.unknown1 ?? 0;
+    message.isLivelyVoice = object.isLivelyVoice ?? false;
     message.unknown2 = object.unknown2 ?? undefined;
+    return message;
+  },
+};
+
+function createBaseVideoTranslationCacheItem(): VideoTranslationCacheItem {
+  return { status: 0, remainingTime: undefined };
+}
+
+export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = {
+  encode(message: VideoTranslationCacheItem, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.status !== 0) {
+      writer.uint32(8).int32(message.status);
+    }
+    if (message.remainingTime !== undefined) {
+      writer.uint32(16).int32(message.remainingTime);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationCacheItem {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationCacheItem();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.remainingTime = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoTranslationCacheItem {
+    return {
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      remainingTime: isSet(object.remainingTime) ? globalThis.Number(object.remainingTime) : undefined,
+    };
+  },
+
+  toJSON(message: VideoTranslationCacheItem): unknown {
+    const obj: any = {};
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.remainingTime !== undefined) {
+      obj.remainingTime = Math.round(message.remainingTime);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationCacheItem>, I>>(base?: I): VideoTranslationCacheItem {
+    return VideoTranslationCacheItem.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationCacheItem>, I>>(object: I): VideoTranslationCacheItem {
+    const message = createBaseVideoTranslationCacheItem();
+    message.status = object.status ?? 0;
+    message.remainingTime = object.remainingTime ?? undefined;
+    return message;
+  },
+};
+
+function createBaseVideoTranslationCacheRequest(): VideoTranslationCacheRequest {
+  return { url: "", duration: 0, language: "", responseLanguage: "" };
+}
+
+export const VideoTranslationCacheRequest: MessageFns<VideoTranslationCacheRequest> = {
+  encode(message: VideoTranslationCacheRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
+    }
+    if (message.duration !== 0) {
+      writer.uint32(17).double(message.duration);
+    }
+    if (message.language !== "") {
+      writer.uint32(26).string(message.language);
+    }
+    if (message.responseLanguage !== "") {
+      writer.uint32(34).string(message.responseLanguage);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationCacheRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationCacheRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 17) {
+            break;
+          }
+
+          message.duration = reader.double();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.language = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.responseLanguage = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoTranslationCacheRequest {
+    return {
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
+      language: isSet(object.language) ? globalThis.String(object.language) : "",
+      responseLanguage: isSet(object.responseLanguage) ? globalThis.String(object.responseLanguage) : "",
+    };
+  },
+
+  toJSON(message: VideoTranslationCacheRequest): unknown {
+    const obj: any = {};
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.duration !== 0) {
+      obj.duration = message.duration;
+    }
+    if (message.language !== "") {
+      obj.language = message.language;
+    }
+    if (message.responseLanguage !== "") {
+      obj.responseLanguage = message.responseLanguage;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationCacheRequest>, I>>(base?: I): VideoTranslationCacheRequest {
+    return VideoTranslationCacheRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationCacheRequest>, I>>(object: I): VideoTranslationCacheRequest {
+    const message = createBaseVideoTranslationCacheRequest();
+    message.url = object.url ?? "";
+    message.duration = object.duration ?? 0;
+    message.language = object.language ?? "";
+    message.responseLanguage = object.responseLanguage ?? "";
+    return message;
+  },
+};
+
+function createBaseVideoTranslationCacheResponse(): VideoTranslationCacheResponse {
+  return { default: undefined, cloning: undefined };
+}
+
+export const VideoTranslationCacheResponse: MessageFns<VideoTranslationCacheResponse> = {
+  encode(message: VideoTranslationCacheResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.default !== undefined) {
+      VideoTranslationCacheItem.encode(message.default, writer.uint32(10).fork()).join();
+    }
+    if (message.cloning !== undefined) {
+      VideoTranslationCacheItem.encode(message.cloning, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoTranslationCacheResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoTranslationCacheResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.default = VideoTranslationCacheItem.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.cloning = VideoTranslationCacheItem.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoTranslationCacheResponse {
+    return {
+      default: isSet(object.default) ? VideoTranslationCacheItem.fromJSON(object.default) : undefined,
+      cloning: isSet(object.cloning) ? VideoTranslationCacheItem.fromJSON(object.cloning) : undefined,
+    };
+  },
+
+  toJSON(message: VideoTranslationCacheResponse): unknown {
+    const obj: any = {};
+    if (message.default !== undefined) {
+      obj.default = VideoTranslationCacheItem.toJSON(message.default);
+    }
+    if (message.cloning !== undefined) {
+      obj.cloning = VideoTranslationCacheItem.toJSON(message.cloning);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoTranslationCacheResponse>, I>>(base?: I): VideoTranslationCacheResponse {
+    return VideoTranslationCacheResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoTranslationCacheResponse>, I>>(
+    object: I,
+  ): VideoTranslationCacheResponse {
+    const message = createBaseVideoTranslationCacheResponse();
+    message.default = (object.default !== undefined && object.default !== null)
+      ? VideoTranslationCacheItem.fromPartial(object.default)
+      : undefined;
+    message.cloning = (object.cloning !== undefined && object.cloning !== null)
+      ? VideoTranslationCacheItem.fromPartial(object.cloning)
+      : undefined;
     return message;
   },
 };

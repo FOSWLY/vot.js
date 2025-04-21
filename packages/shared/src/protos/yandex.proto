@@ -30,14 +30,14 @@ message VideoTranslationRequest {
   bool wasStream = 13;
   string responseLanguage = 14;
   int32 unknown2 = 15; // 0
-  int32 unknown3 = 16; // 1
+  int32 unknown3 = 16; // before april 2025 is 1, but now it's 2
   // they have some kind of limiter on requests from one IP
   // because after one such request it stops working
   bool bypassCache = 17;
   // translates videos with higher-quality voices, but sometimes the
   // voice of one person can constantly change
   // (https://github.com/ilyhalight/voice-over-translation/issues/897)
-  bool useNewModel = 18;
+  bool useLivelyVoice = 18;
   string videoTitle = 19;
 }
 
@@ -57,10 +57,27 @@ message VideoTranslationResponse {
   // detected language (if the wrong one is set)
   optional string language = 8;
   optional string message = 9;
-  // always 0?
-  int32 unknown1 = 10;
+  bool isLivelyVoice = 10;
   // added if status=1 (sucess) can be equal to 0 or 1
   optional int32 unknown2 = 11;
+}
+
+message VideoTranslationCacheItem {
+  int32 status = 1;
+  optional int32 remainingTime = 2;
+}
+
+message VideoTranslationCacheRequest {
+  string url = 1;
+  double duration = 2;
+  // source language code
+  string language = 3;
+  string responseLanguage = 4;
+}
+
+message VideoTranslationCacheResponse {
+  VideoTranslationCacheItem default = 1;
+  VideoTranslationCacheItem cloning = 2;
 }
 
 // video translation audio info (can be part of ChunkAudioObject or used

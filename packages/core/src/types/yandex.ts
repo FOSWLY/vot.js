@@ -20,7 +20,7 @@ export type TranslationExtraOpts = {
   forceSourceLang?: boolean;
   wasStream?: boolean;
   bypassCache?: boolean;
-  useNewModel?: boolean;
+  useLivelyVoice?: boolean;
   videoTitle?: string;
 };
 
@@ -61,6 +61,23 @@ export enum AudioDownloadType {
   ANDROID_API = "android_api",
   WEB_API_SLOW = "web_api_slow",
 }
+
+export type VideoTranslationCacheOpts<T extends string = VideoService> = {
+  videoData: VideoData<T>;
+  requestLang?: RequestLang;
+  responseLang?: ResponseLang;
+  headers?: RequestHeaders;
+};
+
+export type VideoTranslationCacheItem = {
+  status: VideoTranslationStatus;
+  remainingTime?: number;
+};
+
+export type VideoTranslationCacheResponse = {
+  default?: VideoTranslationCacheItem;
+  cloning?: VideoTranslationCacheItem;
+};
 
 export type VideoTranslationOpts<T extends string = VideoService> = {
   videoData: VideoData<T>;

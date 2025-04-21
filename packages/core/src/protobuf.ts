@@ -4,6 +4,8 @@ import {
   StreamTranslationResponse,
   SubtitlesRequest,
   SubtitlesResponse,
+  VideoTranslationCacheResponse,
+  VideoTranslationCacheRequest,
   VideoTranslationAudioRequest,
   VideoTranslationAudioResponse,
   VideoTranslationRequest,
@@ -32,7 +34,7 @@ export abstract class YandexVOTProtobuf {
       wasStream = false,
       videoTitle = "",
       bypassCache = false,
-      useNewModel = true,
+      useLivelyVoice = true,
     }: TranslationExtraOpts = {},
   ) {
     return VideoTranslationRequest.encode({
@@ -47,15 +49,33 @@ export abstract class YandexVOTProtobuf {
       responseLanguage: responseLang,
       wasStream,
       unknown2: 0,
-      unknown3: 1,
+      unknown3: 2,
       bypassCache,
-      useNewModel,
+      useLivelyVoice,
       videoTitle,
     }).finish();
   }
 
   static decodeTranslationResponse(response: ArrayBuffer) {
     return VideoTranslationResponse.decode(new Uint8Array(response));
+  }
+
+  static encodeTranslationCacheRequest(
+    url: string,
+    duration: number,
+    requestLang: string,
+    responseLang: string,
+  ) {
+    return VideoTranslationCacheRequest.encode({
+      url,
+      duration,
+      language: requestLang,
+      responseLanguage: responseLang,
+    }).finish();
+  }
+
+  static decodeTranslationCacheResponse(response: ArrayBuffer) {
+    return VideoTranslationCacheResponse.decode(new Uint8Array(response));
   }
 
   static encodeTranslationAudioRequest(
