@@ -437,6 +437,11 @@ export default class VOTClient<
           status,
           remainingTime: translationData.remainingTime ?? -1,
         };
+      case VideoTranslationStatus.SESSION_REQUIRED:
+        throw new VOTJSError(
+          "Yandex account required to translate video",
+          translationData,
+        );
       default:
         Logger.error("Unknown response", translationData);
         throw new VOTJSError("Unknown response from Yandex", translationData);

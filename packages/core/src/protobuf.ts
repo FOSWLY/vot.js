@@ -34,7 +34,7 @@ export abstract class YandexVOTProtobuf {
       wasStream = false,
       videoTitle = "",
       bypassCache = false,
-      useLivelyVoice = true,
+      useLivelyVoice = false,
     }: TranslationExtraOpts = {},
   ) {
     return VideoTranslationRequest.encode({

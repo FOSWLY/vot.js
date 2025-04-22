@@ -51,6 +51,10 @@ export enum VideoTranslationStatus {
   LONG_WAITING = 3,
   PART_CONTENT = 5,
   AUDIO_REQUESTED = 6,
+  /**
+   * requires login to yandex account
+   */
+  SESSION_REQUIRED = 7,
 }
 
 export enum AudioDownloadType {

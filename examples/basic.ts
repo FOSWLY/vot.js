@@ -21,6 +21,22 @@ response = await client.translateVideo({
 
 console.log(response);
 
+// live voices
+response = await client.translateVideo({
+  videoData,
+  requestLang: "en",
+  responseLang: "ru",
+  extraOpts: {
+    useLivelyVoice: true,
+  },
+  headers: {
+    // your yandex Sesssion_id. Without this you can't request new translation with enabled live voices
+    Cookie: "Session_id=...",
+  },
+});
+
+console.log(response);
+
 const videoDataTransHelp = await getVideoData("https://s3.toil.cc/vot/video");
 
 // link + translationHelp (just for example, this is an unsupported domain)
