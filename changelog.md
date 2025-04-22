@@ -1,3 +1,18 @@
+# 2.4.1
+
+## Core, Ext, Node
+
+- Added support get video translation cache (`translateVideoCache`)
+- [!] Renamed `useNewModel` to `useLivelyVoice` in translateVideo extraOpts
+- Now `uselivelyVoice` is false by default, because it requires `Session_id` cookie in headers
+
+## Shared
+
+- Added TranslateVideoCache request/response to protobuf
+- [!] Renamed `useNewModel` to `useLivelyVoice` in protobuf
+- Renamed `unknown1` to `isLivelyVoice` in VideoTranslation protobuf request
+- Updated component version to `25.4.x`
+
 # 2.4.0
 
 ## Ext
