@@ -1,3 +1,13 @@
+# 2.4.2
+
+## Ext
+
+- Added support Telegram Web K (`https://web.telegram.org/k/`, supports only public channels)
+
+## Node
+
+- Added support Telegram (`t.me`, supports only public channels)
+
 # 2.4.1
 
 ## Core, Ext, Node
