@@ -58,6 +58,7 @@ import ThisVidHelper from "./thisvid";
 import IgnHelper from "./ign";
 import BunkrHelper from "./bunkr";
 import IMDBHelper from "./imdb";
+import TelegramHelper from "./telegram";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -115,6 +116,7 @@ export * as ThisVidHelper from "./thisvid";
 export * as IgnHelper from "./ign";
 export * as BunkrHelper from "./bunkr";
 export * as IMDBHelper from "./imdb";
+export * as TelegramHelper from "./telegram";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -172,6 +174,7 @@ export const availableHelpers = {
   [CoreVideoService.ign]: IgnHelper,
   [CoreVideoService.bunkr]: BunkrHelper,
   [CoreVideoService.imdb]: IMDBHelper,
+  [CoreVideoService.telegram]: TelegramHelper,
   [ExtVideoService.udemy]: UdemyHelper,
   [ExtVideoService.coursera]: CourseraHelper,
   [ExtVideoService.douyin]: DouyinHelper,

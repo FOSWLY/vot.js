@@ -341,6 +341,11 @@ export default [
     match: /^(www.)?imdb.com$/,
   },
   {
+    host: CoreVideoService.telegram,
+    url: "https://t.me/",
+    match: /^t.me$/,
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),

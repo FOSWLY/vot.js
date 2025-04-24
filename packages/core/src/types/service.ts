@@ -62,6 +62,7 @@ export enum VideoService {
   ign = "ign",
   bunkr = "bunkr",
   imdb = "imdb",
+  telegram = "telegram",
 }
 
 export type ServiceConf<T extends string = VideoService> = {

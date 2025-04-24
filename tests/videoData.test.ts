@@ -850,3 +850,9 @@ test("imdb", async () => {
   const normalized = await normalize(expected);
   expect(normalized).toBe(expected);
 });
+
+test("telegram", async () => {
+  const expected = "https://t.me/topor/42828";
+  const normalized = await normalize(expected);
+  expect(normalized).toBe(expected);
+});

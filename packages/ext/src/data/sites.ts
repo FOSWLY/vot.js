@@ -520,6 +520,13 @@ export default [
     selector: ".jw-media",
   },
   {
+    host: CoreVideoService.telegram,
+    url: "https://t.me/",
+    match: (url: URL) =>
+      /^web.telegram.org$/.test(url.hostname) && url.pathname.startsWith("/k"),
+    selector: ".ckin__player",
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),
