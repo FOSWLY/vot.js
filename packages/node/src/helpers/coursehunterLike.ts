@@ -3,6 +3,7 @@ import type { MinimalVideoData } from "../types/client";
 
 import type { Lesson } from "@vot.js/shared/types/helpers/coursehunterLike";
 import Logger from "@vot.js/shared/utils/logger";
+import { proxyMedia } from "@vot.js/shared/utils/utils";
 
 export default class CoursehunterLikeHelper extends BaseHelper {
   API_ORIGIN = this.origin ?? "https://coursehunter.net";
@@ -61,7 +62,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
     }
 
     return {
-      url: videoUrl,
+      url: proxyMedia(videoUrl),
       duration,
       title,
     };

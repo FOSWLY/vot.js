@@ -1,3 +1,9 @@
+# 2.4.3 [WIP]
+
+## Ext, Node
+
+- Added proxy video url for coursehunter
+
 # 2.4.2
 
 ## Ext
