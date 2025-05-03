@@ -1,4 +1,5 @@
-import * as path from "node:path";
+import path from "node:path";
+import crypto from "node:crypto";
 import { semver } from "bun";
 
 import * as prettier from "prettier";
@@ -28,14 +29,15 @@ async function rewriteConfig(data: typeof config) {
 }
 
 async function getActualVersion(version: string) {
+  const urlParams = new URLSearchParams({
+    version,
+    custo: "yes",
+    reason: "browser_updater",
+    uid: crypto.randomUUID().toUpperCase(),
+    os_arch: "x86_64",
+  }).toString();
   const res = await fetch(
-    "https://api.browser.yandex.ru/update-info/browser/yandex/win-yandex.rss?" +
-      new URLSearchParams({
-        partner: "exp_new_identity_2",
-        version,
-        custo: "yes",
-        reason: "browser_updater",
-      }).toString(),
+    `https://api.browser.yandex.ru/update-info/browser/yandex/win-yandex.rss?${urlParams}`,
     { headers: { "User-Agent": config.userAgent } },
   );
 
