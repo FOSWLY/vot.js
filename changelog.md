@@ -4,6 +4,15 @@
 
 - Added proxy video url for coursehunter
 
+## Shared
+
+- Updated component version
+- Updated sec headers
+
+## Workspace
+
+- Updated getActualVersion (component version) script
+
 # 2.4.2
 
 ## Ext
