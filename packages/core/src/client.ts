@@ -348,7 +348,6 @@ export default class VOTClient<
     const translationData = YandexVOTProtobuf.decodeTranslationResponse(
       res.data,
     );
-    console.log(translationData);
     Logger.log("translateVideo", translationData);
     const {
       status,
