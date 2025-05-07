@@ -53,6 +53,11 @@ async function getActualVersion(version: string) {
   const versionData = parseFromString(content);
   const versions = versionData.getElementsByTagName("version:version");
   const newVersion = versions?.[0]?.textContent;
+  if (newVersion === "25.4.0.1971") {
+    // temp fix. semver: 25.4.0.1971 > 25.4.0.1973
+    return version;
+  }
+
   const isNewer = semver.satisfies(newVersion, `^${version}`);
   if (!isNewer) {
     console.error(`Yandex returned old component version "${newVersion}"!`);
