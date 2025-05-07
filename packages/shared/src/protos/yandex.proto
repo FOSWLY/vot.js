@@ -58,13 +58,17 @@ message VideoTranslationResponse {
   optional string language = 8;
   optional string message = 9;
   bool isLivelyVoice = 10;
-  // added if status=1 (sucess) can be equal to 0 or 1
+  // added if status=1 (success) can be equal to 0 or 1
   optional int32 unknown2 = 11;
 }
 
 message VideoTranslationCacheItem {
   int32 status = 1;
   optional int32 remainingTime = 2;
+  // exists if status is 3 (error)
+  optional string message = 3;
+  // exists if status is 3 (error). Value is 5
+  optional int32 unknown0 = 4;
 }
 
 message VideoTranslationCacheRequest {
@@ -80,41 +84,44 @@ message VideoTranslationCacheResponse {
   VideoTranslationCacheItem cloning = 2;
 }
 
-// video translation audio info (can be part of ChunkAudioObject or used
-// separated)
+// video translation audio info. Used separated
 message AudioBufferObject {
-  // e.g:
-  // 32Eߣ�B��01B��01B�04B�10B��webmB��04B��0230S�g010000000033��21M�t�M��S��25I�fS��00000000000000DM��S��26T�kS��0000000000000077M��S��34S�kS��00000000000000�25I�f�*ױ�17B@D��Gш�M��google/video-fileWA�google/video-file26T�k֮�ׁ01sŇ\����ϡ��02��00"���eng��A_OPUSc��OpusHead0105E�37�fSց�0�23�p�C\�ws�ܔ��00q]�77_�mt�26+.�y�$��31�00���J=33�34�iw�16�02�4�L�21U��30)`00000000,A+�Hv9��?C��05����º�31��
-  // ���f�L01�36w�n_35kJ�������Q�g�}5 3126,�͋���)�[z�8��H+31�vvX�.f��)
-  // also can be empty if it's failed audio js
+  // Uint8Array. can be empty if it's failed audio js
   bytes audioFile = 2;
   // if it's single file u set json data
   // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxx"}
-  // if it's chunk u set chunk index (0-xxx...)
   // if it's error u set only downloadType
   // (1=web_api_get_all_generating_urls_data_from_iframe)
   string fileId = 1;
 }
 
+// video translation partial audio info. Part of ChunkAudioObject
+message PartialAudioBufferObject {
+  // Uint8Array
+  bytes audioFile = 2;
+  // if it's chunk u set chunk index (0-xxx...)
+  int32 chunkId = 1;
+}
+
 // video translation audio info
 message ChunkAudioObject {
-  int32 audioPartsLength = 2; // 1-xxx...
-  AudioBufferObject audioBuffer = 1;
+  PartialAudioBufferObject audioBuffer = 1;
+  // 1-xxx... (chunks count)
+  int32 audioPartsLength = 2;
   // I don't know why it's a fileId, but they call it that
   // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
   string fileId = 3;
-  // There are several possible assignments:
-  // - version: is static 1
-  // - purpose: is enum (1 = video-translation)
-  // - fromPlayer: is boolean
-  int32 unknown0 = 4;
+  // current version only 1
+  int32 version = 4;
 }
 
 // can have only partialAudioInfo or only audioInfo
 message VideoTranslationAudioRequest {
   string translationId = 1;
   string url = 2;
+  // used if video has many chunks
   optional ChunkAudioObject partialAudioInfo = 4;
+  // used if video has only one chunk
   optional AudioBufferObject audioInfo = 6;
 }
 
@@ -123,6 +130,7 @@ message VideoTranslationAudioResponse {
   // 1 = waiting chunks
   // 2 = done
   int32 status = 1;
+  // invalid naming. It's not a list of chunks, but a list of some numbers (?)
   repeated string remainingChunks = 2;
 }
 
