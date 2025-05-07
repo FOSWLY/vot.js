@@ -1,10 +1,28 @@
-# 2.4.3 [WIP]
+# 2.4.3
 
-## Ext, Node
+## Ext
+
+- Added proxy video url for coursehunter
+- Added typings `loadVideoById`, `pauseVideo` and `mute` methods for Youtube `PlayerElement`
+
+## Node
 
 - Added proxy video url for coursehunter
 
+## Core
+
+- Updated possible values for AudioDownloadType
+- (!) Updated `VOTClient.requestVtransAudio` params
+- Removed protected from `requestVtransFailAudio` client method
+
 ## Shared
+
+- Updated `VideoTranslationCache` protobuf schema
+- Updated `ChunkAudioObject` protobuf schema.
+
+  Added separated `PartialAudioBufferObject` schema for `ChunkAudioObject` (field changes: `fileId` (string) -> `chunkId` (int32))
+
+  `unknown0` renamed to `version`
 
 - Updated component version
 - Updated sec headers
@@ -12,6 +30,7 @@
 ## Workspace
 
 - Updated getActualVersion (component version) script
+- Bump depends
 
 # 2.4.2
 
