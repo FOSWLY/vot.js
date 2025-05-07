@@ -339,4 +339,7 @@ export interface PlayerElement extends HTMLDivElement {
   getVideoUrl(): string;
   setVolume(volume: number): void;
   isMuted(): boolean;
+  loadVideoById?(videoId: string): void;
+  pauseVideo?(): void;
+  mute?(): void;
 }
