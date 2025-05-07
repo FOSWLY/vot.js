@@ -18,6 +18,7 @@ import type { SessionModule } from "@vot.js/shared/types/secure";
 import type {
   AudioBufferObject,
   PartialAudioObject,
+  PartialAudioBufferObject,
   TranslationExtraOpts,
   TranslationHelp,
 } from "./types/yandex";
@@ -78,25 +79,45 @@ export abstract class YandexVOTProtobuf {
     return VideoTranslationCacheResponse.decode(new Uint8Array(response));
   }
 
+  static isPartialAudioBuffer(
+    audioBuffer: PartialAudioBufferObject | AudioBufferObject,
+  ): audioBuffer is PartialAudioBufferObject {
+    return "chunkId" in audioBuffer;
+  }
+
   static encodeTranslationAudioRequest(
     url: string,
     translationId: string,
     audioBuffer: AudioBufferObject,
+    partialAudio?: never,
+  ): Uint8Array;
+  static encodeTranslationAudioRequest(
+    url: string,
+    translationId: string,
+    audioBuffer: PartialAudioBufferObject,
+    partialAudio: PartialAudioObject,
+  ): Uint8Array;
+  static encodeTranslationAudioRequest(
+    url: string,
+    translationId: string,
+    audioBuffer: PartialAudioBufferObject | AudioBufferObject,
     partialAudio?: PartialAudioObject,
-  ) {
+  ): Uint8Array {
+    if (partialAudio && YandexVOTProtobuf.isPartialAudioBuffer(audioBuffer)) {
+      return VideoTranslationAudioRequest.encode({
+        url,
+        translationId,
+        partialAudioInfo: {
+          ...partialAudio,
+          audioBuffer,
+        },
+      }).finish();
+    }
+
     return VideoTranslationAudioRequest.encode({
       url,
       translationId,
-      ...(partialAudio
-        ? {
-            partialAudioInfo: {
-              ...partialAudio,
-              audioBuffer,
-            },
-          }
-        : {
-            audioInfo: audioBuffer,
-          }),
+      audioInfo: audioBuffer as AudioBufferObject,
     }).finish();
   }
 

@@ -3,6 +3,12 @@ import type {
   ResponseLang,
   RequestHeaders,
 } from "@vot.js/shared/types/data";
+
+import {
+  AudioBufferObject as AudioBufferObjectProto,
+  PartialAudioBufferObject as PartialAudioBufferObjectProto,
+} from "@vot.js/shared/protos";
+
 import type { VideoData } from "./client";
 import { VideoService } from "./service";
 
@@ -24,22 +30,19 @@ export type TranslationExtraOpts = {
   videoTitle?: string;
 };
 
-export type AudioBufferObject = {
-  audioFile: Uint8Array;
-  fileId: string;
-};
+export type AudioBufferObject = AudioBufferObjectProto;
+export type PartialAudioBufferObject = PartialAudioBufferObjectProto;
 
 export type PartialAudioObject = {
   audioPartsLength: number;
   fileId: string;
-  unknown0: 1;
+  version: 1;
 };
 
 // convert this object using JSON.stringify
 export type FileIdObject = {
   downloadType: AudioDownloadType;
   itag: number;
-  /** in their code its minChunkSize, but it seems to me that in fact its maxChunkSize */
   minChunkSize: number;
   fileSize: string;
 };
@@ -58,12 +61,15 @@ export enum VideoTranslationStatus {
 }
 
 export enum AudioDownloadType {
+  WEB_API_VIDEO_SRC_FROM_IFRAME = "web_api_video_src_from_iframe",
+  WEB_API_VIDEO_SRC = "web_api_video_src",
   WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe",
+  WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME_TMP_EXP = "web_api_get_all_generating_urls_data_from_iframe_tmp_exp",
   WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe",
-  WEB_API_REPLACED_FETCH_FORCE_REQUEST_WITH_SEEK = "web_api_replaced_fetch_force_request_with_seek",
-  WEB_API_REPLACED_FETCH = "web_api_replaced_fetch",
   ANDROID_API = "android_api",
   WEB_API_SLOW = "web_api_slow",
+  WEB_API_STEAL_SIG_AND_N = "web_api_steal_sig_and_n",
+  WEB_API_COMBINED = "web_api_get_all_generating_urls_data_from_iframe,web_api_steal_sig_and_n",
 }
 
 export type VideoTranslationCacheOpts<T extends string = VideoService> = {

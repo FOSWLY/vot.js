@@ -1,7 +1,10 @@
 import config from "@vot.js/shared/config";
 import Logger from "@vot.js/shared/utils/logger";
 
-import { StreamInterval } from "@vot.js/shared/protos";
+import {
+  StreamInterval,
+  VideoTranslationAudioResponse,
+} from "@vot.js/shared/protos";
 import { getSecYaHeaders, getSignature, getUUID } from "@vot.js/shared/secure";
 import { fetchWithTimeout, getTimestamp } from "@vot.js/shared/utils/utils";
 
@@ -30,6 +33,7 @@ import type {
   AudioBufferObject,
   PartialAudioObject,
   GetSubtitlesResponse,
+  PartialAudioBufferObject,
 } from "./types/yandex";
 import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex";
 import type {
@@ -509,7 +513,7 @@ export default class VOTClient<
     }
   }
 
-  protected async requestVtransFailAudio(url: string) {
+  async requestVtransFailAudio(url: string) {
     const res = await this.requestJSON<VideoTranslationFailAudioResponse>(
       this.paths.videoTranslationFailAudio,
       JSON.stringify({
@@ -536,16 +540,37 @@ export default class VOTClient<
     url: string,
     translationId: string,
     audioBuffer: AudioBufferObject,
+    partialAudio?: never,
+    headers?: Record<string, string>,
+  ): Promise<VideoTranslationAudioResponse>;
+  async requestVtransAudio(
+    url: string,
+    translationId: string,
+    audioBuffer: PartialAudioBufferObject,
+    partialAudio: PartialAudioObject,
+    headers?: Record<string, string>,
+  ): Promise<VideoTranslationAudioResponse>;
+  async requestVtransAudio(
+    url: string,
+    translationId: string,
+    audioBuffer: AudioBufferObject | PartialAudioBufferObject,
     partialAudio?: PartialAudioObject,
     headers: Record<string, string> = {},
-  ) {
+  ): Promise<VideoTranslationAudioResponse> {
     const session = await this.getSession("video-translation");
-    const body = YandexVOTProtobuf.encodeTranslationAudioRequest(
-      url,
-      translationId,
-      audioBuffer,
-      partialAudio,
-    );
+    const body = YandexVOTProtobuf.isPartialAudioBuffer(audioBuffer)
+      ? YandexVOTProtobuf.encodeTranslationAudioRequest(
+          url,
+          translationId,
+          audioBuffer,
+          partialAudio!,
+        )
+      : YandexVOTProtobuf.encodeTranslationAudioRequest(
+          url,
+          translationId,
+          audioBuffer,
+          undefined,
+        );
 
     const path = this.paths.videoTranslationAudio;
     const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
