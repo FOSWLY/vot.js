@@ -56,6 +56,7 @@ export type VOTOpts = MinimalClientOpts & {
   hostVOT?: string;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
+  apiToken?: string;
 };
 
 export type ClientSuccessResponse<T = unknown> = {

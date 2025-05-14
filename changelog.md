@@ -1,3 +1,15 @@
+# 2.4.4
+
+## Core
+
+- Added support authorization with [OAuth token](https://oauth.yandex.ru) to use `useLivelyVoice` feature
+
+```ts
+new VOTClient({
+  apiToken: "YOUR_OAUTH",
+});
+```
+
 # 2.4.3
 
 ## Ext

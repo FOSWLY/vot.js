@@ -109,7 +109,7 @@ export class MinimalClient {
     headers: Record<string, string> = {},
     method = "POST",
   ): Promise<ClientResponse<T>> {
-    const options = this.getOpts(new Blob([body]), headers, method);
+    const options = this.getOpts(new Blob([body as BlobPart]), headers, method);
 
     try {
       const res = await this.fetch(
@@ -224,6 +224,7 @@ export default class VOTClient<
 > extends MinimalClient {
   hostVOT: string;
   schemaVOT: URLSchema;
+  apiToken: string | undefined;
 
   // default langs
   requestLang: RequestLang;
@@ -267,6 +268,7 @@ export default class VOTClient<
     fetchOpts,
     requestLang = "en",
     responseLang = "ru",
+    apiToken,
     headers,
   }: VOTOpts = {}) {
     super({
@@ -283,6 +285,18 @@ export default class VOTClient<
     this.schemaVOT = schemaVOT ?? "https";
     this.requestLang = requestLang;
     this.responseLang = responseLang;
+    this.apiToken = apiToken;
+  }
+
+  protected get apiTokenHeader(): Record<string, string> {
+    if (!this.apiToken) {
+      return {};
+    }
+
+    return {
+      // idk it's bug or not, but thanks who left it <3
+      Authorization: `OAuth ${this.apiToken}`,
+    };
   }
 
   /**
@@ -339,9 +353,10 @@ export default class VOTClient<
 
     const path = this.paths.videoTranslation;
     const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
-
+    const apiTokenHeader = extraOpts.useLivelyVoice ? this.apiTokenHeader : {};
     const res = await this.request(path, body, {
       ...vtransHeaders,
+      ...apiTokenHeader,
       ...headers,
     });
 
@@ -442,7 +457,7 @@ export default class VOTClient<
         };
       case VideoTranslationStatus.SESSION_REQUIRED:
         throw new VOTJSError(
-          "Yandex account required to translate video",
+          "Yandex auth required to translate video. See docs for more info",
           translationData,
         );
       default:

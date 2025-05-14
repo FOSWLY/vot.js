@@ -1,7 +1,15 @@
+import {
+  AudioDownloadType,
+  FileIdObject,
+} from "../packages/core/src/types/yandex";
 import VOTClient, { VOTWorkerClient } from "../packages/node/dist/client";
 import { getVideoData } from "../packages/node/dist/utils/videoData";
+import { config } from "../packages/shared/src";
 
-const client = new VOTClient();
+const client = new VOTClient({
+  // https://oauth.yandex.ru
+  // apiToken: ""
+});
 const url = "https://youtu.be/LK6nLR1bzpI";
 const videoData = await getVideoData(url);
 
@@ -21,7 +29,9 @@ response = await client.translateVideo({
 
 console.log(response);
 
-// live voices
+// live voices requires Yandex auth !!!
+// You can set apiToken in VOTClient constructor
+// or use headers.Cookie: "Session_id=..." in request
 response = await client.translateVideo({
   videoData,
   requestLang: "en",
@@ -29,8 +39,9 @@ response = await client.translateVideo({
   extraOpts: {
     useLivelyVoice: true,
   },
+  // alternative auth with cookie for useLivelyVoice
   headers: {
-    // your yandex Sesssion_id. Without this you can't request new translation with enabled live voices
+    // your yandex Sesssion_id
     Cookie: "Session_id=...",
   },
 });
@@ -90,3 +101,47 @@ const translateCache = await client.translateVideoCache({
 });
 
 console.log("Translate video cache", translateCache);
+
+// Code below only for example, it doesn't have real data!
+async function exampleOfSendYouTubeAudioDownload() {
+  // !!! you MUST use real values !!!
+  const fakeFileId = JSON.stringify({
+    downloadType:
+      AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
+    fileSize: "10000000", // use real value
+    itag: 251,
+    minChunkSize: config.minChunkSize,
+  } satisfies FileIdObject);
+
+  // use real data
+  const fakeAudioFile = new Uint8Array([1, 1, 1, 1, 1, 1]);
+
+  // use real id from translation request
+  const translationId = "2142134";
+
+  // static value
+  const version = 1;
+
+  // single chunk
+  await client.requestVtransAudio(url, translationId, {
+    audioFile: fakeAudioFile,
+    fileId: fakeFileId,
+  });
+
+  // multiple chunks
+  await client.requestVtransAudio(
+    url,
+    translationId,
+    {
+      audioFile: fakeAudioFile,
+      // next request chunkId: 1, and etc. For each audio chunks queue, it starts from 0
+      chunkId: 0,
+    },
+    {
+      // see how to calculate this value in https://github.com/ilyhalight/voice-over-translation/blob/dev/src/audioDownloader/index.ts (mediaPartsLength)
+      audioPartsLength: 5,
+      fileId: fakeFileId,
+      version,
+    },
+  );
+}
