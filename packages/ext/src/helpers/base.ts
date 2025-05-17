@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { FetchFunction } from "@vot.js/core/types/client";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
-import { ResponseLang } from "@vot.js/shared/types/data";
+import { BaseHelperInterface } from "@vot.js/core/types/helpers/base";
 
 import type { BaseHelperOpts } from "../types/helpers/base";
 import type { MinimalVideoData } from "../types/client";
-import type { ServiceConf } from "../types/service";
+import type { ServiceConf, VideoService } from "../types/service";
 
 export class VideoHelperError extends Error {
   constructor(message: string) {
@@ -15,7 +15,9 @@ export class VideoHelperError extends Error {
   }
 }
 
-export class BaseHelper {
+export class BaseHelper
+  implements BaseHelperInterface<VideoService, ServiceConf>
+{
   API_ORIGIN = window.location.origin;
   fetch: FetchFunction;
   extraInfo: boolean;
@@ -23,7 +25,7 @@ export class BaseHelper {
   origin: string;
   service?: ServiceConf;
   video?: HTMLVideoElement;
-  language: ResponseLang;
+  language: string;
 
   constructor({
     fetchFn = fetchWithTimeout,
@@ -45,11 +47,11 @@ export class BaseHelper {
     this.language = language;
   }
 
-  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
+  async getVideoData(_videoId: string): Promise<MinimalVideoData | undefined> {
     return undefined;
   }
 
-  async getVideoId(url: URL): Promise<string | undefined> {
+  async getVideoId(_url: URL): Promise<string | undefined> {
     return undefined;
   }
 

@@ -1,7 +1,5 @@
-import type { FetchFunction } from "../client";
-import type { ServiceConf } from "../service";
-
-import type { ResponseLang } from "@vot.js/shared/types/data";
+import type { FetchFunction, MinimalVideoData } from "../client";
+import type { ServiceConf, VideoService } from "../service";
 
 export type BaseHelperOpts<T = ServiceConf> = {
   /**
@@ -19,6 +17,30 @@ export type BaseHelperOpts<T = ServiceConf> = {
    * Domain from url, it's used e.g. for api domain
    */
   origin?: string;
-  language?: ResponseLang;
+  language?: string;
   service?: T;
 };
+
+export interface BaseHelperInterface<
+  T extends string = VideoService,
+  S = ServiceConf,
+> {
+  API_ORIGIN: string;
+  fetch: FetchFunction;
+  extraInfo: boolean;
+  referer: string;
+  origin: string;
+  service?: S;
+  language: string;
+
+  getVideoData(videoId: string): Promise<MinimalVideoData<T> | undefined>;
+  getVideoId(url: URL): Promise<string | undefined>;
+  returnBaseData(videoId: string):
+    | {
+        url: string;
+        videoId: string;
+        host: T;
+        duration: undefined;
+      }
+    | undefined;
+}
