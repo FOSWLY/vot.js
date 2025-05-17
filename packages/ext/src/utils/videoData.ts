@@ -1,9 +1,10 @@
 import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
-import type { GetVideoDataOpts, VideoData } from "@vot.js/core/types/client";
+import type { VideoData } from "@vot.js/core/types/client";
 import { VideoDataError, localLinkRe } from "@vot.js/core/utils/videoData";
 
 import sites from "../data/sites";
 import { type ServiceConf, VideoService } from "../types/service";
+import type { GetVideoDataOpts } from "../types/client";
 import VideoHelper, {
   availableHelpers,
   type AvailableVideoHelpers,

@@ -43,7 +43,10 @@ export type MinimalVideoData<T extends string = VideoService> = AtLeast<
   "url"
 >;
 
-export type GetVideoDataOpts = Omit<BaseHelperOpts, "service">;
+export type GetVideoDataOpts<T extends object = BaseHelperOpts> = Omit<
+  T,
+  "service"
+>;
 
 export type MinimalClientOpts = {
   host?: string;
