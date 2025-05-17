@@ -29,7 +29,11 @@ async function signHMAC(hashName: HashName, hmac: string, data: BufferSource) {
 
 // yandex signature
 export async function getSignature(body: Uint8Array) {
-  const signature = await signHMAC("SHA-256", config.hmac, body);
+  const signature = await signHMAC(
+    "SHA-256",
+    config.hmac,
+    body as BufferSource,
+  );
 
   // Convert the signature to a hex string
   return new Uint8Array(signature).reduce(

@@ -1,3 +1,19 @@
+# 2.4.5
+
+## Ext
+
+- Added typings for `video` field in getVideoData options
+
+## Core
+
+- Added support custom initial type for GetVideoDataOpts
+- Replaced language field type `ResponseLang` to `string` in BaseHelper
+- Added BaseHelperInterface type as base for implementations
+
+## Shared
+
+- Bump component version
+
 # 2.4.4
 
 ## Core
