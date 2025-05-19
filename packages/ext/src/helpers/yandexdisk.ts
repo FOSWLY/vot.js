@@ -40,7 +40,7 @@ export default class YandexDiskHelper extends BaseHelper {
           apiMethod: "mpfs/info",
           connection_id: idClient,
           requestParams: {
-            path: dialogId.replaceAll(" ", "+"),
+            path: dialogId,
           },
           sk,
         }),

@@ -1,3 +1,9 @@
+# 2.4.6 [WIP]
+
+## Ext
+
+- Fixed yandex disk `/client/disk` if file contains whitespaces
+
 # 2.4.5
 
 ## Ext
