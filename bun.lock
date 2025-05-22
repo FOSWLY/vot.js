@@ -4,13 +4,13 @@
     "": {
       "name": "vot.js",
       "devDependencies": {
-        "@eslint/js": "^9.26.0",
+        "@eslint/js": "^9.27.0",
         "@toil/typebox-genx": "^0.1.0",
         "@types/bun": "latest",
-        "eslint": "^9.26.0",
-        "eslint-plugin-oxlint": "^0.16.10",
+        "eslint": "^9.27.0",
+        "eslint-plugin-oxlint": "^0.16.11",
         "husky": "^9.1.7",
-        "oxlint": "^0.16.10",
+        "oxlint": "^0.16.11",
         "prettier": "^3.5.3",
         "typedoc": "^0.28.4",
         "typedoc-plugin-include-example": "^2.1.2",
@@ -25,7 +25,7 @@
     },
     "packages/core": {
       "name": "@vot.js/core",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "dependencies": {
         "@vot.js/shared": "workspace:^",
       },
@@ -39,7 +39,7 @@
     },
     "packages/ext": {
       "name": "@vot.js/ext",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "dependencies": {
         "@vot.js/core": "workspace:^",
         "@vot.js/shared": "workspace:^",
@@ -54,7 +54,7 @@
     },
     "packages/node": {
       "name": "@vot.js/node",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "dependencies": {
         "@vot.js/core": "workspace:^",
         "@vot.js/shared": "workspace:^",
@@ -71,7 +71,7 @@
     },
     "packages/shared": {
       "name": "@vot.js/shared",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "dependencies": {
         "@bufbuild/protobuf": "^2.0.0",
       },
@@ -158,7 +158,7 @@
 
     "@ts-morph/common": ["@ts-morph/common@0.26.1", "", { "dependencies": { "fast-glob": "^3.3.2", "minimatch": "^9.0.4", "path-browserify": "^1.0.1" } }, "sha512-Sn28TGl/4cFpcM+jwsH1wLncYq3FtN/BIpem+HOygfBWPT5pAeS5dB4VFVzV8FbnOKHpDLZmvAl4AjPEev5idA=="],
 
-    "@types/bun": ["@types/bun@1.2.13", "", { "dependencies": { "bun-types": "1.2.13" } }, "sha512-u6vXep/i9VBxoJl3GjZsl/BFIsvML8DfVDO0RYLEwtSZSp981kEO1V5NwRcO1CPJ7AmvpbnDCiMKo3JvbDEjAg=="],
+    "@types/bun": ["@types/bun@1.2.14", "", { "dependencies": { "bun-types": "1.2.14" } }, "sha512-VsFZKs8oKHzI7zwvECiAJ5oSorWndIWEVhfbYqZd4HI/45kzW7PN2Rr5biAzvGvRuNmYLSANY+H59ubHq8xw7Q=="],
 
     "@types/estree": ["@types/estree@1.0.6", "", {}, "sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw=="],
 
@@ -210,7 +210,7 @@
 
     "braces": ["braces@3.0.3", "", { "dependencies": { "fill-range": "^7.1.1" } }, "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA=="],
 
-    "bun-types": ["bun-types@1.2.13", "", { "dependencies": { "@types/node": "*" } }, "sha512-rRjA1T6n7wto4gxhAO/ErZEtOXyEZEmnIHQfl0Dt1QQSB4QV0iP6BZ9/YB5fZaHFQ2dwHFrmPaRQ9GGMX01k9Q=="],
+    "bun-types": ["bun-types@1.2.14", "", { "dependencies": { "@types/node": "*" } }, "sha512-Kuh4Ub28ucMRWeiUUWMHsT9Wcbr4H3kLIO72RZZElSDxSu7vpetRvxIUDUaW6QtaIeixIpm7OXtNnZPf82EzwA=="],
 
     "callsites": ["callsites@3.1.0", "", {}, "sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ=="],
 
