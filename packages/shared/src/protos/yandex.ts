@@ -80,12 +80,13 @@ export interface VideoTranslationRequest {
    * array for translation assistance
    * ([0] -> {2: link to video, 1: "video_file_url"},
    * [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
+   * i guess subtitles_file_url is optional in 2025
    */
   translationHelp: VideoTranslationHelpObject[];
   /** set true if it's ended stream else don't add it */
   wasStream: boolean;
   responseLanguage: string;
-  /** 0 */
+  /** 1? */
   unknown2: number;
   /** before april 2025 is 1, but now it's 2 */
   unknown3: number;

@@ -43,10 +43,11 @@ test("Translate video (with translationHelp)", async () => {
     },
     // just for example
     translationHelp: [
-      {
-        target: "subtitles_file_url",
-        targetUrl: "https://s3.toil.cc/vot/subs.vtt",
-      },
+      // subtitles file is optional in 2025
+      // {
+      //   target: "subtitles_file_url",
+      //   targetUrl: "https://s3.toil.cc/vot/subs.vtt",
+      // },
       {
         target: "video_file_url",
         targetUrl: "https://s3.toil.cc/vot/video.mp4",

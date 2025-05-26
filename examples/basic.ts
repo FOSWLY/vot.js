@@ -1,6 +1,6 @@
 import {
   AudioDownloadType,
-  FileIdObject,
+  type FileIdObject,
 } from "../packages/core/src/types/yandex";
 import VOTClient, { VOTWorkerClient } from "../packages/node/dist/client";
 import { getVideoData } from "../packages/node/dist/utils/videoData";
@@ -54,10 +54,11 @@ const videoDataTransHelp = await getVideoData("https://s3.toil.cc/vot/video");
 response = await client.translateVideo({
   videoData: videoDataTransHelp,
   translationHelp: [
-    {
-      target: "subtitles_file_url",
-      targetUrl: "https://s3.toil.cc/vot/subs.vtt",
-    },
+    // subtitles file is optional in 2025
+    // {
+    //   target: "subtitles_file_url",
+    //   targetUrl: "https://s3.toil.cc/vot/subs.vtt",
+    // },
     {
       target: "video_file_url",
       targetUrl: "https://s3.toil.cc/vot/video.mp4",
@@ -103,6 +104,7 @@ const translateCache = await client.translateVideoCache({
 console.log("Translate video cache", translateCache);
 
 // Code below only for example, it doesn't have real data!
+// eslint-disable-next-line no-unused-vars
 async function exampleOfSendYouTubeAudioDownload() {
   // !!! you MUST use real values !!!
   const fakeFileId = JSON.stringify({
