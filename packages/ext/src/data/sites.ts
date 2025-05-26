@@ -82,6 +82,7 @@ export default [
     url: "https://9gag.com/gag/",
     match: /^9gag.com$/,
     selector: ".video-post",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.twitch,
