@@ -1,0 +1,13 @@
+{
+  "categories": {
+    "correctness": "error",
+    "perf": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "no-await-in-loop": "off",
+    "no-unassigned-import": "off"
+  },
+  "ignorePatterns": ["dist", "test-scripts", "docs"],
+  "plugins": ["promise", "import", "eslint", "oxc", "typescript", "unicorn"]
+}
