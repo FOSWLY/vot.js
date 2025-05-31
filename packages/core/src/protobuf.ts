@@ -49,7 +49,7 @@ export abstract class YandexVOTProtobuf {
       translationHelp: translationHelp ?? [],
       responseLanguage: responseLang,
       wasStream,
-      unknown2: 0,
+      unknown2: 1,
       unknown3: 2,
       bypassCache,
       useLivelyVoice,

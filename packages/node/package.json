@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/node",
   "description": "package for runtimes",
-  "version": "2.4.6",
+  "version": "2.4.7",
   "author": "Toil",
   "license": "MIT",
   "repository": {

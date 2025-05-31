@@ -2,7 +2,7 @@ import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
 
 import { proxyMedia } from "@vot.js/shared/utils/utils";
-import * as PornTN from "@vot.js/shared/types/helpers/porntn";
+import type * as PornTN from "@vot.js/shared/types/helpers/porntn";
 import Logger from "@vot.js/shared/utils/logger";
 
 declare global {

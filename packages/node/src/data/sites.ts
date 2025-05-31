@@ -9,7 +9,7 @@ import {
   sitesCoursehunterLike,
 } from "@vot.js/shared/alternativeUrls";
 
-import { type ServiceConf } from "../types/service";
+import type { ServiceConf } from "../types/service";
 
 export default [
   {

@@ -10,8 +10,11 @@ import {
 } from "@vot.js/shared/protos";
 
 import type { VideoData } from "./client";
-import { VideoService } from "./service";
+import type { VideoService } from "./service";
 
+/**
+ * I guess in 2025 only video_file_url works
+ */
 export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
 
 export type TranslationHelp = {

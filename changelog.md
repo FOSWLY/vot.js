@@ -1,3 +1,19 @@
+# 2.4.7
+
+## Ext
+
+- Fixed 9GAG
+
+## Shared
+
+- Bump component version
+
+## Workspace
+
+- Added example to translateVideo with temp url without subtitles
+- Moved Oxlint config to `.oxlintrc.json` file
+- Bump depends
+
 # 2.4.6
 
 ## Ext
