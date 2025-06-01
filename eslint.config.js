@@ -1,5 +1,4 @@
 import js from "@eslint/js";
-import oxlint from "eslint-plugin-oxlint";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -20,6 +19,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-explicit-any": 0,
       "@typescript-eslint/consistent-type-definitions": 0,
+      "@typescript-eslint/no-unused-vars": 0,
     },
     languageOptions: {
       ecmaVersion: "latest",
@@ -30,5 +30,4 @@ export default tseslint.config(
       },
     },
   },
-  oxlint.configs["flat/recommended"], // oxlint should be the last one
 );

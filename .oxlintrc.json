@@ -6,7 +6,7 @@
   },
   "rules": {
     "no-await-in-loop": "off",
-    "no-unassigned-import": "off"
+    "no-extraneous-class": "off"
   },
   "ignorePatterns": ["dist", "test-scripts", "docs"],
   "plugins": ["promise", "import", "eslint", "oxc", "typescript", "unicorn"]
