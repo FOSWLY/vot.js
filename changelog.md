@@ -1,3 +1,15 @@
+# 2.4.8
+
+## Ext
+
+- Added support for Oracle Learn
+
+## Workspace
+
+- Migrated from `prettier` to `biome`
+- Migrated from `husky` to `lefthook`
+- Removed `eslint-oxlint-plugin`
+
 # 2.4.7
 
 ## Ext
