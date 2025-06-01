@@ -510,27 +510,36 @@ export default [
     url: "https://bunkr.site/",
     // https://github.com/mikf/gallery-dl/blob/master/gallery_dl/extractor/bunkr.py
     match:
-      /^bunkr.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
+      /^bunkr\.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
     selector: ".plyr__video-wrapper",
   },
   {
     host: CoreVideoService.imdb,
     url: "https://www.imdb.com/video/",
-    match: /^(www.)?imdb.com$/,
+    match: /^(www\.)?imdb\.com$/,
     selector: ".jw-media",
   },
   {
     host: CoreVideoService.telegram,
     url: "https://t.me/",
     match: (url: URL) =>
-      /^web.telegram.org$/.test(url.hostname) && url.pathname.startsWith("/k"),
+      /^web\.telegram\.org$/.test(url.hostname) &&
+      url.pathname.startsWith("/k"),
     selector: ".ckin__player",
+  },
+  {
+    host: ExtVideoService.oraclelearn,
+    url: "https://mylearn.oracle.com/ou/course/",
+    match: /^mylearn\.oracle\.com/,
+    selector: ".vjs-v7",
+    needExtraData: true,
+    needBypassCSP: true,
   },
   {
     host: CoreVideoService.custom,
     url: "stub",
-    match: (url: URL) => /([^.]+).(mp4|webm)/.test(url.pathname),
+    match: (url: URL) => /([^.]+)\.(mp4|webm)/.test(url.pathname),
     rawResult: true,
   },
 ] as ServiceConf[];

@@ -2,7 +2,7 @@ import { BaseHelper } from "./base";
 
 export default class DailymotionHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
-  async getVideoId(url: URL) {
+  async getVideoId(_url: URL) {
     // geo.dailymotion.com
     const plainPlayerConfig = Array.from(document.querySelectorAll("*")).filter(
       (s) => s.innerHTML.trim().includes(".m3u8"),

@@ -1,7 +1,7 @@
 import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
-import { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
+import type { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
 
-import { ServiceConf, ExtVideoService } from "../types/service";
+import { type ServiceConf, ExtVideoService } from "../types/service";
 
 import MailRuHelper from "./mailru";
 import WeverseHelper from "./weverse";
@@ -59,6 +59,7 @@ import IgnHelper from "./ign";
 import BunkrHelper from "./bunkr";
 import IMDBHelper from "./imdb";
 import TelegramHelper from "./telegram";
+import OracleLearnHelper from "./oraclelearn";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -117,6 +118,7 @@ export * as IgnHelper from "./ign";
 export * as BunkrHelper from "./bunkr";
 export * as IMDBHelper from "./imdb";
 export * as TelegramHelper from "./telegram";
+export * as OracleLearnHelper from "./oraclelearn";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -180,6 +182,7 @@ export const availableHelpers = {
   [ExtVideoService.douyin]: DouyinHelper,
   [ExtVideoService.artstation]: ArtstationHelper,
   [ExtVideoService.kickstarter]: KickstarterHelper,
+  [ExtVideoService.oraclelearn]: OracleLearnHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
@@ -195,7 +198,7 @@ export default class VideoHelper {
   }
 
   getHelper<K extends keyof AvailableVideoHelpers>(
-    service: K,
+    service: K
   ): AvailableVideoHelpers[K]["prototype"] {
     return new availableHelpers[service](this.helpersData);
   }

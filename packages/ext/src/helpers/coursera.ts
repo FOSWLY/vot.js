@@ -1,14 +1,14 @@
-import { MinimalVideoData } from "../types/client";
 import VideoJSHelper from "./videojs";
-import * as CourseraPlayer from "../types/helpers/coursera";
-import * as VideoJS from "../types/helpers/videojs";
+import type { MinimalVideoData } from "../types/client";
+import type * as CourseraPlayer from "../types/helpers/coursera";
+import type * as VideoJS from "../types/helpers/videojs";
 
-import * as Coursera from "@vot.js/shared/types/helpers/coursera";
+import type * as Coursera from "@vot.js/shared/types/helpers/coursera";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 import { availableLangs } from "@vot.js/shared/consts";
-import { RequestLang } from "@vot.js/shared/types/data";
+import type { RequestLang } from "@vot.js/shared/types/data";
 import Logger from "@vot.js/shared/utils/logger";
-import { VideoDataSubtitle } from "@vot.js/core/types/client";
+import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 
 export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";
@@ -17,7 +17,7 @@ export default class CourseraHelper extends VideoJSHelper {
   async getCourseData(courseId: string | number) {
     try {
       const response = await this.fetch(
-        `${this.API_ORIGIN}/onDemandCourses.v1/${courseId}`,
+        `${this.API_ORIGIN}/onDemandCourses.v1/${courseId}`
       );
 
       const resJSON = (await response.json()) as Coursera.CourseData;
@@ -25,7 +25,7 @@ export default class CourseraHelper extends VideoJSHelper {
     } catch (err) {
       Logger.error(
         `Failed to get course data by courseId: ${courseId}`,
-        (err as Error).message,
+        (err as Error).message
       );
       return undefined;
     }
@@ -34,7 +34,7 @@ export default class CourseraHelper extends VideoJSHelper {
   static getPlayer<
     T extends VideoJS.PlayerOptions = CourseraPlayer.PlayerOptions,
   >() {
-    return super.getPlayer<T>();
+    return VideoJSHelper.getPlayer<T>();
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
@@ -52,7 +52,7 @@ export default class CourseraHelper extends VideoJSHelper {
             language: normalizeLang(track.srclang),
             source: this.SUBTITLE_SOURCE,
             format: this.SUBTITLE_FORMAT,
-          }) as VideoDataSubtitle,
+          }) as VideoDataSubtitle
       );
     }
 

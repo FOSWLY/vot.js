@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/require-await */
-import { FetchFunction } from "@vot.js/core/types/client";
+import type { FetchFunction } from "@vot.js/core/types/client";
+import type { BaseHelperInterface } from "@vot.js/core/types/helpers/base";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
-import { BaseHelperInterface } from "@vot.js/core/types/helpers/base";
 
 import type { BaseHelperOpts } from "../types/helpers/base";
 import type { MinimalVideoData } from "../types/client";
@@ -30,7 +31,7 @@ export class BaseHelper
   constructor({
     fetchFn = fetchWithTimeout,
     extraInfo = true,
-    referer = document.referrer ?? window.location.origin + "/",
+    referer = document.referrer ?? `${window.location.origin}/`,
     origin = window.location.origin,
     service,
     video,
