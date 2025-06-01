@@ -1,12 +1,12 @@
 import { parseFromString } from "dom-parser";
 
-import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import { BaseHelper, VideoHelperError } from "./base";
 
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import * as Sap from "@vot.js/shared/types/helpers/sap";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 
 export default class SapHelper extends BaseHelper {
   API_ORIGIN = "https://learning.sap.com/";
@@ -88,10 +88,8 @@ export default class SapHelper extends BaseHelper {
       let entryId = doc
         .getElementById("shadow")
         ?.firstChild?.getAttribute("id");
-      if (!entryId) {
-        // for course demo
-        entryId = /"sourceId":\s?"([^"]+)"/.exec(content)?.[1];
-      }
+      // for course demo
+      entryId ??= /"sourceId":\s?"([^"]+)"/.exec(content)?.[1];
 
       if (!kalturaDomain || Number.isNaN(+partnerId) || !entryId) {
         throw new VideoHelperError(

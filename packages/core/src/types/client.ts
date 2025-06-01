@@ -1,11 +1,11 @@
+import type { RequestLang, ResponseLang } from "@vot.js/shared/types/data";
 import type { ClientSession, SessionModule } from "@vot.js/shared/types/secure";
 import type { SubtitleFormat } from "@vot.js/shared/types/subs";
-import type { RequestLang, ResponseLang } from "@vot.js/shared/types/data";
 import type { AtLeast } from "@vot.js/shared/types/utils";
 
 import type { BaseHelperOpts } from "./helpers/base";
-import type { TranslationHelp } from "./yandex";
 import type { VideoService } from "./service";
+import type { TranslationHelp } from "./yandex";
 
 export type FetchFunction = (
   input: string | URL | Request,

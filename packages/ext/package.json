@@ -74,18 +74,9 @@
   "engines": {
     "node": ">=18"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "homepage": "https://github.com/FOSWLY/vot.js#readme",
-  "keywords": [
-    "translate",
-    "vot",
-    "yandex",
-    "foswly",
-    "api",
-    "vot.js"
-  ],
+  "keywords": ["translate", "vot", "yandex", "foswly", "api", "vot.js"],
   "publishConfig": {
     "access": "public"
   },

@@ -1,8 +1,8 @@
-import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import { BaseHelper, VideoHelperError } from "./base";
 
-import * as Kodik from "@vot.js/shared/types/helpers/kodik";
 import config from "@vot.js/shared/config";
+import * as Kodik from "@vot.js/shared/types/helpers/kodik";
 import Logger from "@vot.js/shared/utils/logger";
 
 export default class KodikHelper extends BaseHelper {
@@ -42,7 +42,7 @@ export default class KodikHelper extends BaseHelper {
       }
 
       const videoInfoContent = allScripts
-        .filter((s) => s.innerHTML.includes(`var videoInfo = {}`))?.[0]
+        .find((s) => s.innerHTML.includes(`var videoInfo = {}`))
         ?.textContent?.trim();
       if (!videoInfoContent) {
         throw new VideoHelperError("Failed to find videoInfo content");

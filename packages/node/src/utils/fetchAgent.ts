@@ -1,6 +1,6 @@
 /** Why it's need? Answer: https://github.com/nodejs/undici/issues/1305 */
 
-import { ProxyAgent, Agent } from "undici";
+import { Agent, ProxyAgent } from "undici";
 import DispatcherBase from "undici/lib/dispatcher/dispatcher-base.js";
 import type Dispatcher from "undici/types/dispatcher";
 
@@ -24,9 +24,10 @@ export class VOTAgent extends DispatcherBase {
 }
 
 export class VOTProxyAgent extends ProxyAgent {
-  constructor(opts: ProxyAgent.Options | string) {
-    super(opts);
-  }
+  // biome-ignore lint/complexity/noUselessConstructor: <explanation>
+  // constructor(opts: ProxyAgent.Options | string) {
+  //   super(opts);
+  // }
 
   dispatch(
     opts: Dispatcher.DispatchOptions,

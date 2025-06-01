@@ -1,5 +1,5 @@
-import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import { BaseHelper, VideoHelperError } from "./base";
 
 import Logger from "@vot.js/shared/utils/logger";
 
@@ -7,7 +7,7 @@ export default class RedditHelper extends BaseHelper {
   API_ORIGIN = "https://www.reddit.com";
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async getContentUrl(videoId: string) {
+  async getContentUrl(_videoId: string) {
     if (this.service?.additionalData !== "old") {
       // this isn't a video element, but nevertheless let it be so
       return (

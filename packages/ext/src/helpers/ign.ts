@@ -1,9 +1,9 @@
 import { BaseHelper } from "./base";
 
-import Ign from "@vot.js/shared/types/helpers/ign";
+import { VideoDataError } from "@vot.js/core/utils/videoData";
+import type * as Ign from "@vot.js/shared/types/helpers/ign";
 import Logger from "@vot.js/shared/utils/logger";
 import { proxyMedia } from "@vot.js/shared/utils/utils";
-import { VideoDataError } from "@vot.js/core/utils/videoData";
 
 export default class IgnHelper extends BaseHelper {
   // https://de.ign.com/m3gan-20/146217/video/m3gan-20-offizieller-trailer

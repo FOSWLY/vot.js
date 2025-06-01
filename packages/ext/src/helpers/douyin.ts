@@ -2,9 +2,9 @@ import { BaseHelper } from "./base";
 
 import * as Douyin from "../types/helpers/douyin";
 
-import { proxyMedia } from "@vot.js/shared/utils/utils";
-import { RequestLang } from "@vot.js/shared/types/data";
 import { availableLangs } from "@vot.js/shared/consts";
+import { RequestLang } from "@vot.js/shared/types/data";
+import { proxyMedia } from "@vot.js/shared/utils/utils";
 
 declare global {
   const player: Douyin.Player | undefined;
@@ -20,7 +20,7 @@ export default class DouyinHelper extends BaseHelper {
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async getVideoData(videoId: string) {
+  async getVideoData(_videoId: string) {
     const xgPlayer = DouyinHelper.getPlayer();
     if (!xgPlayer) {
       return undefined;

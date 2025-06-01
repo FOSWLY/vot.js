@@ -12,7 +12,7 @@ export default class GoogleDriveHelper extends BaseHelper {
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async getVideoId(url: URL) {
+  async getVideoId(_url: URL) {
     return this.getPlayerData()?.video_id;
   }
 }

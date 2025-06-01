@@ -2,10 +2,10 @@ import { Dom, parseFromString } from "dom-parser";
 
 import { BaseHelper, VideoHelperError } from "./base";
 
-import Ign from "@vot.js/shared/types/helpers/ign";
-import { proxyMedia } from "@vot.js/shared/utils/utils";
-import Logger from "@vot.js/shared/utils/logger";
 import { VideoDataError } from "@vot.js/core/utils/videoData";
+import * as Ign from "@vot.js/shared/types/helpers/ign";
+import Logger from "@vot.js/shared/utils/logger";
+import { proxyMedia } from "@vot.js/shared/utils/utils";
 
 export default class IgnHelper extends BaseHelper {
   getVideoDataByScriptData(doc: Dom) {

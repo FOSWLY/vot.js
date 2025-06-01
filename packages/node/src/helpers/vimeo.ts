@@ -1,13 +1,13 @@
 import { parseFromString } from "dom-parser";
 
-import { BaseHelper, VideoHelperError } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import { BaseHelper, VideoHelperError } from "./base";
 
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import type { TranslationHelp } from "@vot.js/core/types/yandex";
 import * as Vimeo from "@vot.js/shared/types/helpers/vimeo";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 
 export default class VimeoHelper extends BaseHelper {
   API_KEY = "";
@@ -119,7 +119,7 @@ export default class VimeoHelper extends BaseHelper {
       const doc = parseFromString(content.replace(/<!DOCTYPE html>/i, ""));
       const playerConfigScript = doc
         .getElementsByTagName("script")
-        .filter((s) => s.innerHTML.startsWith(`window.playerConfig`))?.[0];
+        .find((s) => s.innerHTML.startsWith(`window.playerConfig`));
       if (!playerConfigScript) {
         throw new VideoHelperError("Failed to find player config script");
       }

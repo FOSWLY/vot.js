@@ -1,11 +1,11 @@
-import { BaseHelper, VideoHelperError } from "./base.js";
 import { MinimalVideoData } from "../types/client.js";
+import { BaseHelper, VideoHelperError } from "./base.js";
 
-import * as Udemy from "@vot.js/shared/types/helpers/udemy";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import { availableLangs } from "@vot.js/shared/consts";
 import { RequestLang } from "@vot.js/shared/types/data";
+import * as Udemy from "@vot.js/shared/types/helpers/udemy";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 
 export default class UdemyHelper extends BaseHelper {
   API_ORIGIN = "https://www.udemy.com/api-2.0";
@@ -86,16 +86,12 @@ export default class UdemyHelper extends BaseHelper {
   }
 
   findSubtitleUrl(captions: Udemy.Caption[], detectedLanguage: string) {
-    let subtitle = captions?.find(
-      (caption) => normalizeLang(caption.locale_id) === detectedLanguage,
-    );
-
-    if (!subtitle) {
-      subtitle =
-        captions?.find(
-          (caption) => normalizeLang(caption.locale_id) === "en",
-        ) ?? captions?.[0];
-    }
+    const subtitle =
+      captions?.find(
+        (caption) => normalizeLang(caption.locale_id) === detectedLanguage,
+      ) ??
+      captions?.find((caption) => normalizeLang(caption.locale_id) === "en") ??
+      captions?.[0];
 
     return subtitle?.url;
   }

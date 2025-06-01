@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/require-await */
 import type { FetchFunction } from "@vot.js/core/types/client";
 import type { BaseHelperInterface } from "@vot.js/core/types/helpers/base";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
 
-import type { BaseHelperOpts } from "../types/helpers/base";
 import type { MinimalVideoData } from "../types/client";
+import type { BaseHelperOpts } from "../types/helpers/base";
 import type { ServiceConf, VideoService } from "../types/service";
 
 export class VideoHelperError extends Error {

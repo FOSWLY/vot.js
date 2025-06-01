@@ -1,10 +1,10 @@
-import { BaseHelper } from "./base";
 import type { MinimalVideoData } from "../types/client";
+import { BaseHelper } from "./base";
 
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import * as EpicGames from "@vot.js/shared/types/helpers/epicgames";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 
 export default class EpicGamesHelper extends BaseHelper {
   API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
@@ -106,7 +106,7 @@ export default class EpicGamesHelper extends BaseHelper {
     };
   }
 
-  async getVideoId(url: URL): Promise<string | undefined> {
+  async getVideoId(_url: URL): Promise<string | undefined> {
     return new Promise((resolve) => {
       const origin = "https://dev.epicgames.com";
       const reqId = btoa(window.location.href);
