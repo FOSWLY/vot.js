@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "2.4.7",
+  "version": "2.4.8",
   "author": "Toil",
   "repository": {
     "type": "git",
@@ -11,10 +11,8 @@
     "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
     "eslint": "^9.28.0",
-    "eslint-plugin-oxlint": "^0.17.0",
-    "husky": "^9.1.7",
+    "lefthook": "^1.11.13",
     "oxlint": "^0.17.0",
-    "prettier": "^3.5.3",
     "typedoc": "^0.28.5",
     "typedoc-plugin-include-example": "^2.1.2",
     "typedoc-plugin-missing-exports": "^4.0.0",
@@ -49,10 +47,8 @@
     "build:all": "bun build:bun && bun build:doc",
     "update:config": "bun run scripts/update-config.ts",
     "lint": "bunx oxlint && bunx eslint",
-    "prepare": "husky"
+    "format": "npx @biomejs/biome check --write ./packages"
   },
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": ["packages/*"]
 }

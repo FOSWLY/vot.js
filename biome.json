@@ -1,0 +1,12 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "files": {
+    "ignore": ["dist", "docs", "**/*.d.ts", "packages/shared/src/protos/*.ts"]
+  },
+  "linter": {
+    "enabled": false
+  },
+  "formatter": {
+    "indentStyle": "space"
+  }
+}
