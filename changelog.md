@@ -1,3 +1,19 @@
+# 2.4.9
+
+## Ext
+
+- Added missed field `eventSelector` for `ServiceConf` type
+- Added support DeeplearningAI
+
+## Core
+
+- Added support lively voice for vot-backend api (provider `yandex_lively` or autoset by `extraOpts.useLivelyVoice` in `translateVideo` method)
+
+## Shared
+
+- Bump component version
+- Updated Chromium version in browser secure headers
+
 # 2.4.8
 
 ## Ext
