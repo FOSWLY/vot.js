@@ -1,13 +1,13 @@
 import type {
+  RequestHeaders,
   RequestLang,
   ResponseLang,
-  RequestHeaders,
 } from "@vot.js/shared/types/data";
 
 import { VideoService } from "./service";
 
 export type TranslationStatus = "success" | "waiting" | "parted" | "failed";
-export type TranslationProvider = "yandex";
+export type TranslationProvider = "yandex" | "yandex_lively";
 
 export type VideoTranslationVOTOpts<T = VideoService> = {
   url: string; // video url
@@ -16,6 +16,7 @@ export type VideoTranslationVOTOpts<T = VideoService> = {
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   headers?: RequestHeaders;
+  provider?: TranslationProvider;
 };
 
 export type TranslationWaitingResponse = {

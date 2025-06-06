@@ -8,42 +8,42 @@ import {
 import { getSecYaHeaders, getSignature, getUUID } from "@vot.js/shared/secure";
 import { fetchWithTimeout, getTimestamp } from "@vot.js/shared/utils/utils";
 
-import type { ClientSession, SessionModule } from "@vot.js/shared/types/secure";
 import type { RequestLang, ResponseLang } from "@vot.js/shared/types/data";
+import type { ClientSession, SessionModule } from "@vot.js/shared/types/secure";
 
-import { YandexVOTProtobuf, YandexSessionProtobuf } from "./protobuf";
+import { YandexSessionProtobuf, YandexVOTProtobuf } from "./protobuf";
 import type {
-  VOTOpts,
-  FetchFunction,
-  VOTSessions,
-  URLSchema,
   ClientResponse,
+  FetchFunction,
+  URLSchema,
+  VOTOpts,
+  VOTSessions,
 } from "./types/client";
-import type {
-  VideoTranslationCacheOpts,
-  VideoTranslationCacheResponse,
-  VideoTranslationOpts,
-  VideoTranslationResponse,
-  VideoSubtitlesOpts,
-  StreamPingOptions,
-  StreamTranslationOpts,
-  StreamTranslationResponse,
-  StreamTranslationObject,
-  VideoTranslationFailAudioResponse,
-  AudioBufferObject,
-  PartialAudioObject,
-  GetSubtitlesResponse,
-  PartialAudioBufferObject,
-} from "./types/yandex";
-import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex";
+import { VideoService } from "./types/service";
 import type {
   GetSubtitlesVOTOpts,
   SubtitleItem,
   TranslationResponse,
   VideoTranslationVOTOpts,
 } from "./types/vot";
+import type {
+  AudioBufferObject,
+  GetSubtitlesResponse,
+  PartialAudioBufferObject,
+  PartialAudioObject,
+  StreamPingOptions,
+  StreamTranslationObject,
+  StreamTranslationOpts,
+  StreamTranslationResponse,
+  VideoSubtitlesOpts,
+  VideoTranslationCacheOpts,
+  VideoTranslationCacheResponse,
+  VideoTranslationFailAudioResponse,
+  VideoTranslationOpts,
+  VideoTranslationResponse,
+} from "./types/yandex";
+import { AudioDownloadType, VideoTranslationStatus } from "./types/yandex";
 import { convertVOT } from "./utils/vot";
-import { VideoService } from "./types/service";
 
 export class VOTJSError extends Error {
   constructor(
@@ -473,12 +473,13 @@ export default class VOTClient<
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
+    provider = "yandex",
   }: VideoTranslationVOTOpts<V>): Promise<VideoTranslationResponse> {
     const votData = convertVOT<V>(service, videoId, url);
     const res = await this.requestVOT<TranslationResponse>(
       this.paths.videoTranslation,
       {
-        provider: "yandex",
+        provider,
         service: votData.service,
         video_id: votData.videoId,
         from_lang: requestLang,
@@ -665,6 +666,7 @@ export default class VOTClient<
           requestLang,
           responseLang,
           headers,
+          provider: extraOpts.useLivelyVoice ? "yandex_lively" : "yandex",
         })
       : await this.translateVideoYAImpl({
           videoData,
