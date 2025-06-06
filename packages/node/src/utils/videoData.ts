@@ -1,14 +1,14 @@
-import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
 import type { GetVideoDataOpts, VideoData } from "@vot.js/core/types/client";
+import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
 import { VideoDataError, localLinkRe } from "@vot.js/core/utils/videoData";
 import Logger from "@vot.js/shared/utils/logger";
 
 import sites from "../data/sites";
-import { type ServiceConf, VideoService } from "../types/service";
 import VideoHelper, {
   availableHelpers,
   type AvailableVideoHelpers,
 } from "../helpers";
+import { type ServiceConf, VideoService } from "../types/service";
 
 export function getService(videoUrl: string) {
   if (localLinkRe.exec(videoUrl)) {
@@ -24,7 +24,7 @@ export function getService(videoUrl: string) {
   }
 
   const hostname = enteredURL.hostname;
-  const isMathes = (match: unknown) => {
+  const isMatches = (match: unknown) => {
     if (match instanceof RegExp) {
       return match.test(hostname);
     } else if (typeof match === "string") {
@@ -38,7 +38,7 @@ export function getService(videoUrl: string) {
 
   return sites.find((e) => {
     return (
-      (Array.isArray(e.match) ? e.match.some(isMathes) : isMathes(e.match)) &&
+      (Array.isArray(e.match) ? e.match.some(isMatches) : isMatches(e.match)) &&
       e.host &&
       e.url
     );
