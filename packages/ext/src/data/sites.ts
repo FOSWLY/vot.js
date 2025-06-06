@@ -1,12 +1,12 @@
 import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
 import {
-  sitesInvidious,
-  sitesPiped,
-  sitesProxiTok,
-  sitesPeertube,
-  sitesPoketube,
-  sitesRicktube,
   sitesCoursehunterLike,
+  sitesInvidious,
+  sitesPeertube,
+  sitesPiped,
+  sitesPoketube,
+  sitesProxiTok,
+  sitesRicktube,
 } from "@vot.js/shared/alternativeUrls";
 
 import { ExtVideoService, type ServiceConf } from "../types/service";
@@ -535,6 +535,13 @@ export default [
     selector: ".vjs-v7",
     needExtraData: true,
     needBypassCSP: true,
+  },
+  {
+    host: ExtVideoService.deeplearningai,
+    url: "https://learn.deeplearning.ai/courses/",
+    match: /^learn\.deeplearning\.ai/,
+    selector: ".lesson-video-player",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.custom,

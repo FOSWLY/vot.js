@@ -1,65 +1,66 @@
-import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
 import type { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
+import { VideoService as CoreVideoService } from "@vot.js/core/types/service";
 
-import { type ServiceConf, ExtVideoService } from "../types/service";
+import { ExtVideoService, type ServiceConf } from "../types/service";
 
-import MailRuHelper from "./mailru";
-import WeverseHelper from "./weverse";
-import KodikHelper from "./kodik";
-import PatreonHelper from "./patreon";
-import RedditHelper from "./reddit";
-import BannedVideoHelper from "./bannedvideo";
-import KickHelper from "./kick";
 import AppleDeveloperHelper from "./appledeveloper";
-import EpicGamesHelper from "./epicgames";
-import OdyseeHelper from "./odysee";
-import CoursehunterLikeHelper from "./coursehunterLike";
-import TwitchHelper from "./twitch";
-import SapHelper from "./sap";
-import LinkedinHelper from "./linkedin";
-import VimeoHelper from "./vimeo";
-import YandexDiskHelper from "./yandexdisk";
-import VKHelper from "./vk";
-import TrovoHelper from "./trovo";
-import IncestflixHelper from "./incestflix";
-import PornTNHelper from "./porntn";
-import GoogleDriveHelper from "./googledrive";
-import BilibiliHelper from "./bilibili";
-import XVideosHelper from "./xvideos";
-import WatchPornToHelper from "./watchpornto";
 import ArchiveHelper from "./archive";
-import DailymotionHelper from "./dailymotion";
-import YoukuHelper from "./youku";
-import EggheadHelper from "./egghead";
-import NewgroundsHelper from "./newgrounds";
-import OKRuHelper from "./okru";
-import PeertubeHelper from "./peertube";
-import EpornerHelper from "./eporner";
-import BitchuteHelper from "./bitchute";
-import RutubeHelper from "./rutube";
-import FacebookHelper from "./facebook";
-import RumbleHelper from "./rumble";
-import TwitterHelper from "./twitter";
-import PornhubHelper from "./pornhub";
-import TikTokHelper from "./tiktok";
-import NineGAGHelper from "./nine_gag";
-import YoutubeHelper from "./youtube";
-import DzenHelper from "./dzen";
-import UdemyHelper from "./udemy";
-import CourseraHelper from "./coursera";
-import CloudflareStreamHelper from "./cloudflarestream";
-import DouyinHelper from "./douyin";
-import LoomHelper from "./loom";
 import ArtstationHelper from "./artstation";
-import RtNewsHelper from "./rtnews";
+import BannedVideoHelper from "./bannedvideo";
+import BilibiliHelper from "./bilibili";
+import BitchuteHelper from "./bitchute";
 import BitviewHelper from "./bitview";
-import KickstarterHelper from "./kickstarter";
-import ThisVidHelper from "./thisvid";
-import IgnHelper from "./ign";
 import BunkrHelper from "./bunkr";
+import CloudflareStreamHelper from "./cloudflarestream";
+import CoursehunterLikeHelper from "./coursehunterLike";
+import CourseraHelper from "./coursera";
+import DailymotionHelper from "./dailymotion";
+import DeeplearningAIHelper from "./deeplearningai";
+import DouyinHelper from "./douyin";
+import DzenHelper from "./dzen";
+import EggheadHelper from "./egghead";
+import EpicGamesHelper from "./epicgames";
+import EpornerHelper from "./eporner";
+import FacebookHelper from "./facebook";
+import GoogleDriveHelper from "./googledrive";
+import IgnHelper from "./ign";
 import IMDBHelper from "./imdb";
-import TelegramHelper from "./telegram";
+import IncestflixHelper from "./incestflix";
+import KickHelper from "./kick";
+import KickstarterHelper from "./kickstarter";
+import KodikHelper from "./kodik";
+import LinkedinHelper from "./linkedin";
+import LoomHelper from "./loom";
+import MailRuHelper from "./mailru";
+import NewgroundsHelper from "./newgrounds";
+import NineGAGHelper from "./nine_gag";
+import OdyseeHelper from "./odysee";
+import OKRuHelper from "./okru";
 import OracleLearnHelper from "./oraclelearn";
+import PatreonHelper from "./patreon";
+import PeertubeHelper from "./peertube";
+import PornhubHelper from "./pornhub";
+import PornTNHelper from "./porntn";
+import RedditHelper from "./reddit";
+import RtNewsHelper from "./rtnews";
+import RumbleHelper from "./rumble";
+import RutubeHelper from "./rutube";
+import SapHelper from "./sap";
+import TelegramHelper from "./telegram";
+import ThisVidHelper from "./thisvid";
+import TikTokHelper from "./tiktok";
+import TrovoHelper from "./trovo";
+import TwitchHelper from "./twitch";
+import TwitterHelper from "./twitter";
+import UdemyHelper from "./udemy";
+import VimeoHelper from "./vimeo";
+import VKHelper from "./vk";
+import WatchPornToHelper from "./watchpornto";
+import WeverseHelper from "./weverse";
+import XVideosHelper from "./xvideos";
+import YandexDiskHelper from "./yandexdisk";
+import YoukuHelper from "./youku";
+import YoutubeHelper from "./youtube";
 
 export * as MailRuHelper from "./mailru";
 export * as WeverseHelper from "./weverse";
@@ -119,6 +120,7 @@ export * as BunkrHelper from "./bunkr";
 export * as IMDBHelper from "./imdb";
 export * as TelegramHelper from "./telegram";
 export * as OracleLearnHelper from "./oraclelearn";
+export * as DeeplearningAIHelper from "./deeplearningai";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -183,6 +185,7 @@ export const availableHelpers = {
   [ExtVideoService.artstation]: ArtstationHelper,
   [ExtVideoService.kickstarter]: KickstarterHelper,
   [ExtVideoService.oraclelearn]: OracleLearnHelper,
+  [ExtVideoService.deeplearningai]: DeeplearningAIHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
@@ -198,7 +201,7 @@ export default class VideoHelper {
   }
 
   getHelper<K extends keyof AvailableVideoHelpers>(
-    service: K
+    service: K,
   ): AvailableVideoHelpers[K]["prototype"] {
     return new availableHelpers[service](this.helpersData);
   }
