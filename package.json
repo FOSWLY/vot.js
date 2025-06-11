@@ -1,24 +1,21 @@
 {
   "name": "vot.js",
-  "version": "2.4.9",
+  "version": "2.4.10",
   "author": "Toil",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
     "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
-    "eslint": "^9.28.0",
     "lefthook": "^1.11.13",
-    "oxlint": "^0.17.0",
+    "oxlint": "^1.0.0",
     "typedoc": "^0.28.5",
     "typedoc-plugin-include-example": "^2.1.2",
     "typedoc-plugin-missing-exports": "^4.0.0",
     "typedoc-plugin-rename-defaults": "^0.7.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -46,7 +43,7 @@
     "build:doc": "typedoc --options .config/typedoc.json --tsconfig tsconfig.build.json",
     "build:all": "bun build:bun && bun build:doc",
     "update:config": "bun run scripts/update-config.ts",
-    "lint": "bunx oxlint && bunx eslint",
+    "lint": "bunx oxlint",
     "format": "npx @biomejs/biome check --write ./packages"
   },
   "type": "module",
