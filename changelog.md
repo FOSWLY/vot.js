@@ -1,3 +1,17 @@
+# 2.4.10
+
+## Ext
+
+- Added ignore metadata files from VideoJS subtitles
+- Added support `learn-dev.` and `learn-staging.` subdomains for DeeplearningAI
+- Added support Netacad
+- Added methods to get PO Token for YouTube
+
+## Workspace
+
+- Bump oxlint to 1.0.0
+- Removed eslint
+
 # 2.4.9
 
 ## Ext

@@ -51,7 +51,7 @@ export async function getSecYaHeaders<T extends SecType>(
   const { secretKey, uuid } = session;
 
   // https://github.com/FOSWLY/vot.js/issues/36
-  const token = `${uuid}:${path}:${config.componentVersion}`;
+  const token = `${uuid}:${path}:${componentVersion}`;
   const tokenBody = utf8Encoder.encode(token);
   const tokenSign = await getSignature(tokenBody);
   if (secType === "Ya-Summary") {
