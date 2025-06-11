@@ -1,9 +1,9 @@
-import { BaseHelper } from "./base";
 import type * as VideoJS from "../types/helpers/videojs";
+import { BaseHelper } from "./base";
 
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 
 /**
  * Shared class for all videojs players
@@ -39,7 +39,7 @@ export default class VideoJSHelper extends BaseHelper {
       }
 
       const subtitles: VideoDataSubtitle[] = tracks
-        .filter((track) => track.src)
+        .filter((track) => track.src && track.kind !== "metadata")
         .map(
           (track) =>
             ({
