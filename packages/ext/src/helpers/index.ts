@@ -32,6 +32,7 @@ import KodikHelper from "./kodik";
 import LinkedinHelper from "./linkedin";
 import LoomHelper from "./loom";
 import MailRuHelper from "./mailru";
+import NetacadHelper from "./netacad";
 import NewgroundsHelper from "./newgrounds";
 import NineGAGHelper from "./nine_gag";
 import OdyseeHelper from "./odysee";
@@ -121,6 +122,7 @@ export * as IMDBHelper from "./imdb";
 export * as TelegramHelper from "./telegram";
 export * as OracleLearnHelper from "./oraclelearn";
 export * as DeeplearningAIHelper from "./deeplearningai";
+export * as NetacadHelper from "./netacad";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -186,6 +188,7 @@ export const availableHelpers = {
   [ExtVideoService.kickstarter]: KickstarterHelper,
   [ExtVideoService.oraclelearn]: OracleLearnHelper,
   [ExtVideoService.deeplearningai]: DeeplearningAIHelper,
+  [ExtVideoService.netacad]: NetacadHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

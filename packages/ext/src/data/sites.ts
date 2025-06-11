@@ -539,8 +539,15 @@ export default [
   {
     host: ExtVideoService.deeplearningai,
     url: "https://learn.deeplearning.ai/courses/",
-    match: /^learn\.deeplearning\.ai/,
+    match: /^learn(-dev|-staging)?\.deeplearning\.ai/,
     selector: ".lesson-video-player",
+    needExtraData: true,
+  },
+  {
+    host: ExtVideoService.netacad,
+    url: "https://www.netacad.com/",
+    match: /^(www\.)?netacad\.com/,
+    selector: ".vjs-v8",
     needExtraData: true,
   },
   {

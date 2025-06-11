@@ -3,7 +3,7 @@ export type Source = {
   type: string; // e.g. "video/mp4"
 };
 
-export type TextTrackMode = "disabled";
+export type TextTrackMode = "disabled" | "hidden";
 
 export type TextTrackV7 = {
   // not full typed
@@ -21,7 +21,7 @@ export type TextTrackV7 = {
 export type TextTrackV8 = {
   // not full typed
   id: string;
-  kind: "subtitles";
+  kind: "subtitles" | "metadata";
   label: string;
   language: string; // e.g. en
   mode: TextTrackMode;

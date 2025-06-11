@@ -14,6 +14,7 @@ export enum ExtVideoService {
   kickstarter = "kickstarter",
   oraclelearn = "oraclelearn",
   deeplearningai = "deeplearningai",
+  netacad = "netacad",
 }
 
 export const VideoService = {
