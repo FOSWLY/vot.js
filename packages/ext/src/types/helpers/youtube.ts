@@ -277,7 +277,7 @@ export interface PlayerAudioTrackLanguageInfo {
 export interface PlayerAudioTrack {
   captionsInitialState: CaptionInitialState;
   id: string;
-  captionTracks: PlayerCaptionTrack;
+  captionTracks: PlayerCaptionTrack[];
   xtags: string;
   getLanguageInfo(): PlayerAudioTrackLanguageInfo;
   getXtags(): PlayerAudioTrack["xtags"];
@@ -342,4 +342,48 @@ export interface PlayerElement extends HTMLDivElement {
   loadVideoById?(videoId: string): void;
   pauseVideo?(): void;
   mute?(): void;
+}
+
+export type InnerTubeContextClient = {
+  browserName: string;
+  browserVersion: string;
+  clientName: string;
+  clientVersion: string;
+  osName: string;
+  osVersion: string;
+  platform: string;
+  deviceMake: string;
+  deviceModel: string;
+};
+
+/**
+ * not full typed
+ */
+export type InnerTubeContext = {
+  client: InnerTubeContextClient;
+};
+
+/**
+ * not full typed
+ */
+export type YoutubeConfig = {
+  // device query params
+  DEVICE: string;
+  INNERTUBE_CLIENT_NAME: string;
+  INNERTUBE_CLIENT_VERSION: string;
+  INNERTUBE_CONTEXT: InnerTubeContext;
+};
+
+export interface YoutubeWindow {
+  yt?: {
+    config_: YoutubeConfig;
+  };
+  ytcfg?: {
+    get<T = undefined>(key: string, def?: string): T;
+    set(key: string, value: unknown): undefined;
+    /**
+     * undefined on mobile
+     */
+    data_?: YoutubeConfig;
+  };
 }

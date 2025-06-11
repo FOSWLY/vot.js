@@ -1,12 +1,17 @@
 import { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
 
-import * as YouTubeType from "../types/helpers/youtube";
-import Logger from "@vot.js/shared/utils/logger";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import { VideoDataSubtitle } from "@vot.js/core/types/client";
 import { availableLangs } from "@vot.js/shared/consts";
 import { RequestLang } from "@vot.js/shared/types/data";
+import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
+import * as YouTubeType from "../types/helpers/youtube";
+
+declare global {
+  const yt: YouTubeType.YoutubeWindow["yt"];
+  const ytcfg: YouTubeType.YoutubeWindow["ytcfg"];
+}
 
 export default class YoutubeHelper extends BaseHelper {
   static isMobile() {
@@ -75,6 +80,61 @@ export default class YoutubeHelper extends BaseHelper {
       video.currentTime;
     const finalTime = preTime - time;
     video.currentTime = finalTime;
+  }
+
+  /**
+   * i guess it doesn't work on mobile. Maybe I'll fix it later
+   */
+  static getPoToken() {
+    const player = YoutubeHelper.getPlayer();
+    if (!player) {
+      return undefined;
+    }
+
+    const audioTrack = player.getAudioTrack?.call(undefined);
+    if (!audioTrack?.captionTracks?.length) {
+      return undefined;
+    }
+
+    const audioTrackWithPoToken = audioTrack.captionTracks.find(
+      (captionTrack) => captionTrack.url.includes("&pot="),
+    );
+    if (!audioTrackWithPoToken) {
+      return undefined;
+    }
+
+    return /&pot=([^&]+)/.exec(audioTrackWithPoToken.url)?.[1];
+  }
+
+  static getGlobalConfig() {
+    if (typeof yt !== "undefined") {
+      return yt?.config_;
+    }
+
+    return typeof ytcfg !== "undefined" ? ytcfg?.data_ : undefined;
+  }
+
+  static getDeviceParams() {
+    const ytconfig = YoutubeHelper.getGlobalConfig();
+    if (!ytconfig) {
+      return "c=WEB";
+    }
+
+    const innertubeClient = ytconfig.INNERTUBE_CONTEXT?.client;
+    const deviceParams = new URLSearchParams(ytconfig.DEVICE);
+    deviceParams.delete("ceng");
+    deviceParams.delete("cengver");
+    deviceParams.set(
+      "c",
+      innertubeClient?.clientName ?? ytconfig.INNERTUBE_CLIENT_NAME,
+    );
+    deviceParams.set(
+      "cver",
+      innertubeClient?.clientVersion ?? ytconfig.INNERTUBE_CLIENT_VERSION,
+    );
+    deviceParams.set("cplayer", "UNIPLAYER");
+
+    return deviceParams.toString();
   }
 
   static getSubtitles(userLang: string) {
