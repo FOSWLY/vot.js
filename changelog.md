@@ -1,3 +1,23 @@
+# 2.4.12
+
+## Ext
+
+- Fix getVideoId on some vimeo link
+
+# 2.4.11
+
+## Core
+
+- Added support set `firstRequest` in `extraOpts` for `translateVideo` method
+
+## Shared
+
+- Updated `VideoTranslationResponse` protobuf schema
+
+## Workspace
+
+- Bump depends
+
 # 2.4.10
 
 ## Ext

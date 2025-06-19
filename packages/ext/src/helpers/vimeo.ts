@@ -1,11 +1,10 @@
-import { BaseHelper, VideoHelperError } from "./base";
-import type { MinimalVideoData } from "../types/client";
-
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import type { TranslationHelp } from "@vot.js/core/types/yandex";
 import * as Vimeo from "@vot.js/shared/types/helpers/vimeo";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
+import type { MinimalVideoData } from "../types/client";
+import { BaseHelper, VideoHelperError } from "./base";
 
 declare global {
   const playerConfig: Vimeo.PlayerConfig | undefined;
@@ -21,7 +20,11 @@ export default class VimeoHelper extends BaseHelper {
   }
 
   isPrivatePlayer() {
-    return this.referer && !this.referer.includes("vimeo.com");
+    return (
+      this.referer &&
+      !this.referer.includes("vimeo.com") &&
+      this.origin.endsWith("player.vimeo.com")
+    );
   }
 
   async getViewerData() {
