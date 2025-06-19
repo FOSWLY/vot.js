@@ -115,7 +115,7 @@ export interface VideoTranslationResponse {
     | undefined;
   /**
    * unknown 0 (1st request) ->
-   * 10 (2nd, 3th and etc requests). (if status is 0)
+   * 10 (2nd, 3th and etc requests). (if status is waiting)
    */
   unknown0?:
     | number
@@ -127,7 +127,19 @@ export interface VideoTranslationResponse {
   message?: string | undefined;
   isLivelyVoice: boolean;
   /** added if status=1 (success) can be equal to 0 or 1 */
-  unknown2?: number | undefined;
+  unknown2?:
+    | number
+    | undefined;
+  /**
+   * maybe i wrong, but it seems like a retry flag
+   * sets if error happened by audio failed
+   * 1 - retry
+   */
+  shouldRetry?:
+    | number
+    | undefined;
+  /** 1 if classic voices and have translation url */
+  unknown3?: number | undefined;
 }
 
 export interface VideoTranslationCacheItem {
@@ -693,6 +705,8 @@ function createBaseVideoTranslationResponse(): VideoTranslationResponse {
     message: undefined,
     isLivelyVoice: false,
     unknown2: undefined,
+    shouldRetry: undefined,
+    unknown3: undefined,
   };
 }
 
@@ -727,6 +741,12 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     }
     if (message.unknown2 !== undefined) {
       writer.uint32(88).int32(message.unknown2);
+    }
+    if (message.shouldRetry !== undefined) {
+      writer.uint32(96).int32(message.shouldRetry);
+    }
+    if (message.unknown3 !== undefined) {
+      writer.uint32(104).int32(message.unknown3);
     }
     return writer;
   },
@@ -818,6 +838,22 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
           message.unknown2 = reader.int32();
           continue;
         }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.shouldRetry = reader.int32();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.unknown3 = reader.int32();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -839,6 +875,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
       message: isSet(object.message) ? globalThis.String(object.message) : undefined,
       isLivelyVoice: isSet(object.isLivelyVoice) ? globalThis.Boolean(object.isLivelyVoice) : false,
       unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : undefined,
+      shouldRetry: isSet(object.shouldRetry) ? globalThis.Number(object.shouldRetry) : undefined,
+      unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : undefined,
     };
   },
 
@@ -874,6 +912,12 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     if (message.unknown2 !== undefined) {
       obj.unknown2 = Math.round(message.unknown2);
     }
+    if (message.shouldRetry !== undefined) {
+      obj.shouldRetry = Math.round(message.shouldRetry);
+    }
+    if (message.unknown3 !== undefined) {
+      obj.unknown3 = Math.round(message.unknown3);
+    }
     return obj;
   },
 
@@ -892,6 +936,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     message.message = object.message ?? undefined;
     message.isLivelyVoice = object.isLivelyVoice ?? false;
     message.unknown2 = object.unknown2 ?? undefined;
+    message.shouldRetry = object.shouldRetry ?? undefined;
+    message.unknown3 = object.unknown3 ?? undefined;
     return message;
   },
 };

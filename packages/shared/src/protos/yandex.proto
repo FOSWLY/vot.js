@@ -51,7 +51,7 @@ message VideoTranslationResponse {
   // secs until translation is completed
   optional int32 remainingTime = 5;
   // unknown 0 (1st request) ->
-  // 10 (2nd, 3th and etc requests). (if status is 0)
+  // 10 (2nd, 3th and etc requests). (if status is waiting)
   optional int32 unknown0 = 6;
   // it isn't a type mistake
   string translationId = 7;
@@ -61,6 +61,12 @@ message VideoTranslationResponse {
   bool isLivelyVoice = 10;
   // added if status=1 (success) can be equal to 0 or 1
   optional int32 unknown2 = 11;
+  // maybe i wrong, but it seems like a retry flag
+  // sets if error happened by audio failed
+  // 1 - retry
+  optional int32 shouldRetry = 12;
+  // 1 if classic voices and have translation url
+  optional int32 unknown3 = 13;
 }
 
 message VideoTranslationCacheItem {
