@@ -1,7 +1,7 @@
 {
   "name": "@vot.js/ext",
   "description": "package for web extensions",
-  "version": "2.4.10",
+  "version": "2.4.11",
   "author": "Toil",
   "license": "MIT",
   "repository": {
@@ -74,9 +74,18 @@
   "engines": {
     "node": ">=18"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "homepage": "https://github.com/FOSWLY/vot.js#readme",
-  "keywords": ["translate", "vot", "yandex", "foswly", "api", "vot.js"],
+  "keywords": [
+    "translate",
+    "vot",
+    "yandex",
+    "foswly",
+    "api",
+    "vot.js"
+  ],
   "publishConfig": {
     "access": "public"
   },

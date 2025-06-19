@@ -1,13 +1,12 @@
-import type {
-  RequestLang,
-  ResponseLang,
-  RequestHeaders,
-} from "@vot.js/shared/types/data";
-
 import {
   AudioBufferObject as AudioBufferObjectProto,
   PartialAudioBufferObject as PartialAudioBufferObjectProto,
 } from "@vot.js/shared/protos";
+import type {
+  RequestHeaders,
+  RequestLang,
+  ResponseLang,
+} from "@vot.js/shared/types/data";
 
 import type { VideoData } from "./client";
 import type { VideoService } from "./service";
@@ -26,6 +25,7 @@ export type TranslationHelp = {
  * Read description about options in src/protos/yandex.(proto|ts) -> VideoTranslationRequest
  */
 export type TranslationExtraOpts = {
+  firstRequest?: boolean;
   forceSourceLang?: boolean;
   wasStream?: boolean;
   bypassCache?: boolean;

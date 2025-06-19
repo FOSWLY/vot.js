@@ -4,10 +4,10 @@ import {
   StreamTranslationResponse,
   SubtitlesRequest,
   SubtitlesResponse,
-  VideoTranslationCacheResponse,
-  VideoTranslationCacheRequest,
   VideoTranslationAudioRequest,
   VideoTranslationAudioResponse,
+  VideoTranslationCacheRequest,
+  VideoTranslationCacheResponse,
   VideoTranslationRequest,
   VideoTranslationResponse,
   YandexSessionRequest,
@@ -17,8 +17,8 @@ import {
 import type { SessionModule } from "@vot.js/shared/types/secure";
 import type {
   AudioBufferObject,
-  PartialAudioObject,
   PartialAudioBufferObject,
+  PartialAudioObject,
   TranslationExtraOpts,
   TranslationHelp,
 } from "./types/yandex";
@@ -36,11 +36,12 @@ export abstract class YandexVOTProtobuf {
       videoTitle = "",
       bypassCache = false,
       useLivelyVoice = false,
+      firstRequest = true,
     }: TranslationExtraOpts = {},
   ) {
     return VideoTranslationRequest.encode({
       url,
-      firstRequest: true,
+      firstRequest,
       duration,
       unknown0: 1,
       language: requestLang,
