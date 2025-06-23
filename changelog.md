@@ -4,6 +4,10 @@
 
 - Fix getVideoId on some vimeo link
 
+## Shared
+
+- Bump component version
+
 # 2.4.11
 
 ## Core
