@@ -9,12 +9,19 @@ export default class RedditHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getContentUrl(_videoId: string) {
     if (this.service?.additionalData !== "old") {
-      // this isn't a video element, but nevertheless let it be so
-      return (
-        document.querySelector("shreddit-player-2") as
-          | HTMLVideoElement
-          | undefined
-      )?.src;
+      const player = document.querySelector<HTMLElement>(
+        "shreddit-player-2, shreddit-player",
+      );
+
+      const src =
+        player?.getAttribute("src") ??
+        player
+          ?.querySelector<HTMLSourceElement>(
+            'source[type="application/vnd.apple.mpegURL"]',
+          )
+          ?.getAttribute("src");
+
+      return src?.replaceAll("&amp;", "&");
     }
 
     const playerEl = document.querySelector<HTMLElement>("[data-hls-url]");

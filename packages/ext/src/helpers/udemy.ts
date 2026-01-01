@@ -8,18 +8,23 @@ import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 
 export default class UdemyHelper extends BaseHelper {
-  API_ORIGIN = "https://www.udemy.com/api-2.0";
+  API_ORIGIN = `${window.location.origin}/api-2.0`;
 
   getModuleData() {
-    const appLoaderEl = document.querySelector<HTMLElement>(
-      ".ud-app-loader[data-module-id='course-taking']",
-    );
+    const appLoaderEl =
+      document.querySelector<HTMLElement>(
+        ".ud-app-loader[data-module-id='course-taking']",
+      ) ?? document.querySelector<HTMLElement>("[data-module-id='course-taking']");
     const moduleData = appLoaderEl?.dataset?.moduleArgs;
     if (!moduleData) {
       return undefined;
     }
 
-    return JSON.parse(moduleData) as Udemy.ModuleData;
+    try {
+      return JSON.parse(moduleData) as Udemy.ModuleData;
+    } catch {
+      return undefined;
+    }
   }
 
   getLectureId() {
@@ -29,7 +34,10 @@ export default class UdemyHelper extends BaseHelper {
   isErrorData<T extends object>(
     data: T | Udemy.ErrorData,
   ): data is Udemy.ErrorData {
-    return Object.hasOwn(data, "error");
+    return (
+      Object.hasOwn(data, "error") ||
+      (Object.hasOwn(data, "detail") && !Object.hasOwn(data, "_class"))
+    );
   }
 
   async getLectureData(courseId: number | string, lectureId: number | string) {
@@ -37,14 +45,16 @@ export default class UdemyHelper extends BaseHelper {
       const res = await this.fetch(
         `${this.API_ORIGIN}/users/me/subscribed-courses/${courseId}/lectures/${lectureId}/?` +
           new URLSearchParams({
-            "fields[lecture]": "title,description,asset",
-            "fields[asset]": "length,media_sources,captions",
+            "fields[lecture]":
+              "title,description,asset,download_url,is_free,last_watched_second",
+            "fields[asset]":
+              "asset_type,length,media_sources,stream_urls,download_urls,external_url,captions,thumbnail_sprite,slides,slide_urls,course_is_drmed,media_license_token",
           }).toString(),
       );
 
       const data = (await res.json()) as Udemy.Lecture | Udemy.ErrorData;
       if (this.isErrorData(data)) {
-        throw new VideoHelperError(data.detail ?? "unknown error");
+        throw new VideoHelperError((data as any).detail ?? "unknown error");
       }
 
       return data;
@@ -67,11 +77,23 @@ export default class UdemyHelper extends BaseHelper {
       );
 
       const data = (await res.json()) as Udemy.Course | Udemy.ErrorData;
-      if (this.isErrorData(data)) {
-        throw new VideoHelperError(data.detail ?? "unknown error");
+      if (!this.isErrorData(data)) {
+        return data;
       }
 
-      return data;
+      const res2 = await this.fetch(
+        `${this.API_ORIGIN}/courses/${courseId}/?` +
+          new URLSearchParams({
+            "fields[course]": "locale",
+          }).toString(),
+      );
+
+      const data2 = (await res2.json()) as Udemy.Course | Udemy.ErrorData;
+      if (this.isErrorData(data2)) {
+        throw new VideoHelperError((data2 as any).detail ?? "unknown error");
+      }
+
+      return data2;
     } catch (err) {
       Logger.error(
         `Failed to get course lang by courseId: ${courseId}`,
@@ -81,19 +103,87 @@ export default class UdemyHelper extends BaseHelper {
     }
   }
 
-  findVideoUrl(sources: Udemy.MediaSource[]) {
-    return sources?.find((src) => src.type === "video/mp4")?.src;
+  findVideoUrl(
+    sources: Udemy.MediaSource[],
+    streamUrls?: unknown,
+    downloadUrls?: unknown,
+  ) {
+    const mp4Sources = (sources ?? []).filter(
+      (src) => src?.type === "video/mp4" && typeof (src as any).src === "string",
+    ) as Array<Udemy.MediaSource & { label?: string; quality?: string }>;
+
+    if (mp4Sources.length) {
+      const getQ = (v?: string) => Number(String(v ?? "").match(/(\d{3,4})/)?.[1] ?? 0);
+      mp4Sources.sort(
+        (a, b) => getQ((b as any).label ?? (b as any).quality) - getQ((a as any).label ?? (a as any).quality),
+      );
+      return (mp4Sources[0] as any).src as string | undefined;
+    }
+
+    const su = streamUrls as any;
+    const streamCandidates = (
+      Array.isArray(su)
+        ? su
+        : Array.isArray(su?.Video)
+          ? su.Video
+          : Array.isArray(su?.video)
+            ? su.video
+            : []
+    ) as any[];
+
+    const streamUrl =
+      streamCandidates.find(
+        (x) => typeof x?.src === "string" && x?.type === "video/mp4",
+      )?.src ??
+      streamCandidates.find(
+        (x) =>
+          typeof x?.src === "string" &&
+          (String(x?.type).toLowerCase().includes("mpegurl") ||
+            String(x?.src).toLowerCase().includes(".m3u8")),
+      )?.src ??
+      streamCandidates.find(
+        (x) =>
+          typeof x?.src === "string" &&
+          (String(x?.type).toLowerCase().includes("dash") ||
+            String(x?.src).toLowerCase().includes(".mpd")),
+      )?.src;
+
+    if (typeof streamUrl === "string") {
+      return streamUrl;
+    }
+
+    const du = downloadUrls as any;
+    const downloadCandidates = (
+      Array.isArray(du)
+        ? du
+        : Array.isArray(du?.Video)
+          ? du.Video
+          : Array.isArray(du?.video)
+            ? du.video
+            : []
+    ) as any[];
+
+    const downloadUrl =
+      downloadCandidates.find(
+        (x) => typeof x?.file === "string" && x?.type === "video/mp4",
+      )?.file ??
+      downloadCandidates.find((x) => typeof x?.file === "string")?.file ??
+      downloadCandidates.find((x) => typeof x?.src === "string")?.src;
+
+    return typeof downloadUrl === "string" ? downloadUrl : undefined;
   }
 
   findSubtitleUrl(captions: Udemy.Caption[], detectedLanguage: string) {
     const subtitle =
       captions?.find(
-        (caption) => normalizeLang(caption.locale_id) === detectedLanguage,
+        (caption) => normalizeLang((caption as any).locale_id) === detectedLanguage,
       ) ??
-      captions?.find((caption) => normalizeLang(caption.locale_id) === "en") ??
+      captions?.find(
+        (caption) => normalizeLang((caption as any).locale_id) === "en",
+      ) ??
       captions?.[0];
 
-    return subtitle?.url;
+    return (subtitle as any)?.url ?? (subtitle as any)?.download_url;
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
@@ -102,7 +192,7 @@ export default class UdemyHelper extends BaseHelper {
       return undefined;
     }
 
-    const { courseId } = moduleData;
+    const { courseId } = moduleData as any;
     const lectureId = this.getLectureId();
     Logger.log(`[Udemy] courseId: ${courseId}, lectureId: ${lectureId}`);
     if (!lectureId) {
@@ -114,14 +204,17 @@ export default class UdemyHelper extends BaseHelper {
       return undefined;
     }
 
-    const { title, description, asset } = lectureData;
-    const { length: duration, media_sources, captions } = asset;
+    const { title, description, asset } = lectureData as any;
+    const { length: duration, media_sources, captions } = asset as any;
 
-    const videoUrl = this.findVideoUrl(media_sources);
+    const streamUrls = (asset as any).stream_urls;
+    const downloadUrls = (asset as any).download_urls;
+
+    const videoUrl = this.findVideoUrl(media_sources, streamUrls, downloadUrls);
     if (!videoUrl) {
       Logger.log(
-        "Failed to find .mp4 video file in media_sources",
-        media_sources,
+        "Failed to find video file in asset sources",
+        asset,
       );
       return undefined;
     }
@@ -131,7 +224,7 @@ export default class UdemyHelper extends BaseHelper {
     if (courseLangData) {
       const {
         locale: { locale: courseLocale },
-      } = courseLangData;
+      } = courseLangData as any;
       courseLang = courseLocale ? normalizeLang(courseLocale) : courseLang;
     }
     if (!availableLangs.includes(courseLang as RequestLang)) {

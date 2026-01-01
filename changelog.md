@@ -1,3 +1,11 @@
+# 2.4.13
+
+## Ext
+
+- Fixed video extraction logic for Reddit, Udemy, VideoJS
+- Fixed VK selector
+- Improved robustness in VideoJS player detection and subtitle extraction.
+
 # 2.4.12
 
 ## Ext

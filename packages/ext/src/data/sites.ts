@@ -74,7 +74,7 @@ export default [
     host: CoreVideoService.vk,
     url: "https://vk.com/video?z=",
     match: [/^(www.|m.)?vk.(com|ru)$/, /^(www.|m.)?vkvideo.ru$/],
-    selector: ".videoplayer_media",
+    selector: "vk-video-player",
     needExtraData: true,
   },
   {
