@@ -51,7 +51,7 @@ export default class SkilljarHelper extends BaseHelper {
       const sources = item.allSources ?? [];
 
       const validSources = sources.filter(
-        (s) => typeof s.height === "number" && s.height > 0
+        (s) => typeof s.height === "number" && s.height > 0,
       );
 
       if (validSources.length === 0) {
@@ -64,7 +64,9 @@ export default class SkilljarHelper extends BaseHelper {
       return {
         url: videoId,
         duration,
-        translationHelp: [{ target: "video_file_url", targetUrl: lowestQuality.file }],
+        translationHelp: [
+          { target: "video_file_url", targetUrl: lowestQuality.file },
+        ],
         subtitles: [],
       };
     } catch (err) {
