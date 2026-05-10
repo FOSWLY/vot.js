@@ -103,10 +103,10 @@ export async function getHmacSha1(hmacKey: string, salt: string) {
 }
 
 export const browserSecHeaders = {
-  "sec-ch-ua": `"Chromium";v="146", "YaBrowser";v="${componentVersion.slice(
+  "sec-ch-ua": `"Chromium";v="147", "YaBrowser";v="${componentVersion.slice(
     0,
     5,
   )}", "Not?A_Brand";v="26", "Yowser";v="2.5"`,
-  "sec-ch-ua-full-version-list": `"Chromium";v="146.0.7680.154", "YaBrowser";v="${componentVersion}", "Not?A_Brand";v="26.0.0.0", "Yowser";v="2.5"`,
+  "sec-ch-ua-full-version-list": `"Chromium";v="147.0.7727.138", "YaBrowser";v="${componentVersion}", "Not?A_Brand";v="26.0.0.0", "Yowser";v="2.5"`,
   "Sec-Fetch-Mode": "no-cors",
 } as const;
