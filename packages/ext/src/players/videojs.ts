@@ -2,7 +2,7 @@ import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type * as VideoJS from "../types/helpers/videojs";
-import { BaseHelper } from "./base";
+import { BaseHelper } from "../helpers/base";
 
 type VideoJSImport = {
   getPlayer?: (idOrEl: string | Element) => unknown;
@@ -122,37 +122,43 @@ export default class VideoJSHelper extends BaseHelper {
         throw new Error(`Failed to find video url for videoID ${videoId}`);
       }
 
-      const trackEls = techEl
-        ? Array.from(techEl.querySelectorAll<HTMLTrackElement>("track[src]"))
-        : [];
-
-      const subtitles: VideoDataSubtitle[] = trackEls
-        .filter((t) => t.kind !== "metadata")
-        .flatMap((t) => {
-          const src = t.getAttribute("src");
-          if (!src) {
-            return [];
-          }
-
-          const absUrl = new URL(src, window.location.href).toString();
-          return [
-            {
-              language: normalizeLang(t.srclang || ""),
-              source: this.SUBTITLE_SOURCE,
-              format: this.SUBTITLE_FORMAT,
-              url: absUrl,
-            } satisfies VideoDataSubtitle,
-          ];
-        });
-
       return {
         url,
         duration,
-        subtitles,
+        subtitles: this.getSubtitles(),
       };
     } catch (err) {
       Logger.error("Failed to get videojs video data", (err as Error).message);
       return undefined;
     }
+  }
+
+  getSubtitles(): VideoDataSubtitle[] {
+    const techEl = document.querySelector<HTMLVideoElement>(
+      "video.vjs-tech, video[id$='_html5_api'], video[src]",
+    );
+
+    const trackEls = techEl
+      ? Array.from(techEl.querySelectorAll<HTMLTrackElement>("track[src]"))
+      : [];
+
+    return trackEls
+      .filter((t) => t.kind !== "metadata")
+      .flatMap((t) => {
+        const src = t.getAttribute("src");
+        if (!src) {
+          return [];
+        }
+
+        const absUrl = new URL(src, window.location.href).toString();
+        return [
+          {
+            language: normalizeLang(t.srclang || ""),
+            source: this.SUBTITLE_SOURCE,
+            format: this.SUBTITLE_FORMAT,
+            url: absUrl,
+          } satisfies VideoDataSubtitle,
+        ];
+      });
   }
 }

@@ -1,6 +1,6 @@
 import { proxyMedia } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
-import VideoJSHelper from "./videojs";
+import VideoJSHelper from "../players/videojs";
 
 export default class LinkedinHelper extends VideoJSHelper {
   SUBTITLE_SOURCE = "linkedin";

@@ -7,7 +7,7 @@ import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import type * as CourseraPlayer from "../types/helpers/coursera";
 import type * as VideoJS from "../types/helpers/videojs";
-import VideoJSHelper from "./videojs";
+import VideoJSHelper from "../players/videojs";
 
 export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";

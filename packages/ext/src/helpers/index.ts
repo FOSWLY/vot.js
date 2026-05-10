@@ -139,7 +139,7 @@ export * as TrovoHelper from "./trovo";
 export * as TwitchHelper from "./twitch";
 export * as TwitterHelper from "./twitter";
 export * as UdemyHelper from "./udemy";
-export * as VideoJSHelper from "./videojs";
+export * as VideoJSHelper from "../players/videojs";
 export * as VimeoHelper from "./vimeo";
 export * as VKHelper from "./vk";
 export * as WatchPornToHelper from "./watchpornto";
