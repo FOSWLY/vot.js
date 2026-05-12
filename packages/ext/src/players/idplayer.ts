@@ -1,8 +1,7 @@
-import type { MinimalVideoData } from "../types/client";
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import type { BasePlayer } from "./base";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
-import { extractDOMSubtitles } from "./utils";
+import type { MinimalVideoData } from "../types/client";
+import type { BasePlayer } from "./base";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,17 +68,6 @@ export default class PlayerJSHelper implements BasePlayer {
       }
     } catch (err) {
       console.error("[VOT] PlayerJSHelper getSubtitles error:", err);
-    }
-
-    if (subtitles.length === 0) {
-      const videoEl = document.querySelector<HTMLVideoElement>("video");
-      subtitles.push(
-        ...extractDOMSubtitles(
-          videoEl,
-          this.SUBTITLE_SOURCE,
-          this.SUBTITLE_FORMAT,
-        ),
-      );
     }
 
     return subtitles;

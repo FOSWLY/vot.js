@@ -1,8 +1,7 @@
-import type { MinimalVideoData } from "../types/client";
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import type { BasePlayer } from "./base";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
-import { extractDOMSubtitles } from "./utils";
+import type { MinimalVideoData } from "../types/client";
+import type { BasePlayer } from "./base";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,18 +33,28 @@ export default class KalturaPlayerHelper implements BasePlayer {
       const duration = player.duration ?? undefined;
 
       // Extract url
-      const sources = player.sources?.poster || player.sources?.hls || player.sources?.dash || [];
+      const _sources =
+        player.sources?.poster ||
+        player.sources?.hls ||
+        player.sources?.dash ||
+        [];
       let url: string | undefined;
-      
+
       // Look for a direct mp4 or m3u8 source URL on the player object if available
       // Kaltura v7 might expose the loaded source differently
-      if (player.provider && player.provider.env && player.provider.env.src) {
+      if (player.provider?.env?.src) {
         url = player.provider.env.src;
       }
-      
-      const videoEl = document.querySelector<HTMLVideoElement>(".kaltura-player-container video, video");
 
-      url ??= videoEl?.currentSrc || videoEl?.src || videoEl?.getAttribute("src") || undefined;
+      const videoEl = document.querySelector<HTMLVideoElement>(
+        ".kaltura-player-container video, video",
+      );
+
+      url ??=
+        videoEl?.currentSrc ||
+        videoEl?.src ||
+        videoEl?.getAttribute("src") ||
+        undefined;
 
       if (!url) {
         throw new Error("Failed to find video url");
@@ -59,7 +68,7 @@ export default class KalturaPlayerHelper implements BasePlayer {
     } catch (err) {
       console.error(
         "[VOT] KalturaPlayerHelper error:",
-        err instanceof Error ? err.message : String(err)
+        err instanceof Error ? err.message : String(err),
       );
       return undefined;
     }
@@ -69,7 +78,7 @@ export default class KalturaPlayerHelper implements BasePlayer {
     const subtitles: VideoDataSubtitle[] = [];
     try {
       const player = this.getPlayer();
-      if (player && player.Track && player.getTracks) {
+      if (player?.Track && player.getTracks) {
         const textTracks = player.getTracks(player.Track.TEXT) || [];
         for (const track of textTracks) {
           // Track API doesn't always expose URL. If it does:
@@ -85,12 +94,6 @@ export default class KalturaPlayerHelper implements BasePlayer {
       }
     } catch (err) {
       console.error("[VOT] KalturaPlayerHelper getSubtitles error:", err);
-    }
-
-    // Fallback to DOM parsing
-    if (subtitles.length === 0) {
-      const videoEl = document.querySelector<HTMLVideoElement>(".kaltura-player-container video, video");
-      subtitles.push(...extractDOMSubtitles(videoEl, this.SUBTITLE_SOURCE, this.SUBTITLE_FORMAT));
     }
 
     return subtitles;

@@ -1,6 +1,6 @@
 import Logger from "@vot.js/shared/utils/logger";
-import type { MinimalVideoData } from "../types/client";
 import VideoJSHelper from "../players/videojs";
+import type { MinimalVideoData } from "../types/client";
 
 export default class DataCampHelper extends VideoJSHelper {
   SUBTITLE_SOURCE = "datacamp";

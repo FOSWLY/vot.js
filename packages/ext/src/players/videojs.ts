@@ -1,8 +1,8 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
-import type * as VideoJS from "../types/helpers/videojs";
 import { BaseHelper } from "../helpers/base";
+import type * as VideoJS from "../types/helpers/videojs";
 
 type VideoJSImport = {
   getPlayer?: (idOrEl: string | Element) => unknown;

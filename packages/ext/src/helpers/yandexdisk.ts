@@ -75,6 +75,7 @@ export default class YandexDiskHelper extends BaseHelper {
         url: short_url,
         title,
         duration,
+        videoId,
       };
     } catch (err) {
       Logger.error(
@@ -99,18 +100,28 @@ export default class YandexDiskHelper extends BaseHelper {
     return encodeURIComponent(data);
   }
 
-  async fetchList(dirHash: string, sk: string) {
-    const body = this.getBodyHash(dirHash, sk);
+  async fetchList(dirHash: string, sk: string, offset = 0) {
+    const data = JSON.stringify({
+      hash: dirHash,
+      sk,
+      offset,
+    });
+
+    const body = encodeURIComponent(data);
     const res = await this.fetch(`${this.API_ORIGIN}/public/api/fetch-list`, {
       method: "POST",
       body,
     });
-    const data = (await res.json()) as YandexDisk.FetchListResponse;
-    if (Object.hasOwn(data, "error")) {
+
+    const resData = (await res.json()) as YandexDisk.FetchListResponse & {
+      completed?: boolean;
+    };
+
+    if (Object.hasOwn(resData, "error")) {
       throw new VideoHelperError("Failed to fetch folder list");
     }
 
-    return data.resources;
+    return resData;
   }
 
   async getDownloadUrl(fileHash: string, sk: string) {
@@ -146,26 +157,47 @@ export default class YandexDiskHelper extends BaseHelper {
         environment: { sk },
       } = data;
       const rootResource = resources[rootResourceId];
-      const resourcePathsLastIdx = resourcePaths.length - 1;
-      const resourcePath = resourcePaths
-        .filter((_, idx) => idx !== resourcePathsLastIdx)
-        .join("/");
-      let resourcesList = Object.values(resources);
-      if (resourcePath.includes("/")) {
-        resourcesList = await this.fetchList(
-          `${rootResource.hash}:/${resourcePath}`,
-          sk,
+
+      const fileName = resourcePaths[resourcePaths.length - 1];
+      const dirPath = resourcePaths.slice(0, -1).join("/");
+      const expectedPath = dirPath
+        ? `${rootResource.hash}:/${dirPath}/${fileName}`
+        : `${rootResource.hash}:/${fileName}`;
+
+      let resource: any =
+        Object.values(resources).find((r: any) => r.path === expectedPath) ||
+        Object.values(resources).find(
+          (r: any) => r.name === fileName && r.type === "file",
         );
+
+      if (!resource && dirPath.length > 0) {
+        const folderHash = `${rootResource.hash}:/${dirPath}`;
+        let offset = 0;
+        let completed = false;
+
+        while (!completed) {
+          const listData = await this.fetchList(folderHash, sk, offset);
+          const fetchedResources = listData.resources || [];
+
+          if (fetchedResources.length === 0) {
+            break;
+          }
+
+          resource = fetchedResources.find((r: any) => r.name === fileName);
+          if (resource) {
+            break;
+          }
+
+          completed = !!listData.completed;
+          offset += fetchedResources.length;
+        }
       }
 
-      const resource = resourcesList.find(
-        (resource) => resource.name === resourcePaths[resourcePathsLastIdx],
-      );
       if (!resource) {
         throw new VideoHelperError("Failed to find resource");
       }
 
-      if (resource && resource.type === "dir") {
+      if (resource.type === "dir") {
         throw new VideoHelperError("Path is dir, but expected file");
       }
 
@@ -174,17 +206,20 @@ export default class YandexDiskHelper extends BaseHelper {
         path,
         name,
       } = resource;
+
       if (mediatype !== "video") {
         throw new VideoHelperError("Resource isn't a video");
       }
 
       const title = this.clearTitle(name);
-      const duration = Math.round(videoDuration / 1000);
+      const duration = videoDuration ? Math.round(videoDuration / 1000) : 0;
+
       if (short_url) {
         return {
           url: short_url,
           duration,
           title,
+          videoId,
         };
       }
 
@@ -210,7 +245,8 @@ export default class YandexDiskHelper extends BaseHelper {
       /^\/d\/([^/]+)$/.exec(videoId)
     ) {
       return {
-        url: this.service?.url + videoId.slice(1),
+        url: (this.service?.url || "https://disk.yandex.ru") + videoId.slice(1),
+        videoId,
       };
     }
 

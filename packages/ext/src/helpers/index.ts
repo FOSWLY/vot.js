@@ -77,6 +77,7 @@ import YoukuHelper from "./youku";
 import YoutubeHelper from "./youtube";
 import ZDFHelper from "./zdf";
 
+export * as VideoJSHelper from "../players/videojs";
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as ArchiveHelper from "./archive";
 export * as ArtstationHelper from "./artstation";
@@ -139,7 +140,6 @@ export * as TrovoHelper from "./trovo";
 export * as TwitchHelper from "./twitch";
 export * as TwitterHelper from "./twitter";
 export * as UdemyHelper from "./udemy";
-export * as VideoJSHelper from "../players/videojs";
 export * as VimeoHelper from "./vimeo";
 export * as VKHelper from "./vk";
 export * as WatchPornToHelper from "./watchpornto";

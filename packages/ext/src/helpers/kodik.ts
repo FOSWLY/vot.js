@@ -1,6 +1,7 @@
 import config from "@vot.js/shared/config";
 import type * as Kodik from "@vot.js/shared/types/helpers/kodik";
 import Logger from "@vot.js/shared/utils/logger";
+import { proxyMedia } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
@@ -166,11 +167,20 @@ export default class KodikHelper extends BaseHelper {
       return undefined;
     }
 
+    const videoUrl = videoLink.src.startsWith("//")
+      ? `${videoLink.src}`
+      : this.decryptUrl(videoLink.src);
+
     return {
-      url: videoLink.src.startsWith("//")
-        ? `${videoLink.src}`
-        : this.decryptUrl(videoLink.src),
-    };
+      url: videoId,
+      video_url: videoUrl,
+      translationHelp: [
+        {
+          target: "video_file_url",
+          targetUrl: proxyMedia(new URL(videoUrl)),
+        },
+      ],
+    } as MinimalVideoData;
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

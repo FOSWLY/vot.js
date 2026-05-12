@@ -1,8 +1,7 @@
-import type { MinimalVideoData } from "../types/client";
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import type { BasePlayer } from "./base";
-import { extractDOMSubtitles } from "./utils";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
+import type { MinimalVideoData } from "../types/client";
+import type { BasePlayer } from "./base";
 
 export default class ShakaPlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "shakaplayer";
@@ -43,16 +42,23 @@ export default class ShakaPlayerHelper implements BasePlayer {
     const subtitles: VideoDataSubtitle[] = [];
     try {
       const player = this.getPlayer();
-      if (player && player.getTextTracks) {
+      if (player?.getTextTracks) {
         const textTracks = player.getTextTracks() || [];
         for (const track of textTracks) {
           // Shaka exposes originalUris, but it could be null or empty depending on manifest type
-          if (track.type === "text" && Array.isArray(track.originalUris) && track.originalUris.length > 0) {
+          if (
+            track.type === "text" &&
+            Array.isArray(track.originalUris) &&
+            track.originalUris.length > 0
+          ) {
             subtitles.push({
               source: this.SUBTITLE_SOURCE,
               format: this.SUBTITLE_FORMAT,
               language: normalizeLang(track.language || "en"),
-              url: new URL(track.originalUris[0], window.location.href).toString(),
+              url: new URL(
+                track.originalUris[0],
+                window.location.href,
+              ).toString(),
             });
           }
         }
@@ -61,12 +67,6 @@ export default class ShakaPlayerHelper implements BasePlayer {
       console.error("[VOT] ShakaPlayerHelper getSubtitles error:", err);
     }
 
-    if (subtitles.length === 0) {
-      const videoEl = document.querySelector<HTMLVideoElement>("video");
-      subtitles.push(...extractDOMSubtitles(videoEl, this.SUBTITLE_SOURCE, this.SUBTITLE_FORMAT));
-    }
-
     return subtitles;
   }
 }
-

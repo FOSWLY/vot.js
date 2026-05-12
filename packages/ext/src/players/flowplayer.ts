@@ -1,7 +1,6 @@
-import type { MinimalVideoData } from "../types/client";
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
+import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
-import { extractDOMSubtitles } from "./utils";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,13 +50,6 @@ export default class FlowplayerHelper implements BasePlayer {
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const videoEl = document.querySelector<HTMLVideoElement>(
-      ".flowplayer video, video.fp-engine",
-    );
-    return extractDOMSubtitles(
-      videoEl,
-      this.SUBTITLE_SOURCE,
-      this.SUBTITLE_FORMAT,
-    );
+    return [];
   }
 }

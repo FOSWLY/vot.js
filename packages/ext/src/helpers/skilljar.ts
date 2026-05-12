@@ -1,6 +1,6 @@
+import JWPlayerHelper from "../players/jwplayer";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
-import JWPlayerHelper from "../players/jwplayer";
 
 export default class SkilljarHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
