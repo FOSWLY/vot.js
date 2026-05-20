@@ -60,6 +60,14 @@ export default [
     needExtraData: true,
   },
   {
+    host: CoreVideoService.youtube,
+    url: "https://youtu.be/",
+    match: (url) => /^music\.youtube\.com$/.test(url.host),
+    selector: "#song-video",
+    eventSelector: "#player",
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.invidious,
     url: "https://youtu.be/",
     match: sitesInvidious,
@@ -233,8 +241,7 @@ export default [
     host: CoreVideoService.pornhub,
     url: "https://rt.pornhub.com/view_video.php?viewkey=",
     match: /^[a-z]+.pornhub.(com|org)$/,
-    selector: ".mainPlayerDiv > .video-element-wrapper-js > div",
-    eventSelector: ".mgp_eventCatcher",
+    selector: "div.video-element-wrapper-js",
   },
   {
     additionalData: "embed",
@@ -436,8 +443,7 @@ export default [
     host: CoreVideoService.patreon,
     url: "stub",
     match: /^(www.)?patreon.com$/,
-    selector:
-      'div[data-tag="post-card"] div[elevation="subtle"] > div > div > div > div',
+    selector: `[class*="videoArea"]`,
     needExtraData: true,
   },
   {

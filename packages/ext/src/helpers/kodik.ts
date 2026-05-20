@@ -167,9 +167,13 @@ export default class KodikHelper extends BaseHelper {
       return undefined;
     }
 
-    const videoUrl = videoLink.src.startsWith("//")
-      ? `${videoLink.src}`
+    let videoUrl = videoLink.src.startsWith("//")
+      ? videoLink.src
       : this.decryptUrl(videoLink.src);
+
+    if (videoUrl.startsWith("//")) {
+      videoUrl = `https:${videoUrl}`;
+    }
 
     return {
       url: videoId,
