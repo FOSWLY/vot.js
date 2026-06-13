@@ -5,88 +5,78 @@ import type { MinimalVideoData } from "../types/client";
 export default class DataCampHelper extends VideoJSHelper {
   SUBTITLE_SOURCE = "datacamp";
 
-  getVideoDataFromInput(): {
-    video_url?: string;
-    plain_video_mp4_link?: string;
-    plain_video_hls_link?: string;
-    video_mp4_link?: string;
-    video_hls_link?: string;
-    subtitle_vtt_link?: string;
-    audio_language_variants?: Record<
-      string,
-      { subtitle_vtt_link?: string } | undefined
-    >;
-  } | null {
+  getVideoUrlFromInput(input: Element): string | null {
     try {
-      const input =
-        document.querySelector("#slideDeckData") ||
-        document.getElementById("videoData");
-      if (
-        !input ||
-        (!(input instanceof HTMLInputElement) &&
-          !(input instanceof HTMLTextAreaElement)) ||
-        !input.value
-      ) {
+      const isInputElement =
+        input instanceof HTMLInputElement ||
+        input instanceof HTMLTextAreaElement ||
+        input.tagName === "INPUT" ||
+        input.tagName === "TEXTAREA";
+
+      if (!isInputElement) {
         return null;
       }
 
-      return JSON.parse(input.value) as ReturnType<
-        DataCampHelper["getVideoDataFromInput"]
-      >;
-    } catch (err) {
-      Logger.error(
-        "Failed to parse DataCamp videoData input",
-        err instanceof Error ? err.message : String(err),
-      );
+      const value = (input as HTMLInputElement | HTMLTextAreaElement).value;
+      if (!value) {
+        return null;
+      }
+
+      const meta = JSON.parse(value);
+      const videoUrl =
+        meta?.video_url ??
+        meta?.plain_video_mp4_link ??
+        meta?.plain_video_hls_link ??
+        meta?.video_mp4_link ??
+        meta?.video_hls_link;
+
+      return typeof videoUrl === "string" ? videoUrl : null;
+    } catch {
       return null;
     }
   }
 
-  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    const data = this.getVideoDataByPlayer(videoId);
-    if (!data) {
-      return undefined;
+  getVideoUrlFromDocument(doc: Document | Element = document): string | null {
+    const videoDataInput = doc.querySelector("#videoData");
+    if (videoDataInput) {
+      const url = this.getVideoUrlFromInput(videoDataInput);
+      if (url) {
+        return url;
+      }
     }
 
-    const meta = this.getVideoDataFromInput();
-    // if (!data.subtitles?.length && meta) {
-    //   const subtitles: VideoDataSubtitle[] = [];
+    const slideDeckInput = doc.querySelector("#slideDeckData");
+    if (slideDeckInput) {
+      const url = this.getVideoUrlFromInput(slideDeckInput);
+      if (url) {
+        return url;
+      }
+    }
 
-    //   if (meta.subtitle_vtt_link) {
-    //     subtitles.push({
-    //       url: meta.subtitle_vtt_link,
-    //       language: normalizeLang("en"),
-    //       source: this.SUBTITLE_SOURCE,
-    //       format: this.SUBTITLE_FORMAT,
-    //     });
-    //   }
+    return null;
+  }
 
-    //   if (meta.audio_language_variants) {
-    //     for (const [langCode, variant] of Object.entries(
-    //       meta.audio_language_variants,
-    //     )) {
-    //       if (!variant?.subtitle_vtt_link) {
-    //         continue;
-    //       }
+  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
+    const cleanUrl = videoId.split("||")[0];
 
-    //       subtitles.push({
-    //         url: variant.subtitle_vtt_link,
-    //         language: normalizeLang(langCode.split("-")[0]),
-    //         source: this.SUBTITLE_SOURCE,
-    //         format: this.SUBTITLE_FORMAT,
-    //       });
-    //     }
-    //   }
+    let videoUrl = this.getVideoUrlFromDocument(document);
 
-    //   data.subtitles = subtitles;
-    // }
-
-    const videoUrl =
-      meta?.video_url ??
-      meta?.plain_video_mp4_link ??
-      meta?.plain_video_hls_link ??
-      meta?.video_mp4_link ??
-      meta?.video_hls_link;
+    if (!videoUrl) {
+      try {
+        const response = await fetch(cleanUrl);
+        if (response.ok) {
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          videoUrl = this.getVideoUrlFromDocument(doc);
+        }
+      } catch (err) {
+        Logger.error(
+          "Failed to fetch DataCamp page for DOMParser",
+          err instanceof Error ? err.message : String(err),
+        );
+      }
+    }
 
     if (!videoUrl) {
       return undefined;

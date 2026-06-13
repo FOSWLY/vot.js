@@ -610,6 +610,13 @@ export default [
     needExtraData: true,
   },
   {
+    host: CoreVideoService.noodlemagazine,
+    url: "https://hot.noodlemagazine.com/",
+    match: /^(hot\.)?noodlemagazine\.com$/,
+    selector: sharedSelectors.jwPlayer,
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.bitview,
     url: "https://www.bitview.net/watch?v=",
     match: /^(www.)?bitview.net$/,

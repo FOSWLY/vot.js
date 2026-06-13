@@ -44,7 +44,6 @@ export default class PlyrHelper implements BasePlayer {
         url: videoId,
         duration,
         translationHelp: [{ target: "video_file_url", targetUrl: fileUrl }],
-        subtitles: this.getSubtitles(),
       };
     } catch (err) {
       console.error(

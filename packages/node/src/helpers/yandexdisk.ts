@@ -125,18 +125,34 @@ export default class YandexDiskHelper extends BaseHelper {
       const duration = Math.round(videoDuration / 1000);
       if (short_url) {
         return {
-          url: short_url,
+          url: videoId,
+          video_url: short_url,
           duration,
           title,
+          videoId: path,
+          translationHelp: [
+            {
+              target: "video_file_url" as const,
+              targetUrl: short_url,
+            },
+          ],
         };
       }
 
       const downloadUrl = await this.getDownloadUrl(path, sk);
+      const proxiedUrl = proxyMedia(new URL(downloadUrl));
       return {
-        // to set the referer and origin
-        url: proxyMedia(new URL(downloadUrl)),
+        url: videoId,
+        video_url: downloadUrl,
         duration,
         title,
+        videoId: path,
+        translationHelp: [
+          {
+            target: "video_file_url" as const,
+            targetUrl: proxiedUrl,
+          },
+        ],
       };
     } catch (err) {
       Logger.warn(
@@ -146,7 +162,7 @@ export default class YandexDiskHelper extends BaseHelper {
       );
       // some /d/ links is valid (https://github.com/FOSWLY/vot-cli/pull/50)
       return {
-        url: this.service?.url + videoId.slice(1),
+        url: videoId,
       };
     }
   }
@@ -157,7 +173,7 @@ export default class YandexDiskHelper extends BaseHelper {
       /^\/d\/([^/]+)$/.exec(videoId)
     ) {
       return {
-        url: this.service?.url + videoId.slice(1),
+        url: videoId,
       };
     }
 

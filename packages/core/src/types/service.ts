@@ -68,6 +68,7 @@ export enum VideoService {
   bitview = "bitview",
   thisvid = "thisvid",
   ign = "ign",
+  noodlemagazine = "noodlemagazine",
   zdf = "zdf",
   bunkr = "bunkr",
   imdb = "imdb",

@@ -40,6 +40,7 @@ import NetacadHelper from "./netacad";
 import NewgroundsHelper from "./newgrounds";
 import NicoNicoHelper from "./niconico";
 import NineGAGHelper from "./nine_gag";
+import NoodleMagazineHelper from "./noodlemagazine";
 import OdyseeHelper from "./odysee";
 import OKRuHelper from "./okru";
 import OlympicsReplayHelper from "./olympicsreplay";
@@ -115,6 +116,7 @@ export * as NetacadHelper from "./netacad";
 export * as NewgroundsHelper from "./newgrounds";
 export * as NicoNicoHelper from "./niconico";
 export * as NineGAGHelper from "./nine_gag";
+export * as NoodleMagazineHelper from "./noodlemagazine";
 export * as OdyseeHelper from "./odysee";
 export * as OKRuHelper from "./okru";
 export * as OlympicsReplayHelper from "./olympicsreplay";
@@ -218,6 +220,7 @@ export const availableHelpers = {
   [CoreVideoService.imdb]: IMDBHelper,
   [CoreVideoService.telegram]: TelegramHelper,
   [CoreVideoService.niconico]: NicoNicoHelper,
+  [CoreVideoService.noodlemagazine]: NoodleMagazineHelper,
   [ExtVideoService.udemy]: UdemyHelper,
   [ExtVideoService.coursera]: CourseraHelper,
   [ExtVideoService.douyin]: DouyinHelper,

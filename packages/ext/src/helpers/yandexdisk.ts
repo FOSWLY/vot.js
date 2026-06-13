@@ -72,10 +72,17 @@ export default class YandexDiskHelper extends BaseHelper {
       const title = this.clearTitle(name);
       const duration = Math.round(video_info.duration / 1000);
       return {
-        url: short_url,
+        url: videoId,
+        video_url: short_url,
         title,
         duration,
-        videoId,
+        videoId: data.path,
+        translationHelp: [
+          {
+            target: "video_file_url" as const,
+            targetUrl: short_url,
+          },
+        ],
       };
     } catch (err) {
       Logger.error(
@@ -216,19 +223,34 @@ export default class YandexDiskHelper extends BaseHelper {
 
       if (short_url) {
         return {
-          url: short_url,
+          url: videoId,
+          video_url: short_url,
           duration,
           title,
-          videoId,
+          videoId: path,
+          translationHelp: [
+            {
+              target: "video_file_url" as const,
+              targetUrl: short_url,
+            },
+          ],
         };
       }
 
       const downloadUrl = await this.getDownloadUrl(path, sk);
+      const proxiedUrl = proxyMedia(new URL(downloadUrl));
       return {
-        // to set the referer and origin
-        url: proxyMedia(new URL(downloadUrl)),
+        url: videoId,
+        video_url: downloadUrl,
         duration,
         title,
+        videoId: path,
+        translationHelp: [
+          {
+            target: "video_file_url" as const,
+            targetUrl: proxiedUrl,
+          },
+        ],
       };
     } catch (err) {
       Logger.error(
@@ -245,8 +267,7 @@ export default class YandexDiskHelper extends BaseHelper {
       /^\/d\/([^/]+)$/.exec(videoId)
     ) {
       return {
-        url: (this.service?.url || "https://disk.yandex.ru") + videoId.slice(1),
-        videoId,
+        url: videoId,
       };
     }
 
