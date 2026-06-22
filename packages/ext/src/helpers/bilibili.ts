@@ -14,10 +14,11 @@ export default class BilibiliHelper extends BaseHelper {
       return `video/${bvid}`;
     }
 
-    // bilibili.tv 
-    const intlId = /^\/(?:[a-z]{2}\/)?((?:play\/\d+(?:\/\d+)?|video\/\d+))\/?$/i.exec(
-      url.pathname,
-    )?.[1];
+    // bilibili.tv
+    const intlId =
+      /^\/(?:[a-z]{2}\/)?((?:play\/\d+(?:\/\d+)?|video\/\d+))\/?$/i.exec(
+        url.pathname,
+      )?.[1];
     if (intlId) {
       return intlId;
     }

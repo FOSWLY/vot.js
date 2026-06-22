@@ -72,7 +72,7 @@ export default class YandexDiskHelper extends BaseHelper {
       const title = this.clearTitle(name);
       const duration = Math.round(video_info.duration / 1000);
       return {
-        url: videoId,
+        url: `https://yadi.sk${videoId}`,
         video_url: short_url,
         title,
         duration,
@@ -223,7 +223,7 @@ export default class YandexDiskHelper extends BaseHelper {
 
       if (short_url) {
         return {
-          url: videoId,
+          url: `https://yadi.sk${videoId}`,
           video_url: short_url,
           duration,
           title,
@@ -240,7 +240,7 @@ export default class YandexDiskHelper extends BaseHelper {
       const downloadUrl = await this.getDownloadUrl(path, sk);
       const proxiedUrl = proxyMedia(new URL(downloadUrl));
       return {
-        url: videoId,
+        url: `https://yadi.sk${videoId}`,
         video_url: downloadUrl,
         duration,
         title,
@@ -267,7 +267,7 @@ export default class YandexDiskHelper extends BaseHelper {
       /^\/d\/([^/]+)$/.exec(videoId)
     ) {
       return {
-        url: videoId,
+        url: `https://yadi.sk${videoId}`,
       };
     }
 
