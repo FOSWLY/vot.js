@@ -542,6 +542,7 @@ export default [
     url: "https://jove.com/",
     match: /^(?:app|www)\.jove\.com$/,
     selector: sharedSelectors.flowplayer,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.linkedin,

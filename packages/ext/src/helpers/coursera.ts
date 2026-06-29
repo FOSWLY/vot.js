@@ -13,26 +13,55 @@ export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";
   SUBTITLE_SOURCE = "coursera";
 
-  async getCourseData(courseId: string | number) {
+  async getCourseData(courseIdOrSlug: string | number) {
     try {
-      const response = await this.fetch(
-        `${this.API_ORIGIN}/onDemandCourses.v1/${courseId}`,
-      );
+      const isSlug =
+        typeof courseIdOrSlug === "string" && courseIdOrSlug.includes("-");
+      const url = isSlug
+        ? `${this.API_ORIGIN}/onDemandCourses.v1?q=slug&slug=${courseIdOrSlug}`
+        : `${this.API_ORIGIN}/onDemandCourses.v1/${courseIdOrSlug}`;
 
+      const response = await this.fetch(url);
       const resJSON = (await response.json()) as Coursera.CourseData;
       return resJSON?.elements?.[0] as Coursera.Course;
     } catch (err) {
       Logger.error(
-        `Failed to get course data by courseId: ${courseId}`,
+        `Failed to get course data: ${courseIdOrSlug}`,
         (err as Error).message,
       );
       return undefined;
     }
   }
 
+  getCourseSlug(): string | undefined {
+    const matched =
+      /learn\/([^/]+)\/lecture/.exec(window.location.pathname) ??
+      /lecture\/([^/]+)\//.exec(window.location.pathname);
+    return matched?.[1];
+  }
+
+  getCourseId(): string | undefined {
+    const player = CourseraHelper.getPlayer();
+    if (player?.options_?.courseId) {
+      return player.options_.courseId;
+    }
+
+    const courseraObj = (window as any).coursera;
+    if (typeof courseraObj?.courseId === "string") {
+      return courseraObj.courseId;
+    } else if (typeof courseraObj?.courseId === "function") {
+      try {
+        return courseraObj.courseId();
+      } catch {}
+    }
+
+    return (window as any).App?.context?.dispatcher?.stores?.CourseStore
+      ?.courseId;
+  }
+
   static getPlayer<
     T extends VideoJS.PlayerOptions = CourseraPlayer.PlayerOptions,
-  >() {
+  >(): VideoJS.Player<T> | undefined {
     return VideoJSHelper.getPlayer<T>();
   }
 
@@ -42,8 +71,10 @@ export default class CourseraHelper extends VideoJSHelper {
       return undefined;
     }
 
-    const { options_: options } = CourseraHelper.getPlayer() ?? {};
-    if (!data.subtitles?.length && options) {
+    const player = CourseraHelper.getPlayer();
+    const options = player?.options_;
+
+    if (!data.subtitles?.length && options?.tracks) {
       data.subtitles = options.tracks.map(
         (track) =>
           ({
@@ -55,20 +86,23 @@ export default class CourseraHelper extends VideoJSHelper {
       );
     }
 
-    const courseId = options?.courseId;
-    if (!courseId) {
-      return data;
+    const courseIdOrSlug =
+      options?.courseId ?? this.getCourseId() ?? this.getCourseSlug();
+    let courseLang: RequestLang = "en";
+    let courseData: Coursera.Course | undefined;
+
+    if (courseIdOrSlug) {
+      courseData = await this.getCourseData(courseIdOrSlug);
     }
 
-    let courseLang: RequestLang = "en";
-    const courseData = await this.getCourseData(courseId);
-    if (courseData) {
-      const {
-        primaryLanguageCodes: [primaryLangauge],
-      } = courseData;
-      courseLang = primaryLangauge
-        ? (normalizeLang(primaryLangauge) as RequestLang)
-        : "en";
+    if (courseData?.primaryLanguageCodes?.[0]) {
+      courseLang = normalizeLang(
+        courseData.primaryLanguageCodes[0],
+      ) as RequestLang;
+    } else {
+      courseLang = normalizeLang(
+        document.documentElement.lang || "en",
+      ) as RequestLang;
     }
 
     if (!availableLangs.includes(courseLang)) {
@@ -79,6 +113,7 @@ export default class CourseraHelper extends VideoJSHelper {
       data.subtitles.find((subtitle) => subtitle.language === courseLang) ??
       data.subtitles?.[0];
     const subtitleUrl = subtitleItem?.url;
+
     if (!subtitleUrl) {
       Logger.warn("Failed to find any subtitle file");
     }
@@ -96,16 +131,10 @@ export default class CourseraHelper extends VideoJSHelper {
           },
         ]
       : null;
+
     return {
-      ...(subtitleUrl
-        ? {
-            url: this.service?.url + videoId,
-            translationHelp,
-          }
-        : {
-            url,
-            translationHelp,
-          }),
+      url: subtitleUrl ? this.service?.url + videoId : url,
+      translationHelp,
       detectedLanguage: courseLang,
       duration,
     };

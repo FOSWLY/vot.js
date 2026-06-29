@@ -26,11 +26,13 @@ export default class VideoJSHelper extends BaseHelper {
   SUBTITLE_SOURCE = "videojs";
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
-  static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>() {
+  static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>():
+    | VideoJS.Player<T>
+    | undefined {
     const vjs = (window as VideoJSWindow).videojs;
 
     const techEl = document.querySelector<HTMLVideoElement>(
-      "video.vjs-tech[id], video[id$='_html5_api']",
+      "video.vjs-tech, video[id$='_html5_api'], video",
     );
 
     const derivedPlayerId = techEl?.id?.endsWith("_html5_api")
@@ -80,7 +82,7 @@ export default class VideoJSHelper extends BaseHelper {
       const player = VideoJSHelper.getPlayer();
 
       const techEl = document.querySelector<HTMLVideoElement>(
-        "video.vjs-tech, video[id$='_html5_api'], video[src]",
+        "video.vjs-tech, video[id$='_html5_api'], video[src], video",
       );
 
       if (!player && !techEl) {
@@ -115,6 +117,7 @@ export default class VideoJSHelper extends BaseHelper {
       url ??=
         techEl?.currentSrc ||
         techEl?.src ||
+        techEl?.querySelector<HTMLSourceElement>("source")?.src ||
         techEl?.getAttribute?.("src") ||
         undefined;
 
@@ -135,7 +138,7 @@ export default class VideoJSHelper extends BaseHelper {
 
   getSubtitles(): VideoDataSubtitle[] {
     const techEl = document.querySelector<HTMLVideoElement>(
-      "video.vjs-tech, video[id$='_html5_api'], video[src]",
+      "video.vjs-tech, video[id$='_html5_api'], video[src], video",
     );
 
     const trackEls = techEl
