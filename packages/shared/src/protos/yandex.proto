@@ -91,6 +91,19 @@ message VideoTranslationCacheResponse {
   VideoTranslationCacheItem cloning = 2;
 }
 
+message VideoLangCacheRequest {
+  string url = 1;
+  string title = 2;
+}
+
+message VideoLangCacheResponse {
+  string url = 1;
+  // 2 = error
+  int32 status = 3;
+  // 1, idk
+  int32 unknown1 = 5;
+}
+
 // video translation audio info. Used separated
 message AudioBufferObject {
   // Uint8Array. can be empty if it's failed audio js

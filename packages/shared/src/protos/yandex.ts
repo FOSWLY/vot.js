@@ -168,6 +168,19 @@ export interface VideoTranslationCacheResponse {
   cloning: VideoTranslationCacheItem | undefined;
 }
 
+export interface VideoLangCacheRequest {
+  url: string;
+  title: string;
+}
+
+export interface VideoLangCacheResponse {
+  url: string;
+  /** 2 = error */
+  status: number;
+  /** 1, idk */
+  unknown1: number;
+}
+
 /** video translation audio info. Used separated */
 export interface AudioBufferObject {
   /** Uint8Array. can be empty if it's failed audio js */
@@ -1236,6 +1249,174 @@ export const VideoTranslationCacheResponse: MessageFns<VideoTranslationCacheResp
     message.cloning = (object.cloning !== undefined && object.cloning !== null)
       ? VideoTranslationCacheItem.fromPartial(object.cloning)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseVideoLangCacheRequest(): VideoLangCacheRequest {
+  return { url: "", title: "" };
+}
+
+export const VideoLangCacheRequest: MessageFns<VideoLangCacheRequest> = {
+  encode(message: VideoLangCacheRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
+    }
+    if (message.title !== "") {
+      writer.uint32(18).string(message.title);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoLangCacheRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoLangCacheRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoLangCacheRequest {
+    return {
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+    };
+  },
+
+  toJSON(message: VideoLangCacheRequest): unknown {
+    const obj: any = {};
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoLangCacheRequest>, I>>(base?: I): VideoLangCacheRequest {
+    return VideoLangCacheRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoLangCacheRequest>, I>>(object: I): VideoLangCacheRequest {
+    const message = createBaseVideoLangCacheRequest();
+    message.url = object.url ?? "";
+    message.title = object.title ?? "";
+    return message;
+  },
+};
+
+function createBaseVideoLangCacheResponse(): VideoLangCacheResponse {
+  return { url: "", status: 0, unknown1: 0 };
+}
+
+export const VideoLangCacheResponse: MessageFns<VideoLangCacheResponse> = {
+  encode(message: VideoLangCacheResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
+    }
+    if (message.status !== 0) {
+      writer.uint32(24).int32(message.status);
+    }
+    if (message.unknown1 !== 0) {
+      writer.uint32(40).int32(message.unknown1);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): VideoLangCacheResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVideoLangCacheResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.unknown1 = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VideoLangCacheResponse {
+    return {
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
+    };
+  },
+
+  toJSON(message: VideoLangCacheResponse): unknown {
+    const obj: any = {};
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.unknown1 !== 0) {
+      obj.unknown1 = Math.round(message.unknown1);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VideoLangCacheResponse>, I>>(base?: I): VideoLangCacheResponse {
+    return VideoLangCacheResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VideoLangCacheResponse>, I>>(object: I): VideoLangCacheResponse {
+    const message = createBaseVideoLangCacheResponse();
+    message.url = object.url ?? "";
+    message.status = object.status ?? 0;
+    message.unknown1 = object.unknown1 ?? 0;
     return message;
   },
 };

@@ -4,6 +4,8 @@ import {
   StreamTranslationResponse,
   SubtitlesRequest,
   SubtitlesResponse,
+  VideoLangCacheRequest,
+  VideoLangCacheResponse,
   VideoTranslationAudioRequest,
   VideoTranslationAudioResponse,
   VideoTranslationCacheRequest,
@@ -160,6 +162,17 @@ function decodeStreamResponse(response: ArrayBuffer) {
   return StreamTranslationResponse.decode(new Uint8Array(response));
 }
 
+function encodeVideoLangCacheRequest(url: string, title: string) {
+  return VideoLangCacheRequest.encode({
+    url,
+    title,
+  }).finish();
+}
+
+function decodeVideoLangCacheResponse(response: ArrayBuffer) {
+  return VideoLangCacheResponse.decode(new Uint8Array(response));
+}
+
 export const YandexVOTProtobuf = {
   encodeTranslationRequest,
   decodeTranslationResponse,
@@ -173,6 +186,8 @@ export const YandexVOTProtobuf = {
   encodeStreamPingRequest,
   encodeStreamRequest,
   decodeStreamResponse,
+  encodeVideoLangCacheRequest,
+  decodeVideoLangCacheResponse,
 } as const;
 
 function encodeSessionRequest(uuid: string, module: SessionModule) {
