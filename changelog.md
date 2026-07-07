@@ -1,3 +1,22 @@
+# 2.4.18
+
+Maintenance release with updated YaBrowser metadata and video language cache protobuf support.
+
+## Core
+
+- Added protobuf encode/decode helpers for video language cache requests and responses
+
+## Shared
+
+- Added `VideoLangCacheRequest` and `VideoLangCacheResponse` protobuf messages and generated bindings
+- Updated `userAgent`, `componentVersion`, and browser security headers for Chromium 148 / YaBrowser 26.6
+
+## Workspace
+
+- Updated dev dependencies and lockfile
+- Migrated doc examples to `typedoc-plugin-include-example` v3
+- Added `AGENTS.md`
+
 # 2.4.17
 
 ## Ext
