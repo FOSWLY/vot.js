@@ -60,7 +60,7 @@ export class MinimalClient {
 
   /**
    * If you don't want to use the classic fetch
-   * @includeExample examples/with_ofetch.ts:1-13
+   * @includeExample examples/with_ofetch.ts[1:13]
    */
   fetch: FetchFunction;
   fetchOpts: Record<string, unknown>;
@@ -99,7 +99,7 @@ export class MinimalClient {
 
   /**
    * The standard method for requesting the Yandex API, if necessary, you can override how it is done in the example
-   * @includeExample examples/with_axios.ts:4-41
+   * @includeExample examples/with_axios.ts[4:41]
    */
   async request<T = ArrayBuffer>(
     path: string,
@@ -654,7 +654,7 @@ export default class VOTClient<
   }
 
   /**
-   * @includeExample examples/basic.ts:4-11,23-39
+   * @includeExample examples/basic.ts[4:11,23:39]
    */
   async translateVideo({
     videoData,
@@ -778,7 +778,7 @@ export default class VOTClient<
   }
 
   /**
-   * @includeExample examples/basic.ts:4-6,52-58
+   * @includeExample examples/basic.ts[4:6,52:58]
    */
   async getSubtitles({
     videoData,
@@ -802,7 +802,7 @@ export default class VOTClient<
   }
 
   /**
-   * @includeExample examples/stream.ts:7-44
+   * @includeExample examples/stream.ts[7:44]
    */
   async pingStream({ pingId, headers = {} }: StreamPingOptions) {
     const session = await this.getSession("video-translation");
@@ -825,7 +825,7 @@ export default class VOTClient<
   }
 
   /**
-   * @includeExample examples/stream.ts:7-44
+   * @includeExample examples/stream.ts[7:44]
    */
   async translateStream({
     videoData,
