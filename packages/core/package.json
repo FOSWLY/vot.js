@@ -85,10 +85,10 @@
   },
   "devDependencies": {
     "tsc-esm-fix": "^3.1.2",
-    "typescript": "^5.7.3"
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^6.0.0"
   },
   "engines": {
     "node": ">=18"

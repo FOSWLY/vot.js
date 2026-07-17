@@ -546,10 +546,6 @@ export default class VOTClient<
     return res;
   }
 
-  // TODO: add try download and set webm file blob (?)
-  // * download webm help sources:
-  // 1. https://github.com/kkdai/youtube/blob/23aa415a67479586129084478367c7478ec45878/client.go#L183C1-L183C29 (yabrowser used this android logic)
-  // 2. yabrowser raw js
   async requestVtransAudio(
     url: string,
     translationId: string,
