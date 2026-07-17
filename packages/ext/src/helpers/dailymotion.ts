@@ -26,6 +26,7 @@ export default class DailymotionHelper extends BaseHelper {
 
         clearTimeout(timeout);
         window.removeEventListener("message", onMessage);
+        // oxlint-disable-next-line promise/no-multiple-resolved FALSE-POSITIVE
         resolve(e.data.replace("getVideoId:", ""));
       };
 

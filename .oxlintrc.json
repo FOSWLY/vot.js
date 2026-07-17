@@ -7,7 +7,9 @@
   },
   "rules": {
     "no-await-in-loop": "off",
-    "no-extraneous-class": "off"
+    "no-extraneous-class": "off",
+    "no-shadow": "off",
+    "no-underscore-dangle": "off"
   },
   "ignorePatterns": [
     "**/dist",

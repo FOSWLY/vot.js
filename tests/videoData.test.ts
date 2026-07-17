@@ -1,4 +1,3 @@
-// oxlint-disable no-shadow
 import { describe, expect, test } from "bun:test";
 import { getVideoData } from "../packages/node/src/utils/videoData";
 import config from "../packages/shared/src/data/config";
