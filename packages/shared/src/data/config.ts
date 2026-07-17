@@ -2,6 +2,7 @@
 // All comments and any code are deleted when the componentVersion is updated.
 // Write comments in scripts/update-config.ts
 import type { ConfigSchema } from "../types/data";
+import type { LoggerLevel } from "../types/logger";
 
 export default {
   host: "api.browser.yandex.ru",
@@ -14,6 +15,6 @@ export default {
   hmac: "bt8xH3VOlb4mqf0nqAibnDOoiPlXsisf",
   defaultDuration: 310,
   minChunkSize: 5295308,
-  loggerLevel: 1,
-  version: "2.4.19",
+  loggerLevel: 1 as LoggerLevel,
+  version: "2.4.20",
 } satisfies ConfigSchema;

@@ -19,8 +19,9 @@ async function rewriteConfig(data: typeof config) {
     // All comments and any code are deleted when the componentVersion is updated.
     // Write comments in scripts/update-config.ts
     import type { ConfigSchema } from "../types/data";
+    import type { LoggerLevel } from "../types/logger";
 
-    export default ${JSON.stringify(data, null, 2)} satisfies ConfigSchema`,
+    export default ${JSON.stringify(data, null, 2).replace(`"loggerLevel": ${data.loggerLevel}`, `"loggerLevel": ${data.loggerLevel} as LoggerLevel`)} satisfies ConfigSchema`,
   );
 
   await Bun.write(CONFIG_ABS_PATH, formatResult.code);

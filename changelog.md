@@ -1,3 +1,9 @@
+# 2.4.20
+
+## Shared
+
+- Fixed invalid `loggerLevel` type in config
+
 # 2.4.19
 
 ## Ext
