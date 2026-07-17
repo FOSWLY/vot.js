@@ -1,3 +1,21 @@
+# 2.4.19
+
+## Node
+
+- Bump `undici` depends to `8.x`
+
+## Shared
+
+- Now, config uses `satisfies ConfigSchema` instead of `as ConfigSchema`
+- Bump `componentVersion` value and `sec-ch-ua-full-version-list` header
+- Bump `ts-proto` dev depends
+
+## Workspace
+
+- Bump depends
+- Migrated to Typescript 6.x
+- Migrated `biome` -> `oxfmt`
+
 # 2.4.18
 
 Maintenance release with updated YaBrowser metadata and video language cache protobuf support.

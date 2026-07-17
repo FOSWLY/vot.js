@@ -26,8 +26,9 @@ export const VideoService = {
 };
 export type VideoService = CoreVideoService | ExtVideoService;
 
-export interface ServiceConf<T extends string = VideoService>
-  extends CoreServiceConf<T> {
+export interface ServiceConf<
+  T extends string = VideoService,
+> extends CoreServiceConf<T> {
   selector?: string;
   eventSelector?: string;
   shadowRoot?: true;

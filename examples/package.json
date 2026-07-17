@@ -1,11 +1,19 @@
 {
   "name": "vot.js-examples",
   "version": "1.0.0",
+  "description": "Usage example of vot.js",
+  "homepage": "https://github.com/FOSWLY/vot.js#readme",
+  "bugs": {
+    "url": "https://github.com/FOSWLY/vot.js/issues"
+  },
+  "license": "MIT",
   "author": "Toil",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
+  "type": "module",
+  "scripts": {},
   "devDependencies": {
     "axios": "^1.7.2",
     "ofetch": "^1.3.4",
@@ -14,15 +22,7 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "bugs": {
-    "url": "https://github.com/FOSWLY/vot.js/issues"
-  },
-  "description": "Usage example of vot.js",
   "engines": {
     "node": ">=18"
-  },
-  "homepage": "https://github.com/FOSWLY/vot.js#readme",
-  "license": "MIT",
-  "scripts": {},
-  "type": "module"
+  }
 }

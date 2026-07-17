@@ -32,9 +32,7 @@ export default class EpicGamesHelper extends BaseHelper {
       return playlistUrl?.[1]?.replace("qsep://", "https://");
     } catch (err) {
       Logger.error(
-        `Failed to get playlist url by embed Id ${embedId}, because: ${
-          (err as Error).message
-        }`,
+        `Failed to get playlist url by embed Id ${embedId}, because: ${(err as Error).message}`,
       );
       return undefined;
     }

@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
   "categories": {
     "correctness": "error",
     "perf": "error",
@@ -8,6 +9,11 @@
     "no-await-in-loop": "off",
     "no-extraneous-class": "off"
   },
-  "ignorePatterns": ["dist", "test-scripts", "docs"],
+  "ignorePatterns": [
+    "**/dist",
+    "**/docs",
+    "**/*.d.ts",
+    "**/packages/shared/src/protos/**/*.ts"
+  ],
   "plugins": ["promise", "import", "eslint", "oxc", "typescript", "unicorn"]
 }

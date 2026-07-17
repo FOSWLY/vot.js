@@ -1,41 +1,31 @@
 {
   "name": "vot.js",
-  "version": "2.4.18",
+  "version": "2.4.19",
+  "private": true,
+  "description": "Unoffical library for interacting with the Yandex VOT API",
+  "keywords": [
+    "api",
+    "foswly",
+    "translate",
+    "voice-over-translation",
+    "vot",
+    "vot.js",
+    "yandex"
+  ],
+  "homepage": "https://github.com/FOSWLY/vot.js#readme",
+  "bugs": {
+    "url": "https://github.com/FOSWLY/vot.js/issues"
+  },
+  "license": "MIT",
   "author": "Toil",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FOSWLY/vot.js"
   },
-  "devDependencies": {
-    "@biomejs/biome": "^2.5.2",
-    "@toil/typebox-genx": "^0.1.0",
-    "@types/bun": "latest",
-    "lefthook": "^2.1.9",
-    "typedoc": "^0.28.20",
-    "typedoc-plugin-include-example": "^3.0.2",
-    "typedoc-plugin-missing-exports": "^4.1.3",
-    "typedoc-plugin-rename-defaults": "^0.7.3",
-    "typescript": "^5.9.3"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "bugs": {
-    "url": "https://github.com/FOSWLY/vot.js/issues"
-  },
-  "description": "Unoffical library for interacting with the Yandex VOT API",
-  "homepage": "https://github.com/FOSWLY/vot.js#readme",
-  "keywords": [
-    "voice-over-translation",
-    "translate",
-    "vot",
-    "yandex",
-    "foswly",
-    "api",
-    "vot.js"
+  "workspaces": [
+    "packages/*"
   ],
-  "license": "MIT",
-  "private": true,
+  "type": "module",
   "scripts": {
     "test": "bun test",
     "build:bun": "bun run ./scripts/build.ts",
@@ -43,11 +33,24 @@
     "build:doc": "typedoc --options .config/typedoc.json --tsconfig tsconfig.build.json",
     "build:all": "bun build:bun && bun build:doc",
     "update:config": "bun run scripts/update-config.ts",
-    "lint": "npx @biomejs/biome check ./packages",
-    "format": "npx @biomejs/biome check --unsafe --write ./packages"
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "bunx oxlint",
+    "lint:fix": "bunx oxlint --fix"
   },
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@toil/typebox-genx": "^0.1.0",
+    "@types/bun": "latest",
+    "lefthook": "^2.1.10",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0",
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-include-example": "^3.0.2",
+    "typedoc-plugin-missing-exports": "^4.1.4",
+    "typedoc-plugin-rename-defaults": "^0.7.3",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.0"
+  }
 }

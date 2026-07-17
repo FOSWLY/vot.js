@@ -191,8 +191,10 @@ export type DashFileVideo = {
   segments: DashFileVideoSegment[];
 };
 
-export interface DashFileAudio
-  extends Omit<DashFileVideo, "framerate" | "mime_type" | "width" | "height"> {
+export interface DashFileAudio extends Omit<
+  DashFileVideo,
+  "framerate" | "mime_type" | "width" | "height"
+> {
   mime_type: "audio/mp4";
   channels: number;
   sample_rate: number;

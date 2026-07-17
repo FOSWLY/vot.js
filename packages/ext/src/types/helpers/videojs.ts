@@ -81,7 +81,8 @@ export type Player<T extends PlayerOptions = PlayerOptions> = {
   duration(): number;
 };
 
-export interface PlayerElement<T extends PlayerOptions = PlayerOptions>
-  extends HTMLDivElement {
+export interface PlayerElement<
+  T extends PlayerOptions = PlayerOptions,
+> extends HTMLDivElement {
   player: Player<T>;
 }

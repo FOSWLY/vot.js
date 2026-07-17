@@ -1,5 +1,15 @@
 pre-commit:
-  commands:
-    lint:
-      run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+  parallel: true
+  jobs:
+    - run: bunx oxfmt --no-error-on-unmatched-pattern
+      glob:
+        - "*"
+      stage_fixed: true
+
+    - run: bun run lint
+      glob:
+        - "*.ts"
+        - "*.js"
+        - "*.tsx"
+        - "*.jsx"
       stage_fixed: true

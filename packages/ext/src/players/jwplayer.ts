@@ -51,12 +51,12 @@ export default class JWPlayerHelper implements BasePlayer {
         if (player && typeof player.getPlaylistItem === "function") {
           return player;
         }
-      } catch (_e) {}
+      } catch {}
     }
 
     try {
       return jwplayer();
-    } catch (_e) {
+    } catch {
       return undefined;
     }
   }
@@ -212,7 +212,7 @@ export default class JWPlayerHelper implements BasePlayer {
               url: absoluteUrl,
             });
           }
-        } catch (_e) {}
+        } catch {}
       };
 
       if (Array.isArray(tracks)) {

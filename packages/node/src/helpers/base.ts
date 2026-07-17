@@ -15,9 +15,10 @@ export class VideoHelperError extends Error {
   }
 }
 
-export class BaseHelper
-  implements BaseHelperInterface<VideoService, ServiceConf>
-{
+export class BaseHelper implements BaseHelperInterface<
+  VideoService,
+  ServiceConf
+> {
   API_ORIGIN: string;
   fetch: FetchFunction;
   extraInfo: boolean;

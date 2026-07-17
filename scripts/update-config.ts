@@ -1,6 +1,7 @@
 import path from "node:path";
 import crypto from "node:crypto";
 import { semver } from "bun";
+import { format } from "oxfmt";
 
 import { parseFromString } from "dom-parser";
 
@@ -11,15 +12,18 @@ const CONFIG_PATH = "/packages/shared/src/data/config.ts";
 const CONFIG_ABS_PATH = path.join(__dirname, "..", CONFIG_PATH);
 
 async function rewriteConfig(data: typeof config) {
-  const code = `// This file is auto-generated.
-// All comments and any code are deleted when the componentVersion is updated.
-// Write comments in scripts/update-config.ts
-import type { ConfigSchema } from "../types/data";
+  const formatResult = await format(
+    CONFIG_ABS_PATH,
+    `
+    // This file is auto-generated.
+    // All comments and any code are deleted when the componentVersion is updated.
+    // Write comments in scripts/update-config.ts
+    import type { ConfigSchema } from "../types/data";
 
-export default ${JSON.stringify(data, null, 2)} as ConfigSchema
-`;
+    export default ${JSON.stringify(data, null, 2)} satisfies ConfigSchema`,
+  );
 
-  await Bun.write(CONFIG_ABS_PATH, code);
+  await Bun.write(CONFIG_ABS_PATH, formatResult.code);
 
   console.log("Successfully rewrited config");
 }

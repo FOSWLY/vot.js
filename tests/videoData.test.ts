@@ -1,3 +1,4 @@
+// oxlint-disable no-shadow
 import { describe, expect, test } from "bun:test";
 import { getVideoData } from "../packages/node/src/utils/videoData";
 import config from "../packages/shared/src/data/config";
@@ -87,9 +88,9 @@ describe("vk", () => {
     ).toEqual(expected);
   });
   test("video short", async () => {
-    expect(await normalize("https://vk.com//video-197217619_456239151")).toEqual(
-      expected,
-    );
+    expect(
+      await normalize("https://vk.com//video-197217619_456239151"),
+    ).toEqual(expected);
   });
   test("video playlist", async () => {
     expect(
@@ -106,9 +107,9 @@ describe("vk", () => {
     ).toEqual("https://vk.com/video-77521_162222515");
   });
   test("solid long video id", async () => {
-    expect(
-      await normalize("https://vk.com/video1036523373_456239034"),
-    ).toEqual("https://vk.com/video1036523373_456239034");
+    expect(await normalize("https://vk.com/video1036523373_456239034")).toEqual(
+      "https://vk.com/video1036523373_456239034",
+    );
   });
   test("embed", async () => {
     expect(
@@ -305,7 +306,6 @@ describe("xhamster", () => {
       "https://xhamster.com/videos/femaleagent-shy-beauty-takes-the-bait-1509445";
     expect(await normalize(expected)).toEqual(expected);
   });
-
 });
 
 describe("spankbang", () => {
@@ -481,9 +481,9 @@ describe("bilibili", () => {
     expect(await normalize(expectedBangumi)).toEqual(expectedBangumi);
   });
   test("intl series with locale", async () => {
-    expect(
-      await normalize("https://www.bilibili.tv/en/play/1043330"),
-    ).toEqual(expectedIntlSeries);
+    expect(await normalize("https://www.bilibili.tv/en/play/1043330")).toEqual(
+      expectedIntlSeries,
+    );
   });
   test("intl episode with locale", async () => {
     expect(
