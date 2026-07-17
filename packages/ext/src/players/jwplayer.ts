@@ -39,6 +39,14 @@ export default class JWPlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "jwplayer";
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
+  getHeight(source: JWPlayerSource): number {
+    if (typeof source.height === "number" && source.height > 0) {
+      return source.height;
+    }
+    const match = source.label?.match(/^(\d+)/);
+    return match ? Number.parseInt(match[1], 10) : 0;
+  }
+
   getPlayer() {
     if (typeof jwplayer === "undefined") {
       return undefined;
@@ -129,22 +137,9 @@ export default class JWPlayerHelper implements BasePlayer {
         }
       }
 
-      const getHeight = (s: JWPlayerSource): number => {
-        if (typeof s.height === "number" && s.height > 0) {
-          return s.height;
-        }
-        if (s.label) {
-          const match = s.label.match(/^(\d+)/);
-          if (match) {
-            return parseInt(match[1], 10);
-          }
-        }
-        return 0;
-      };
-
       validSources.sort((a, b) => {
-        const heightA = getHeight(a);
-        const heightB = getHeight(b);
+        const heightA = this.getHeight(a);
+        const heightB = this.getHeight(b);
         if (heightA === 0 && heightB > 0) return 1;
         if (heightB === 0 && heightA > 0) return -1;
         return heightA - heightB;

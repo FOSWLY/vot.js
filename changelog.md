@@ -1,5 +1,9 @@
 # 2.4.19
 
+## Ext
+
+- Moved and refactored `getHeight` from nested function inside `getVideoData` to a method on `JWPlayerHelper`
+
 ## Node
 
 - Bump `undici` depends to `8.x`
