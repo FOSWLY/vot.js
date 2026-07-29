@@ -1,7 +1,8 @@
 import { expect, test } from "bun:test";
-import VOTClient, { VOTWorkerClient } from "../packages/node/src/index";
+import VOTClient from "../packages/node/src/index";
 import { getVideoData } from "../packages/node/src/utils/videoData";
 import { VideoService } from "../packages/node/src/types/service";
+import { VOTWorkerProvider } from "../packages/core/src/providers/votworker";
 
 const url = "https://youtu.be/LK6nLR1bzpI";
 const videoData = await getVideoData(url);
@@ -18,9 +19,32 @@ test("Translate video", async () => {
   expect(response.translated).not.toBeNull();
 });
 
+test("Translate video m3u8", async () => {
+  const client = new VOTClient();
+
+  const response = await client.translateVideo({
+    videoData: {
+      url: "https://test.toil.cc/idk",
+      videoId: "hls/1080_out.m3u8",
+      host: VideoService.custom,
+    },
+    translationHelp: [
+      {
+        target: "video_file_url",
+        targetUrl: "https://s3.toil.cc/hls/1080_out.m3u8",
+      },
+    ],
+  });
+
+  console.log("Translate video (m3u8)", response);
+
+  expect(response.translated).not.toBeNull();
+});
+
 test("Translate video (worker)", async () => {
-  const client = new VOTWorkerClient({
+  const client = new VOTClient({
     host: "vot-worker.toil.cc",
+    provider: VOTWorkerProvider,
   });
 
   const response = await client.translateVideo({
@@ -77,21 +101,6 @@ test("Translate private vimeo embed (with internal translationHelp)", async () =
   expect(response.translated).not.toBeNull();
 });
 
-test("Translate video (with VOT Backend API)", async () => {
-  const client = new VOTClient();
-  const videoData = await getVideoData(
-    "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
-  );
-
-  const response = await client.translateVideo({
-    videoData,
-  });
-
-  console.log("Translate video (with VOT Backend API)", response);
-
-  expect(response.translated).toEqual(true);
-});
-
 test("Get subtitles", async () => {
   const client = new VOTClient();
 
@@ -105,25 +114,10 @@ test("Get subtitles", async () => {
   expect(response.waiting).toEqual(false);
 });
 
-test("Get subtitles (with VOT Backend API)", async () => {
-  const client = new VOTClient();
-  const videoData = await getVideoData(
-    "https://www.reddit.com/r/Unexpected/comments/1bkqj2u/rookie_ninja_warrior_rises_to_the_top/",
-  );
-
-  const response = await client.getSubtitles({
-    videoData,
-    requestLang: "ru",
-  });
-
-  console.log("Get subtitles (with VOT Backend API)", response);
-
-  expect(response.waiting).toEqual(false);
-});
-
 test("Get subtitles (worker)", async () => {
-  const client = new VOTWorkerClient({
+  const client = new VOTClient({
     host: "vot-worker.toil.cc",
+    provider: VOTWorkerProvider,
   });
 
   const response = await client.getSubtitles({
@@ -139,7 +133,7 @@ test("Get subtitles (worker)", async () => {
 test("Translate video cache", async () => {
   const client = new VOTClient();
 
-  const response = await client.translateVideoCache({
+  const response = await client.provider.translateVideoCache({
     videoData,
   });
 

@@ -6,13 +6,8 @@ import type { AtLeast } from "@vot.js/shared/types/utils";
 import type { BaseHelperOpts } from "./helpers/base";
 import type { VideoService } from "./service";
 import type { TranslationHelp } from "./yandex";
-
-export type FetchInit = RequestInit;
-
-export type FetchFunction = (
-  input: string | URL | Request,
-  init?: FetchInit,
-) => Promise<Response>;
+import { FetchFunction } from "./providers/base";
+import { VOTProvider } from "./providers";
 
 export type URLSchema = "http" | "https";
 
@@ -50,14 +45,15 @@ export type GetVideoDataOpts<T extends object = BaseHelperOpts> = Omit<
   "service"
 >;
 
-export type MinimalClientOpts = {
+export type VOTOpts<
+  T extends string = VideoService,
+  C extends VOTProvider<T> = VOTProvider<T>,
+> = {
+  provider?: C;
   host?: string;
   fetchFn?: FetchFunction; // e.g. GM_fetch, ofetch.native and etc
   fetchOpts?: Record<string, unknown>; // e.g. { dispatcher: ... }
   headers?: Record<string, string>;
-};
-
-export type VOTOpts = MinimalClientOpts & {
   hostVOT?: string;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;

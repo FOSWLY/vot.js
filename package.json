@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "2.4.20",
+  "version": "2.5.0",
   "private": true,
   "description": "Unoffical library for interacting with the Yandex VOT API",
   "keywords": [
@@ -42,8 +42,8 @@
     "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
     "lefthook": "^2.1.10",
-    "oxfmt": "^0.59.0",
-    "oxlint": "^1.74.0",
+    "oxfmt": "^0.61.0",
+    "oxlint": "^1.76.0",
     "typedoc": "^0.28.20",
     "typedoc-plugin-include-example": "^3.0.2",
     "typedoc-plugin-missing-exports": "^4.1.4",

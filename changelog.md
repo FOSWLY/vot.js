@@ -1,3 +1,28 @@
+# 3.0.0
+
+> [!CAUTION]
+> BREAKING CHANGES
+
+This release contains **many breaking changes**, including a complete rewrite of the `VOTClient` class. The new architecture is based on separate `Providers`, allowing for easier extension and customization. Additionally, the `vot-backend` support is being dropped.
+
+## Shared across of Cort, Node
+
+- [!] Drop `vot-backend` provider support
+- [!] Drop `incestflix` service support
+- [!] Reworked logic of `VOTClient` class. Now, all logic based in separated `Providers` and you can easy add your own provider for any service
+- [!] Removed `VOTWorker` class. Use `VOTClient` with `provider: VOTWorkerProvider` instead
+- [!] Removed `MinimalClient` class
+- [!] Now, only `translateVideo`, `translateStream` and `getSubtitles` available as public methods in `VOTClient`. All other specific methods moved to `Providers` and you can use them directly from provider instance, e.g. `client.provider.translateVideoCache(...)`
+- [!] Drop built-in typebox types
+
+## Shared
+
+- [!] Reworked logic of `fetchWithTimeout` to use modern AbortSignal API instead of timeouts
+
+## Workspace
+
+- Bump dev depends
+
 # 2.4.20
 
 ## Shared

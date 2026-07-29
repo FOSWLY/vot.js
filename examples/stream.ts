@@ -41,7 +41,7 @@ const fn = async () => {
   console.log(`Success! URL: ${response.result.url}`);
   const pingId = response.pingId;
   setInterval(async () => {
-    await client.pingStream({
+    await client.provider.pingStream({
       pingId,
     });
   }, response.interval * 1000);

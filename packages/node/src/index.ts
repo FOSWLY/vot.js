@@ -1,4 +1,4 @@
-export { default, VOTWorkerClient } from "./client";
+export { default } from "./client";
 export { default as sites } from "./data/sites";
 export * as VideoHelper from "./helpers";
 export * as VOTTypes from "./types/index";

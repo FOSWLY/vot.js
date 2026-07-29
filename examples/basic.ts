@@ -2,9 +2,10 @@ import {
   AudioDownloadType,
   type FileIdObject,
 } from "../packages/core/src/types/yandex";
-import VOTClient, { VOTWorkerClient } from "../packages/node/dist/client";
+import VOTClient from "../packages/node/dist/client";
 import { getVideoData } from "../packages/node/dist/utils/videoData";
 import { config } from "../packages/shared/src";
+import { VOTWorkerProvider } from "../packages/core/src/providers/votworker";
 
 const client = new VOTClient({
   // https://oauth.yandex.ru
@@ -69,7 +70,9 @@ response = await client.translateVideo({
 console.log(response);
 
 // vot worker
-const workerClient = new VOTWorkerClient();
+const workerClient = new VOTClient({
+  provider: VOTWorkerProvider,
+});
 
 response = await workerClient.translateVideo({
   videoData,
@@ -97,7 +100,7 @@ response = await client.translateVideo({
 console.log(response);
 
 // get translate video cache
-const translateCache = await client.translateVideoCache({
+const translateCache = await client.provider.translateVideoCache({
   videoData,
 });
 
@@ -125,13 +128,13 @@ async function exampleOfSendYouTubeAudioDownload() {
   const version = 1;
 
   // single chunk
-  await client.requestVtransAudio(url, translationId, {
+  await client.provider.requestVtransAudio(url, translationId, {
     audioFile: fakeAudioFile,
     fileId: fakeFileId,
   });
 
   // multiple chunks
-  await client.requestVtransAudio(
+  await client.provider.requestVtransAudio(
     url,
     translationId,
     {

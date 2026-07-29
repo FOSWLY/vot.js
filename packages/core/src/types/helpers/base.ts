@@ -1,4 +1,5 @@
-import type { FetchFunction, MinimalVideoData } from "../client";
+import type { MinimalVideoData } from "../client";
+import type { FetchFunction } from "../providers/base";
 import type { ServiceConf, VideoService } from "../service";
 
 export type BaseHelperOpts<T = ServiceConf> = {

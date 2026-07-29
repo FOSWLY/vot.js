@@ -151,48 +151,18 @@ export async function fetchWithTimeout(
     },
   },
 ): Promise<Response> {
-  const { timeout = 3000, signal, ...fetchOptions } = options;
+  let { timeout = 3000, signal, ...fetchOptions } = options;
 
   // Fast path: no timeout requested and no signal provided
   if (!signal && (!timeout || timeout <= 0)) {
     return await fetch(url, fetchOptions);
   }
 
-  const controller = new AbortController();
-  const abort = (reason?: unknown) => {
-    if (!controller.signal.aborted) {
-      controller.abort(reason);
-    }
-  };
-
-  // If a signal was provided, forward abort to our controller
-  if (signal) {
-    if (signal.aborted) {
-      abort((signal as AbortSignal).reason);
-    } else {
-      signal.addEventListener(
-        "abort",
-        () => abort((signal as AbortSignal).reason),
-        { once: true },
-      );
-    }
-  }
-
-  let timeoutId: ReturnType<typeof setTimeout> | undefined;
-  if (timeout && timeout > 0) {
-    timeoutId = setTimeout(() => abort(new Error("Fetch timeout")), timeout);
-  }
-
-  try {
-    return await fetch(url, {
-      ...fetchOptions,
-      signal: controller.signal,
-    });
-  } finally {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-  }
+  signal ??= AbortSignal.timeout(timeout);
+  return await fetch(url, {
+    ...fetchOptions,
+    signal,
+  });
 }
 
 /**

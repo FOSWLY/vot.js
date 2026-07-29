@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/core",
-  "version": "2.4.20",
+  "version": "2.5.0",
   "description": "core package",
   "keywords": [
     "api",
@@ -53,6 +53,11 @@
       "require": "./dist/types/*.js",
       "import": "./dist/types/*.js",
       "types": "./dist/types/*.d.ts"
+    },
+    "./providers/*": {
+      "require": "./dist/providers/*.js",
+      "import": "./dist/providers/*.js",
+      "types": "./dist/providers/*.d.ts"
     },
     "./utils/videoData": {
       "require": "./dist/utils/videoData.js",
