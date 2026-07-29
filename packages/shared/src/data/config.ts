@@ -6,7 +6,6 @@ import type { LoggerLevel } from "../types/logger";
 
 export default {
   host: "api.browser.yandex.ru",
-  hostVOT: "vot.toil.cc/v1",
   hostWorker: "vot-worker.toil.cc",
   mediaProxy: "media-proxy.transly.eu.cc",
   userAgent:

@@ -54,7 +54,6 @@ export type VOTOpts<
   fetchFn?: FetchFunction; // e.g. GM_fetch, ofetch.native and etc
   fetchOpts?: Record<string, unknown>; // e.g. { dispatcher: ... }
   headers?: Record<string, string>;
-  hostVOT?: string;
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   apiToken?: string;

@@ -107,6 +107,6 @@ export const browserSecHeaders = {
     0,
     5,
   )}", "Not?A_Brand";v="99", "Yowser";v="2.5"`,
-  "sec-ch-ua-full-version-list": `"Chromium";v="148.0.7778.938", "YaBrowser";v="${componentVersion}", "Not?A_Brand";v="99.0.0.0", "Yowser";v="2.5"`,
+  "sec-ch-ua-full-version-list": `"Chromium";v="148.0.7778.870", "YaBrowser";v="${componentVersion}", "Not?A_Brand";v="99.0.0.0", "Yowser";v="2.5"`,
   "Sec-Fetch-Mode": "no-cors",
 } as const;

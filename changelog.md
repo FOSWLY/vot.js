@@ -19,7 +19,7 @@ This release contains **many breaking changes**, including a complete rewrite of
 ## Shared
 
 - [!] Reworked logic of `fetchWithTimeout` to use modern AbortSignal API instead of timeouts
-- Bump `componentVersion` value
+- Bump `componentVersion` value and `sec-ch-ua-full-version-list` header
 
 ## Workspace
 

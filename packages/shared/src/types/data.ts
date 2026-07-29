@@ -3,7 +3,6 @@ import type { LoggerLevel } from "./logger";
 
 export type ConfigSchema = {
   host: string;
-  hostVOT: string;
   hostWorker: string;
   mediaProxy: string;
   userAgent: string;
