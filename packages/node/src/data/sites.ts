@@ -339,12 +339,6 @@ export default [
     needExtraData: true,
   },
   {
-    host: CoreVideoService.incestflix,
-    url: "https://www.incestflix.net/watch/",
-    match: /^(www.)?incestflix.(net|to|com)$/,
-    needExtraData: true,
-  },
-  {
     host: CoreVideoService.porntn,
     url: "https://porntn.com/videos/",
     match: /^porntn.com$/,

@@ -1,9 +1,9 @@
-import type { FetchFunction } from "@vot.js/core/types/client";
 import type {
   BaseHelperInterface,
   BaseHelperOpts,
 } from "@vot.js/core/types/helpers/base";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
+import { FetchFunction } from "@vot.js/core/types/providers/base";
 
 import type { MinimalVideoData } from "../types/client";
 import type { ServiceConf, VideoService } from "../types/service";

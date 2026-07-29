@@ -21,7 +21,6 @@ import FacebookHelper from "./facebook";
 import GoogleDriveHelper from "./googledrive";
 import IgnHelper from "./ign";
 import IMDBHelper from "./imdb";
-import IncestflixHelper from "./incestflix";
 import JoveHelper from "./jove";
 import KickHelper from "./kick";
 import KodikHelper from "./kodik";
@@ -83,7 +82,6 @@ export * as FacebookHelper from "./facebook";
 export * as GoogleDriveHelper from "./googledrive";
 export * as IgnHelper from "./ign";
 export * as IMDBHelper from "./imdb";
-export * as IncestflixHelper from "./incestflix";
 export * as JoveHelper from "./jove";
 export * as KickHelper from "./kick";
 export * as KodikHelper from "./kodik";
@@ -147,7 +145,6 @@ export const availableHelpers = {
   [CoreVideoService.yandexdisk]: YandexDiskHelper,
   [CoreVideoService.vk]: VKHelper,
   [CoreVideoService.trovo]: TrovoHelper,
-  [CoreVideoService.incestflix]: IncestflixHelper,
   [CoreVideoService.porntn]: PornTNHelper,
   [CoreVideoService.googledrive]: GoogleDriveHelper,
   [CoreVideoService.bilibili]: BilibiliHelper,

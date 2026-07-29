@@ -925,14 +925,6 @@ test("linkedin", async () => {
   expect(normalized).toIncludeRepeated(`dms.licdn.com`, 2);
 });
 
-test("incestflix", async () => {
-  const normalized = await normalize(
-    "http://www.incestflix.com/watch/deviant-kat-waking-mommy-up-blowjob",
-  );
-  expect(normalized).toStartWith(`https://${config.mediaProxy}`);
-  expect(normalized).toIncludeRepeated("incestflix.net", 2);
-});
-
 test("porntn", async () => {
   const normalized = await normalize(
     "https://porntn.com/videos/23452/maimy-asmr-9-april-2025-kissing-you/",

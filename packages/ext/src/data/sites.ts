@@ -553,13 +553,6 @@ export default [
     needBypassCSP: true,
   },
   {
-    host: CoreVideoService.incestflix,
-    url: "https://www.incestflix.net/watch/",
-    match: /^(www.)?incestflix.(net|to|com)$/,
-    selector: "#incflix-stream",
-    needExtraData: true,
-  },
-  {
     host: CoreVideoService.porntn,
     url: "https://porntn.com/videos/",
     match: /^porntn.com$/,
