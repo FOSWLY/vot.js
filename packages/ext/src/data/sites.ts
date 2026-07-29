@@ -707,7 +707,7 @@ export default [
   {
     host: CoreVideoService.custom,
     url: "stub",
-    match: (url: URL) => /([^.]+)\.(mp4|webm)/.test(url.pathname),
+    match: (url: URL) => /([^/]+)\.(mp4|webm)/.test(url.pathname),
     rawResult: true,
   },
 ] as ServiceConf[];

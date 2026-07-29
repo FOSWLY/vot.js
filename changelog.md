@@ -5,7 +5,7 @@
 
 This release contains **many breaking changes**, including a complete rewrite of the `VOTClient` class. The new architecture is based on separate `Providers`, allowing for easier extension and customization. Additionally, the `vot-backend` support is being dropped.
 
-## Shared across of Cort, Node
+## Shared across of Core, Node, Ext
 
 - [!] Drop `vot-backend` provider support
 - [!] Drop `incestflix` service support
@@ -14,10 +14,12 @@ This release contains **many breaking changes**, including a complete rewrite of
 - [!] Removed `MinimalClient` class
 - [!] Now, only `translateVideo`, `translateStream` and `getSubtitles` available as public methods in `VOTClient`. All other specific methods moved to `Providers` and you can use them directly from provider instance, e.g. `client.provider.translateVideoCache(...)`
 - [!] Drop built-in typebox types
+- Improved raw `.mp3` / `.webm` link matching (fixed [voice-over-translation#1384](https://github.com/ilyhalight/voice-over-translation/issues/1384))
 
 ## Shared
 
 - [!] Reworked logic of `fetchWithTimeout` to use modern AbortSignal API instead of timeouts
+- Bump `componentVersion` value
 
 ## Workspace
 
