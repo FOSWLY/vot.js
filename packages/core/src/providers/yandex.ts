@@ -251,6 +251,7 @@ export class YandexProvider<
             responseLang,
             translationHelp,
             headers,
+            extraOpts,
             shouldSendFailedAudio: false,
           });
         }
