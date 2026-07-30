@@ -204,6 +204,7 @@ describe("tiktok", () => {
 describe("vimeo", () => {
   const expected = "https://vimeo.com/1074816435";
   const expectedUnlisted = "https://vimeo.com/1074813550/af636e7a9d";
+  const expectededEmbedWithAppId = "https://player.vimeo.com/video/783022286";
   test("public", async () => {
     expect(await normalize(expected)).toEqual(expected);
   });
@@ -219,6 +220,11 @@ describe("vimeo", () => {
     expect(
       await normalize("https://player.vimeo.com/video/1074816435"),
     ).toEqual(expected);
+  });
+  test("embed with app_id", async () => {
+    expect(
+      await normalize(`${expectededEmbedWithAppId}?autoplay=1&app_id=122963`),
+    ).toEqual(expectededEmbedWithAppId);
   });
   test("embed without video prefix", async () => {
     expect(await normalize("https://player.vimeo.com/1074816435")).toBeOneOf([

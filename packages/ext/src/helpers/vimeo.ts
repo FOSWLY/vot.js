@@ -215,6 +215,11 @@ export default class VimeoHelper extends BaseHelper {
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
+    if (videoId.includes("?app_id=")) {
+      const [embedId] = videoId.split("?");
+      return this.returnBaseData(embedId);
+    }
+
     const isPrivate = this.isPrivatePlayer();
     if (isPrivate) {
       const videoInfo = await this.getPrivateVideoInfo(videoId);
@@ -302,6 +307,10 @@ export default class VimeoHelper extends BaseHelper {
   async getVideoId(url: URL) {
     const normalizedPathname = url.pathname.replace(/\/+$/, "");
     const embedId = /video\/[^/]+$/.exec(normalizedPathname)?.[0];
+    const appId = url.searchParams.get("app_id");
+    if (embedId && appId) {
+      return `${embedId}?app_id=${appId}`;
+    }
     if (this.isPrivatePlayer()) {
       return embedId;
     }

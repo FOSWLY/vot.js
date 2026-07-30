@@ -15,6 +15,7 @@ This release contains **many breaking changes**, including a complete rewrite of
 - [!] Now, only `translateVideo`, `translateStream` and `getSubtitles` available as public methods in `VOTClient`. All other specific methods moved to `Providers` and you can use them directly from provider instance, e.g. `client.provider.translateVideoCache(...)`
 - [!] Drop built-in typebox types
 - Added support for Wistia Embed (`https://fast.wistia.net/embed/iframe/XXX`)
+- Fixed Vimeo embed with `app_id` query param
 - Improved raw `.mp3` / `.webm` link matching (fixed [voice-over-translation#1384](https://github.com/ilyhalight/voice-over-translation/issues/1384))
 
 ## Ext
