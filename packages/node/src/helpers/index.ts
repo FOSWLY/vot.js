@@ -62,6 +62,7 @@ import YandexDiskHelper from "./yandexdisk";
 import YoukuHelper from "./youku";
 import YoutubeHelper from "./youtube";
 import ZDFHelper from "./zdf";
+import WistiaHelper from "./wistia";
 
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as ArchiveHelper from "./archive";
@@ -123,6 +124,7 @@ export * as YandexDiskHelper from "./yandexdisk";
 export * as YoukuHelper from "./youku";
 export * as YoutubeHelper from "./youtube";
 export * as ZDFHelper from "./zdf";
+export * as WistiaHelper from "./wistia";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -189,6 +191,7 @@ export const availableHelpers = {
   [CoreVideoService.imdb]: IMDBHelper,
   [CoreVideoService.telegram]: TelegramHelper,
   [CoreVideoService.niconico]: NicoNicoHelper,
+  [CoreVideoService.wistia]: WistiaHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

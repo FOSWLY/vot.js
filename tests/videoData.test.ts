@@ -1097,3 +1097,9 @@ test("telegram", async () => {
   const normalized = await normalize(expected);
   expect(normalized).toBe(expected);
 });
+
+test("wistia", async () => {
+  const expected = "https://fast.wistia.net/embed/iframe/990l9y356a";
+  const normalized = await normalize(expected);
+  expect(normalized).toBe(expected);
+});

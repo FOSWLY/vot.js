@@ -72,6 +72,7 @@ export enum VideoService {
   bunkr = "bunkr",
   imdb = "imdb",
   telegram = "telegram",
+  wistia = "wistia",
 }
 
 /**

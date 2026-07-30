@@ -253,7 +253,6 @@ export default [
     match: /^(www.)?newgrounds.com$/,
   },
   {
-    // TODO: Добавить поддержку tips (сделать через m3u8 т.к. обычная ссылка не принимается) и платных курсов
     host: CoreVideoService.egghead,
     url: "https://egghead.io/",
     match: /^egghead.io$/,
@@ -414,6 +413,11 @@ export default [
     host: CoreVideoService.telegram,
     url: "https://t.me/",
     match: /^t.me$/,
+  },
+  {
+    host: CoreVideoService.wistia,
+    url: "https://fast.wistia.net/embed/iframe/",
+    match: /^fast.wistia.net$/,
   },
   {
     host: CoreVideoService.custom,

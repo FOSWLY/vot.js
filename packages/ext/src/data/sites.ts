@@ -705,6 +705,12 @@ export default [
     needExtraData: true,
   },
   {
+    host: CoreVideoService.wistia,
+    url: "https://fast.wistia.net/embed/iframe/",
+    match: /^fast.wistia.net$/,
+    selector: ".w-video-wrapper",
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^/]+)\.(mp4|webm)/.test(url.pathname),
