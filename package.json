@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "description": "Unoffical library for interacting with the Yandex VOT API",
   "keywords": [

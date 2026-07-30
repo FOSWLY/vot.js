@@ -666,7 +666,7 @@ export default [
     match: (url: URL) =>
       /^web\.telegram\.org$/.test(url.hostname) &&
       url.pathname.startsWith("/k"),
-    selector: ".ckin__player",
+    selector: ".media-viewer-aspecter, .ckin__player",
   },
   {
     host: ExtVideoService.oraclelearn,

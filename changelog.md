@@ -1,3 +1,9 @@
+# 3.0.1
+
+## Ext
+
+- Fixed TelegramK selector
+
 # 3.0.0
 
 > [!CAUTION]
@@ -18,10 +24,6 @@ This release contains **many breaking changes**, including a complete rewrite of
 - Fixed Vimeo embed with `app_id` query param
 - Fixed missing `extraOpts` field in retry request `translateVideo` after AUDIO_REQUESTED
 - Improved raw `.mp3` / `.webm` link matching (fixed [voice-over-translation#1384](https://github.com/ilyhalight/voice-over-translation/issues/1384))
-
-## Ext
-
-- Fixed TelegramK selector
 
 ## Shared
 
