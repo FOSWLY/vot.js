@@ -5,9 +5,9 @@
 [![ru](https://img.shields.io/badge/%D1%8F%D0%B7%D1%8B%D0%BA-%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9%20%F0%9F%87%B7%F0%9F%87%BA-white)](README-RU.md)
 [![en](https://img.shields.io/badge/lang-English%20%F0%9F%87%AC%F0%9F%87%A7-white)](README.md)
 
-An unofficial library for interacting with the Yandex VOT API, which supports working with JavaScript, TypeScript, and also has built-in parted types for Typebox.
+An unofficial library for interacting with the Yandex VOT API, which supports working with JavaScript and TypeScript.
 
-The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTWorkerClient` client and specify the domain of the worker server, for example `vot-worker.toil.cc`.
+The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTClient` client with provider `VOTWorkerProvider` and specify the domain of the worker server, for example `vot-worker.toil.cc`.
 
 > [!WARNING]
 > The library was created exclusively for research purposes and isn't intended for commercial use. All rights to the original software belong to their respective right holders. The library isn't affiliated with the original rights holders

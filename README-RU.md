@@ -5,9 +5,9 @@
 [![en](https://img.shields.io/badge/lang-English%20%F0%9F%87%AC%F0%9F%87%A7-white)](README.md)
 [![ru](https://img.shields.io/badge/%D1%8F%D0%B7%D1%8B%D0%BA-%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9%20%F0%9F%87%B7%F0%9F%87%BA-white)](README-RU.md)
 
-Неофициальная библиотека для взаимодействия с Yandex VOT API, которая поддерживает работу с JavaScript, TypeScript, а так же имеет некоторые встроенные типы для Typebox.
+Неофициальная библиотека для взаимодействия с Yandex VOT API, которая поддерживает работу с JavaScript и TypeScript.
 
-Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/vot-worker), для этого необходимо создать клиент `VOTWorkerClient` и указать домен воркер-сервера, например `vot-worker.toil.cc`.
+Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/vot-worker), для этого необходимо создать клиент `VOTClient` с провайдером `VOTWorkerProvider` и указать домен воркер-сервера, например `vot-worker.toil.cc`.
 
 > [!WARNING]
 > Библиотека создана исключительно в исследовательских целях и не предназначена для коммерческого использования. Все права на оригинальное программное обеспечение принадлежат их правообладателям. Библиотека не связана с оригинальными правообладателями
@@ -45,8 +45,9 @@ const result = await client.translateVideo({ videoData });
 Проксирование через [vot-worker](https://github.com/FOSWLY/vot-worker):
 
 ```ts
-const client = new VOTWorkerClient({
+const client = new VOTClient({
   host: "vot-worker.toil.cc",
+  provider: VOTWorkerProvider,
 });
 ```
 
