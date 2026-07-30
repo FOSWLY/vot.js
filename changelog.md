@@ -32,6 +32,8 @@ This release contains **many breaking changes**, including a complete rewrite of
 
 - Bump dev depends
 
+\* this version also available as 2.5.0 in npm registry (my mistake)
+
 # 2.4.20
 
 ## Shared
