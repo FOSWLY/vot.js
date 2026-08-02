@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/shared",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "shared for all @vot.js package",
   "keywords": [
     "api",

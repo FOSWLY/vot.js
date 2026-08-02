@@ -7,6 +7,7 @@ export type ConfigSchema = {
   mediaProxy: string;
   userAgent: string;
   componentVersion: string;
+  chromiumRevision: string;
   hmac: string;
   defaultDuration: number;
   minChunkSize: number;
