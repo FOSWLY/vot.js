@@ -15,13 +15,15 @@ message VideoTranslationRequest {
   // true for the first request, false for subsequent ones
   bool firstRequest = 5;
   double duration = 6;
-  int32 unknown0 = 7; // 1 1
+  // 1 1
+  bool unknown0 = 7;
   // source language code
   string language = 8;
   // 0 - auto detected by yabrowser, 1 - user set his
   // (own lang by dropdown)
   bool forceSourceLang = 9;
-  int32 unknown1 = 10; // 0 0
+  // 0 0
+  bool unknown1 = 10;
   // array for translation assistance
   // ([0] -> {2: link to video, 1: "video_file_url"},
   // [1] -> {2: link to subtitles, 1: "subtitles_file_url"})
@@ -30,13 +32,13 @@ message VideoTranslationRequest {
   // set true if it's ended stream else don't add it
   bool wasStream = 13;
   string responseLanguage = 14;
-  int32 unknown2 = 15; // 1?
-  int32 unknown3 = 16; // before april 2025 is 1, but now it's 2
-  // they have some kind of limiter on requests from one IP
+  bool unknown2 = 15; // 1?
+  // before april 2025 is 1, but now it's 2
+  int32 unknown3 = 16;
+    // they have some kind of limiter on requests from one IP
   // because after one such request it stops working
   bool bypassCache = 17;
-  // translates videos with higher-quality voices, but sometimes the
-  // voice of one person can constantly change
+  // translates videos with higher-quality voices
   // (https://github.com/ilyhalight/voice-over-translation/issues/897)
   bool useLivelyVoice = 18;
   string videoTitle = 19;
@@ -60,7 +62,7 @@ message VideoTranslationResponse {
   optional string message = 9;
   bool isLivelyVoice = 10;
   // added if status=1 (success) can be equal to 0 or 1
-  optional int32 unknown2 = 11;
+  optional bool allowToTranslateVideo = 11;
   // maybe i wrong, but it seems like a retry flag
   // sets if error happened by audio failed
   // 1 - retry
@@ -70,12 +72,19 @@ message VideoTranslationResponse {
 }
 
 message VideoTranslationCacheItem {
+  // constrained to values 0..3
+  // 0 - finished
+  // 2 - waiting
+  // 3 - error
   int32 status = 1;
   optional int32 remainingTime = 2;
   // exists if status is 3 (error)
   optional string message = 3;
   // exists if status is 3 (error). Value is 5
   optional int32 unknown0 = 4;
+  // MAYBE
+  // value 1 is music_detected
+  repeated int32 flags = 5;
 }
 
 message VideoTranslationCacheRequest {
@@ -158,11 +167,11 @@ message VideoTranslationAudioResponse {
 message SubtitlesObject {
   string language = 1;
   string url = 2;
-  int32 unknown0 = 3;
+  bool hasTranslation = 3;
   string translatedLanguage = 4;
   string translatedUrl = 5;
-  int32 unknown1 = 6;
-  int32 unknown2 = 7;
+  bool unknown1 = 6;
+  uint32 subtitleId = 7;
 }
 
 message SubtitlesRequest {

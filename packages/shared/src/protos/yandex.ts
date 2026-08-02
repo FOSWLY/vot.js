@@ -66,7 +66,7 @@ export interface VideoTranslationRequest {
   firstRequest: boolean;
   duration: number;
   /** 1 1 */
-  unknown0: number;
+  unknown0: boolean;
   /** source language code */
   language: string;
   /**
@@ -75,7 +75,7 @@ export interface VideoTranslationRequest {
    */
   forceSourceLang: boolean;
   /** 0 0 */
-  unknown1: number;
+  unknown1: boolean;
   /**
    * array for translation assistance
    * ([0] -> {2: link to video, 1: "video_file_url"},
@@ -87,7 +87,7 @@ export interface VideoTranslationRequest {
   wasStream: boolean;
   responseLanguage: string;
   /** 1? */
-  unknown2: number;
+  unknown2: boolean;
   /** before april 2025 is 1, but now it's 2 */
   unknown3: number;
   /**
@@ -96,8 +96,7 @@ export interface VideoTranslationRequest {
    */
   bypassCache: boolean;
   /**
-   * translates videos with higher-quality voices, but sometimes the
-   * voice of one person can constantly change
+   * translates videos with higher-quality voices
    * (https://github.com/ilyhalight/voice-over-translation/issues/897)
    */
   useLivelyVoice: boolean;
@@ -127,8 +126,8 @@ export interface VideoTranslationResponse {
   message?: string | undefined;
   isLivelyVoice: boolean;
   /** added if status=1 (success) can be equal to 0 or 1 */
-  unknown2?:
-    | number
+  allowToTranslateVideo?:
+    | boolean
     | undefined;
   /**
    * maybe i wrong, but it seems like a retry flag
@@ -143,6 +142,12 @@ export interface VideoTranslationResponse {
 }
 
 export interface VideoTranslationCacheItem {
+  /**
+   * constrained to values 0..3
+   * 0 - finished
+   * 2 - waiting
+   * 3 - error
+   */
   status: number;
   remainingTime?:
     | number
@@ -152,7 +157,14 @@ export interface VideoTranslationCacheItem {
     | string
     | undefined;
   /** exists if status is 3 (error). Value is 5 */
-  unknown0?: number | undefined;
+  unknown0?:
+    | number
+    | undefined;
+  /**
+   * MAYBE
+   * value 1 is music_detected
+   */
+  flags: number[];
 }
 
 export interface VideoTranslationCacheRequest {
@@ -245,11 +257,11 @@ export interface VideoTranslationAudioResponse {
 export interface SubtitlesObject {
   language: string;
   url: string;
-  unknown0: number;
+  hasTranslation: boolean;
   translatedLanguage: string;
   translatedUrl: string;
-  unknown1: number;
-  unknown2: number;
+  unknown1: boolean;
+  subtitleId: number;
 }
 
 export interface SubtitlesRequest {
@@ -393,14 +405,14 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
     deviceId: undefined,
     firstRequest: false,
     duration: 0,
-    unknown0: 0,
+    unknown0: false,
     language: "",
     forceSourceLang: false,
-    unknown1: 0,
+    unknown1: false,
     translationHelp: [],
     wasStream: false,
     responseLanguage: "",
-    unknown2: 0,
+    unknown2: false,
     unknown3: 0,
     bypassCache: false,
     useLivelyVoice: false,
@@ -422,8 +434,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.duration !== 0) {
       writer.uint32(49).double(message.duration);
     }
-    if (message.unknown0 !== 0) {
-      writer.uint32(56).int32(message.unknown0);
+    if (message.unknown0 !== false) {
+      writer.uint32(56).bool(message.unknown0);
     }
     if (message.language !== "") {
       writer.uint32(66).string(message.language);
@@ -431,8 +443,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.forceSourceLang !== false) {
       writer.uint32(72).bool(message.forceSourceLang);
     }
-    if (message.unknown1 !== 0) {
-      writer.uint32(80).int32(message.unknown1);
+    if (message.unknown1 !== false) {
+      writer.uint32(80).bool(message.unknown1);
     }
     for (const v of message.translationHelp) {
       VideoTranslationHelpObject.encode(v!, writer.uint32(90).fork()).join();
@@ -443,8 +455,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.responseLanguage !== "") {
       writer.uint32(114).string(message.responseLanguage);
     }
-    if (message.unknown2 !== 0) {
-      writer.uint32(120).int32(message.unknown2);
+    if (message.unknown2 !== false) {
+      writer.uint32(120).bool(message.unknown2);
     }
     if (message.unknown3 !== 0) {
       writer.uint32(128).int32(message.unknown3);
@@ -505,7 +517,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
             break;
           }
 
-          message.unknown0 = reader.int32();
+          message.unknown0 = reader.bool();
           continue;
         }
         case 8: {
@@ -529,7 +541,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
             break;
           }
 
-          message.unknown1 = reader.int32();
+          message.unknown1 = reader.bool();
           continue;
         }
         case 11: {
@@ -561,7 +573,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
             break;
           }
 
-          message.unknown2 = reader.int32();
+          message.unknown2 = reader.bool();
           continue;
         }
         case 16: {
@@ -611,16 +623,16 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
       deviceId: isSet(object.deviceId) ? globalThis.String(object.deviceId) : undefined,
       firstRequest: isSet(object.firstRequest) ? globalThis.Boolean(object.firstRequest) : false,
       duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
-      unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
+      unknown0: isSet(object.unknown0) ? globalThis.Boolean(object.unknown0) : false,
       language: isSet(object.language) ? globalThis.String(object.language) : "",
       forceSourceLang: isSet(object.forceSourceLang) ? globalThis.Boolean(object.forceSourceLang) : false,
-      unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
+      unknown1: isSet(object.unknown1) ? globalThis.Boolean(object.unknown1) : false,
       translationHelp: globalThis.Array.isArray(object?.translationHelp)
         ? object.translationHelp.map((e: any) => VideoTranslationHelpObject.fromJSON(e))
         : [],
       wasStream: isSet(object.wasStream) ? globalThis.Boolean(object.wasStream) : false,
       responseLanguage: isSet(object.responseLanguage) ? globalThis.String(object.responseLanguage) : "",
-      unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
+      unknown2: isSet(object.unknown2) ? globalThis.Boolean(object.unknown2) : false,
       unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
       bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
       useLivelyVoice: isSet(object.useLivelyVoice) ? globalThis.Boolean(object.useLivelyVoice) : false,
@@ -642,8 +654,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.duration !== 0) {
       obj.duration = message.duration;
     }
-    if (message.unknown0 !== 0) {
-      obj.unknown0 = Math.round(message.unknown0);
+    if (message.unknown0 !== false) {
+      obj.unknown0 = message.unknown0;
     }
     if (message.language !== "") {
       obj.language = message.language;
@@ -651,8 +663,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.forceSourceLang !== false) {
       obj.forceSourceLang = message.forceSourceLang;
     }
-    if (message.unknown1 !== 0) {
-      obj.unknown1 = Math.round(message.unknown1);
+    if (message.unknown1 !== false) {
+      obj.unknown1 = message.unknown1;
     }
     if (message.translationHelp?.length) {
       obj.translationHelp = message.translationHelp.map((e) => VideoTranslationHelpObject.toJSON(e));
@@ -663,8 +675,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.responseLanguage !== "") {
       obj.responseLanguage = message.responseLanguage;
     }
-    if (message.unknown2 !== 0) {
-      obj.unknown2 = Math.round(message.unknown2);
+    if (message.unknown2 !== false) {
+      obj.unknown2 = message.unknown2;
     }
     if (message.unknown3 !== 0) {
       obj.unknown3 = Math.round(message.unknown3);
@@ -690,14 +702,14 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     message.deviceId = object.deviceId ?? undefined;
     message.firstRequest = object.firstRequest ?? false;
     message.duration = object.duration ?? 0;
-    message.unknown0 = object.unknown0 ?? 0;
+    message.unknown0 = object.unknown0 ?? false;
     message.language = object.language ?? "";
     message.forceSourceLang = object.forceSourceLang ?? false;
-    message.unknown1 = object.unknown1 ?? 0;
+    message.unknown1 = object.unknown1 ?? false;
     message.translationHelp = object.translationHelp?.map((e) => VideoTranslationHelpObject.fromPartial(e)) || [];
     message.wasStream = object.wasStream ?? false;
     message.responseLanguage = object.responseLanguage ?? "";
-    message.unknown2 = object.unknown2 ?? 0;
+    message.unknown2 = object.unknown2 ?? false;
     message.unknown3 = object.unknown3 ?? 0;
     message.bypassCache = object.bypassCache ?? false;
     message.useLivelyVoice = object.useLivelyVoice ?? false;
@@ -717,7 +729,7 @@ function createBaseVideoTranslationResponse(): VideoTranslationResponse {
     language: undefined,
     message: undefined,
     isLivelyVoice: false,
-    unknown2: undefined,
+    allowToTranslateVideo: undefined,
     shouldRetry: undefined,
     unknown3: undefined,
   };
@@ -752,8 +764,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     if (message.isLivelyVoice !== false) {
       writer.uint32(80).bool(message.isLivelyVoice);
     }
-    if (message.unknown2 !== undefined) {
-      writer.uint32(88).int32(message.unknown2);
+    if (message.allowToTranslateVideo !== undefined) {
+      writer.uint32(88).bool(message.allowToTranslateVideo);
     }
     if (message.shouldRetry !== undefined) {
       writer.uint32(96).int32(message.shouldRetry);
@@ -848,7 +860,7 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
             break;
           }
 
-          message.unknown2 = reader.int32();
+          message.allowToTranslateVideo = reader.bool();
           continue;
         }
         case 12: {
@@ -887,7 +899,9 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
       language: isSet(object.language) ? globalThis.String(object.language) : undefined,
       message: isSet(object.message) ? globalThis.String(object.message) : undefined,
       isLivelyVoice: isSet(object.isLivelyVoice) ? globalThis.Boolean(object.isLivelyVoice) : false,
-      unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : undefined,
+      allowToTranslateVideo: isSet(object.allowToTranslateVideo)
+        ? globalThis.Boolean(object.allowToTranslateVideo)
+        : undefined,
       shouldRetry: isSet(object.shouldRetry) ? globalThis.Number(object.shouldRetry) : undefined,
       unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : undefined,
     };
@@ -922,8 +936,8 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     if (message.isLivelyVoice !== false) {
       obj.isLivelyVoice = message.isLivelyVoice;
     }
-    if (message.unknown2 !== undefined) {
-      obj.unknown2 = Math.round(message.unknown2);
+    if (message.allowToTranslateVideo !== undefined) {
+      obj.allowToTranslateVideo = message.allowToTranslateVideo;
     }
     if (message.shouldRetry !== undefined) {
       obj.shouldRetry = Math.round(message.shouldRetry);
@@ -948,7 +962,7 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
     message.language = object.language ?? undefined;
     message.message = object.message ?? undefined;
     message.isLivelyVoice = object.isLivelyVoice ?? false;
-    message.unknown2 = object.unknown2 ?? undefined;
+    message.allowToTranslateVideo = object.allowToTranslateVideo ?? undefined;
     message.shouldRetry = object.shouldRetry ?? undefined;
     message.unknown3 = object.unknown3 ?? undefined;
     return message;
@@ -956,7 +970,7 @@ export const VideoTranslationResponse: MessageFns<VideoTranslationResponse> = {
 };
 
 function createBaseVideoTranslationCacheItem(): VideoTranslationCacheItem {
-  return { status: 0, remainingTime: undefined, message: undefined, unknown0: undefined };
+  return { status: 0, remainingTime: undefined, message: undefined, unknown0: undefined, flags: [] };
 }
 
 export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = {
@@ -973,6 +987,11 @@ export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = 
     if (message.unknown0 !== undefined) {
       writer.uint32(32).int32(message.unknown0);
     }
+    writer.uint32(42).fork();
+    for (const v of message.flags) {
+      writer.int32(v);
+    }
+    writer.join();
     return writer;
   },
 
@@ -1015,6 +1034,24 @@ export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = 
           message.unknown0 = reader.int32();
           continue;
         }
+        case 5: {
+          if (tag === 40) {
+            message.flags.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.flags.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1030,6 +1067,7 @@ export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = 
       remainingTime: isSet(object.remainingTime) ? globalThis.Number(object.remainingTime) : undefined,
       message: isSet(object.message) ? globalThis.String(object.message) : undefined,
       unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : undefined,
+      flags: globalThis.Array.isArray(object?.flags) ? object.flags.map((e: any) => globalThis.Number(e)) : [],
     };
   },
 
@@ -1047,6 +1085,9 @@ export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = 
     if (message.unknown0 !== undefined) {
       obj.unknown0 = Math.round(message.unknown0);
     }
+    if (message.flags?.length) {
+      obj.flags = message.flags.map((e) => Math.round(e));
+    }
     return obj;
   },
 
@@ -1059,6 +1100,7 @@ export const VideoTranslationCacheItem: MessageFns<VideoTranslationCacheItem> = 
     message.remainingTime = object.remainingTime ?? undefined;
     message.message = object.message ?? undefined;
     message.unknown0 = object.unknown0 ?? undefined;
+    message.flags = object.flags?.map((e) => e) || [];
     return message;
   },
 };
@@ -1876,7 +1918,15 @@ export const VideoTranslationAudioResponse: MessageFns<VideoTranslationAudioResp
 };
 
 function createBaseSubtitlesObject(): SubtitlesObject {
-  return { language: "", url: "", unknown0: 0, translatedLanguage: "", translatedUrl: "", unknown1: 0, unknown2: 0 };
+  return {
+    language: "",
+    url: "",
+    hasTranslation: false,
+    translatedLanguage: "",
+    translatedUrl: "",
+    unknown1: false,
+    subtitleId: 0,
+  };
 }
 
 export const SubtitlesObject: MessageFns<SubtitlesObject> = {
@@ -1887,8 +1937,8 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     if (message.url !== "") {
       writer.uint32(18).string(message.url);
     }
-    if (message.unknown0 !== 0) {
-      writer.uint32(24).int32(message.unknown0);
+    if (message.hasTranslation !== false) {
+      writer.uint32(24).bool(message.hasTranslation);
     }
     if (message.translatedLanguage !== "") {
       writer.uint32(34).string(message.translatedLanguage);
@@ -1896,11 +1946,11 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     if (message.translatedUrl !== "") {
       writer.uint32(42).string(message.translatedUrl);
     }
-    if (message.unknown1 !== 0) {
-      writer.uint32(48).int32(message.unknown1);
+    if (message.unknown1 !== false) {
+      writer.uint32(48).bool(message.unknown1);
     }
-    if (message.unknown2 !== 0) {
-      writer.uint32(56).int32(message.unknown2);
+    if (message.subtitleId !== 0) {
+      writer.uint32(56).uint32(message.subtitleId);
     }
     return writer;
   },
@@ -1933,7 +1983,7 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
             break;
           }
 
-          message.unknown0 = reader.int32();
+          message.hasTranslation = reader.bool();
           continue;
         }
         case 4: {
@@ -1957,7 +2007,7 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
             break;
           }
 
-          message.unknown1 = reader.int32();
+          message.unknown1 = reader.bool();
           continue;
         }
         case 7: {
@@ -1965,7 +2015,7 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
             break;
           }
 
-          message.unknown2 = reader.int32();
+          message.subtitleId = reader.uint32();
           continue;
         }
       }
@@ -1981,11 +2031,11 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     return {
       language: isSet(object.language) ? globalThis.String(object.language) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      unknown0: isSet(object.unknown0) ? globalThis.Number(object.unknown0) : 0,
+      hasTranslation: isSet(object.hasTranslation) ? globalThis.Boolean(object.hasTranslation) : false,
       translatedLanguage: isSet(object.translatedLanguage) ? globalThis.String(object.translatedLanguage) : "",
       translatedUrl: isSet(object.translatedUrl) ? globalThis.String(object.translatedUrl) : "",
-      unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
-      unknown2: isSet(object.unknown2) ? globalThis.Number(object.unknown2) : 0,
+      unknown1: isSet(object.unknown1) ? globalThis.Boolean(object.unknown1) : false,
+      subtitleId: isSet(object.subtitleId) ? globalThis.Number(object.subtitleId) : 0,
     };
   },
 
@@ -1997,8 +2047,8 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.unknown0 !== 0) {
-      obj.unknown0 = Math.round(message.unknown0);
+    if (message.hasTranslation !== false) {
+      obj.hasTranslation = message.hasTranslation;
     }
     if (message.translatedLanguage !== "") {
       obj.translatedLanguage = message.translatedLanguage;
@@ -2006,11 +2056,11 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     if (message.translatedUrl !== "") {
       obj.translatedUrl = message.translatedUrl;
     }
-    if (message.unknown1 !== 0) {
-      obj.unknown1 = Math.round(message.unknown1);
+    if (message.unknown1 !== false) {
+      obj.unknown1 = message.unknown1;
     }
-    if (message.unknown2 !== 0) {
-      obj.unknown2 = Math.round(message.unknown2);
+    if (message.subtitleId !== 0) {
+      obj.subtitleId = Math.round(message.subtitleId);
     }
     return obj;
   },
@@ -2022,11 +2072,11 @@ export const SubtitlesObject: MessageFns<SubtitlesObject> = {
     const message = createBaseSubtitlesObject();
     message.language = object.language ?? "";
     message.url = object.url ?? "";
-    message.unknown0 = object.unknown0 ?? 0;
+    message.hasTranslation = object.hasTranslation ?? false;
     message.translatedLanguage = object.translatedLanguage ?? "";
     message.translatedUrl = object.translatedUrl ?? "";
-    message.unknown1 = object.unknown1 ?? 0;
-    message.unknown2 = object.unknown2 ?? 0;
+    message.unknown1 = object.unknown1 ?? false;
+    message.subtitleId = object.subtitleId ?? 0;
     return message;
   },
 };
