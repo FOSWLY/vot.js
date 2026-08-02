@@ -54,6 +54,7 @@ export enum VideoTranslationStatus {
   FAILED = 0,
   FINISHED = 1,
   WAITING = 2,
+  // also named as NEED_CLIENT_UPDATE
   LONG_WAITING = 3,
   PART_CONTENT = 5,
   AUDIO_REQUESTED = 6,
@@ -73,6 +74,10 @@ export enum AudioDownloadType {
   WEB_API_SLOW = "web_api_slow",
   WEB_API_STEAL_SIG_AND_N = "web_api_steal_sig_and_n",
   WEB_API_COMBINED = "web_api_get_all_generating_urls_data_from_iframe,web_api_steal_sig_and_n",
+  WEB_ABR = "web_abr",
+  WEB_SABR = "web_sabr",
+  WEB_MSE_PROXY = "web_mse_proxy",
+  EMPTY_PLUG = "empty_plug",
 }
 
 export type VideoTranslationCacheOpts<T extends string = VideoService> = {

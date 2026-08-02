@@ -242,6 +242,7 @@ export class YandexProvider<
           await this.requestVtransFailAudio(url);
           await this.requestVtransAudio(url, translationData.translationId, {
             audioFile: new Uint8Array(),
+            // maybe change it to AudioDownloadType.EMPTY_PLUG?
             fileId:
               AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
           });

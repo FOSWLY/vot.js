@@ -1,3 +1,24 @@
+# 3.0.2
+
+## Core
+
+- Added new `AudioDownloadType` enum values:
+
+  - `WEB_ABR`
+  - `WEB_SABR`
+  - `WEB_MSE_PROXY`
+  - `EMPTY_PLUG`
+
+## Shared
+
+- Improved Yandex protobuf schema
+- Added `chromiumRevision` value
+- Bump `componentVersion` value
+
+## Workspace
+
+- Added autobump `chromiumRevision` on `componentVersion` update
+
 # 3.0.1
 
 ## Ext

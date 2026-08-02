@@ -4,8 +4,8 @@ import VOTClient from "../packages/node/src";
 import { getVideoData } from "../packages/node/src/utils/videoData";
 
 class CustomProvider extends BaseProvider {
-  override async translateVideo(
-    opts: BaseVideoTranslationOpts & {
+  async translateVideo(
+    _opts: BaseVideoTranslationOpts & {
       test: "passed";
     },
   ): ReturnType<BaseProvider["translateVideo"]> {
