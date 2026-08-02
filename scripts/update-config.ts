@@ -65,6 +65,14 @@ async function getActualVersion(version: string) {
   return isNewer ? newVersion : version;
 }
 
-config.componentVersion = await getActualVersion(config.componentVersion);
+const yaActualVersion = await getActualVersion(config.componentVersion);
+config.componentVersion = yaActualVersion;
+
+const chromiumRevision = yaActualVersion.split(".").at(-1);
+if (chromiumRevision) {
+  console.log(`Updating chromiumRevision to: ${chromiumRevision}`);
+  config.chromiumRevision = chromiumRevision;
+}
+
 config.version = version;
 await rewriteConfig(config);
