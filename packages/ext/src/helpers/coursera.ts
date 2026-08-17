@@ -8,6 +8,10 @@ import VideoJSHelper from "../players/videojs";
 import type { MinimalVideoData } from "../types/client";
 import type * as CourseraPlayer from "../types/helpers/coursera";
 import type * as VideoJS from "../types/helpers/videojs";
+import {
+  getCourseraCourseSlugFromPath,
+  getCourseraVideoIdFromPath,
+} from "./courseraPaths";
 
 export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";
@@ -34,10 +38,7 @@ export default class CourseraHelper extends VideoJSHelper {
   }
 
   getCourseSlug(): string | undefined {
-    const matched =
-      /learn\/([^/]+)\/lecture/.exec(window.location.pathname) ??
-      /lecture\/([^/]+)\//.exec(window.location.pathname);
-    return matched?.[1];
+    return getCourseraCourseSlugFromPath(window.location.pathname);
   }
 
   getCourseId(): string | undefined {
@@ -142,9 +143,6 @@ export default class CourseraHelper extends VideoJSHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    const matched =
-      /learn\/([^/]+)\/lecture\/([^/]+)/.exec(url.pathname) ??
-      /lecture\/([^/]+)\/([^/]+)/.exec(url.pathname);
-    return matched?.[0];
+    return getCourseraVideoIdFromPath(url.pathname);
   }
 }
