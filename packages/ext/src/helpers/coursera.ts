@@ -8,14 +8,42 @@ import VideoJSHelper from "../players/videojs";
 import type { MinimalVideoData } from "../types/client";
 import type * as CourseraPlayer from "../types/helpers/coursera";
 import type * as VideoJS from "../types/helpers/videojs";
-import {
-  getCourseraCourseSlugFromPath,
-  getCourseraVideoIdFromPath,
-} from "./courseraPaths";
 
 export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";
   SUBTITLE_SOURCE = "coursera";
+
+  /**
+   * Coursera on-demand item types that can embed the same Video.js player
+   * as lectures.
+   */
+  static VIDEO_ITEM_TYPES = [
+    "lecture",
+    "ungradedLab",
+    "ungradedWidget",
+    "supplement",
+    "programmingLab",
+    "programmingAssignment",
+    "notebook",
+    "lab",
+    "quiz",
+    "exam",
+    "peer",
+    "discussionPrompt",
+    "honors",
+    "staffGraded",
+    "assignment",
+    "review",
+    "workspaceLab",
+    "ungradedLti",
+    "gradedLti",
+  ] as const;
+
+  static LEARN_ITEM_RE = new RegExp(
+    `learn/([^/]+)/(${this.VIDEO_ITEM_TYPES.join("|")})/([^/]+)`,
+  );
+  static PREVIEW_LECTURE_RE = /lecture\/([^/]+)\/([^/]+)/;
+  static LEARN_SLUG_RE = /learn\/([^/]+)/;
 
   async getCourseData(courseIdOrSlug: string | number) {
     try {
@@ -38,7 +66,10 @@ export default class CourseraHelper extends VideoJSHelper {
   }
 
   getCourseSlug(): string | undefined {
-    return getCourseraCourseSlugFromPath(window.location.pathname);
+    return (
+      CourseraHelper.LEARN_SLUG_RE.exec(window.location.pathname)?.[1] ??
+      CourseraHelper.PREVIEW_LECTURE_RE.exec(window.location.pathname)?.[1]
+    );
   }
 
   getCourseId(): string | undefined {
@@ -143,6 +174,9 @@ export default class CourseraHelper extends VideoJSHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return getCourseraVideoIdFromPath(url.pathname);
+    return (
+      CourseraHelper.LEARN_ITEM_RE.exec(url.pathname)?.[0] ??
+      CourseraHelper.PREVIEW_LECTURE_RE.exec(url.pathname)?.[0]
+    );
   }
 }
