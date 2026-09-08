@@ -136,9 +136,11 @@ message PartialAudioBufferObject {
 message ChunkAudioObject {
   PartialAudioBufferObject audioBuffer = 1;
   // 1-xxx... (chunks count)
+  // can be skipped for mse_proxy, but set for latest chunk
   int32 audioPartsLength = 2;
   // I don't know why it's a fileId, but they call it that
-  // {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
+  // old: {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
+  // new: random-web_mse_proxy-xxx-xxx-xx-xx
   string fileId = 3;
   // current version only 1
   int32 version = 4;

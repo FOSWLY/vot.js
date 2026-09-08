@@ -219,11 +219,15 @@ export interface ChunkAudioObject {
   audioBuffer:
     | PartialAudioBufferObject
     | undefined;
-  /** 1-xxx... (chunks count) */
+  /**
+   * 1-xxx... (chunks count)
+   * can be skipped for mse_proxy, but set for latest chunk
+   */
   audioPartsLength: number;
   /**
    * I don't know why it's a fileId, but they call it that
-   * {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
+   * old: {"downloadType":"web_api_get_all_generating_urls_data_from_iframe","itag":251,"minChunkSize":5295308,"fileSize":"xxxx"}
+   * new: random-web_mse_proxy-xxx-xxx-xx-xx
    */
   fileId: string;
   /** current version only 1 */
