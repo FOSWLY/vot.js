@@ -11,7 +11,6 @@ import {
 } from "../types/providers/yandex";
 import {
   AudioBufferObject,
-  AudioDownloadType,
   GetSubtitlesResponse,
   PartialAudioObject,
   StreamPingOptions,
@@ -241,10 +240,8 @@ export class YandexProvider<
           // try to fix with fake requests (only for youtube)
           await this.requestVtransFailAudio(url);
           await this.requestVtransAudio(url, translationData.translationId, {
-            audioFile: new Uint8Array(),
-            // maybe change it to AudioDownloadType.EMPTY_PLUG?
-            fileId:
-              AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
+            audioFile: new Uint8Array(0),
+            fileId: `fallback-empty-audio:video-translation:${videoData.videoId}`,
           });
           return await this.translateVideo({
             videoData,

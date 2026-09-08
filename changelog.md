@@ -1,3 +1,19 @@
+# 3.0.3
+
+## Core
+
+- Changed default `fileId` to `fallback-empty-audio:<purpose>:<videoId>` for failed audio in translateVideo `shouldSendFailedAudio` section
+
+## Shared
+
+- Bump `sec-ch-ua` secure headers to chromium 150
+- Bump `userAgent` header
+- Bump `componentVersion` value
+
+## Workspace
+
+- Bump dev depends
+
 # 3.0.2
 
 ## Core

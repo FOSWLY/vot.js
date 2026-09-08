@@ -80,7 +80,9 @@ message VideoTranslationCacheItem {
   optional int32 remainingTime = 2;
   // exists if status is 3 (error)
   optional string message = 3;
-  // exists if status is 3 (error). Value is 5
+  // exists if status is 3 (error).
+  // old value is 5
+  // new value is 1
   optional int32 unknown0 = 4;
   // MAYBE
   // value 1 is music_detected
