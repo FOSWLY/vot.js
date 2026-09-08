@@ -524,7 +524,7 @@ export default [
     needExtraData: true,
   },
   {
-    // ONLY IF YOU LOGINED TO COURSERA /learn/NAME/lecture/XXXX
+    // ONLY IF YOU LOGINED TO COURSERA /learn/NAME/{lecture,ungradedLab,...}/XXXX
     host: ExtVideoService.coursera,
     url: "https://www.coursera.org/",
     match: /coursera.org$/,

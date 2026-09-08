@@ -4,6 +4,10 @@
 
 - Changed default `fileId` to `fallback-empty-audio:<purpose>:<videoId>` for failed audio in translateVideo `shouldSendFailedAudio` section
 
+## Ext
+
+- Added parse Coursera lab and other non-lecture item urls (#130)
+
 ## Shared
 
 - Bump `sec-ch-ua` secure headers to chromium 150

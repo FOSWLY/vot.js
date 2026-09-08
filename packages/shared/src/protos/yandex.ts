@@ -156,7 +156,11 @@ export interface VideoTranslationCacheItem {
   message?:
     | string
     | undefined;
-  /** exists if status is 3 (error). Value is 5 */
+  /**
+   * exists if status is 3 (error).
+   * old value is 5
+   * new value is 1
+   */
   unknown0?:
     | number
     | undefined;
