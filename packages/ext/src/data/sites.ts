@@ -218,6 +218,12 @@ export default [
     selector: sharedSelectors.flowplayer,
   },
   {
+    host: CoreVideoService.joidatabase,
+    url: "https://www.the-joi-database.com/api/stream/",
+    match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
+    selector: "#small-player-container",
+  },
+  {
     host: CoreVideoService.picarto,
     url: "https://picarto.tv/",
     match: (url: URL) =>

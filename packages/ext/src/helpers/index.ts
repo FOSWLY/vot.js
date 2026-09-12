@@ -27,6 +27,7 @@ import FacebookHelper from "./facebook";
 import GoogleDriveHelper from "./googledrive";
 import IgnHelper from "./ign";
 import IMDBHelper from "./imdb";
+import JOIDatabaseHelper from "./joidatabase";
 import JoveHelper from "./jove";
 import KickHelper from "./kick";
 import KickstarterHelper from "./kickstarter";
@@ -214,6 +215,7 @@ export const availableHelpers = {
   [CoreVideoService.rtnews]: RtNewsHelper,
   [CoreVideoService.bitview]: BitviewHelper,
   [CoreVideoService.thisvid]: ThisVidHelper,
+  [CoreVideoService.joidatabase]: JOIDatabaseHelper,
   [CoreVideoService.ign]: IgnHelper,
   [CoreVideoService.bunkr]: BunkrHelper,
   [CoreVideoService.imdb]: IMDBHelper,
