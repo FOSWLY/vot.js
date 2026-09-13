@@ -688,6 +688,7 @@ export default [
     url: "https://www.netacad.com/",
     match: /^(www\.)?netacad\.com/,
     selector: sharedSelectors.videoJsUniversal,
+    shadowRoot: true,
     needExtraData: true,
   },
   {

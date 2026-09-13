@@ -3,6 +3,7 @@ import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 import { BaseHelper } from "../helpers/base";
 import type * as VideoJS from "../types/helpers/videojs";
+import { querySelectorDeep } from "../utils/dom";
 
 type VideoJSImport = {
   getPlayer?: (idOrEl: string | Element) => unknown;
@@ -19,21 +20,51 @@ type PlayerCandidate = {
   id?: () => string;
 };
 
+type SourceLike = {
+  src?: string | null;
+  type?: string | null;
+};
+
+function isPreferredMedia(source: SourceLike) {
+  const type = source.type?.toLowerCase().split(";")[0].trim();
+  if (type === "video/mp4" || type === "video/webm") {
+    return true;
+  }
+
+  const path = source.src?.split(/[?#]/)[0].toLowerCase();
+  return Boolean(path?.endsWith(".mp4") || path?.endsWith(".webm"));
+}
+
+function selectVideoUrl(candidates: SourceLike[]): string | undefined {
+  const available = candidates.filter(
+    (source): source is SourceLike & { src: string } => Boolean(source.src),
+  );
+
+  return (available.find(isPreferredMedia) ?? available[0])?.src;
+}
+
 /**
  * Shared class for all videojs players
  */
 export default class VideoJSHelper extends BaseHelper {
   SUBTITLE_SOURCE = "videojs";
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
+  static VIDEOJS_SELECTOR =
+    "video.vjs-tech, video[id$='_html5_api'], video[src], video";
 
-  static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>():
-    | VideoJS.Player<T>
-    | undefined {
+  static getTechEl(isShadowRoot = false) {
+    return isShadowRoot
+      ? querySelectorDeep<HTMLVideoElement>(VideoJSHelper.VIDEOJS_SELECTOR)
+      : document.querySelector<HTMLVideoElement>(
+          VideoJSHelper.VIDEOJS_SELECTOR,
+        );
+  }
+
+  static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>(
+    isShadowRoot = false,
+  ): VideoJS.Player<T> | undefined {
     const vjs = (window as VideoJSWindow).videojs;
-
-    const techEl = document.querySelector<HTMLVideoElement>(
-      "video.vjs-tech, video[id$='_html5_api'], video",
-    );
+    const techEl = VideoJSHelper.getTechEl(isShadowRoot);
 
     const derivedPlayerId = techEl?.id?.endsWith("_html5_api")
       ? techEl.id.slice(0, -"_html5_api".length)
@@ -77,50 +108,45 @@ export default class VideoJSHelper extends BaseHelper {
     return undefined;
   }
 
-  getVideoDataByPlayer(videoId: string) {
+  getVideoDataByPlayer(videoId: string, isShadowRoot = false) {
     try {
-      const player = VideoJSHelper.getPlayer();
-
-      const techEl = document.querySelector<HTMLVideoElement>(
-        "video.vjs-tech, video[id$='_html5_api'], video[src], video",
-      );
-
+      const player = VideoJSHelper.getPlayer(isShadowRoot);
+      const techEl = VideoJSHelper.getTechEl(isShadowRoot);
       if (!player && !techEl) {
         throw new Error(
           `Video player/video element not found, videoId ${videoId}`,
         );
       }
 
-      // duration
       const duration = player?.duration?.() ?? techEl?.duration;
 
-      // url
-      let url: string | undefined;
+      const candidates: SourceLike[] = [];
       if (player) {
         const sources =
           typeof player.currentSources === "function"
             ? player.currentSources()
             : player.getCache?.()?.sources;
 
-        const videoUrl = Array.isArray(sources)
-          ? sources.find(
-              (source) =>
-                source?.type === "video/mp4" ||
-                source?.type === "video/webm" ||
-                source?.src,
-            )
-          : undefined;
-
-        url = videoUrl?.src;
+        if (Array.isArray(sources)) {
+          candidates.push(...sources);
+        }
       }
 
-      url ??=
-        techEl?.currentSrc ||
-        techEl?.src ||
-        techEl?.querySelector<HTMLSourceElement>("source")?.src ||
-        techEl?.getAttribute?.("src") ||
-        undefined;
+      if (techEl) {
+        candidates.push(
+          { src: techEl.currentSrc },
+          { src: techEl.src },
+          ...Array.from(
+            techEl.querySelectorAll<HTMLSourceElement>("source"),
+          ).map((source) => ({
+            src: source.src,
+            type: source.getAttribute("type"),
+          })),
+          { src: techEl.getAttribute?.("src") },
+        );
+      }
 
+      const url = selectVideoUrl(candidates);
       if (!url) {
         throw new Error(`Failed to find video url for videoID ${videoId}`);
       }
@@ -137,10 +163,7 @@ export default class VideoJSHelper extends BaseHelper {
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const techEl = document.querySelector<HTMLVideoElement>(
-      "video.vjs-tech, video[id$='_html5_api'], video[src], video",
-    );
-
+    const techEl = VideoJSHelper.getTechEl();
     const trackEls = techEl
       ? Array.from(techEl.querySelectorAll<HTMLTrackElement>("track[src]"))
       : [];

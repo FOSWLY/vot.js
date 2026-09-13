@@ -1,4 +1,3 @@
-import { proxyMedia } from "@vot.js/shared/utils/utils";
 import VideoJSHelper from "../players/videojs";
 import type { MinimalVideoData } from "../types/client";
 
@@ -7,18 +6,12 @@ export default class NetacadHelper extends VideoJSHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    const data = this.getVideoDataByPlayer(videoId);
+    const data = this.getVideoDataByPlayer(videoId, true);
     if (!data) {
       return undefined;
     }
 
-    const { url, duration, subtitles } = data;
-
-    return {
-      url: proxyMedia(new URL(url)),
-      duration,
-      subtitles,
-    };
+    return data;
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

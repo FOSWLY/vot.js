@@ -1,3 +1,27 @@
+# 3.0.4
+
+## Ext
+
+- Fixed Netacad helper
+- Added `querySelectorDeep` utility function, available from `/utils/dom`
+- Added support ShadowRoot for VideoJS player
+- Added check all candidates for find `.mp4` / `.webm` video url in VideoJS Helper instead of return first candidate that can be `.m3u8` url
+- Removed duplicate code for `getTechEl` in VideoJS Helper
+- Removed outdated exports `/utils/vot`, `/protobuf`, `/typebox/*` from package.json
+
+## Node
+
+- Removed outdated export `/typebox/*` from package.json
+
+## Core
+
+- Removed outdated export `/typebox/*` from package.json
+
+## Shared
+
+- Removed outdated export `/typebox/*` from package.json
+- Bump `componentVersion` value
+
 # 3.0.3
 
 ## Core
