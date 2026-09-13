@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/shared",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "shared for all @vot.js package",
   "keywords": [
     "api",
@@ -83,9 +83,6 @@
       "require": "./dist/utils/utils.js",
       "import": "./dist/utils/utils.js",
       "types": "./dist/utils/utils.d.ts"
-    },
-    "./typebox/*": {
-      "import": "./dist/typebox/*.ts"
     }
   },
   "publishConfig": {

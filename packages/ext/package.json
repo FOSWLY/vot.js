@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/ext",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "package for web extensions",
   "keywords": [
     "api",
@@ -69,18 +69,10 @@
       "import": "./dist/utils/videoData.js",
       "types": "./dist/utils/videoData.d.ts"
     },
-    "./utils/vot": {
-      "require": "./dist/utils/vot.js",
-      "import": "./dist/utils/vot.js",
-      "types": "./dist/utils/vot.d.ts"
-    },
-    "./protobuf": {
-      "require": "./dist/protobuf.js",
-      "import": "./dist/protobuf.js",
-      "types": "./dist/protobuf.d.ts"
-    },
-    "./typebox/*": {
-      "import": "./dist/typebox/*.ts"
+    "./utils/dom": {
+      "require": "./dist/utils/dom.js",
+      "import": "./dist/utils/dom.js",
+      "types": "./dist/utils/dom.d.ts"
     }
   },
   "publishConfig": {

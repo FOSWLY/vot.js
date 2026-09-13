@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/node",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "package for runtimes",
   "keywords": [
     "api",
@@ -73,9 +73,6 @@
       "require": "./dist/utils/fetchAgent.js",
       "import": "./dist/utils/fetchAgent.js",
       "types": "./dist/utils/fetchAgent.d.ts"
-    },
-    "./typebox/*": {
-      "import": "./dist/typebox/*.ts"
     }
   },
   "publishConfig": {

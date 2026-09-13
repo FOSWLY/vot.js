@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/core",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "core package",
   "keywords": [
     "api",
@@ -73,9 +73,6 @@
       "require": "./dist/protobuf.js",
       "import": "./dist/protobuf.js",
       "types": "./dist/protobuf.d.ts"
-    },
-    "./typebox/*": {
-      "import": "./dist/typebox/*.ts"
     }
   },
   "publishConfig": {
