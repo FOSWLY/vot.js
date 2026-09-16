@@ -3,7 +3,34 @@ import { ClientResponse } from "../types/client";
 import { YandexProviderOpts } from "../types/providers/yandex";
 import { VideoService } from "../types/service";
 import { YandexProvider } from "./yandex";
+import { VOTJSError } from "../client";
 
+export class VOTNextWorkerProvider<
+  V extends string = VideoService,
+> extends YandexProvider<V> {
+  constructor(opts: YandexProviderOpts = {}) {
+    opts.host = opts.host ?? config.hostWorker;
+    super(opts);
+  }
+
+  override mergeHeaders(
+    ...headers: Record<string, string>[]
+  ): Record<string, string> {
+    const data = Object.assign({}, this.headers, ...headers);
+    try {
+      return {
+        "User-Agent": `vot.js/${config.version}`,
+        "X-VOT-Headers": btoa(JSON.stringify(data)),
+      };
+    } catch {
+      throw new VOTJSError("Failed to encode headers for VOT Worker request");
+    }
+  }
+}
+
+/**
+ * @deprecated Use `VOTNextWorkerProvider` instead. This class is kept for backward compatibility and will be merged with `VOTNextWorkerProvider` in the future
+ */
 export class VOTWorkerProvider<
   V extends string = VideoService,
 > extends YandexProvider<V> {
@@ -92,3 +119,5 @@ export class VOTWorkerProvider<
     }
   }
 }
+
+export { VOTWorkerProvider as VOTLegacyWorkerProvider };

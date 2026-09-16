@@ -77,6 +77,10 @@ export class YandexProvider<
     };
   }
 
+  mergeHeaders(...headers: Record<string, string>[]): Record<string, string> {
+    return Object.assign({}, ...headers);
+  }
+
   async getSession(module: SessionModule): Promise<ClientSession> {
     const timestamp = getTimestamp();
     const session = this.sessions[module];
@@ -98,9 +102,13 @@ export class YandexProvider<
   async createSession(module: SessionModule) {
     const uuid = getUUID();
     const body = YandexSessionProtobuf.encodeSessionRequest(uuid, module);
-    const res = await this.request("/session/create", body, {
-      "Vtrans-Signature": await getSignature(body),
-    });
+    const res = await this.request(
+      "/session/create",
+      body,
+      this.mergeHeaders({
+        "Vtrans-Signature": await getSignature(body),
+      }),
+    );
 
     if (!res.success) {
       throw new VOTJSError("Failed to request create session", res);
@@ -122,7 +130,9 @@ export class YandexProvider<
       JSON.stringify({
         video_url: url,
       }),
-      undefined,
+      this.mergeHeaders({
+        Accept: "application/json",
+      }),
       "PUT",
     );
     if (!res.data || typeof res.data === "string" || res.data.status !== 1) {
@@ -159,11 +169,11 @@ export class YandexProvider<
     const path = this.paths.videoTranslation;
     const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
     const apiTokenHeader = extraOpts.useLivelyVoice ? this.apiTokenHeader : {};
-    const res = await this.request(path, body, {
-      ...vtransHeaders,
-      ...apiTokenHeader,
-      ...headers,
-    });
+    const res = await this.request(
+      path,
+      body,
+      this.mergeHeaders(vtransHeaders, apiTokenHeader, headers),
+    );
 
     if (!res.success) {
       throw new VOTJSError("Failed to request video translation", res);
@@ -324,10 +334,7 @@ export class YandexProvider<
     const res = await this.request(
       path,
       body,
-      {
-        ...vtransHeaders,
-        ...headers,
-      },
+      this.mergeHeaders(vtransHeaders, headers),
       "PUT",
     );
 
@@ -348,10 +355,11 @@ export class YandexProvider<
     const body = YandexVOTProtobuf.encodeSubtitlesRequest(url, requestLang);
     const path = this.paths.videoSubtitles;
     const vsubsHeaders = await getSecYaHeaders("Vsubs", session, body, path);
-    const res = await this.request(path, body, {
-      ...vsubsHeaders,
-      ...headers,
-    });
+    const res = await this.request(
+      path,
+      body,
+      this.mergeHeaders(vsubsHeaders, headers),
+    );
 
     if (!res.success) {
       throw new VOTJSError("Failed to request video subtitles", res);
@@ -383,10 +391,11 @@ export class YandexProvider<
     const path = this.paths.streamPing;
     const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
 
-    const res = await this.request(path, body, {
-      ...vtransHeaders,
-      ...headers,
-    });
+    const res = await this.request(
+      path,
+      body,
+      this.mergeHeaders(vtransHeaders, headers),
+    );
 
     if (!res.success) {
       throw new VOTJSError("Failed to request stream ping", res);
@@ -422,10 +431,11 @@ export class YandexProvider<
     const path = this.paths.streamTranslation;
     const vtransHeaders = await getSecYaHeaders("Vtrans", session, body, path);
 
-    const res = await this.request(path, body, {
-      ...vtransHeaders,
-      ...headers,
-    });
+    const res = await this.request(
+      path,
+      body,
+      this.mergeHeaders(vtransHeaders, headers),
+    );
 
     if (!res.success) {
       throw new VOTJSError("Failed to request stream translation", res);
@@ -495,10 +505,7 @@ export class YandexProvider<
     const res = await this.request(
       path,
       body,
-      {
-        ...vtransHeaders,
-        ...headers,
-      },
+      this.mergeHeaders(vtransHeaders, headers),
       "POST",
     );
 

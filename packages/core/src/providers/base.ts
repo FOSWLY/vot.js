@@ -103,6 +103,7 @@ export abstract class BaseProvider<V extends string = VideoService> {
     const options = this.getOpts(
       body,
       {
+        Accept: "application/json",
         "Content-Type": "application/json",
         ...headers,
       },

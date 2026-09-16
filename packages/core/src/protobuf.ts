@@ -52,7 +52,7 @@ function encodeTranslationRequest(
     responseLanguage: responseLang,
     wasStream,
     unknown2: true,
-    unknown3: 2,
+    configVersion: 2,
     bypassCache,
     useLivelyVoice,
     videoTitle,

@@ -7,7 +7,7 @@
 
 Неофициальная библиотека для взаимодействия с Yandex VOT API, которая поддерживает работу с JavaScript и TypeScript.
 
-Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/vot-worker), для этого необходимо создать клиент `VOTClient` с провайдером `VOTWorkerProvider` и указать домен воркер-сервера, например `vot-worker.toil.cc`.
+Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/vot-worker), для этого необходимо создать клиент `VOTClient` с провайдером `VOTNextWorkerProvider` и указать домен воркер-сервера, например `vot-worker.toil.cc`.
 
 > [!WARNING]
 > Библиотека создана исключительно в исследовательских целях и не предназначена для коммерческого использования. Все права на оригинальное программное обеспечение принадлежат их правообладателям. Библиотека не связана с оригинальными правообладателями
@@ -47,7 +47,7 @@ const result = await client.translateVideo({ videoData });
 ```ts
 const client = new VOTClient({
   host: "vot-worker.toil.cc",
-  provider: VOTWorkerProvider,
+  provider: VOTNextWorkerProvider,
 });
 ```
 

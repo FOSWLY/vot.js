@@ -1,3 +1,24 @@
+# 3.1.0
+
+> [!CAUTION]
+> VOTWorkerProvider is deprecated now. Please use `VOTNextWorkerProvider` with new vot-worker service
+
+## Core
+
+- [!] `VOTWorkerProvider` mark as deprecated. This class is kept for backward compatibility and will be merged with `VOTNextWorkerProvider` in the future
+- Added `VOTNextWorkerProvider` class for new vot-worker service
+- Added `VOTLegacyWorkerProvider` alias for `VOTWorkerProvider` class to avoid future changes in existing code
+
+## Shared
+
+- Renamed `unknown3` to `configVersion` in `VideoTranslationRequest` proto schema
+- Bump `componentVersion` value
+
+## Workspace
+
+- Added caching Yandex component version to `.yabrover_cache` file to avoid unnecessary requests to Yandex RSS feed
+- Better console logs for Yandex version fetching and caching
+
 # 3.0.4
 
 ## Ext

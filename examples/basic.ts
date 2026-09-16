@@ -5,7 +5,7 @@ import {
 import VOTClient from "../packages/node/dist/client";
 import { getVideoData } from "../packages/node/dist/utils/videoData";
 import { config } from "../packages/shared/src";
-import { VOTWorkerProvider } from "../packages/core/src/providers/votworker";
+import { VOTNextWorkerProvider } from "../packages/core/src/providers/votworker";
 
 const client = new VOTClient({
   // https://oauth.yandex.ru
@@ -71,7 +71,9 @@ console.log(response);
 
 // vot worker
 const workerClient = new VOTClient({
-  provider: VOTWorkerProvider,
+  // for vot-worker with json body requests
+  // provider: VOTLegacyWorkerProvider,
+  provider: VOTNextWorkerProvider,
 });
 
 response = await workerClient.translateVideo({

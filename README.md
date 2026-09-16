@@ -7,7 +7,7 @@
 
 An unofficial library for interacting with the Yandex VOT API, which supports working with JavaScript and TypeScript.
 
-The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTClient` client with provider `VOTWorkerProvider` and specify the domain of the worker server, for example `vot-worker.toil.cc`.
+The library supports working with [worker servers](https://github.com/FOSWLY/vot-worker), to do this, you need to create a `VOTClient` client with provider `VOTNextWorkerProvider` and specify the domain of the worker server, for example `vot-worker.toil.cc`.
 
 > [!WARNING]
 > The library was created exclusively for research purposes and isn't intended for commercial use. All rights to the original software belong to their respective right holders. The library isn't affiliated with the original rights holders
@@ -47,7 +47,7 @@ Proxying via [vot-worker](https://github.com/FOSWLY/vot-worker):
 ```ts
 const client = new VOTClient({
   host: "vot-worker.toil.cc",
-  provider: VOTWorkerProvider,
+  provider: VOTNextWorkerProvider,
 });
 ```
 

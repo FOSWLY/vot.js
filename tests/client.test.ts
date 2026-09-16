@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import VOTClient from "../packages/node/src/index";
 import { getVideoData } from "../packages/node/src/utils/videoData";
 import { VideoService } from "../packages/node/src/types/service";
-import { VOTWorkerProvider } from "../packages/core/src/providers/votworker";
+import { VOTNextWorkerProvider } from "../packages/core/src/providers/votworker";
 
 const url = "https://youtu.be/LK6nLR1bzpI";
 const videoData = await getVideoData(url);
@@ -44,7 +44,7 @@ test("Translate video m3u8", async () => {
 test("Translate video (worker)", async () => {
   const client = new VOTClient({
     host: "vot-worker.toil.cc",
-    provider: VOTWorkerProvider,
+    provider: VOTNextWorkerProvider,
   });
 
   const response = await client.translateVideo({
@@ -117,7 +117,7 @@ test("Get subtitles", async () => {
 test("Get subtitles (worker)", async () => {
   const client = new VOTClient({
     host: "vot-worker.toil.cc",
-    provider: VOTWorkerProvider,
+    provider: VOTNextWorkerProvider,
   });
 
   const response = await client.getSubtitles({

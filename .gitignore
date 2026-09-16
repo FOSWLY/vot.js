@@ -4,6 +4,7 @@
 docs
 
 .vscode
+.yabrover_cache
 .pytest_cache
 .env
 
