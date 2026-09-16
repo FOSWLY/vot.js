@@ -34,9 +34,9 @@ message VideoTranslationRequest {
   string responseLanguage = 14;
   bool unknown2 = 15; // 1?
   // before april 2025 is 1, but now it's 2
-  int32 unknown3 = 16;
-    // they have some kind of limiter on requests from one IP
-  // because after one such request it stops working
+  // ! maybe it's wrong name
+  int32 configVersion = 16;
+  // idk how it works
   bool bypassCache = 17;
   // translates videos with higher-quality voices
   // (https://github.com/ilyhalight/voice-over-translation/issues/897)

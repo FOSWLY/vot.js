@@ -88,12 +88,12 @@ export interface VideoTranslationRequest {
   responseLanguage: string;
   /** 1? */
   unknown2: boolean;
-  /** before april 2025 is 1, but now it's 2 */
-  unknown3: number;
   /**
-   * they have some kind of limiter on requests from one IP
-   * because after one such request it stops working
+   * before april 2025 is 1, but now it's 2
+   * ! maybe it's wrong name
    */
+  configVersion: number;
+  /** idk how it works */
   bypassCache: boolean;
   /**
    * translates videos with higher-quality voices
@@ -421,7 +421,7 @@ function createBaseVideoTranslationRequest(): VideoTranslationRequest {
     wasStream: false,
     responseLanguage: "",
     unknown2: false,
-    unknown3: 0,
+    configVersion: 0,
     bypassCache: false,
     useLivelyVoice: false,
     videoTitle: "",
@@ -466,8 +466,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.unknown2 !== false) {
       writer.uint32(120).bool(message.unknown2);
     }
-    if (message.unknown3 !== 0) {
-      writer.uint32(128).int32(message.unknown3);
+    if (message.configVersion !== 0) {
+      writer.uint32(128).int32(message.configVersion);
     }
     if (message.bypassCache !== false) {
       writer.uint32(136).bool(message.bypassCache);
@@ -589,7 +589,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
             break;
           }
 
-          message.unknown3 = reader.int32();
+          message.configVersion = reader.int32();
           continue;
         }
         case 17: {
@@ -641,7 +641,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
       wasStream: isSet(object.wasStream) ? globalThis.Boolean(object.wasStream) : false,
       responseLanguage: isSet(object.responseLanguage) ? globalThis.String(object.responseLanguage) : "",
       unknown2: isSet(object.unknown2) ? globalThis.Boolean(object.unknown2) : false,
-      unknown3: isSet(object.unknown3) ? globalThis.Number(object.unknown3) : 0,
+      configVersion: isSet(object.configVersion) ? globalThis.Number(object.configVersion) : 0,
       bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
       useLivelyVoice: isSet(object.useLivelyVoice) ? globalThis.Boolean(object.useLivelyVoice) : false,
       videoTitle: isSet(object.videoTitle) ? globalThis.String(object.videoTitle) : "",
@@ -686,8 +686,8 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     if (message.unknown2 !== false) {
       obj.unknown2 = message.unknown2;
     }
-    if (message.unknown3 !== 0) {
-      obj.unknown3 = Math.round(message.unknown3);
+    if (message.configVersion !== 0) {
+      obj.configVersion = Math.round(message.configVersion);
     }
     if (message.bypassCache !== false) {
       obj.bypassCache = message.bypassCache;
@@ -718,7 +718,7 @@ export const VideoTranslationRequest: MessageFns<VideoTranslationRequest> = {
     message.wasStream = object.wasStream ?? false;
     message.responseLanguage = object.responseLanguage ?? "";
     message.unknown2 = object.unknown2 ?? false;
-    message.unknown3 = object.unknown3 ?? 0;
+    message.configVersion = object.configVersion ?? 0;
     message.bypassCache = object.bypassCache ?? false;
     message.useLivelyVoice = object.useLivelyVoice ?? false;
     message.videoTitle = object.videoTitle ?? "";
