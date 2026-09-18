@@ -1109,3 +1109,26 @@ test("wistia", async () => {
   const normalized = await normalize(expected);
   expect(normalized).toBe(expected);
 });
+
+describe("joidatabase", () => {
+  const expectedId = "f6898c3d4b9cd2914a58e4b0";
+  const expected = `https://www.the-joi-database.com/api/stream/${expectedId}`;
+  test("normal", async () => {
+    const normalized = await normalize(
+      `https://www.the-joi-database.com/watch/${expectedId}`,
+    );
+    expect(normalized).toBe(expected);
+  });
+  test("embed", async () => {
+    const normalized = await normalize(
+      `https://www.the-joi-database.com/embed/${expectedId}`,
+    );
+    expect(normalized).toBe(expected);
+  });
+  test("s1 domain", async () => {
+    const normalized = await normalize(
+      `https://s1.the-joi-database.com/embed/${expectedId}`,
+    );
+    expect(normalized).toBe(expected);
+  });
+});

@@ -420,6 +420,11 @@ export default [
     match: /^fast.wistia.net$/,
   },
   {
+    host: CoreVideoService.joidatabase,
+    url: "https://www.the-joi-database.com/api/stream/",
+    match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
+  },
+  {
     host: CoreVideoService.custom,
     url: "stub",
     match: (url: URL) => /([^/]+)\.(mp4|webm)/.test(url.pathname),

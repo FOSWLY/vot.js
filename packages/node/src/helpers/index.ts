@@ -63,6 +63,7 @@ import YoukuHelper from "./youku";
 import YoutubeHelper from "./youtube";
 import ZDFHelper from "./zdf";
 import WistiaHelper from "./wistia";
+import JOIDatabaseHelper from "./joidatabase";
 
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as ArchiveHelper from "./archive";
@@ -125,6 +126,7 @@ export * as YoukuHelper from "./youku";
 export * as YoutubeHelper from "./youtube";
 export * as ZDFHelper from "./zdf";
 export * as WistiaHelper from "./wistia";
+export * as JOIDatabaseHelper from "./joidatabase";
 
 export const availableHelpers = {
   [CoreVideoService.mailru]: MailRuHelper,
@@ -192,6 +194,7 @@ export const availableHelpers = {
   [CoreVideoService.telegram]: TelegramHelper,
   [CoreVideoService.niconico]: NicoNicoHelper,
   [CoreVideoService.wistia]: WistiaHelper,
+  [CoreVideoService.joidatabase]: JOIDatabaseHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
