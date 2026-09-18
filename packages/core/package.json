@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/core",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "core package",
   "keywords": [
     "api",
@@ -63,11 +63,6 @@
       "require": "./dist/utils/videoData.js",
       "import": "./dist/utils/videoData.js",
       "types": "./dist/utils/videoData.d.ts"
-    },
-    "./utils/vot": {
-      "require": "./dist/utils/vot.js",
-      "import": "./dist/utils/vot.js",
-      "types": "./dist/utils/vot.d.ts"
     },
     "./protobuf": {
       "require": "./dist/protobuf.js",

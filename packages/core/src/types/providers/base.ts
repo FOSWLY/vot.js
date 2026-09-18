@@ -25,13 +25,27 @@ export type BaseVideoTranslationOpts<T extends string = VideoService> = {
   requestLang?: RequestLang;
   responseLang?: ResponseLang;
   headers?: RequestHeaders;
+  fetchOpts?: Record<string, unknown>;
 };
 
 export type BaseVideoSubtitlesOpts<T extends string = VideoService> = {
   videoData: VideoData<T>;
   requestLang?: RequestLang;
   headers?: RequestHeaders;
+  fetchOpts?: Record<string, unknown>;
 };
 
 export type BaseStreamTranslationOpts<T extends string = VideoService> =
   BaseVideoTranslationOpts<T>;
+
+export type GetSubtitleItem = {
+  language: string;
+  url: string;
+  translatedLanguage: string;
+  translatedUrl: string;
+};
+
+export type BaseGetSubtitlesResponse<T = GetSubtitleItem> = {
+  waiting: boolean;
+  subtitles: T[];
+};

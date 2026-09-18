@@ -1,3 +1,67 @@
+# 3.1.1
+
+## Ext
+
+- Added support for JOI Database (`https://www.the-joi-database.com/`) (thx @DeMoN288 in #132)
+
+## Node
+
+- Added support for JOI Database (`https://www.the-joi-database.com/`)
+
+## Core
+
+- Added `joidatabase` for VideoService
+- [!] Deprecate some types. All deprecated types will be removed in future releases:
+
+  **Migration guide** (usually rename or/and move types, no changes in fields):
+
+  a. moved `types/yandex.ts` -> `types/providers/base.ts` and renamed:
+
+  - `VideoSubtitlesOpts` -> `BaseVideoSubtitlesOpts`
+  - `StreamTranslationOpts` -> `BaseStreamTranslationOpts`
+  - `SubtitleItem` -> `GetSubtitleItem`
+  - `GetSubtitlesResponse` -> `BaseGetSubtitlesResponse`
+
+  b. moved `types/yandex.ts` -> `types/providers/yandex.ts`:
+
+  - `StreamPingOptions` -> `StreamPingOpts` (and renamed)
+  - `TranslationExtraOpts` -> `VideoTranslationExtraOpts` (and renamed)
+  - `TranslationHelpTarget` -> `VideoTranslationHelpTarget` (and renamed)
+  - `TranslationHelp` -> `VideoTranslationHelp` (and renamed)
+  - `VideoTranslationStatus`
+  - `VideoTranslationCacheOpts`
+  - `VideoTranslationCacheItem`
+  - `VideoTranslationCacheResponse`
+  - `VideoTranslationOpts`
+  - `TranslatedVideoTranslationResponse`
+  - `WaitingVideoTranslationResponse`
+  - `VideoTranslationResponse`
+  - `StreamTranslationObject`
+  - `TranslatedStreamTranslationResponse`
+  - `WaitingStreamTranslationResponse`
+  - `StreamTranslationResponse`
+  - `VideoTranslationFailAudioResponse`
+  - `AudioDownloadType`
+  - `AudioBufferObject` (re-export from `@vot.js/shared`)
+  - `PartialAudioBufferObject` (re-export from `@vot.js/shared`)
+
+  c. just renamed:
+
+  - `YandexVideoTranslationOpts` -> `VideoTranslationOpts` (`types/providers/yandex.ts`)
+
+  d. will removed in future:
+
+  - `FileIdObject` (`types/yandex.ts`)
+
+- [!] Removed old unused vot-backend methods (`/utils/vot.ts`) and types (`types/vot.ts`)
+- Added support for set inplace `fetchOpts` for all providers methods (except `getSession` and `createSession` methods in `YandexProvider`)
+- Added re-export `StreamInterval` and `VideoTranslationAudioResponse` to `types/providers/yandex.ts` from `@vot.js/shared/protos`
+- Method `pingStream` in `YandexProvider` now returns correct type `Promise<true>` instead of `Promise<boolean>`
+
+## Shared
+
+- Bump `componentVersion` value
+
 # 3.1.0
 
 > [!CAUTION]

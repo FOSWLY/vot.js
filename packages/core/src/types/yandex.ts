@@ -1,48 +1,20 @@
-import type {
-  AudioBufferObject as AudioBufferObjectProto,
-  PartialAudioBufferObject as PartialAudioBufferObjectProto,
+export type {
+  /**
+   * @deprecated use `PartialAudioBufferObject` from `/types/providers/yandex` or from `@vot.js/shared/protos` instead
+   */
+  AudioBufferObject,
+  /**
+   * @deprecated use `PartialAudioBufferObject` from `/types/providers/yandex` or from `@vot.js/shared/protos` instead
+   */
+  PartialAudioBufferObject,
 } from "@vot.js/shared/protos";
-import type {
-  RequestHeaders,
-  RequestLang,
-  ResponseLang,
-} from "@vot.js/shared/types/data";
 
-import type { VideoData } from "./client";
-import type { VideoService } from "./service";
-
+import { AudioDownloadType } from "./providers/yandex";
 /**
- * I guess in 2025 only video_file_url works
+ * for future convert this object using JSON.stringify
+ *
+ * @deprecated now unused in any modern strategy
  */
-export type TranslationHelpTarget = "video_file_url" | "subtitles_file_url";
-
-export type TranslationHelp = {
-  target: TranslationHelpTarget;
-  targetUrl: string;
-};
-
-/**
- * Read description about options in src/protos/yandex.(proto|ts) -> VideoTranslationRequest
- */
-export type TranslationExtraOpts = {
-  firstRequest?: boolean;
-  forceSourceLang?: boolean;
-  wasStream?: boolean;
-  bypassCache?: boolean;
-  useLivelyVoice?: boolean;
-  videoTitle?: string;
-};
-
-export type AudioBufferObject = AudioBufferObjectProto;
-export type PartialAudioBufferObject = PartialAudioBufferObjectProto;
-
-export type PartialAudioObject = {
-  audioPartsLength: number;
-  fileId: string;
-  version: 1;
-};
-
-// convert this object using JSON.stringify
 export type FileIdObject = {
   downloadType: AudioDownloadType;
   itag: number;
@@ -50,142 +22,101 @@ export type FileIdObject = {
   fileSize: string;
 };
 
-export enum VideoTranslationStatus {
-  FAILED = 0,
-  FINISHED = 1,
-  WAITING = 2,
-  // also named as NEED_CLIENT_UPDATE
-  LONG_WAITING = 3,
-  PART_CONTENT = 5,
-  AUDIO_REQUESTED = 6,
+export {
   /**
-   * requires login to yandex account
+   * @deprecated use `VideoTranslationHelpTarget` from `/types/providers/yandex`
    */
-  SESSION_REQUIRED = 7,
-}
-
-export enum AudioDownloadType {
-  WEB_API_VIDEO_SRC_FROM_IFRAME = "web_api_video_src_from_iframe",
-  WEB_API_VIDEO_SRC = "web_api_video_src",
-  WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME = "web_api_get_all_generating_urls_data_from_iframe",
-  WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME_TMP_EXP = "web_api_get_all_generating_urls_data_from_iframe_tmp_exp",
-  WEB_API_REPLACED_FETCH_INSIDE_IFRAME = "web_api_replaced_fetch_inside_iframe",
-  ANDROID_API = "android_api",
-  WEB_API_SLOW = "web_api_slow",
-  WEB_API_STEAL_SIG_AND_N = "web_api_steal_sig_and_n",
-  WEB_API_COMBINED = "web_api_get_all_generating_urls_data_from_iframe,web_api_steal_sig_and_n",
-  WEB_ABR = "web_abr",
-  WEB_SABR = "web_sabr",
-  WEB_MSE_PROXY = "web_mse_proxy",
-  EMPTY_PLUG = "empty_plug",
-}
-
-export type VideoTranslationCacheOpts<T extends string = VideoService> = {
-  videoData: VideoData<T>;
-  requestLang?: RequestLang;
-  responseLang?: ResponseLang;
-  headers?: RequestHeaders;
-};
-
-export type VideoTranslationCacheItem = {
-  status: VideoTranslationStatus;
-  remainingTime?: number;
-};
-
-export type VideoTranslationCacheResponse = {
-  default?: VideoTranslationCacheItem;
-  cloning?: VideoTranslationCacheItem;
-};
-
-export type VideoTranslationOpts<T extends string = VideoService> = {
-  videoData: VideoData<T>;
-  requestLang?: RequestLang;
-  responseLang?: ResponseLang;
-  translationHelp?: TranslationHelp[] | null;
-  headers?: RequestHeaders;
+  VideoTranslationHelpTarget as TranslationHelpTarget,
   /**
-   * extra translation options (doesn't work with VOT Backend API)
+   * @deprecated use `VideoTranslationHelp` from `/types/providers/yandex`
    */
-  extraOpts?: TranslationExtraOpts;
+  VideoTranslationHelp as TranslationHelp,
   /**
-   * for bypass youtube long waiting (doesn't work with VOT Backend API)
+   * @deprecated use `VideoTranslationExtraOpts` from `/types/providers/yandex`
    */
-  shouldSendFailedAudio?: boolean;
-};
+  VideoTranslationExtraOpts as TranslationExtraOpts,
+  /**
+   * @deprecated use `PartialAudioObject` from `/types/providers/yandex`
+   */
+  PartialAudioObject,
+  /**
+   * @deprecated use `VideoTranslationStatus` from `/types/providers/yandex`
+   */
+  VideoTranslationStatus,
+  /**
+   * @deprecated use `VideoTranslationCacheOpts` from `types/providers/yandex` instead
+   */
+  VideoTranslationCacheOpts,
+  /**
+   * @deprecated use `VideoTranslationCacheItem` from `types/providers/yandex` instead
+   */
+  VideoTranslationCacheItem,
+  /**
+   * @deprecated use `VideoTranslationCacheResponse` from `types/providers/yandex` instead
+   */
+  VideoTranslationCacheResponse,
+  /**
+   * @deprecated use `VideoTranslationOpts` from `types/providers/yandex` instead
+   */
+  VideoTranslationOpts,
+  /**
+   * @deprecated use `TranslatedVideoTranslationResponse` from `types/providers/yandex` instead
+   */
+  TranslatedVideoTranslationResponse,
+  /**
+   * @deprecated use `WaitingVideoTranslationResponse` from `types/providers/yandex` instead
+   */
+  WaitingVideoTranslationResponse,
+  /**
+   * @deprecated use `VideoTranslationResponse` from `types/providers/yandex` instead
+   */
+  VideoTranslationResponse,
+  /**
+   * @deprecated use `StreamPingOpts` from `types/providers/yandex` instead
+   */
+  StreamPingOpts as StreamPingOptions,
+  /**
+   * @deprecated use `StreamTranslationObject` from `types/providers/yandex` instead
+   */
+  StreamTranslationObject,
+  /**
+   * @deprecated use `TranslatedStreamTranslationResponse` from `types/providers/yandex` instead
+   */
+  TranslatedStreamTranslationResponse,
+  /**
+   * @deprecated use `WaitingStreamTranslationResponse` from `types/providers/yandex` instead
+   */
+  WaitingStreamTranslationResponse,
+  /**
+   * @deprecated use `StreamTranslationResponse` from `types/providers/yandex` instead
+   */
+  StreamTranslationResponse,
+  /**
+   * @deprecated use `VideoTranslationFailAudioResponse` from `types/providers/yandex` instead
+   */
+  VideoTranslationFailAudioResponse,
+  /**
+   * @deprecated use `AudioDownloadType` from `types/providers/yandex` instead
+   */
+  AudioDownloadType,
+} from "./providers/yandex";
 
-export type TranslatedVideoTranslationResponse = {
-  translationId: string;
-  translated: true;
-  url: string;
-  remainingTime: number;
-  status: VideoTranslationStatus;
-  message?: string;
-};
+export type {
 
-export type WaitingVideoTranslationResponse = {
-  translationId: string;
-  translated: false;
-  remainingTime: number;
-  status: VideoTranslationStatus;
-  message?: string;
-};
-
-export type VideoTranslationResponse =
-  | TranslatedVideoTranslationResponse
-  | WaitingVideoTranslationResponse;
-
-export type VideoSubtitlesOpts<T extends string = VideoService> = {
-  videoData: VideoData<T>;
-  requestLang?: RequestLang;
-  headers?: RequestHeaders;
-};
-
-export type StreamPingOptions = {
-  pingId: number;
-  headers?: RequestHeaders;
-};
-
-export type StreamTranslationOpts<T extends string = VideoService> = {
-  videoData: VideoData<T>;
-  requestLang?: RequestLang;
-  responseLang?: ResponseLang;
-  headers?: RequestHeaders;
-};
-
-export type StreamTranslationObject = {
-  url: string;
-  timestamp: string;
-};
-
-export type TranslatedStreamTranslationResponse = {
-  translated: true;
-  interval: number;
-  result: StreamTranslationObject;
-  pingId: number;
-};
-
-export type WaitingStreamTranslationResponse = {
-  translated: false;
-  interval: number;
-  message: string;
-};
-
-export type StreamTranslationResponse =
-  | TranslatedStreamTranslationResponse
-  | WaitingStreamTranslationResponse;
-
-export type VideoTranslationFailAudioResponse = {
-  status: number; // 1 - success (maybe it's tinyint)
-};
-
-export type SubtitleItem = {
-  language: string;
-  url: string;
-  translatedLanguage: string;
-  translatedUrl: string;
-};
-
-export type GetSubtitlesResponse = {
-  waiting: boolean;
-  subtitles: SubtitleItem[];
-};
+  /**
+   * @deprecated use `BaseStreamTranslationOpts` from `types/providers/base` instead
+   */
+  BaseStreamTranslationOpts as StreamTranslationOpts,
+  /**
+   * @deprecated use `BaseVideoSubtitlesOpts` from `types/providers/base` instead
+   */
+  BaseVideoSubtitlesOpts as VideoSubtitlesOpts,
+  /**
+   * @deprecated use `GetSubtitleItem` from `types/providers/base` instead
+   */
+  GetSubtitleItem as SubtitleItem,
+  /**
+   * @deprecated use `BaseGetSubtitlesResponse` from `types/providers/base` instead
+   */
+  BaseGetSubtitlesResponse as GetSubtitlesResponse,
+} from "./providers/base";

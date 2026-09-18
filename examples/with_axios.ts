@@ -13,6 +13,7 @@ class AxiosYandexProvider extends YandexProvider {
     body: Uint8Array,
     headers: Record<string, string> = {},
     method = "POST",
+    fetchOpts: Record<string, unknown> = {},
   ): Promise<ClientResponse<T>> {
     try {
       const res = await axios({
@@ -25,6 +26,7 @@ class AxiosYandexProvider extends YandexProvider {
         data: body,
         responseType: "arraybuffer",
         ...this.fetchOpts,
+        ...fetchOpts,
       });
       return {
         success: res.status === 200,

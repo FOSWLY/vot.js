@@ -1,11 +1,9 @@
-import {
-  AudioDownloadType,
-  type FileIdObject,
-} from "../packages/core/src/types/yandex";
+import crypto from "node:crypto";
+
 import VOTClient from "../packages/node/dist/client";
 import { getVideoData } from "../packages/node/dist/utils/videoData";
-import { config } from "../packages/shared/src";
 import { VOTNextWorkerProvider } from "../packages/core/src/providers/votworker";
+import { AudioDownloadType } from "../packages/core/src/types/providers/yandex";
 
 const client = new VOTClient({
   // https://oauth.yandex.ru
@@ -112,13 +110,7 @@ console.log("Translate video cache", translateCache);
 // eslint-disable-next-line no-unused-vars
 async function exampleOfSendYouTubeAudioDownload() {
   // !!! you MUST use real values !!!
-  const fakeFileId = JSON.stringify({
-    downloadType:
-      AudioDownloadType.WEB_API_GET_ALL_GENERATING_URLS_DATA_FROM_IFRAME,
-    fileSize: "10000000", // use real value
-    itag: 251,
-    minChunkSize: config.minChunkSize,
-  } satisfies FileIdObject);
+  const fakeFileId = `random-${AudioDownloadType.WEB_MSE_PROXY}-${crypto.randomUUID()}`;
 
   // use real data
   const fakeAudioFile = new Uint8Array([1, 1, 1, 1, 1, 1]);

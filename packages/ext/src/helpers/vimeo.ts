@@ -1,5 +1,5 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import type { TranslationHelp } from "@vot.js/core/types/yandex";
+import type { VideoTranslationHelp } from "@vot.js/core/types/providers/yandex";
 import type * as Vimeo from "@vot.js/shared/types/helpers/vimeo";
 import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
@@ -243,7 +243,7 @@ export default class VimeoHelper extends BaseHelper {
         ? ([
             { target: "video_file_url", targetUrl: video_url },
             { target: "subtitles_file_url", targetUrl: subtitles[0].url },
-          ] as TranslationHelp[])
+          ] as VideoTranslationHelp[])
         : null;
 
       return {

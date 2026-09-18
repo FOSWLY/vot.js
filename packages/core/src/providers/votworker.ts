@@ -1,9 +1,10 @@
 import { config } from "@vot.js/shared";
+
+import { YandexProvider } from "./yandex";
+import { VOTJSError } from "../client";
 import { ClientResponse } from "../types/client";
 import { YandexProviderOpts } from "../types/providers/yandex";
 import { VideoService } from "../types/service";
-import { YandexProvider } from "./yandex";
-import { VOTJSError } from "../client";
 
 export class VOTNextWorkerProvider<
   V extends string = VideoService,
@@ -44,6 +45,7 @@ export class VOTWorkerProvider<
     body: Uint8Array,
     headers: Record<string, string> = {},
     method = "POST",
+    fetchOpts: Record<string, unknown> = {},
   ): Promise<ClientResponse<T>> {
     const options = this.getOpts(
       JSON.stringify({
@@ -57,6 +59,7 @@ export class VOTWorkerProvider<
         "Content-Type": "application/json",
       },
       method,
+      fetchOpts,
     );
 
     try {
@@ -82,6 +85,7 @@ export class VOTWorkerProvider<
     body: unknown = null,
     headers: Record<string, string> = {},
     method = "POST",
+    fetchOpts: Record<string, unknown> = {},
   ): Promise<ClientResponse<T>> {
     const options = this.getOpts(
       JSON.stringify({
@@ -98,6 +102,7 @@ export class VOTWorkerProvider<
         "Content-Type": "application/json",
       },
       method,
+      fetchOpts,
     );
 
     try {

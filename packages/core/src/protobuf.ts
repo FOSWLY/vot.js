@@ -14,23 +14,23 @@ import {
   VideoTranslationResponse,
   YandexSessionRequest,
   YandexSessionResponse,
+  AudioBufferObject,
+  PartialAudioBufferObject,
 } from "@vot.js/shared/protos";
 
 import type { SessionModule } from "@vot.js/shared/types/secure";
 import type {
-  AudioBufferObject,
-  PartialAudioBufferObject,
   PartialAudioObject,
-  TranslationExtraOpts,
-  TranslationHelp,
-} from "./types/yandex";
+  VideoTranslationExtraOpts,
+  VideoTranslationHelp,
+} from "./types/providers/yandex";
 
 function encodeTranslationRequest(
   url: string,
   duration: number,
   requestLang: string,
   responseLang: string,
-  translationHelp: TranslationHelp[] | null,
+  translationHelp: VideoTranslationHelp[] | null,
   {
     forceSourceLang = false,
     wasStream = false,
@@ -38,7 +38,7 @@ function encodeTranslationRequest(
     bypassCache = false,
     useLivelyVoice = false,
     firstRequest = true,
-  }: TranslationExtraOpts = {},
+  }: VideoTranslationExtraOpts = {},
 ) {
   return VideoTranslationRequest.encode({
     url,

@@ -1,37 +1,39 @@
-import { ClientSession, SessionModule } from "@vot.js/shared/types/secure";
-import { BaseProvider } from "./base";
-import { getTimestamp } from "@vot.js/shared/utils/utils";
-import { VOTSessions } from "../types/client";
-import { getSecYaHeaders, getSignature, getUUID } from "@vot.js/shared/secure";
-import { YandexSessionProtobuf, YandexVOTProtobuf } from "../protobuf";
-import { VOTJSError } from "../client";
-import {
-  YandexProviderOpts,
-  YandexVideoTranslationOpts,
-} from "../types/providers/yandex";
-import {
-  AudioBufferObject,
-  GetSubtitlesResponse,
-  PartialAudioObject,
-  StreamPingOptions,
-  StreamTranslationOpts,
-  StreamTranslationResponse,
-  VideoTranslationCacheOpts,
-  VideoTranslationCacheResponse,
-  VideoTranslationFailAudioResponse,
-  VideoTranslationResponse,
-  VideoTranslationStatus,
-} from "../types/yandex";
-import { config } from "@vot.js/shared";
-import type { VideoService } from "../types/service";
 import Logger from "@vot.js/shared/utils/logger";
+import { config } from "@vot.js/shared";
+import { ClientSession, SessionModule } from "@vot.js/shared/types/secure";
+import { getTimestamp } from "@vot.js/shared/utils/utils";
+import { getSecYaHeaders, getSignature, getUUID } from "@vot.js/shared/secure";
 import {
   PartialAudioBufferObject,
+  AudioBufferObject,
   StreamInterval,
   VideoTranslationAudioResponse,
 } from "@vot.js/shared/protos";
-import { BaseVideoSubtitlesOpts } from "../types/providers/base";
+
+import { BaseProvider } from "./base";
+import { VOTJSError } from "../client";
+import { VOTSessions } from "../types/client";
 import { isCustomLink } from "../utils/videoData";
+import { YandexSessionProtobuf, YandexVOTProtobuf } from "../protobuf";
+import {
+  RawClientSession,
+  YandexProviderOpts,
+  VideoTranslationCacheOpts,
+  VideoTranslationOpts,
+  VideoTranslationCacheResponse,
+  VideoTranslationResponse,
+  StreamPingOpts,
+  StreamTranslationResponse,
+  VideoTranslationFailAudioResponse,
+  PartialAudioObject,
+  VideoTranslationStatus,
+} from "../types/providers/yandex";
+import type { VideoService } from "../types/service";
+import type {
+  BaseStreamTranslationOpts,
+  BaseVideoSubtitlesOpts,
+  BaseGetSubtitlesResponse,
+} from "../types/providers/base";
 
 export class YandexProvider<
   V extends string = VideoService,
@@ -99,7 +101,7 @@ export class YandexProvider<
     return this.sessions[module];
   }
 
-  async createSession(module: SessionModule) {
+  async createSession(module: SessionModule): Promise<RawClientSession> {
     const uuid = getUUID();
     const body = YandexSessionProtobuf.encodeSessionRequest(uuid, module);
     const res = await this.request(
@@ -124,7 +126,10 @@ export class YandexProvider<
     };
   }
 
-  async requestVtransFailAudio(url: string) {
+  async requestVtransFailAudio(
+    url: string,
+    fetchOpts: Record<string, unknown> = {},
+  ) {
     const res = await this.requestJSON<VideoTranslationFailAudioResponse>(
       this.paths.videoTranslationFailAudio,
       JSON.stringify({
@@ -134,6 +139,7 @@ export class YandexProvider<
         Accept: "application/json",
       }),
       "PUT",
+      fetchOpts,
     );
     if (!res.data || typeof res.data === "string" || res.data.status !== 1) {
       throw new VOTJSError(
@@ -153,7 +159,8 @@ export class YandexProvider<
     headers = {},
     extraOpts = {},
     shouldSendFailedAudio = true,
-  }: YandexVideoTranslationOpts<V>): Promise<VideoTranslationResponse> {
+    fetchOpts = {},
+  }: VideoTranslationOpts<V>): Promise<VideoTranslationResponse> {
     const { url, duration = config.defaultDuration } = videoData;
 
     const session = await this.getSession("video-translation");
@@ -173,6 +180,8 @@ export class YandexProvider<
       path,
       body,
       this.mergeHeaders(vtransHeaders, apiTokenHeader, headers),
+      undefined,
+      fetchOpts,
     );
 
     if (!res.success) {
@@ -248,11 +257,18 @@ export class YandexProvider<
 
         if (url.startsWith("https://youtu.be/") && shouldSendFailedAudio) {
           // try to fix with fake requests (only for youtube)
-          await this.requestVtransFailAudio(url);
-          await this.requestVtransAudio(url, translationData.translationId, {
-            audioFile: new Uint8Array(0),
-            fileId: `fallback-empty-audio:video-translation:${videoData.videoId}`,
-          });
+          await this.requestVtransFailAudio(url, fetchOpts);
+          await this.requestVtransAudio(
+            url,
+            translationData.translationId,
+            {
+              audioFile: new Uint8Array(0),
+              fileId: `fallback-empty-audio:video-translation:${videoData.videoId}`,
+            },
+            undefined,
+            undefined,
+            fetchOpts,
+          );
           return await this.translateVideo({
             videoData,
             requestLang,
@@ -261,6 +277,7 @@ export class YandexProvider<
             headers,
             extraOpts,
             shouldSendFailedAudio: false,
+            fetchOpts,
           });
         }
 
@@ -287,6 +304,7 @@ export class YandexProvider<
     audioBuffer: AudioBufferObject,
     partialAudio?: never,
     headers?: Record<string, string>,
+    fetchOpts?: Record<string, unknown>,
   ): Promise<VideoTranslationAudioResponse>;
   async requestVtransAudio(
     url: string,
@@ -294,6 +312,7 @@ export class YandexProvider<
     audioBuffer: PartialAudioBufferObject,
     partialAudio: PartialAudioObject,
     headers?: Record<string, string>,
+    fetchOpts?: Record<string, unknown>,
   ): Promise<VideoTranslationAudioResponse>;
   async requestVtransAudio(
     url: string,
@@ -301,6 +320,7 @@ export class YandexProvider<
     audioBuffer: AudioBufferObject | PartialAudioBufferObject,
     partialAudio?: PartialAudioObject,
     headers: Record<string, string> = {},
+    fetchOpts: Record<string, unknown> = {},
   ): Promise<VideoTranslationAudioResponse> {
     const session = await this.getSession("video-translation");
     let body: Uint8Array;
@@ -336,6 +356,7 @@ export class YandexProvider<
       body,
       this.mergeHeaders(vtransHeaders, headers),
       "PUT",
+      fetchOpts,
     );
 
     if (!res.success) {
@@ -349,7 +370,8 @@ export class YandexProvider<
     videoData,
     requestLang = this.requestLang,
     headers = {},
-  }: BaseVideoSubtitlesOpts<V>): Promise<GetSubtitlesResponse> {
+    fetchOpts = {},
+  }: BaseVideoSubtitlesOpts<V>): Promise<BaseGetSubtitlesResponse> {
     const { url } = videoData;
     const session = await this.getSession("video-translation");
     const body = YandexVOTProtobuf.encodeSubtitlesRequest(url, requestLang);
@@ -359,6 +381,8 @@ export class YandexProvider<
       path,
       body,
       this.mergeHeaders(vsubsHeaders, headers),
+      undefined,
+      fetchOpts,
     );
 
     if (!res.success) {
@@ -384,7 +408,11 @@ export class YandexProvider<
   /**
    * @includeExample examples/stream.ts[7:44]
    */
-  async pingStream({ pingId, headers = {} }: StreamPingOptions) {
+  async pingStream({
+    pingId,
+    headers = {},
+    fetchOpts = {},
+  }: StreamPingOpts): Promise<true> {
     const session = await this.getSession("video-translation");
     const body = YandexVOTProtobuf.encodeStreamPingRequest(pingId);
 
@@ -395,13 +423,15 @@ export class YandexProvider<
       path,
       body,
       this.mergeHeaders(vtransHeaders, headers),
+      undefined,
+      fetchOpts,
     );
 
     if (!res.success) {
       throw new VOTJSError("Failed to request stream ping", res);
     }
 
-    // response doesn't have body
+    // server response doesn't have body
     return true;
   }
 
@@ -413,7 +443,8 @@ export class YandexProvider<
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
-  }: StreamTranslationOpts<V>): Promise<StreamTranslationResponse> {
+    fetchOpts = {},
+  }: BaseStreamTranslationOpts<V>): Promise<StreamTranslationResponse> {
     const { url } = videoData;
     if (isCustomLink(url)) {
       throw new VOTJSError(
@@ -435,6 +466,8 @@ export class YandexProvider<
       path,
       body,
       this.mergeHeaders(vtransHeaders, headers),
+      undefined,
+      fetchOpts,
     );
 
     if (!res.success) {
@@ -488,6 +521,7 @@ export class YandexProvider<
     requestLang = this.requestLang,
     responseLang = this.responseLang,
     headers = {},
+    fetchOpts = {},
   }: VideoTranslationCacheOpts<V>): Promise<VideoTranslationCacheResponse> {
     const { url, duration = config.defaultDuration } = videoData;
 
@@ -507,6 +541,7 @@ export class YandexProvider<
       body,
       this.mergeHeaders(vtransHeaders, headers),
       "POST",
+      fetchOpts,
     );
 
     if (!res.success) {

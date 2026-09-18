@@ -5,8 +5,8 @@ import type { AtLeast } from "@vot.js/shared/types/utils";
 
 import type { BaseHelperOpts } from "./helpers/base";
 import type { VideoService } from "./service";
-import type { TranslationHelp } from "./yandex";
 import { FetchFunction } from "./providers/base";
+import { VideoTranslationHelp } from "./providers/yandex";
 import { VOTProvider } from "./providers";
 
 export type URLSchema = "http" | "https";
@@ -32,7 +32,7 @@ export type VideoData<T extends string = VideoService> = {
   description?: string;
   subtitles?: VideoDataSubtitle[];
   detectedLanguage?: RequestLang;
-  translationHelp?: TranslationHelp[] | null;
+  translationHelp?: VideoTranslationHelp[] | null;
 };
 
 export type MinimalVideoData<T extends string = VideoService> = AtLeast<

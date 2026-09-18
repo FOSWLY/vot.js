@@ -1,5 +1,6 @@
 import { config } from "@vot.js/shared";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
+import { RequestLang, ResponseLang } from "@vot.js/shared/types/data";
 
 import { ClientResponse, URLSchema } from "../types/client";
 import type {
@@ -7,14 +8,14 @@ import type {
   BaseStreamTranslationOpts,
   BaseVideoSubtitlesOpts,
   BaseVideoTranslationOpts,
+  BaseGetSubtitlesResponse,
   FetchFunction,
 } from "../types/providers/base";
-import { RequestLang, ResponseLang } from "@vot.js/shared/types/data";
-import {
-  GetSubtitlesResponse,
-  StreamTranslationResponse,
+import type {
   VideoTranslationResponse,
-} from "../types/yandex";
+  StreamTranslationResponse,
+} from "../types/providers/yandex";
+
 import { VideoService } from "../types/service";
 
 export abstract class BaseProvider<V extends string = VideoService> {
@@ -73,8 +74,14 @@ export abstract class BaseProvider<V extends string = VideoService> {
     body: Uint8Array,
     headers: Record<string, string> = {},
     method = "POST",
+    fetchOpts: Record<string, unknown> = {},
   ): Promise<ClientResponse<T>> {
-    const options = this.getOpts(new Blob([body as BlobPart]), headers, method);
+    const options = this.getOpts(
+      new Blob([body as BlobPart]),
+      headers,
+      method,
+      fetchOpts,
+    );
 
     try {
       const res = await this.fetch(
@@ -99,6 +106,7 @@ export abstract class BaseProvider<V extends string = VideoService> {
     body: BodyInit | null | undefined = null,
     headers: Record<string, string> = {},
     method = "POST",
+    fetchOpts: Record<string, unknown> = {},
   ): Promise<ClientResponse<T>> {
     const options = this.getOpts(
       body,
@@ -108,6 +116,7 @@ export abstract class BaseProvider<V extends string = VideoService> {
         ...headers,
       },
       method,
+      fetchOpts,
     );
 
     try {
@@ -133,6 +142,7 @@ export abstract class BaseProvider<V extends string = VideoService> {
     body: BodyInit | null | undefined,
     headers: Record<string, string> = {},
     method = "POST",
+    fetchOpts: Record<string, unknown> = {},
   ): RequestInit {
     return {
       method,
@@ -142,6 +152,7 @@ export abstract class BaseProvider<V extends string = VideoService> {
       },
       body,
       ...this.fetchOpts,
+      ...fetchOpts,
     };
   }
 
@@ -151,7 +162,7 @@ export abstract class BaseProvider<V extends string = VideoService> {
 
   abstract getSubtitles(
     opts: BaseVideoSubtitlesOpts<V>,
-  ): Promise<GetSubtitlesResponse>;
+  ): Promise<BaseGetSubtitlesResponse>;
 
   abstract translateStream(
     opts: BaseStreamTranslationOpts<V>,

@@ -1,10 +1,11 @@
 import VOTCoreClient from "@vot.js/core/client";
 import type { VOTOpts } from "@vot.js/core/types/client";
-import type { VideoService } from "./types/service";
-import { VOTAgent } from "./utils/fetchAgent";
 import type { BaseProvider } from "@vot.js/core/providers/base";
 import type { VOTProvider } from "@vot.js/core/types/providers/index";
 import type { YandexProvider } from "@vot.js/core/providers/yandex";
+
+import type { VideoService } from "./types/service";
+import { VOTAgent } from "./utils/fetchAgent";
 
 export default class VOTClient<
   V extends string = VideoService,
