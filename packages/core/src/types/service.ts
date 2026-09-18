@@ -66,6 +66,7 @@ export enum VideoService {
   rtnews = "rtnews",
   bitview = "bitview",
   thisvid = "thisvid",
+  joidatabase = "joidatabase",
   ign = "ign",
   noodlemagazine = "noodlemagazine",
   zdf = "zdf",
