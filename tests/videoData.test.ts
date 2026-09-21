@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { getVideoData } from "../packages/node/src/utils/videoData";
+import type { FetchFunction } from "../packages/core/src/types/providers/base";
 import config from "../packages/shared/src/data/config";
 import { fetchWithTimeout } from "../packages/shared/src/utils/utils";
 
@@ -1113,22 +1114,70 @@ test("wistia", async () => {
 describe("joidatabase", () => {
   const expectedId = "f6898c3d4b9cd2914a58e4b0";
   const expected = `https://www.the-joi-database.com/api/stream/${expectedId}`;
+
+  // the site cuts bun's TLS fingerprint via Cloudflare, so helper tests
+  // run against fixtures instead of the live site
+  const joiFetch = ((input: string | URL | Request) => {
+    const url = String(input);
+    let body = "";
+    if (url.endsWith("_360p.m3u8")) {
+      body = [
+        "#EXTM3U",
+        "#EXT-X-TARGETDURATION:13",
+        "#EXTINF:10.233333,",
+        "seg_0000.ts",
+        "#EXTINF:12.3,",
+        "seg_0001.ts",
+        "#EXT-X-ENDLIST",
+      ].join("\n");
+    } else if (url.includes("/api/stream/")) {
+      body = [
+        "#EXTM3U",
+        '#EXT-X-STREAM-INF:BANDWIDTH=4337382,RESOLUTION=640x360,NAME="360"',
+        `video_${expectedId}_360p.m3u8`,
+      ].join("\n");
+    } else {
+      body =
+        '<html><head><meta property="og:title" content="Test joi video"/></head></html>';
+    }
+    return Promise.resolve(new Response(body, { status: 200 }));
+  }) as unknown as FetchFunction;
+
+  const normalizeJoi = async (url: string) => {
+    const data = await getVideoData(url, { fetchFn: joiFetch });
+    return data?.url;
+  };
+
   test("normal", async () => {
-    const normalized = await normalize(
+    const normalized = await normalizeJoi(
       `https://www.the-joi-database.com/watch/${expectedId}`,
     );
     expect(normalized).toBe(expected);
   });
   test("embed", async () => {
-    const normalized = await normalize(
+    const normalized = await normalizeJoi(
       `https://www.the-joi-database.com/embed/${expectedId}`,
     );
     expect(normalized).toBe(expected);
   });
   test("s1 domain", async () => {
-    const normalized = await normalize(
+    const normalized = await normalizeJoi(
       `https://s1.the-joi-database.com/embed/${expectedId}`,
     );
     expect(normalized).toBe(expected);
+  });
+  test("duration from playlist", async () => {
+    const data = await getVideoData(
+      `https://www.the-joi-database.com/watch/${expectedId}`,
+      { fetchFn: joiFetch },
+    );
+    expect(data?.duration).toBeCloseTo(22.533333, 4);
+  });
+  test("title from og meta", async () => {
+    const data = await getVideoData(
+      `https://www.the-joi-database.com/watch/${expectedId}`,
+      { fetchFn: joiFetch },
+    );
+    expect(data?.title).toBe("Test joi video");
   });
 });
