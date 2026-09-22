@@ -5,8 +5,6 @@ const availableLangs = [
   "en",
   "zh",
   "ko",
-  "lt",
-  "lv",
   "ar",
   "fr",
   "it",

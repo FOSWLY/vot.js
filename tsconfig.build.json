@@ -27,7 +27,8 @@
     "noPropertyAccessFromIndexSignature": false,
 
     "outDir": "./dist",
-    "removeComments": true
+    // "removeComments": true
+    "removeComments": false
   },
   "exclude": [
     "**/dist",

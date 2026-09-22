@@ -1,6 +1,6 @@
 {
   "name": "vot.js",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "private": true,
   "description": "Unoffical library for interacting with the Yandex VOT API",
   "keywords": [
@@ -39,11 +39,10 @@
     "lint:fix": "bunx oxlint --fix"
   },
   "devDependencies": {
-    "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
     "lefthook": "^2.1.14",
-    "oxfmt": "^0.68.0",
-    "oxlint": "^1.83.0",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
     "typedoc": "^0.28.20",
     "typedoc-plugin-include-example": "^3.0.2",
     "typedoc-plugin-missing-exports": "^4.1.4",

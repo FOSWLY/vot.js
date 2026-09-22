@@ -1,3 +1,14 @@
+# 3.1.2
+
+## Shared
+
+- Removed `lv` and `lt` from `availableLangs` (no longer available via API)
+
+## Workspace
+
+- Temporary disabled `removeComments` in build tsconfig
+- Removed unused `@toil/typebox-genx` dev dependency
+
 # 3.1.1
 
 ## Ext
