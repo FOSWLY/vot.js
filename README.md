@@ -14,7 +14,7 @@ The library supports working with [worker servers](https://github.com/FOSWLY/vot
 
 ## Installation
 
-To work with Node, Bun, or other runtimes, install the `@vot.js/node`:
+To work with Node (22.19+), Bun, or other runtimes, install the `@vot.js/node`:
 
 ```bash
 bun install @vot.js/node

@@ -8,5 +8,4 @@ const data = await client.translateVideo({
   videoData,
 });
 
-// eslint-disable-next-line no-undef
 console.log(data);

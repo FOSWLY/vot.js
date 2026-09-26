@@ -1,3 +1,16 @@
+# 3.1.3
+
+## Ext
+
+- Added minimal types for `getPlayer` method in `PlyrPlayer` class
+- Added title and duration for JOI Database data
+- Fixed selector for JOI Database (read [voice-over-translation#1851](https://github.com/ilyhalight/voice-over-translation/pull/1851))
+
+## Node
+
+- Fixed work with fetch agent in Node.js <26. Current minimum supported Node.js version is 22.19.0
+- Added title and duration for JOI Database (#136)
+
 # 3.1.2
 
 ## Shared

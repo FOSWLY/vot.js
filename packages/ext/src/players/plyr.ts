@@ -1,19 +1,23 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
-import type { MinimalVideoData } from "../types/client";
+
 import type { BasePlayer } from "./base";
+import type { MinimalVideoData } from "../types/client";
+import type * as Plyr from "../types/helpers/plyr";
 
 export default class PlyrHelper implements BasePlayer {
   SUBTITLE_SOURCE = "plyr";
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
-  getPlayer() {
+  getPlayer(): Plyr.Player | undefined {
     const customWindow = window as any;
     if (customWindow.player?.media) {
       return customWindow.player;
     }
 
-    const videoEl = document.querySelector<any>("video, audio, .plyr video");
+    const videoEl = document.querySelector<Plyr.PlayerElement>(
+      "video, audio, .plyr video",
+    );
     return videoEl?.plyr || undefined;
   }
 
@@ -64,10 +68,10 @@ export default class PlyrHelper implements BasePlayer {
 
       const rawTracks: Array<{ src: string; lang: string }> = [];
 
-      const searchTargets: Element[] = [];
+      const searchTargets: HTMLElement[] = [];
       if (videoEl) searchTargets.push(videoEl);
       if (player?.elements?.container) {
-        searchTargets.push(player.elements.container as Element);
+        searchTargets.push(player.elements.container as HTMLElement);
       }
 
       for (const target of searchTargets) {
@@ -84,7 +88,7 @@ export default class PlyrHelper implements BasePlayer {
       }
 
       if (player?.config?.tracks && Array.isArray(player.config.tracks)) {
-        const configTracks = player.config.tracks as any[];
+        const configTracks = player.config.tracks;
         for (const track of configTracks) {
           if (track?.src && track.kind !== "metadata") {
             rawTracks.push({
