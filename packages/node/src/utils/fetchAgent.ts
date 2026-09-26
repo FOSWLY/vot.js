@@ -5,17 +5,12 @@
  * that some upstreams reject. See: https://github.com/nodejs/undici/issues/1305
  */
 
-import { Agent, ProxyAgent } from "undici";
-import DispatcherBase from "undici/lib/dispatcher/dispatcher-base.js";
+import { Agent, Dispatcher1Wrapper, ProxyAgent } from "undici";
 import type Dispatcher from "undici/types/dispatcher";
 
-/** Partial pasted from undici/lib/dispatcher/proxy-agent.js */
-export class VOTAgent extends DispatcherBase {
-  private readonly proxyAgent: Agent;
-
+export class VOTAgent extends Dispatcher1Wrapper {
   constructor() {
-    super();
-    this.proxyAgent = new Agent();
+    super(new Agent());
   }
 
   dispatch(
@@ -25,12 +20,15 @@ export class VOTAgent extends DispatcherBase {
     if (opts.headers && typeof opts.headers === "object") {
       delete (opts.headers as Record<string, string>)["sec-fetch-mode"];
     }
-
-    return this.proxyAgent.dispatch(opts, handler);
+    return super.dispatch(opts, handler);
   }
 }
 
-export class VOTProxyAgent extends ProxyAgent {
+export class VOTProxyAgent extends Dispatcher1Wrapper {
+  constructor(options: ProxyAgent.Options | string) {
+    super(new ProxyAgent(options));
+  }
+
   dispatch(
     opts: Dispatcher.DispatchOptions,
     handler: Dispatcher.DispatchHandler,
