@@ -21,10 +21,12 @@ const result = await client.translateVideo({ videoData });
 Proxying via [vot-worker](https://github.com/FOSWLY/vot-worker):
 
 ```ts
-import { VOTWorkerClient } from "@vot.js/ext";
+import { VOTClient } from "@vot.js/ext";
+import { VOTNextWorkerProvider } from "@vot.js/core/providers/votworker";
 
-const client = new VOTWorkerClient({
-  host: "vot.toil.cc",
+const client = new VOTClient({
+  host: "vot-worker.toil.cc",
+  provider: VOTNextWorkerProvider,
 });
 ```
 
