@@ -5,7 +5,7 @@
  * that some upstreams reject. See: https://github.com/nodejs/undici/issues/1305
  */
 
-import { Agent, Dispatcher1Wrapper, ProxyAgent } from "undici";
+import { Agent, Dispatcher1Wrapper, ProxyAgent } from "undici/index.js";
 import type Dispatcher from "undici/types/dispatcher";
 
 export class VOTAgent extends Dispatcher1Wrapper {

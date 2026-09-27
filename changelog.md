@@ -1,3 +1,9 @@
+# 3.1.4
+
+## Node
+
+- Fix `VOTAgent` for Bun
+
 # 3.1.3
 
 ## Ext
