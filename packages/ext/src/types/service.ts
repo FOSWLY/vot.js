@@ -18,6 +18,7 @@ export enum ExtVideoService {
   netacad = "netacad",
   mediafile = "mediafile",
   skilljar = "skilljar",
+  dropout = "dropout",
 }
 
 export const VideoService = {
