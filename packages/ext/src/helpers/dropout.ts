@@ -1,64 +1,20 @@
 import type * as Vimeo from "@vot.js/shared/types/helpers/vimeo";
 import Logger from "@vot.js/shared/utils/logger";
+import type * as Dropout from "../types/helpers/dropout";
 import { VideoHelperError } from "./base";
 import VimeoHelper from "./vimeo";
-
-type DropoutCdnGroup = {
-  url?: string;
-  default_cdn?: string;
-  cdns?: Record<string, { url?: string }>;
-};
-
-type DropoutProgressiveFile = {
-  url?: string;
-  height?: number;
-};
-
-type DropoutFiles = {
-  progressive?: DropoutProgressiveFile[];
-  dash?: DropoutCdnGroup;
-  hls?: DropoutCdnGroup;
-};
-
-type DropoutDashTrack = {
-  format?: string;
-  mime_type?: string;
-  codecs?: string;
-  codec?: string;
-  id?: string;
-  quality?: string;
-  base_url?: string;
-  segments?: { url?: string }[];
-};
-
-type DropoutDashConfig = {
-  base_url?: string;
-  audio?: DropoutDashTrack[];
-  video?: DropoutDashTrack[];
-};
-
-type DropoutRequest = {
-  files?: DropoutFiles;
-  text_tracks?: Vimeo.PrivateVideoSubtitle[];
-  textTracks?: Vimeo.PrivateVideoSubtitle[];
-};
-
-type DropoutPlayerConfig = DropoutRequest & {
-  request?: DropoutRequest;
-  video?: { title?: string; name?: string; duration?: number };
-};
 
 const CONFIG_URL_RE =
   /^https:\/\/player\.vimeo\.com\/video\/[a-z0-9_-]+\/config/i;
 const CONFIG_WAIT_TIMEOUT = 10_000;
 const CONFIG_WAIT_INTERVAL = 500;
 
-function isPlayerConfig(data: unknown): data is DropoutPlayerConfig {
+function isPlayerConfig(data: unknown): data is Dropout.PlayerConfig {
   if (!data || typeof data !== "object") {
     return false;
   }
 
-  const config = data as DropoutPlayerConfig;
+  const config = data as Dropout.PlayerConfig;
   return Boolean(
     (config.request?.files || config.files) && (config.video || config.request),
   );
@@ -134,14 +90,18 @@ function getDomTextTracks() {
   ).filter((track) => Boolean(track.url));
 }
 
-function getCdnUrl(group?: DropoutCdnGroup) {
+function getCdnUrl(group?: Dropout.CdnGroup) {
   return (
     (group?.default_cdn ? group.cdns?.[group.default_cdn]?.url : undefined) ??
     Object.values(group?.cdns ?? {})[0]?.url
   );
 }
 
-function getTrackCodec(track: DropoutDashTrack) {
+function distanceTo360p(item: Dropout.ProgressiveFile) {
+  return Math.abs((item.height ?? 360) - 360);
+}
+
+function getTrackCodec(track: Dropout.DashTrack) {
   return [track.codecs, track.codec, track.mime_type, track.id, track.quality]
     .filter(Boolean)
     .join(" ")
@@ -149,7 +109,7 @@ function getTrackCodec(track: DropoutDashTrack) {
 }
 
 export default class DropoutHelper extends VimeoHelper {
-  private config?: DropoutPlayerConfig;
+  private config?: Dropout.PlayerConfig;
 
   isPrivatePlayer() {
     return true;
@@ -211,7 +171,7 @@ export default class DropoutHelper extends VimeoHelper {
       throw new VideoHelperError(await res.text());
     }
 
-    const data = (await res.json()) as DropoutDashConfig;
+    const data = (await res.json()) as Dropout.DashConfig;
     const baseUrl = new URL(data.base_url ?? "", dashCdnUrl);
     const tracks = [...(data.audio ?? []), ...(data.video ?? [])].filter(
       (track) => track.format === "dash" && track.segments?.length,
@@ -243,14 +203,12 @@ export default class DropoutHelper extends VimeoHelper {
     ).href;
   }
 
-  async getPrivateVideoSource(files?: DropoutFiles) {
+  async getPrivateVideoSource(files?: Dropout.Files) {
     try {
       // the closest to 360p is enough for translation and the fastest to load
-      const distanceTo360p = (item: DropoutProgressiveFile) =>
-        Math.abs((item.height ?? 360) - 360);
       const progressiveSource = files?.progressive
         ?.filter((item) => item.url)
-        .reduce<DropoutProgressiveFile | undefined>(
+        .reduce<Dropout.ProgressiveFile | undefined>(
           (best, item) =>
             !best || distanceTo360p(item) < distanceTo360p(best) ? item : best,
           undefined,
