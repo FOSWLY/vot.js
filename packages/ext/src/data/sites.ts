@@ -713,6 +713,15 @@ export default [
     needExtraData: true,
   },
   {
+    // dropout.tv player
+    host: ExtVideoService.dropout,
+    url: "https://embed.vhx.tv/videos/",
+    match: /^embed\.vhx\.tv$/,
+    selector: "body",
+    needExtraData: true,
+    needBypassCSP: true,
+  },
+  {
     host: CoreVideoService.wistia,
     url: "https://fast.wistia.net/embed/iframe/",
     match: /^fast.wistia.net$/,

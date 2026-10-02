@@ -19,6 +19,7 @@ import DailymotionHelper from "./dailymotion";
 import DataCampHelper from "./datacamp";
 import DeeplearningAIHelper from "./deeplearningai";
 import DouyinHelper from "./douyin";
+import DropoutHelper from "./dropout";
 import DzenHelper from "./dzen";
 import EggheadHelper from "./egghead";
 import EpicGamesHelper from "./epicgames";
@@ -96,6 +97,7 @@ export * as DailymotionHelper from "./dailymotion";
 export * as DataCampHelper from "./datacamp";
 export * as DeeplearningAIHelper from "./deeplearningai";
 export * as DouyinHelper from "./douyin";
+export * as DropoutHelper from "./dropout";
 export * as DzenHelper from "./dzen";
 export * as EggheadHelper from "./egghead";
 export * as EpicGamesHelper from "./epicgames";
@@ -234,6 +236,7 @@ export const availableHelpers = {
   [ExtVideoService.netacad]: NetacadHelper,
   [ExtVideoService.mediafile]: MediafileHelper,
   [ExtVideoService.skilljar]: SkilljarHelper,
+  [ExtVideoService.dropout]: DropoutHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
