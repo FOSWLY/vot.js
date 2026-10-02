@@ -1,3 +1,13 @@
+# 3.1.5
+
+## Ext
+
+- Added support for Dropout (`https://www.dropout.tv/`) (thx @turboenotak in #140)
+
+## Shared
+
+- Bump `componentVersion` value
+
 # 3.1.4
 
 ## Node

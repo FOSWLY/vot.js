@@ -10,11 +10,11 @@ export default {
   mediaProxy: "media-proxy.toil.cc",
   userAgent:
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36",
-  componentVersion: "26.8.3.1002",
-  chromiumRevision: "1002",
+  componentVersion: "26.8.5.811",
+  chromiumRevision: "811",
   hmac: "bt8xH3VOlb4mqf0nqAibnDOoiPlXsisf",
   defaultDuration: 310,
   minChunkSize: 5295308,
   loggerLevel: 1 as LoggerLevel,
-  version: "3.1.4",
+  version: "3.1.5",
 } satisfies ConfigSchema;
