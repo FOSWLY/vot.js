@@ -32,6 +32,7 @@ import JOIDatabaseHelper from "./joidatabase";
 import JoveHelper from "./jove";
 import KickHelper from "./kick";
 import KickstarterHelper from "./kickstarter";
+import KinopoiskHelper from "./kinopoisk";
 import KodikHelper from "./kodik";
 import LinkedinHelper from "./linkedin";
 import LoomHelper from "./loom";
@@ -109,6 +110,7 @@ export * as IMDBHelper from "./imdb";
 export * as JoveHelper from "./jove";
 export * as KickHelper from "./kick";
 export * as KickstarterHelper from "./kickstarter";
+export * as KinopoiskHelper from "./kinopoisk";
 export * as KodikHelper from "./kodik";
 export * as LinkedinHelper from "./linkedin";
 export * as LoomHelper from "./loom";
@@ -237,6 +239,7 @@ export const availableHelpers = {
   [ExtVideoService.mediafile]: MediafileHelper,
   [ExtVideoService.skilljar]: SkilljarHelper,
   [ExtVideoService.dropout]: DropoutHelper,
+  [ExtVideoService.kinopoisk]: KinopoiskHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

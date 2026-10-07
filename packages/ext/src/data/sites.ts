@@ -8,6 +8,7 @@ import {
 } from "@vot.js/shared/alternativeUrls";
 
 import { ExtVideoService, type ServiceConf } from "../types/service";
+import { isKinopoiskUrl } from "../helpers/kinopoisk";
 
 const sharedSelectors = {
   bilibiliPlayer:
@@ -23,6 +24,14 @@ const sharedSelectors = {
 } as const;
 
 export default [
+  {
+    host: ExtVideoService.kinopoisk,
+    url: "https://www.kinopoisk.ru/",
+    match: (url: URL) => isKinopoiskUrl(url, document.referrer),
+    selector: 'yaplayertag, [id^="ya-video-player-"], #player',
+    needExtraData: true,
+    needBypassCSP: true,
+  },
   {
     additionalData: "mobile",
     host: CoreVideoService.youtube,
