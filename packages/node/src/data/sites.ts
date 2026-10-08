@@ -6,6 +6,7 @@ import {
   sitesPiped,
   sitesProxiTok,
 } from "@vot.js/shared/alternativeUrls";
+import { parseKinopoiskUrl } from "@vot.js/shared/utils/kinopoisk";
 
 import type { ServiceConf } from "../types/service";
 
@@ -402,6 +403,12 @@ export default [
     // https://github.com/mikf/gallery-dl/blob/master/gallery_dl/extractor/bunkr.py
     match:
       /^bunkr.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
+    needExtraData: true,
+  },
+  {
+    host: CoreVideoService.kinopoisk,
+    url: "https://widgets.kinopoisk.ru/discovery/",
+    match: (url) => !!parseKinopoiskUrl(url),
     needExtraData: true,
   },
   {

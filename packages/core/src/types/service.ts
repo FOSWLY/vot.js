@@ -72,6 +72,7 @@ export enum VideoService {
   zdf = "zdf",
   bunkr = "bunkr",
   imdb = "imdb",
+  kinopoisk = "kinopoisk",
   telegram = "telegram",
   wistia = "wistia",
 }

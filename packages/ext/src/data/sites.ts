@@ -6,6 +6,10 @@ import {
   sitesPiped,
   sitesProxiTok,
 } from "@vot.js/shared/alternativeUrls";
+import {
+  parseKinopoiskFilmId,
+  parseKinopoiskUrl,
+} from "@vot.js/shared/utils/kinopoisk";
 
 import { ExtVideoService, type ServiceConf } from "../types/service";
 
@@ -660,6 +664,14 @@ export default [
       /^bunkr\.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
     selector: ".plyr__video-wrapper",
+  },
+  {
+    host: CoreVideoService.kinopoisk,
+    url: "https://widgets.kinopoisk.ru/discovery/",
+    match: (url) => !!(parseKinopoiskUrl(url) || parseKinopoiskFilmId(url)),
+    needExtraData: true,
+    needBypassCSP: true,
+    selector: sharedSelectors.idPlayer,
   },
   {
     host: CoreVideoService.imdb,

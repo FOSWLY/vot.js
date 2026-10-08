@@ -74,6 +74,11 @@
       "import": "./dist/utils/logger.js",
       "types": "./dist/utils/logger.d.ts"
     },
+    "./utils/kinopoisk": {
+      "require": "./dist/utils/kinopoisk.js",
+      "import": "./dist/utils/kinopoisk.js",
+      "types": "./dist/utils/kinopoisk.d.ts"
+    },
     "./utils/subs": {
       "require": "./dist/utils/subs.js",
       "import": "./dist/utils/subs.js",

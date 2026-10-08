@@ -5,6 +5,7 @@ export * as CourseraType from "./helpers/coursera";
 export * as EpicGamesType from "./helpers/epicgames";
 export * as IgnType from "./helpers/ign";
 export * as KickType from "./helpers/kick";
+export * as KinopoiskType from "./helpers/kinopoisk";
 export * as KodikType from "./helpers/kodik";
 export * as MailRuType from "./helpers/mailru";
 export * as PatreonType from "./helpers/patreon";
