@@ -19,6 +19,16 @@ export enum ExtVideoService {
   mediafile = "mediafile",
   skilljar = "skilljar",
   dropout = "dropout",
+  beacon = "beacon",
+  vidly = "vidly",
+  noz = "noz",
+  craftsy = "craftsy",
+  nzherald = "nzherald",
+  jwplatform = "jwplatform",
+  spiegel = "spiegel",
+  espn = "espn",
+  onefootball = "onefootball",
+  brightcove = "brightcove",
 }
 
 export const VideoService = {

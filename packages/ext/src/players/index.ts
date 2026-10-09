@@ -4,6 +4,7 @@ export * as ClapprPlayerHelper from "./clappr";
 export * as DPlayerHelper from "./dplayer";
 export * as FlowplayerHelper from "./flowplayer";
 export * as FluidPlayerHelper from "./fluidplayer";
+export * as HivePlayerHelper from "./hive";
 export * as PlayerJSHelper from "./idplayer";
 export * as JWPlayerHelper from "./jwplayer";
 export * as KalturaPlayerHelper from "./kaltura";

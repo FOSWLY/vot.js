@@ -41,8 +41,9 @@ export default class KalturaPlayerHelper implements BasePlayer {
       return undefined;
     }
 
-    const players: Record<string, KalturaPlayerInstance> | undefined =
-      safeCall(() => KalturaPlayer.getPlayers());
+    const players: Record<string, KalturaPlayerInstance> | undefined = safeCall(
+      () => KalturaPlayer.getPlayers(),
+    );
     return players ? Object.values(players)[0] : undefined;
   }
 
@@ -85,9 +86,10 @@ export default class KalturaPlayerHelper implements BasePlayer {
 
     return buildSubtitles(
       [
-        ...(Array.isArray(tracks) ? tracks : []).map(
-          (track) => ({ src: track?.url, lang: track?.language }),
-        ),
+        ...(Array.isArray(tracks) ? tracks : []).map((track) => ({
+          src: track?.url,
+          lang: track?.language,
+        })),
         ...getTrackElements(this.getMediaElement()),
       ],
       this.SUBTITLE_SOURCE,

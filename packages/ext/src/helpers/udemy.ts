@@ -5,64 +5,15 @@ import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client.js";
 import { BaseHelper, VideoHelperError } from "./base.js";
-
-type UrlCandidate = {
-  file?: string;
-  src?: string;
-  type?: string;
-  label?: string | number;
-  quality?: string | number;
-  height?: string | number;
-};
-
-type UrlCandidatesRecord = {
-  Video?: UrlCandidate[];
-  video?: UrlCandidate[];
-};
-
-type CaptionWithDownloadUrl = Udemy.Caption & {
-  download_url?: string;
-  locale?: {
-    locale?: string;
-  };
-};
-
-type AssetOutput = {
-  url?: string;
-  type?: string;
-  height?: number | string;
-};
-
-type AssetData = {
-  outputs?: Record<string, AssetOutput>;
-};
-
-type AssetWithExtraUrls = Udemy.Asset & {
-  stream_urls?: unknown;
-  download_urls?: unknown;
-  stream_url?: string;
-  streamUrl?: string;
-  external_url?: string;
-  data?: AssetData;
-};
-
-type LectureWithViewHtml = Udemy.Lecture & {
-  view_html?: string;
-};
-
-type ModuleDataWithExtraFields = Udemy.ModuleData & {
-  course_id?: number | string;
-  course?: {
-    id?: number | string;
-  };
-};
-
-type ParsedUrlCandidate = {
-  url: string;
-  type: string;
-  quality: number;
-  isYouTubeWatch: boolean;
-};
+import type {
+  AssetWithExtraUrls,
+  CaptionWithDownloadUrl,
+  LectureWithViewHtml,
+  ModuleDataWithExtraFields,
+  ParsedUrlCandidate,
+  UrlCandidate,
+  UrlCandidatesRecord,
+} from "../types/helpers/udemy";
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

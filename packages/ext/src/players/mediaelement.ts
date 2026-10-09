@@ -59,7 +59,10 @@ export default class MediaElementPlayerHelper implements BasePlayer {
       player?.node ??
       player?.domNode ??
       player?.media?.originalNode ??
-      findMediaElement(document, ".mejs__container video, .mejs-container video, .mejs__container audio, .mejs-container audio")
+      findMediaElement(
+        document,
+        ".mejs__container video, .mejs-container video, .mejs__container audio, .mejs-container audio",
+      )
     );
   }
 
@@ -87,7 +90,10 @@ export default class MediaElementPlayerHelper implements BasePlayer {
         this.getSubtitles(),
       );
     } catch (err) {
-      console.error("[VOT] MediaElementPlayerHelper error:", (err as Error).message);
+      console.error(
+        "[VOT] MediaElementPlayerHelper error:",
+        (err as Error).message,
+      );
       return undefined;
     }
   }

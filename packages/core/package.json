@@ -74,6 +74,11 @@
       "import": "./dist/utils/videoData.js",
       "types": "./dist/utils/videoData.d.ts"
     },
+    "./utils/*": {
+      "require": "./dist/utils/*.js",
+      "import": "./dist/utils/*.js",
+      "types": "./dist/utils/*.d.ts"
+    },
     "./protobuf": {
       "require": "./dist/protobuf.js",
       "import": "./dist/protobuf.js",

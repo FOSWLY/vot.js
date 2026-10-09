@@ -51,7 +51,9 @@ export default class BunkrHelper extends BaseHelper {
 
   async getVideoData(videoId: string) {
     try {
-      const pageUrl = await this.getSignedPageUrl(videoId).catch(() => undefined);
+      const pageUrl = await this.getSignedPageUrl(videoId).catch(
+        () => undefined,
+      );
       if (pageUrl) {
         return { url: pageUrl };
       }

@@ -57,7 +57,11 @@ export default class ClapprPlayerHelper implements BasePlayer {
   static SELECTOR = "[data-player]";
 
   getPlayer(): ClapprPlayer | undefined {
-    return findGlobalInstance(isClapprPlayer, ["player", "clappr", "clapprPlayer"]);
+    return findGlobalInstance(isClapprPlayer, [
+      "player",
+      "clappr",
+      "clapprPlayer",
+    ]);
   }
 
   getMediaElement(player = this.getPlayer()) {
@@ -78,7 +82,9 @@ export default class ClapprPlayerHelper implements BasePlayer {
       const { source, sources = [], mimeType } = player?.options ?? {};
       const fileUrl = selectSourceUrl([
         ...(source ? [toSource(source, mimeType)] : []),
-        ...(Array.isArray(sources) ? sources : []).map((s) => toSource(s, mimeType)),
+        ...(Array.isArray(sources) ? sources : []).map((s) =>
+          toSource(s, mimeType),
+        ),
         ...getMediaElementSources(media),
       ]);
       return buildVideoData(

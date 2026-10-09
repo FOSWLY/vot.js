@@ -92,7 +92,10 @@ export default class DPlayerHelper implements BasePlayer {
     const subtitle = player?.options?.subtitle;
     const tracks: PlayerTrackSource[] = [];
     if (typeof subtitle?.url === "string") {
-      tracks.push({ src: subtitle.url, format: subtitle.type === "webvtt" ? "vtt" : subtitle.type });
+      tracks.push({
+        src: subtitle.url,
+        format: subtitle.type === "webvtt" ? "vtt" : subtitle.type,
+      });
     } else if (Array.isArray(subtitle?.url)) {
       tracks.push(...subtitle.url.map((s) => ({ src: s?.url, lang: s?.lang })));
     }

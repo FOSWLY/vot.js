@@ -7,6 +7,9 @@ export type PlayerMediaSource = {
   type?: string | null;
   height?: number | null;
   label?: string | null;
+  drm?: unknown;
+  keySystems?: unknown;
+  key_systems?: unknown;
 };
 
 export type PlayerTrackSource = {
@@ -37,7 +40,8 @@ export function toAbsoluteUrl(src?: string | null): string | undefined {
   }
 
   try {
-    return new URL(src, window.location.href).toString();
+    const url = new URL(src, window.location.href);
+    return /^https?:$/.test(url.protocol) ? url.toString() : undefined;
   } catch {
     return undefined;
   }
@@ -53,7 +57,11 @@ export function isStreamSource(source: PlayerMediaSource) {
 }
 
 export function getSourceHeight(source: PlayerMediaSource) {
-  if (typeof source.height === "number" && source.height > 0) {
+  if (
+    typeof source.height === "number" &&
+    Number.isFinite(source.height) &&
+    source.height > 0
+  ) {
     return source.height;
   }
 
@@ -69,11 +77,23 @@ export function getSourceHeight(source: PlayerMediaSource) {
 export function selectSourceUrl(
   sources: PlayerMediaSource[],
 ): string | undefined {
+  const protectedUrls = new Set(
+    sources
+      .filter((source) =>
+        [source?.drm, source?.keySystems, source?.key_systems].some(
+          (value) =>
+            value &&
+            (typeof value !== "object" || Object.keys(value).length > 0),
+        ),
+      )
+      .map((source) => toAbsoluteUrl(source?.src))
+      .filter(Boolean),
+  );
   const seen = new Set<string>();
   const valid: (PlayerMediaSource & { src: string })[] = [];
   for (const source of sources) {
     const src = toAbsoluteUrl(source?.src);
-    if (!src || seen.has(src)) {
+    if (!src || seen.has(src) || protectedUrls.has(src)) {
       continue;
     }
 
@@ -83,6 +103,8 @@ export function selectSourceUrl(
 
   const progressive = valid.filter((source) => !isStreamSource(source));
   const pool = progressive.length ? progressive : valid;
+  // Copy before sorting: Array.toSorted is unavailable on supported Node 18.
+  // eslint-disable-next-line unicorn/no-array-sort
   return [...pool].sort((a, b) => {
     const heightA = getSourceHeight(a);
     const heightB = getSourceHeight(b);
@@ -256,7 +278,11 @@ export function findGlobalInstance<T>(
     const value = safeCall(
       () => (window as unknown as Record<string, unknown>)[key],
     );
-    if (value && typeof value === "object" && safeCall(() => predicate(value))) {
+    if (
+      value &&
+      typeof value === "object" &&
+      safeCall(() => predicate(value))
+    ) {
       return value as T;
     }
   }

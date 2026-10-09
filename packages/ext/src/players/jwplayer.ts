@@ -19,15 +19,22 @@ interface JWPlayerSource {
   type?: string;
   height?: number;
   label?: string;
+  drm?: unknown;
+  keySystems?: unknown;
+  key_systems?: unknown;
 }
 
 interface JWPlayerTrack {
   file?: string;
   kind?: string;
   label?: string;
+  language?: string;
+  srclang?: string;
 }
 
-interface JWPlayerPlaylistItem {
+export interface JWPlayerPlaylistItem {
+  mediaid?: string;
+  title?: string;
   duration?: number;
   file?: string;
   sources?: JWPlayerSource[];
@@ -40,7 +47,7 @@ interface JWPlayerPlaylistItem {
  */
 export default class JWPlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "jwplayer";
-  static SELECTOR = ".jwplayer";
+  static SELECTOR = ".jwplayer, div[aria-label='Video Player']";
 
   getPlayer() {
     if (typeof jwplayer === "undefined") {
@@ -48,10 +55,15 @@ export default class JWPlayerHelper implements BasePlayer {
     }
 
     // jwplayer() without an id returns a stub (without API methods) if setup wasn't called
-    const id = document.querySelector(JWPlayerHelper.SELECTOR)?.id;
-    for (const query of id ? [id, undefined] : [undefined]) {
+    const queries = Array.from(
+      document.querySelectorAll<HTMLElement>(JWPlayerHelper.SELECTOR),
+    ).map((element) => element.id || element);
+    for (const query of [...queries, undefined]) {
       const player = safeCall(() => jwplayer(query));
-      if (typeof player?.getPlaylistItem === "function") {
+      if (
+        typeof player?.getPlaylistItem === "function" ||
+        typeof player?.getPlaylist === "function"
+      ) {
         return player;
       }
     }
@@ -62,7 +74,12 @@ export default class JWPlayerHelper implements BasePlayer {
   getPlaylistItem(player = this.getPlayer()): JWPlayerPlaylistItem | undefined {
     return (
       safeCall(() => player?.getPlaylistItem()) ??
-      safeCall(() => player?.getPlaylist?.()?.[player.getPlaylistIndex?.() ?? 0]) ??
+      safeCall(
+        () =>
+          player?.getPlaylist?.()?.[
+            safeCall(() => player.getPlaylistIndex?.()) ?? 0
+          ],
+      ) ??
       undefined
     );
   }
@@ -75,28 +92,58 @@ export default class JWPlayerHelper implements BasePlayer {
         throw new Error("JW Player playlist item not found");
       }
 
-      const sources = [
-        ...(item.allSources ?? []),
-        ...(item.sources ?? []),
-        { file: item.file },
-      ];
-      return buildVideoData(
+      return this.getVideoDataByPlaylistItem(
         videoId,
-        selectSourceUrl(
-          sources.map(({ file, type, height, label }) => ({
-            src: file,
-            type,
-            height,
-            label,
-          })),
-        ),
-        getFiniteDuration(safeCall(() => player.getDuration?.()), item.duration),
+        item,
+        safeCall(() => player.getDuration?.()),
         this.getSubtitles(),
       );
     } catch (err) {
       console.error("[VOT] JWPlayerHelper error:", (err as Error).message);
       return undefined;
     }
+  }
+
+  /** Also accepts the JW playlist JSON returned by public site APIs. */
+  getVideoDataByPlaylistItem(
+    pageUrl: string,
+    item: JWPlayerPlaylistItem,
+    duration?: unknown,
+    subtitles = buildSubtitles(
+      (item.tracks ?? []).map(({ file, label, language, srclang, kind }) => ({
+        src: file,
+        lang: srclang ?? language ?? label,
+        kind,
+      })),
+      this.SUBTITLE_SOURCE,
+    ),
+  ): MinimalVideoData {
+    const sources = [
+      ...(item.allSources ?? []),
+      ...(item.sources ?? []),
+      { file: item.file },
+    ];
+    return {
+      ...buildVideoData(
+        pageUrl,
+        selectSourceUrl(
+          sources.map(
+            ({ file, type, height, label, drm, keySystems, key_systems }) => ({
+              src: file,
+              type,
+              height,
+              label,
+              drm,
+              keySystems,
+              key_systems,
+            }),
+          ),
+        ),
+        getFiniteDuration(duration, item.duration),
+        subtitles,
+      ),
+      title: item.title,
+    };
   }
 
   getSubtitles(): VideoDataSubtitle[] {
@@ -108,7 +155,11 @@ export default class JWPlayerHelper implements BasePlayer {
     ];
 
     return buildSubtitles(
-      tracks.map(({ file, label, kind }) => ({ src: file, lang: label, kind })),
+      tracks.map(({ file, label, language, srclang, kind }) => ({
+        src: file,
+        lang: srclang ?? language ?? label,
+        kind,
+      })),
       this.SUBTITLE_SOURCE,
     );
   }

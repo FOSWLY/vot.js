@@ -48,7 +48,11 @@ function toSources(src: unknown): PlayerMediaSource[] {
   }
 
   if (src && typeof src === "object" && "src" in src) {
-    const { src: url, type, height } = src as Exclude<VidstackSrc, string | VidstackSrc[]>;
+    const {
+      src: url,
+      type,
+      height,
+    } = src as Exclude<VidstackSrc, string | VidstackSrc[]>;
     return typeof url === "string" ? [{ src: url, type, height }] : [];
   }
 
@@ -101,7 +105,10 @@ export default class VidstackPlayerHelper implements BasePlayer {
         ...(title ? { title } : {}),
       };
     } catch (err) {
-      console.error("[VOT] VidstackPlayerHelper error:", (err as Error).message);
+      console.error(
+        "[VOT] VidstackPlayerHelper error:",
+        (err as Error).message,
+      );
       return undefined;
     }
   }

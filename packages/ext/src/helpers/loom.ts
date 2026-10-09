@@ -49,9 +49,9 @@ export function parseLoomCaptionLanguages(bundle: string): string[] {
   const languageMap = /L4:\{([^}]+)\},Yj:/.exec(bundle)?.[1];
   if (!languageMap) throw new Error("Failed to find Loom caption languages");
 
-  const languages = [...languageMap.matchAll(
-    /(?:^|,)([a-z]{2,3}):"((?:\\.|[^"\\])*)"/g,
-  )]
+  const languages = [
+    ...languageMap.matchAll(/(?:^|,)([a-z]{2,3}):"((?:\\.|[^"\\])*)"/g),
+  ]
     .filter(([, code, label]) => code !== "unknown" && label !== code)
     .map(([, code]) => code);
   if (!languages.length) throw new Error("Loom caption language list is empty");
@@ -84,12 +84,12 @@ export function parseLoomCaptionTrack(
     return undefined;
   }
 
-  const language =
-    isOriginal ? transcript.language : translatedLanguage || requestedLanguage;
-  const captionsPath =
-    isOriginal
-      ? transcript.captions_source_url || transcript.captions_url
-      : transcript.captions_source_url;
+  const language = isOriginal
+    ? transcript.language
+    : translatedLanguage || requestedLanguage;
+  const captionsPath = isOriginal
+    ? transcript.captions_source_url || transcript.captions_url
+    : transcript.captions_source_url;
   if (!language || !captionsPath) return undefined;
   const cleanLanguage = language.trim();
   if (!cleanLanguage) return undefined;
@@ -141,13 +141,18 @@ export default class LoomHelper extends BaseHelper {
       const languages = parseLoomCaptionLanguages(bundle);
       const data = await this.fetchCaptionData(videoId, version, languages);
       const original = parseLoomCaptionTrack(data.original);
-      if (!original) throw new VideoHelperError("Loom captions are unavailable");
+      if (!original)
+        throw new VideoHelperError("Loom captions are unavailable");
 
       const tracks = [
         original,
         ...languages.flatMap((language, index) => {
-          const track = parseLoomCaptionTrack(data[`caption_${index}`], language);
-          return track && normalizeLang(track.language) === normalizeLang(language)
+          const track = parseLoomCaptionTrack(
+            data[`caption_${index}`],
+            language,
+          );
+          return track &&
+            normalizeLang(track.language) === normalizeLang(language)
             ? [track]
             : [];
         }),
@@ -216,7 +221,9 @@ export default class LoomHelper extends BaseHelper {
       signal: AbortSignal.timeout(15_000),
     });
     if (!response.ok) {
-      throw new VideoHelperError(`Failed to query Loom captions (${response.status})`);
+      throw new VideoHelperError(
+        `Failed to query Loom captions (${response.status})`,
+      );
     }
 
     const { data } = (await response.json()) as {

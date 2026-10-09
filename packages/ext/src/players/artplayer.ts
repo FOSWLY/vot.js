@@ -51,7 +51,9 @@ export default class ArtplayerHelper implements BasePlayer {
     }
 
     const alive = instances.filter((art) => art && !art.isDestroy);
-    return alive.find((art) => this.getMediaElement(art)?.isConnected) ?? alive[0];
+    return (
+      alive.find((art) => this.getMediaElement(art)?.isConnected) ?? alive[0]
+    );
   }
 
   getMediaElement(player = this.getPlayer()) {
@@ -71,7 +73,10 @@ export default class ArtplayerHelper implements BasePlayer {
 
       const { option } = player ?? {};
       const fileUrl = selectSourceUrl([
-        ...(option?.quality ?? []).map((q) => ({ src: q?.url, label: q?.html })),
+        ...(option?.quality ?? []).map((q) => ({
+          src: q?.url,
+          label: q?.html,
+        })),
         { src: option?.url, type: option?.type },
         { src: player?.url, type: option?.type },
         ...getMediaElementSources(media),
@@ -94,7 +99,13 @@ export default class ArtplayerHelper implements BasePlayer {
     return buildSubtitles(
       [
         ...(subtitle?.url
-          ? [{ src: subtitle.url, lang: subtitle.lang ?? "", format: subtitle.type }]
+          ? [
+              {
+                src: subtitle.url,
+                lang: subtitle.lang ?? "",
+                format: subtitle.type,
+              },
+            ]
           : []),
         ...getTrackElements(this.getMediaElement(player)),
       ],

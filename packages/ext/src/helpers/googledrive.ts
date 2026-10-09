@@ -1,12 +1,5 @@
 import { BaseHelper } from "./base";
-
-type PlayerData = {
-  video_id: string;
-};
-
-type PlayerElement = Element & {
-  getVideoData?: () => PlayerData;
-};
+import type { PlayerData, PlayerElement } from "../types/helpers/googledrive";
 
 export default class GoogleDriveHelper extends BaseHelper {
   getPlayerData(): PlayerData | undefined {

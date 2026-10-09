@@ -54,6 +54,16 @@ import VimeoHelper from "./vimeo";
 import VKHelper from "./vk";
 import YandexDiskHelper from "./yandexdisk";
 import YoutubeHelper from "./youtube";
+import BeaconHelper from "./beacon";
+import VidlyHelper from "./vidly";
+import NOZHelper from "./noz";
+import CraftsyHelper from "./craftsy";
+import NZHeraldHelper from "./nzherald";
+import JWPlatformHelper from "./jwplatform";
+import SpiegelHelper from "./spiegel";
+import ESPNHelper from "./espn";
+import OneFootballHelper from "./onefootball";
+import BrightcoveHelper from "./brightcove";
 
 // Re-export the shared helper namespaces + registry so `@vot.js/ext/helpers` stays a complete barrel.
 export * from "@vot.js/core/helpers";
@@ -104,6 +114,16 @@ export * as VimeoHelper from "./vimeo";
 export * as VKHelper from "./vk";
 export * as YandexDiskHelper from "./yandexdisk";
 export * as YoutubeHelper from "./youtube";
+export * as BeaconHelper from "./beacon";
+export * as VidlyHelper from "./vidly";
+export * as NOZHelper from "./noz";
+export * as CraftsyHelper from "./craftsy";
+export * as NZHeraldHelper from "./nzherald";
+export * as JWPlatformHelper from "./jwplatform";
+export * as SpiegelHelper from "./spiegel";
+export * as ESPNHelper from "./espn";
+export * as OneFootballHelper from "./onefootball";
+export * as BrightcoveHelper from "./brightcove";
 
 export const availableHelpers = {
   // shared, environment-agnostic helpers (see @vot.js/core/helpers)
@@ -158,6 +178,16 @@ export const availableHelpers = {
   [ExtVideoService.mediafile]: MediafileHelper,
   [ExtVideoService.skilljar]: SkilljarHelper,
   [ExtVideoService.dropout]: DropoutHelper,
+  [ExtVideoService.beacon]: BeaconHelper,
+  [ExtVideoService.vidly]: VidlyHelper,
+  [ExtVideoService.noz]: NOZHelper,
+  [ExtVideoService.craftsy]: CraftsyHelper,
+  [ExtVideoService.nzherald]: NZHeraldHelper,
+  [ExtVideoService.jwplatform]: JWPlatformHelper,
+  [ExtVideoService.spiegel]: SpiegelHelper,
+  [ExtVideoService.espn]: ESPNHelper,
+  [ExtVideoService.onefootball]: OneFootballHelper,
+  [ExtVideoService.brightcove]: BrightcoveHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

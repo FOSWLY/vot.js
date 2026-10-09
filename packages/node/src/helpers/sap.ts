@@ -79,7 +79,9 @@ export default class SapHelper extends BaseHelper {
   // oxlint-disable-next-line no-explicit-any
   findKalturaEntry(nextData: any) {
     const video = nextData?.props?.pageProps?.embeddedVideos?.[0];
-    const legacy = /https:\/\/([^/]+)\/p\/(\d+)\//i.exec(video?.contentUrl ?? "");
+    const legacy = /https:\/\/([^/]+)\/p\/(\d+)\//i.exec(
+      video?.contentUrl ?? "",
+    );
     if (legacy && video?.videoId) {
       return {
         kalturaDomain: legacy[1],
@@ -91,7 +93,9 @@ export default class SapHelper extends BaseHelper {
     const raw = JSON.stringify(nextData?.props?.pageProps ?? {});
     const entryId =
       /id=\\?"(\d_[0-9a-z]{8})\\?"[^>]*kalturaVideo/i.exec(raw)?.[1] ??
-      /"preview":\{"format":"VIDEO","sourceId":"(\d_[0-9a-z]{8})"/i.exec(raw)?.[1];
+      /"preview":\{"format":"VIDEO","sourceId":"(\d_[0-9a-z]{8})"/i.exec(
+        raw,
+      )?.[1];
     if (!entryId) {
       return undefined;
     }

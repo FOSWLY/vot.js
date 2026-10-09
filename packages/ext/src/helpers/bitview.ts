@@ -11,7 +11,10 @@ export default class BitviewHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      const video = findMediaElement(document.querySelector(".vlScreen"), "video");
+      const video = findMediaElement(
+        document.querySelector(".vlScreen"),
+        "video",
+      );
       const videoUrl = selectSourceUrl(getMediaElementSources(video));
       if (!videoUrl) {
         throw new VideoHelperError("Failed to find video URL");

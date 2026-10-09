@@ -32,7 +32,8 @@ export type TextTrack = TextTrackV7 | TextTrackV8;
 
 export type TextTrackObj = {
   length: number;
-  tracks_: TextTrack[];
+  tracks_?: TextTrack[];
+  [index: number]: TextTrack;
 };
 
 export type PlayerCache = {
@@ -83,6 +84,9 @@ export type Player<T extends PlayerOptions = PlayerOptions> = {
   options_: T;
   textTracks_?: TextTrackObj;
   currentSources?(): Source[];
+  currentSource?(): Source;
+  remoteTextTracks?(): TextTrackObj;
+  remoteTextTrackEls?(): ArrayLike<HTMLTrackElement>;
   textTracks(): TextTrackObj;
   getCache(): PlayerCache;
   duration(): number;

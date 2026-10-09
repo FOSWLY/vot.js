@@ -11,17 +11,22 @@ import {
   selectSourceUrl,
 } from "./utils";
 
+type BrightcoveTrack = {
+  src?: string;
+  srclang?: string;
+  language?: string;
+  kind?: string;
+  sources?: { src?: string }[];
+};
+
 type BrightcoveMediaInfo = {
   id?: string;
   name?: string;
   duration?: number;
   sources?: (PlayerMediaSource & { container?: string })[];
-  text_tracks?: {
-    src?: string;
-    srclang?: string;
-    kind?: string;
-    sources?: { src?: string }[];
-  }[];
+  // Brightcove exposes camelCase in current players and snake_case in older ones.
+  textTracks?: BrightcoveTrack[];
+  text_tracks?: BrightcoveTrack[];
 };
 
 type BrightcovePlayer = {
@@ -35,7 +40,8 @@ type BrightcovePlayer = {
  */
 export default class BrightcovePlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "brightcove";
-  static SELECTOR = ".video-js[data-account], video-js[data-account], .bc-player-default_default";
+  static SELECTOR =
+    ".video-js[data-account], video-js[data-account], .bc-player-default_default";
 
   getPlayer(): BrightcovePlayer | undefined {
     const player = safeCall(
@@ -53,10 +59,26 @@ export default class BrightcovePlayerHelper implements BasePlayer {
       }
 
       const fileUrl = selectSourceUrl([
-        ...(mediainfo.sources ?? []).map((s) => ({
-          ...s,
-          type: s.type ?? (s.container === "MP4" ? "video/mp4" : undefined),
-        })),
+        ...(mediainfo.sources ?? []).map(
+          ({
+            src,
+            type,
+            container,
+            height,
+            label,
+            drm,
+            keySystems,
+            key_systems,
+          }) => ({
+            src,
+            type: type ?? (container === "MP4" ? "video/mp4" : undefined),
+            height,
+            label,
+            drm,
+            keySystems,
+            key_systems,
+          }),
+        ),
         ...(safeCall(() => player.currentSources?.()) ?? []),
       ]);
       return {
@@ -64,27 +86,33 @@ export default class BrightcovePlayerHelper implements BasePlayer {
           videoId,
           fileUrl,
           getFiniteDuration(
-          mediainfo.duration,
-          safeCall(() => player.duration?.()),
-        ),
+            mediainfo.duration,
+            safeCall(() => player.duration?.()),
+          ),
           this.getSubtitles(),
         ),
         title: mediainfo.name,
       };
     } catch (err) {
-      console.error("[VOT] BrightcovePlayerHelper error:", (err as Error).message);
+      console.error(
+        "[VOT] BrightcovePlayerHelper error:",
+        (err as Error).message,
+      );
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const tracks = this.getPlayer()?.mediainfo?.text_tracks ?? [];
+    const info = this.getPlayer()?.mediainfo;
+    const tracks = [...(info?.textTracks ?? []), ...(info?.text_tracks ?? [])];
     return buildSubtitles(
-      tracks.map((t) => ({
-        src: t.src ?? t.sources?.[0]?.src,
-        lang: t.srclang,
-        kind: t.kind,
-      })),
+      tracks.flatMap((t) =>
+        [t.src, ...(t.sources ?? []).map((s) => s.src)].map((src) => ({
+          src,
+          lang: t.srclang ?? t.language,
+          kind: t.kind,
+        })),
+      ),
       this.SUBTITLE_SOURCE,
     );
   }

@@ -75,6 +75,17 @@ export enum VideoService {
   kinopoisk = "kinopoisk",
   telegram = "telegram",
   wistia = "wistia",
+  pinterest = "pinterest",
+  nytimes = "nytimes",
+  navertv = "navertv",
+  chzzk = "chzzk",
+  washingtonpost = "washingtonpost",
+  wsj = "wsj",
+  imgur = "imgur",
+  zhihu = "zhihu",
+  snapchat = "snapchat",
+  cbsnews = "cbsnews",
+  streamable = "streamable",
 }
 
 /**

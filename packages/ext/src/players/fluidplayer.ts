@@ -45,6 +45,9 @@ export default class FluidPlayerHelper implements BasePlayer {
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    return buildSubtitles(getTrackElements(this.getPlayer()), this.SUBTITLE_SOURCE);
+    return buildSubtitles(
+      getTrackElements(this.getPlayer()),
+      this.SUBTITLE_SOURCE,
+    );
   }
 }

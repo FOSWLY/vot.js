@@ -28,7 +28,7 @@ export default class EpicGamesHelper extends BaseHelper {
         `https://dev.epicgames.com/community/api/cms/videos/${embedId}/embed.html`,
       );
       const content = await res.text();
-      const playlistUrl = /videoUrl\s?=\s"([^"]+)"?/.exec(content);
+      const playlistUrl = /videoUrl\s*=\s*["'`]([^"'`]+)["'`]/.exec(content);
       return playlistUrl?.[1]?.replace("qsep://", "https://");
     } catch (err) {
       Logger.error(
@@ -44,7 +44,9 @@ export default class EpicGamesHelper extends BaseHelper {
       return undefined;
     }
 
-    const videoBlock = postInfo.blocks.find((block) => block.type === "video");
+    const videoBlock = postInfo.blocks?.find(
+      (block): block is EpicGames.VideoBlock => block.type === "video",
+    );
     if (!videoBlock) {
       return undefined;
     }
@@ -66,6 +68,8 @@ export default class EpicGamesHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return /\/(\w{3,5})\/[^/]+$/.exec(url.pathname)?.[1];
+    return /\/learning\/(?:[^/]+\/)*?(\w{3,8})\/[^/?#]+\/?$/.exec(
+      url.pathname,
+    )?.[1];
   }
 }
