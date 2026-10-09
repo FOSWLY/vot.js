@@ -17,7 +17,7 @@ export default [
     match: /^((www.|m.)?youtube(-nocookie|kids)?.com)|(youtu.be)$/,
   },
   {
-    // Sites host Invidious. I tested the performance only on invidious.kevin.rocks, youtu.be and inv.vern.cc
+    // Sites host Invidious. I tested the performance only on invidious.kevin.rocks, youtu.be
     host: CoreVideoService.invidious,
     url: "https://youtu.be/",
     match: sitesInvidious,

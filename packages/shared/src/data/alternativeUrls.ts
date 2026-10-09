@@ -1,11 +1,10 @@
-// Sites host Invidious. I tested the performance only on invidious.kevin.rocks, youtu.be and inv.vern.cc
+// Sites host Invidious. I tested the performance only on invidious.kevin.rocks, yewtu.be
 const sitesInvidious = [
   "yewtu.be",
   "inv.nadeko.net",
   "invidious.nerdvpn.de",
   "invidious.protokolla.fi",
   "invidious.materialio.us",
-  "iv.melmac.space",
 ] as const;
 
 // Sites host Piped. I tested the performance only on piped.video
@@ -16,17 +15,8 @@ const sitesPiped = [
 ] as const;
 
 const sitesProxiTok = [
+  // Use your own domain instead of this. See https://github.com/pablouser1/ProxiTok/issues/237
   "proxitok.pabloferreiro.es",
-  "proxitok.pussthecat.org",
-  "tok.habedieeh.re",
-  "proxitok.esmailelbob.xyz",
-  "proxitok.privacydev.net",
-  "tok.artemislena.eu",
-  "tok.adminforge.de",
-  "tt.vern.cc",
-  "cringe.whatever.social",
-  "proxitok.lunar.icu",
-  "proxitok.privacy.com.de",
 ] as const;
 
 // Sites host Peertube. I tested the performance only on dalek.zone and tube.shanti.cafe

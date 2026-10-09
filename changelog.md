@@ -8,6 +8,7 @@
 
 ## Shared
 
+- Removed outdated Invidious, ProxiTok alternative URLs
 - Bump `componentVersion` value
 
 # 3.1.5
