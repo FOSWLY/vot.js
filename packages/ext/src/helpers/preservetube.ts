@@ -1,17 +1,24 @@
 import Logger from "@vot.js/shared/utils/logger";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
+import { getVideoSrc } from "../utils/dom";
 
 export default class PreserveTubeHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      if (!videoId) {
-        throw new VideoHelperError("Failed to find PreserveTube video ID");
+      const videoEl =
+        document.querySelector<HTMLVideoElement>("#video-player") ?? this.video;
+      const videoUrl = getVideoSrc(videoEl);
+      if (
+        !videoUrl ||
+        videoUrl.startsWith("blob:") ||
+        (!videoUrl.includes(".mp4") && !videoUrl.includes(".webm"))
+      ) {
+        throw new VideoHelperError("Failed to find PreserveTube video url");
       }
 
       return {
-        url: `https://s3.archive.party/preservetube/${videoId}.mp4`,
+        url: videoUrl,
       };
     } catch (err) {
       Logger.error(
@@ -22,7 +29,6 @@ export default class PreserveTubeHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.searchParams.get("v") ?? undefined;
   }
