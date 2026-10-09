@@ -2,6 +2,7 @@ import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
+import { getVideoSrc } from "../utils/dom";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,11 +34,6 @@ export default class KalturaPlayerHelper implements BasePlayer {
       const duration = player.duration ?? undefined;
 
       // Extract url
-      const _sources =
-        player.sources?.poster ||
-        player.sources?.hls ||
-        player.sources?.dash ||
-        [];
       let url: string | undefined;
 
       // Look for a direct mp4 or m3u8 source URL on the player object if available
@@ -50,12 +46,7 @@ export default class KalturaPlayerHelper implements BasePlayer {
         ".kaltura-player-container video, video",
       );
 
-      url ??=
-        videoEl?.currentSrc ||
-        videoEl?.src ||
-        videoEl?.getAttribute("src") ||
-        undefined;
-
+      url ??= getVideoSrc(videoEl);
       if (!url) {
         throw new Error("Failed to find video url");
       }

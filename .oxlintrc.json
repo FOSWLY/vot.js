@@ -9,7 +9,10 @@
     "no-await-in-loop": "off",
     "no-extraneous-class": "off",
     "no-shadow": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    // We support chrome and firefox since 106.
+    // `Array#toReversed` works from chrome 110 and firefox 115
+    "no-array-reverse": "off"
   },
   "ignorePatterns": [
     "**/dist",

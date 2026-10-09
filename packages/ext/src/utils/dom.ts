@@ -21,3 +21,13 @@ export function querySelectorDeep<T extends Element = Element>(
 
   return null;
 }
+
+export function getVideoSrc(
+  videoEl: HTMLVideoElement | null | undefined,
+): string | undefined {
+  return (
+    videoEl?.src ||
+    videoEl?.currentSrc ||
+    videoEl?.querySelector<HTMLSourceElement>("source[src]")?.src
+  );
+}

@@ -1,3 +1,15 @@
+# unreleased
+
+## Ext
+
+- Added support Kinopoisk trailers (`https://www.kinopoisk.ru/`)
+- Fixed PreserveTube helper for some cases
+- Refactored repeated video source retrieval using `getVideoSrc` utility function
+
+## Shared
+
+- Bump `componentVersion` value
+
 # 3.1.5
 
 ## Ext

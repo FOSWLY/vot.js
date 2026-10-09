@@ -4,6 +4,7 @@ import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { BasePlayer } from "./base";
 import type { MinimalVideoData } from "../types/client";
 import type * as Plyr from "../types/helpers/plyr";
+import { getVideoSrc } from "../utils/dom";
 
 export default class PlyrHelper implements BasePlayer {
   SUBTITLE_SOURCE = "plyr";
@@ -34,11 +35,7 @@ export default class PlyrHelper implements BasePlayer {
 
       const duration = player?.duration ?? videoEl?.duration ?? 0;
 
-      const fileUrl =
-        player?.source ||
-        videoEl?.currentSrc ||
-        videoEl?.src ||
-        videoEl?.querySelector("source")?.getAttribute("src");
+      const fileUrl = player?.source || getVideoSrc(videoEl);
 
       if (!fileUrl) {
         throw new Error("Failed to find video url");
