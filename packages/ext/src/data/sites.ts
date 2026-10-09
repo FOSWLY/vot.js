@@ -550,7 +550,7 @@ export default [
   },
   {
     host: CoreVideoService.jove,
-    url: "https://jove.com/",
+    url: "https://www.jove.com/",
     match: /^(?:app|www)\.jove\.com$/,
     selector: sharedSelectors.flowplayer,
     needExtraData: true,
@@ -565,7 +565,7 @@ export default [
   },
   {
     host: CoreVideoService.porntn,
-    url: "https://porntn.com/videos/",
+    url: "https://porntn.com/video/",
     match: /^porntn.com$/,
     selector: sharedSelectors.flowplayer,
     needExtraData: true,

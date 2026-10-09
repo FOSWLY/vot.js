@@ -1,6 +1,5 @@
-import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import Logger from "@vot.js/shared/utils/logger";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
+import { buildSubtitles, getTrackElements } from "../players/utils";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
@@ -18,28 +17,10 @@ export default class KickstarterHelper extends BaseHelper {
         throw new VideoHelperError("Failed to find video URL");
       }
 
-      const subtitles = videoEl?.querySelectorAll("track") ?? [];
-
+      // <track> parsing is shared with the generic HTML5 player helpers
       return {
         url,
-        subtitles: Array.from(subtitles).reduce<VideoDataSubtitle[]>(
-          (result, sub) => {
-            const lang = sub.getAttribute("srclang");
-            const url = sub.getAttribute("src");
-            if (!lang || !url) {
-              return result;
-            }
-
-            result.push({
-              language: normalizeLang(lang),
-              url,
-              format: "vtt",
-              source: "kickstarter",
-            });
-            return result;
-          },
-          [],
-        ),
+        subtitles: buildSubtitles(getTrackElements(videoEl), "kickstarter"),
       };
     } catch (err) {
       Logger.error(

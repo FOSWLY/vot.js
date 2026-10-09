@@ -1,7 +1,13 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
+import {
+  buildSubtitles,
+  buildVideoData,
+  getFiniteDuration,
+  safeCall,
+  selectSourceUrl,
+} from "./utils";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,25 +15,19 @@ declare global {
 }
 
 interface JWPlayerSource {
-  type: string;
-  file: string;
+  file?: string;
+  type?: string;
   height?: number;
-  width?: number;
   label?: string;
-  bitrate?: number;
-  default?: boolean;
-  mimeType?: string;
 }
 
 interface JWPlayerTrack {
   file?: string;
   kind?: string;
   label?: string;
-  default?: boolean;
 }
 
 interface JWPlayerPlaylistItem {
-  mediaid?: string;
   duration?: number;
   file?: string;
   sources?: JWPlayerSource[];
@@ -35,204 +35,81 @@ interface JWPlayerPlaylistItem {
   tracks?: JWPlayerTrack[];
 }
 
+/**
+ * JW Player (https://jwplayer.com/)
+ */
 export default class JWPlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "jwplayer";
-  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
-
-  getHeight(source: JWPlayerSource): number {
-    if (typeof source.height === "number" && source.height > 0) {
-      return source.height;
-    }
-    const match = source.label?.match(/^(\d+)/);
-    return match ? Number.parseInt(match[1], 10) : 0;
-  }
+  static SELECTOR = ".jwplayer";
 
   getPlayer() {
     if (typeof jwplayer === "undefined") {
       return undefined;
     }
 
-    const playerEl = document.querySelector(".jwplayer");
-    if (playerEl?.id) {
-      try {
-        const player = jwplayer(playerEl.id);
-        if (player && typeof player.getPlaylistItem === "function") {
-          return player;
-        }
-      } catch {}
+    // jwplayer() without an id returns a stub (without API methods) if setup wasn't called
+    const id = document.querySelector(JWPlayerHelper.SELECTOR)?.id;
+    for (const query of id ? [id, undefined] : [undefined]) {
+      const player = safeCall(() => jwplayer(query));
+      if (typeof player?.getPlaylistItem === "function") {
+        return player;
+      }
     }
 
-    try {
-      return jwplayer();
-    } catch {
-      return undefined;
-    }
+    return undefined;
+  }
+
+  getPlaylistItem(player = this.getPlayer()): JWPlayerPlaylistItem | undefined {
+    return (
+      safeCall(() => player?.getPlaylistItem()) ??
+      safeCall(() => player?.getPlaylist?.()?.[player.getPlaylistIndex?.() ?? 0]) ??
+      undefined
+    );
   }
 
   getVideoData(videoId: string): MinimalVideoData | undefined {
     try {
       const player = this.getPlayer();
-      if (!player) {
-        throw new Error("JW Player instance not ready or not found");
-      }
-
-      let item = player.getPlaylistItem
-        ? (player.getPlaylistItem() as JWPlayerPlaylistItem | null)
-        : null;
-
-      if (!item && typeof player.getPlaylist === "function") {
-        const playlist = player.getPlaylist();
-        const index =
-          typeof player.getPlaylistIndex === "function"
-            ? player.getPlaylistIndex()
-            : 0;
-        if (Array.isArray(playlist) && playlist[index]) {
-          item = playlist[index];
-        }
-      }
-
+      const item = this.getPlaylistItem(player);
       if (!item) {
-        throw new Error("No playlist item found");
+        throw new Error("JW Player playlist item not found");
       }
 
-      let duration = 0;
-      if (typeof player.getDuration === "function") {
-        duration = player.getDuration();
-      }
-      if (
-        (typeof duration !== "number" || duration <= 0) &&
-        typeof item.duration === "number"
-      ) {
-        duration = item.duration;
-      }
-
-      const sources: JWPlayerSource[] = [];
-      if (Array.isArray(item.allSources)) {
-        sources.push(...item.allSources);
-      }
-      if (Array.isArray(item.sources)) {
-        for (const s of item.sources) {
-          if (
-            s?.file &&
-            !sources.some((existing) => existing.file === s.file)
-          ) {
-            sources.push(s);
-          }
-        }
-      }
-
-      const validSources = sources.filter(
-        (s) => s && typeof s.file === "string" && s.file.length > 0,
+      const sources = [
+        ...(item.allSources ?? []),
+        ...(item.sources ?? []),
+        { file: item.file },
+      ];
+      return buildVideoData(
+        videoId,
+        selectSourceUrl(
+          sources.map(({ file, type, height, label }) => ({
+            src: file,
+            type,
+            height,
+            label,
+          })),
+        ),
+        getFiniteDuration(safeCall(() => player.getDuration?.()), item.duration),
+        this.getSubtitles(),
       );
-
-      if (validSources.length === 0) {
-        if (typeof item.file === "string" && item.file.length > 0) {
-          validSources.push({
-            file: item.file,
-            type: "",
-            label: "default",
-          });
-        } else {
-          throw new Error("No valid sources found");
-        }
-      }
-
-      validSources.sort((a, b) => {
-        const heightA = this.getHeight(a);
-        const heightB = this.getHeight(b);
-        if (heightA === 0 && heightB > 0) return 1;
-        if (heightB === 0 && heightA > 0) return -1;
-        return heightA - heightB;
-      });
-
-      const lowestQuality = validSources[0];
-
-      return {
-        url: videoId,
-        duration,
-        translationHelp: [
-          { target: "video_file_url", targetUrl: lowestQuality.file },
-        ],
-        subtitles: this.getSubtitles(),
-      };
     } catch (err) {
-      console.error(
-        "[VOT] JWPlayerHelper error:",
-        err instanceof Error ? err.message : String(err),
-      );
+      console.error("[VOT] JWPlayerHelper error:", (err as Error).message);
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const subtitles: VideoDataSubtitle[] = [];
-    try {
-      const player = this.getPlayer();
-      if (!player) {
-        return subtitles;
-      }
+    const player = this.getPlayer();
+    const captions = safeCall(() => player?.getCaptionsList?.());
+    const tracks: JWPlayerTrack[] = [
+      ...(this.getPlaylistItem(player)?.tracks ?? []),
+      ...(Array.isArray(captions) ? captions : []),
+    ];
 
-      let item = player.getPlaylistItem
-        ? (player.getPlaylistItem() as JWPlayerPlaylistItem | null)
-        : null;
-      if (!item && typeof player.getPlaylist === "function") {
-        const playlist = player.getPlaylist();
-        const index =
-          typeof player.getPlaylistIndex === "function"
-            ? player.getPlaylistIndex()
-            : 0;
-        if (Array.isArray(playlist) && playlist[index]) {
-          item = playlist[index];
-        }
-      }
-
-      const tracks = item?.tracks ?? [];
-      const captionsList =
-        typeof player.getCaptionsList === "function"
-          ? player.getCaptionsList()
-          : [];
-
-      const seenUrls = new Set<string>();
-
-      const addSubtitle = (label: string, file: string) => {
-        if (!file) return;
-        try {
-          const absoluteUrl = new URL(file, window.location.href).toString();
-          if (!seenUrls.has(absoluteUrl)) {
-            seenUrls.add(absoluteUrl);
-            subtitles.push({
-              source: this.SUBTITLE_SOURCE,
-              format: this.SUBTITLE_FORMAT,
-              language: normalizeLang(label || "en"),
-              url: absoluteUrl,
-            });
-          }
-        } catch {}
-      };
-
-      if (Array.isArray(tracks)) {
-        for (const track of tracks) {
-          if (
-            track &&
-            (track.kind === "captions" || track.kind === "subtitles") &&
-            track.file
-          ) {
-            addSubtitle(track.label || "en", track.file);
-          }
-        }
-      }
-
-      if (Array.isArray(captionsList)) {
-        for (const track of captionsList) {
-          if (track && typeof track === "object" && track.file) {
-            addSubtitle(track.label || "en", track.file);
-          }
-        }
-      }
-    } catch (err) {
-      console.error("[VOT] JWPlayerHelper getSubtitles error:", err);
-    }
-
-    return subtitles;
+    return buildSubtitles(
+      tracks.map(({ file, label, kind }) => ({ src: file, lang: label, kind })),
+      this.SUBTITLE_SOURCE,
+    );
   }
 }

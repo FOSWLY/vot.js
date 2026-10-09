@@ -3,7 +3,7 @@ import { BaseHelper } from "./base";
 export default class VKHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    const pathID = /^\/((?:video|clip)-?\d+_\d+)(?:\/)?$/.exec(url.pathname);
+    const pathID = /^\/+((?:video|clip)-?\d+_\d+)\/?$/.exec(url.pathname);
     if (pathID) {
       return pathID[1];
     }

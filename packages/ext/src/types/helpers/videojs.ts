@@ -52,8 +52,15 @@ export type PlayerCache = {
 
 export type PlayerLanguages = Record<string, Record<string, string>>; // translations?
 
+export type PlayerOptionsTrack = {
+  src?: string;
+  srclang?: string;
+  kind?: string;
+};
+
 export type PlayerOptions = {
   // not full typed
+  tracks?: PlayerOptionsTrack[];
   language: string;
   languages: PlayerLanguages;
   muted: boolean;

@@ -1,6 +1,15 @@
+export * as ArtplayerHelper from "./artplayer";
+export * as BrightcovePlayerHelper from "./brightcove";
+export * as ClapprPlayerHelper from "./clappr";
+export * as DPlayerHelper from "./dplayer";
 export * as FlowplayerHelper from "./flowplayer";
+export * as FluidPlayerHelper from "./fluidplayer";
 export * as PlayerJSHelper from "./idplayer";
 export * as JWPlayerHelper from "./jwplayer";
 export * as KalturaPlayerHelper from "./kaltura";
+export * as MediaElementPlayerHelper from "./mediaelement";
+export * as PlyrHelper from "./plyr";
 export * as ShakaPlayerHelper from "./shaka";
+export * as UniversalPlayerHelper from "./universal";
+export * as VidstackPlayerHelper from "./vidstack";
 export * as VideoJSHelper from "./videojs";

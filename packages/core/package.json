@@ -59,6 +59,16 @@
       "import": "./dist/providers/*.js",
       "types": "./dist/providers/*.d.ts"
     },
+    "./helpers": {
+      "require": "./dist/helpers/index.js",
+      "import": "./dist/helpers/index.js",
+      "types": "./dist/helpers/index.d.ts"
+    },
+    "./helpers/*": {
+      "require": "./dist/helpers/*.js",
+      "import": "./dist/helpers/*.js",
+      "types": "./dist/helpers/*.d.ts"
+    },
     "./utils/videoData": {
       "require": "./dist/utils/videoData.js",
       "import": "./dist/utils/videoData.js",

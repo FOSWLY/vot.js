@@ -19,8 +19,44 @@ export default class BunkrHelper extends BaseHelper {
     return this.xorDecrypt(this.base64ToBytes(encryptedBase64), key);
   }
 
+  /**
+   * Current Bunkr flow (2026): the /f/<slug> page embeds the CDN url (`jsCDN`)
+   * and the player signs its path via `signUrl` (?token=&ex=) before playback
+   */
+  async getSignedPageUrl(videoId: string): Promise<string | undefined> {
+    const res = await this.fetch(`${this.origin}/f/${videoId}`);
+    const html = await res.text();
+    const unescape = (v?: string) => v?.replace(/\\\//g, "/");
+    const cdnUrl = unescape(/var\s+jsCDN\s*=\s*"([^"]+)"/.exec(html)?.[1]);
+    if (!cdnUrl) return undefined;
+
+    const signUrl = unescape(/var\s+signUrl\s*=\s*"([^"]+)"/.exec(html)?.[1]);
+    if (!signUrl) return cdnUrl;
+
+    try {
+      const url = new URL(cdnUrl);
+      const signRes = await this.fetch(
+        `${signUrl}?path=${encodeURIComponent(decodeURIComponent(url.pathname))}`,
+      );
+      const { token, ex } = (await signRes.json()) as Bunkr.SignResponse;
+      if (token) {
+        url.searchParams.set("token", token);
+        url.searchParams.set("ex", String(ex));
+      }
+      return url.toString();
+    } catch {
+      return cdnUrl;
+    }
+  }
+
   async getVideoData(videoId: string) {
     try {
+      const pageUrl = await this.getSignedPageUrl(videoId).catch(() => undefined);
+      if (pageUrl) {
+        return { url: pageUrl };
+      }
+
+      // legacy encrypted API (player.enc.js)
       const res = await this.fetch(`${this.origin}/api/vs`, {
         method: "POST",
         body: JSON.stringify({

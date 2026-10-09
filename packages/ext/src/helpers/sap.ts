@@ -5,6 +5,10 @@ import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
+// Public Kaltura player config of learning.sap.com (NEXT_PUBLIC_KALTURA_PARTNER_ID).
+const SAP_KALTURA_DOMAIN = "cdnapisec.kaltura.com";
+const SAP_KALTURA_PARTNER_ID = "1921661";
+
 export default class SapHelper extends BaseHelper {
   API_ORIGIN = "https://learning.sap.com/";
 
@@ -65,6 +69,40 @@ export default class SapHelper extends BaseHelper {
     }
   }
 
+  /**
+   * Resolve the Kaltura entry for a page. learning.sap.com no longer ships
+   * `embeddedVideos` in `__NEXT_DATA__`; the entry id now lives in the lesson
+   * HTML (`<div id="1_xxxxxxxx" class="kalturaVideoLessonContainer">`) or in the
+   * course `preview.sourceId`, while partner id/domain come from the public
+   * player config (`NEXT_PUBLIC_KALTURA_PARTNER_ID`). No DOM execution needed.
+   */
+  // oxlint-disable-next-line no-explicit-any
+  findKalturaEntry(nextData: any) {
+    const video = nextData?.props?.pageProps?.embeddedVideos?.[0];
+    const legacy = /https:\/\/([^/]+)\/p\/(\d+)\//i.exec(video?.contentUrl ?? "");
+    if (legacy && video?.videoId) {
+      return {
+        kalturaDomain: legacy[1],
+        partnerId: legacy[2],
+        entryId: String(video.videoId),
+      };
+    }
+
+    const raw = JSON.stringify(nextData?.props?.pageProps ?? {});
+    const entryId =
+      /id=\\?"(\d_[0-9a-z]{8})\\?"[^>]*kalturaVideo/i.exec(raw)?.[1] ??
+      /"preview":\{"format":"VIDEO","sourceId":"(\d_[0-9a-z]{8})"/i.exec(raw)?.[1];
+    if (!entryId) {
+      return undefined;
+    }
+
+    return {
+      kalturaDomain: SAP_KALTURA_DOMAIN,
+      partnerId: SAP_KALTURA_PARTNER_ID,
+      entryId,
+    };
+  }
+
   async getKalturaData(videoId: string) {
     const url = `${this.API_ORIGIN}${videoId}`;
     try {
@@ -81,25 +119,14 @@ export default class SapHelper extends BaseHelper {
       }
 
       const nextData = JSON.parse(nextDataEl.textContent);
-      const video = nextData?.props?.pageProps?.embeddedVideos?.[0];
-
-      if (!video) {
+      const entry = this.findKalturaEntry(nextData);
+      if (!entry) {
         throw new VideoHelperError(
-          `Failed to find embeddedVideos in JSON for ${videoId}`,
+          `Failed to find Kaltura entry in __NEXT_DATA__ for ${videoId}`,
         );
       }
 
-      const contentUrl = video.contentUrl || "";
-      const match = /https:\/\/([^/]+)\/p\/(\d+)\//i.exec(contentUrl);
-
-      if (!match) {
-        throw new VideoHelperError(
-          `Failed to extract Kaltura domain and partnerId for ${videoId}`,
-        );
-      }
-
-      const [, kalturaDomain, partnerId] = match;
-      const entryId = video.videoId;
+      const { kalturaDomain, partnerId, entryId } = entry;
 
       return await this.requestKaltura(kalturaDomain, partnerId, entryId);
     } catch (err: unknown) {

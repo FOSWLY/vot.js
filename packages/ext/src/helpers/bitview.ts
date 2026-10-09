@@ -1,4 +1,9 @@
 import Logger from "@vot.js/shared/utils/logger";
+import {
+  findMediaElement,
+  getMediaElementSources,
+  selectSourceUrl,
+} from "../players/utils";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
@@ -6,15 +11,13 @@ export default class BitviewHelper extends BaseHelper {
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
-      const videoUrl =
-        document.querySelector<HTMLVideoElement>(".vlScreen > video")?.src;
+      const video = findMediaElement(document.querySelector(".vlScreen"), "video");
+      const videoUrl = selectSourceUrl(getMediaElementSources(video));
       if (!videoUrl) {
         throw new VideoHelperError("Failed to find video URL");
       }
 
-      return {
-        url: videoUrl,
-      };
+      return { url: videoUrl };
     } catch (err) {
       Logger.error(
         `Failed to get Bitview data by videoId: ${videoId}`,

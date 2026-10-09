@@ -8,7 +8,7 @@ export default class KickHelper extends BaseHelper {
 
   async getClipInfo(clipId: string): Promise<MinimalVideoData | undefined> {
     try {
-      const res = await this.fetch(`${this.API_ORIGIN}/v2/clips/${clipId}`);
+      const res = await this.fetch(`${this.API_ORIGIN}/v2/clips/${clipId}/play`);
       const data = (await res.json()) as Kick.ClipResponse;
       const { clip_url: url, duration, title } = data.clip;
       return {

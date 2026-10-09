@@ -329,7 +329,7 @@ export default [
   },
   {
     host: CoreVideoService.jove,
-    url: "https://jove.com/",
+    url: "https://www.jove.com/",
     match: /^(?:app|www)\.jove\.com$/,
   },
   {
@@ -340,7 +340,7 @@ export default [
   },
   {
     host: CoreVideoService.porntn,
-    url: "https://porntn.com/videos/",
+    url: "https://porntn.com/video/",
     match: /^porntn.com$/,
     needExtraData: true,
   },

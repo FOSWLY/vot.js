@@ -11,7 +11,11 @@ export default class CoursehunterLikeHelper extends BaseHelper {
     try {
       const res = await this.fetch(`${this.API_ORIGIN}/${videoId}`);
       const content = await res.text();
-      return /course_id(\s)?=(\s)?([\d]+)/.exec(content)?.[3];
+      return (
+        /data-course-id="(\d+)"/.exec(content)?.[1] ??
+        /name="course_id"\s+value="(\d+)"/.exec(content)?.[1] ??
+        /course_id\s?=\s?(\d+)/.exec(content)?.[1]
+      );
     } catch (err) {
       Logger.error(
         `Failed to get CoursehunterLike courseId by videoId: ${videoId}, because ${

@@ -1,75 +1,68 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
+import {
+  buildSubtitles,
+  buildVideoData,
+  findMediaElement,
+  getFiniteDuration,
+  getMediaElementSources,
+  getTrackElements,
+  safeCall,
+  selectSourceUrl,
+} from "./utils";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Playerjs: any;
 }
 
+type PlayerJSSubtitle = {
+  url?: string;
+  title?: string;
+  lang?: string;
+};
+
+/**
+ * PlayerJS (https://playerjs.com/)
+ */
 export default class PlayerJSHelper implements BasePlayer {
   SUBTITLE_SOURCE = "playerjs";
-  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
   getPlayer() {
-    if (typeof Playerjs !== "undefined") {
-      return Playerjs;
-    }
-    return undefined;
+    return typeof Playerjs === "undefined" ? undefined : Playerjs;
   }
 
-  getVideoData(): MinimalVideoData | undefined {
+  getVideoData(videoId: string): MinimalVideoData | undefined {
     try {
-      const videoEl = document.querySelector<HTMLVideoElement>("video");
-      if (!videoEl) {
+      const media = findMediaElement(document, "video");
+      if (!media) {
         throw new Error("Video element not found");
       }
 
-      const url = videoEl.src || videoEl.currentSrc;
-      if (!url) {
-        throw new Error("No video url found");
-      }
-
-      return {
-        url,
-        duration: videoEl.duration,
-        subtitles: this.getSubtitles(),
-      };
-    } catch (err) {
-      console.error(
-        "[VOT] PlayerJSHelper error:",
-        err instanceof Error ? err.message : String(err),
+      return buildVideoData(
+        videoId,
+        selectSourceUrl(getMediaElementSources(media)),
+        getFiniteDuration(media.duration),
+        this.getSubtitles(),
       );
+    } catch (err) {
+      console.error("[VOT] PlayerJSHelper error:", (err as Error).message);
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const subtitles: VideoDataSubtitle[] = [];
-    try {
-      const player = this.getPlayer();
-      // PlayerJS API: player.api("subtitles") returns list of subtitle objects
-      if (player && typeof player.api === "function") {
-        const subs = player.api("subtitles");
-        if (Array.isArray(subs)) {
-          for (const sub of subs) {
-            // PlayerJS sub format: { title, url } or similar
-            if (sub?.url) {
-              subtitles.push({
-                source: this.SUBTITLE_SOURCE,
-                format: this.SUBTITLE_FORMAT,
-                language: normalizeLang(sub.title || sub.lang || "en"),
-                url: new URL(sub.url, window.location.href).toString(),
-              });
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.error("[VOT] PlayerJSHelper getSubtitles error:", err);
-    }
-
-    return subtitles;
+    // PlayerJS API: player.api("subtitles") returns a list of { title, url }
+    const subs = safeCall(() => this.getPlayer()?.api?.("subtitles"));
+    return buildSubtitles(
+      [
+        ...(Array.isArray(subs) ? (subs as PlayerJSSubtitle[]) : []).map(
+          (sub) => ({ src: sub?.url, lang: sub?.title || sub?.lang }),
+        ),
+        ...getTrackElements(findMediaElement(document, "video")),
+      ],
+      this.SUBTITLE_SOURCE,
+    );
   }
 }

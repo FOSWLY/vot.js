@@ -1,72 +1,98 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
-import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
+import {
+  buildSubtitles,
+  buildVideoData,
+  findGlobalInstance,
+  findMediaElement,
+  getFiniteDuration,
+  getMediaElementSources,
+  getTrackElements,
+  safeCall,
+  selectSourceUrl,
+} from "./utils";
 
+type ShakaTextTrack = {
+  language?: string;
+  kind?: string;
+  originalUris?: string[];
+};
+
+type ShakaPlayer = {
+  getAssetUri?: () => string | null;
+  getManifestUri?: () => string | null;
+  getMediaElement?: () => HTMLMediaElement | null;
+  getTextTracks: () => ShakaTextTrack[];
+};
+
+function isShakaPlayer(value: unknown): value is ShakaPlayer {
+  const player = value as ShakaPlayer;
+  return (
+    typeof player.getTextTracks === "function" &&
+    typeof (player.getAssetUri ?? player.getManifestUri) === "function"
+  );
+}
+
+/**
+ * Shaka Player (https://github.com/shaka-project/shaka-player)
+ */
 export default class ShakaPlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "shakaplayer";
-  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
-  getPlayer(): any | undefined {
-    // Custom logic to fetch Shaka player instance if exposed on window
-    return undefined;
+  getPlayer(): ShakaPlayer | undefined {
+    // shaka doesn't keep an instance registry
+    return findGlobalInstance(isShakaPlayer, ["player", "shakaPlayer"]);
   }
 
-  getVideoData(): MinimalVideoData | undefined {
+  getMediaElement(player = this.getPlayer()) {
+    return (
+      safeCall(() => player?.getMediaElement?.()) ??
+      findMediaElement(document, "video")
+    );
+  }
+
+  getVideoData(videoId: string): MinimalVideoData | undefined {
     try {
-      const videoEl = document.querySelector<HTMLVideoElement>("video");
-      if (!videoEl) {
+      const player = this.getPlayer();
+      const media = this.getMediaElement(player);
+      if (!media) {
         throw new Error("Video element not found");
       }
 
-      const url = videoEl.src || videoEl.currentSrc;
-      if (!url) {
-        throw new Error("No video url found");
-      }
-
-      return {
-        url,
-        duration: videoEl.duration,
-        subtitles: this.getSubtitles(),
-      };
-    } catch (err) {
-      console.error(
-        "[VOT] ShakaPlayerHelper error:",
-        err instanceof Error ? err.message : String(err),
+      return buildVideoData(
+        videoId,
+        selectSourceUrl([
+          ...getMediaElementSources(media),
+          {
+            src: safeCall(
+              () => player?.getAssetUri?.() ?? player?.getManifestUri?.(),
+            ),
+          },
+        ]),
+        getFiniteDuration(media.duration),
+        this.getSubtitles(),
       );
+    } catch (err) {
+      console.error("[VOT] ShakaPlayerHelper error:", (err as Error).message);
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const subtitles: VideoDataSubtitle[] = [];
-    try {
-      const player = this.getPlayer();
-      if (player?.getTextTracks) {
-        const textTracks = player.getTextTracks() || [];
-        for (const track of textTracks) {
-          // Shaka exposes originalUris, but it could be null or empty depending on manifest type
-          if (
-            track.type === "text" &&
-            Array.isArray(track.originalUris) &&
-            track.originalUris.length > 0
-          ) {
-            subtitles.push({
-              source: this.SUBTITLE_SOURCE,
-              format: this.SUBTITLE_FORMAT,
-              language: normalizeLang(track.language || "en"),
-              url: new URL(
-                track.originalUris[0],
-                window.location.href,
-              ).toString(),
-            });
-          }
-        }
-      }
-    } catch (err) {
-      console.error("[VOT] ShakaPlayerHelper getSubtitles error:", err);
-    }
-
-    return subtitles;
+    const player = this.getPlayer();
+    const tracks = safeCall(() => player?.getTextTracks()) ?? [];
+    return buildSubtitles(
+      [
+        // originalUris can be empty, depending on the manifest type
+        ...tracks.map((track) => ({
+          src: track.originalUris?.[0],
+          lang: track.language,
+          kind: track.kind,
+        })),
+        ...getTrackElements(this.getMediaElement(player)),
+      ],
+      this.SUBTITLE_SOURCE,
+    );
   }
 }

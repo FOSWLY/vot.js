@@ -1,55 +1,59 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
+import {
+  buildSubtitles,
+  buildVideoData,
+  findMediaElement,
+  getFiniteDuration,
+  getMediaElementSources,
+  getTrackElements,
+  selectSourceUrl,
+} from "./utils";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const flowplayer: any;
 }
 
+/**
+ * Flowplayer (https://flowplayer.com/)
+ */
 export default class FlowplayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "flowplayer";
-  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
+  static SELECTOR = ".flowplayer";
 
   getPlayer() {
-    if (typeof flowplayer === "undefined") return undefined;
-    return flowplayer;
+    return typeof flowplayer === "undefined" ? undefined : flowplayer;
   }
 
-  getVideoData(): MinimalVideoData | undefined {
+  getMediaElement() {
+    return findMediaElement(document, ".flowplayer video, video.fp-engine");
+  }
+
+  getVideoData(videoId: string): MinimalVideoData | undefined {
     try {
-      const player = this.getPlayer();
-      if (!player) {
-        throw new Error("Flowplayer not found on page");
+      const media = this.getMediaElement();
+      if (!this.getPlayer() || !media) {
+        throw new Error("Flowplayer not found");
       }
 
-      const videoEl = document.querySelector<HTMLVideoElement>(
-        ".flowplayer video, video.fp-engine",
+      return buildVideoData(
+        videoId,
+        selectSourceUrl(getMediaElementSources(media)),
+        getFiniteDuration(media.duration),
+        this.getSubtitles(),
       );
-      if (!videoEl) {
-        throw new Error("Flowplayer video element not found");
-      }
-
-      const url = videoEl.src || videoEl.currentSrc;
-      if (!url) {
-        throw new Error("Failed to find video url");
-      }
-
-      return {
-        url,
-        duration: videoEl.duration,
-        subtitles: this.getSubtitles(),
-      };
     } catch (err) {
-      console.error(
-        "[VOT] FlowplayerHelper error:",
-        err instanceof Error ? err.message : String(err),
-      );
+      console.error("[VOT] FlowplayerHelper error:", (err as Error).message);
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    return [];
+    return buildSubtitles(
+      getTrackElements(this.getMediaElement()),
+      this.SUBTITLE_SOURCE,
+    );
   }
 }

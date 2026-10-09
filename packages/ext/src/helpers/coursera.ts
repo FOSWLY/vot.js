@@ -1,4 +1,3 @@
-import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import { availableLangs } from "@vot.js/shared/consts";
 import type { RequestLang } from "@vot.js/shared/types/data";
 import type * as Coursera from "@vot.js/shared/types/helpers/coursera";
@@ -103,21 +102,7 @@ export default class CourseraHelper extends VideoJSHelper {
       return undefined;
     }
 
-    const player = CourseraHelper.getPlayer();
-    const options = player?.options_;
-
-    if (!data.subtitles?.length && options?.tracks) {
-      data.subtitles = options.tracks.map(
-        (track) =>
-          ({
-            url: track.src,
-            language: normalizeLang(track.srclang),
-            source: this.SUBTITLE_SOURCE,
-            format: this.SUBTITLE_FORMAT,
-          }) as VideoDataSubtitle,
-      );
-    }
-
+    const options = CourseraHelper.getPlayer()?.options_;
     const courseIdOrSlug =
       options?.courseId ?? this.getCourseId() ?? this.getCourseSlug();
     let courseLang: RequestLang = "en";

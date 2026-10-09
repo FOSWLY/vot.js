@@ -8,8 +8,8 @@ export default class NoodleMagazineHelper extends BaseHelper {
     return url.pathname.slice(1);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    const jwHelper = new JWPlayerHelper();
-    return jwHelper.getVideoData(videoId);
+    return new JWPlayerHelper().getVideoData(videoId);
   }
 }
