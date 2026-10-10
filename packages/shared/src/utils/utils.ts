@@ -189,7 +189,7 @@ export function normalizeLang(lang: string) {
 export function proxyMedia(url: URL | string, format: "mp4" | "webm" = "mp4") {
   const generalUrl = `https://${config.mediaProxy}/v1/proxy/video.${format}?format=base64&force=true`;
   if (!(url instanceof URL)) {
-    return `${generalUrl}&url=${btoa(url)}`;
+    return `${generalUrl}&url=${encodeURIComponent(btoa(url))}`;
   }
-  return `${generalUrl}&url=${btoa(url.href)}&origin=${url.origin}&referer=${url.origin}`;
+  return `${generalUrl}&url=${encodeURIComponent(btoa(url.href))}&origin=${url.origin}&referer=${url.origin}`;
 }

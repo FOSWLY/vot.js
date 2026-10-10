@@ -2,6 +2,8 @@
 
 ## Ext
 
+- Added support TikTok feed
+- Added support get subtitles for TikTok
 - Added support Kinopoisk trailers (`https://www.kinopoisk.ru/`)
 - Fixed PreserveTube helper for some cases
 - Refactored repeated video source retrieval using `getVideoSrc` utility function
@@ -9,6 +11,7 @@
 ## Shared
 
 - Removed outdated Invidious, ProxiTok alternative URLs
+- Added autoencode url in `proxyMedia` utility function
 - Bump `componentVersion` value
 
 # 3.1.5
