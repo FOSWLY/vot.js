@@ -1,4 +1,6 @@
 import { JWPlatformSiteHelper } from "./jwplatformSite";
+import type { BaseHelperOpts } from "@vot.js/core/types/helpers/base";
+import type { ServiceConf } from "../types/service";
 
 const jwMediaIdRe =
   /^https?:\/\/cdn\.jwplayer\.com\/(?:videos|manifests|previews)\/([A-Za-z0-9]{8})(?:-[A-Za-z0-9]+)?\.(?:mp4|m3u8)/;
@@ -10,8 +12,8 @@ function collectJwMediaId(value: string | null | undefined): string | undefined 
 }
 
 export default class OneFootballHelper extends JWPlatformSiteHelper {
-  constructor() {
-    super();
+  constructor(opts?: BaseHelperOpts<ServiceConf>) {
+    super(opts);
     this.player.SUBTITLE_SOURCE = "onefootball";
   }
 

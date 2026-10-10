@@ -494,13 +494,6 @@ export default [
       !/^\/(?:a|gallery|t|topic|r)\//.test(url.pathname),
   },
   {
-    host: CoreVideoService.youporn,
-    url: "https://www.youporn.com/watch/",
-    match: (url: URL) =>
-      /(?:www.)?youporn.com$/.test(url.hostname) &&
-      /\/(?:watch|embed)\/\d+/.test(url.pathname),
-  },
-  {
     host: CoreVideoService.zhihu,
     url: "https://www.zhihu.com/zvideo/",
     match: (url: URL) =>
