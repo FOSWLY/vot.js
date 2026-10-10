@@ -36,7 +36,7 @@ export default class PornTNHelper extends BaseHelper {
       url.searchParams.append("rnd", rnd);
       Logger.log(url.href);
       return {
-        url: proxyMedia(url),
+        url: proxyMedia(url, "mp4", this.mediaProxy),
         title,
       };
     } catch (err) {

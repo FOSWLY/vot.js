@@ -20,6 +20,12 @@ export type BaseHelperOpts<T = ServiceConf> = {
   origin?: string;
   language?: string;
   service?: T;
+  /**
+   * Media proxy host used for proxied media links
+   *
+   * Default: config.mediaProxy
+   */
+  mediaProxy?: string;
 };
 
 export interface BaseHelperInterface<
@@ -33,6 +39,7 @@ export interface BaseHelperInterface<
   origin: string;
   service?: S;
   language: string;
+  mediaProxy: string;
 
   getVideoData(videoId: string): Promise<MinimalVideoData<T> | undefined>;
   getVideoId(url: URL): Promise<string | undefined>;

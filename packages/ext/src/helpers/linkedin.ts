@@ -15,7 +15,7 @@ export default class LinkedinHelper extends VideoJSHelper {
     const { url, duration, subtitles } = data;
 
     return {
-      url: proxyMedia(new URL(url)),
+      url: proxyMedia(new URL(url), "mp4", this.mediaProxy),
       duration,
       subtitles,
     };

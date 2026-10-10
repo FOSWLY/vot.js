@@ -87,7 +87,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
       translationHelp: [
         {
           target: "video_file_url",
-          targetUrl: proxyMedia(videoUrl),
+          targetUrl: proxyMedia(videoUrl, "mp4", this.mediaProxy),
         },
       ],
       duration,

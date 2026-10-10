@@ -23,7 +23,7 @@ export default class RtNewsHelper extends BaseHelper {
 
       // yandex has case sensitive check of video format
       if (videoSrc.endsWith(".MP4")) {
-        videoSrc = proxyMedia(videoSrc);
+        videoSrc = proxyMedia(videoSrc, "mp4", this.mediaProxy);
       }
 
       return {
