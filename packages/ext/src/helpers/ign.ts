@@ -16,7 +16,7 @@ export default class IgnHelper extends BaseHelper {
     }
 
     return {
-      url: proxyMedia(url),
+      url: proxyMedia(url, "mp4", this.mediaProxy),
     };
   }
 
@@ -50,7 +50,7 @@ export default class IgnHelper extends BaseHelper {
       }
 
       return {
-        url: proxyMedia(videoUrl),
+        url: proxyMedia(videoUrl, "mp4", this.mediaProxy),
         duration,
         title,
         description,

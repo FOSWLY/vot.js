@@ -2,6 +2,7 @@ import type {
   BaseHelperInterface,
   BaseHelperOpts,
 } from "@vot.js/core/types/helpers/base";
+import config from "@vot.js/shared/config";
 import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
 import { FetchFunction } from "@vot.js/core/types/providers/base";
 
@@ -26,6 +27,7 @@ export class BaseHelper implements BaseHelperInterface<
   origin: string;
   service?: ServiceConf;
   language: string;
+  mediaProxy: string;
 
   constructor({
     fetchFn = fetchWithTimeout,
@@ -34,6 +36,7 @@ export class BaseHelper implements BaseHelperInterface<
     origin = "",
     service,
     language = "en",
+    mediaProxy = config.mediaProxy,
   }: BaseHelperOpts<ServiceConf> = {}) {
     this.fetch = fetchFn;
     this.extraInfo = extraInfo;
@@ -42,6 +45,7 @@ export class BaseHelper implements BaseHelperInterface<
     this.API_ORIGIN = this.origin;
     this.service = service;
     this.language = language;
+    this.mediaProxy = mediaProxy;
   }
 
   getVideoData(_videoId: string): Promise<MinimalVideoData | undefined> {

@@ -61,7 +61,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
     }
 
     return {
-      url: proxyMedia(videoUrl),
+      url: proxyMedia(videoUrl, "mp4", this.mediaProxy),
       duration,
       title,
     };
