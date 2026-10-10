@@ -157,6 +157,7 @@ export default [
     host: CoreVideoService.tiktok,
     url: "https://www.tiktok.com/",
     match: /^(www.)?tiktok.com$/,
+    needExtraData: true,
     selector: null,
   },
   {
