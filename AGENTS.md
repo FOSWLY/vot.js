@@ -25,6 +25,14 @@ NEVER make push or pull requests without ASK an user!
 
 This package targets modern browsers. Before use new JS features check that it's supported by the Firefox 106 and Chrome 106. You can check it on [caniuse.com](https://caniuse.com/).
 
+## Tests
+
+Mock external dependencies only when necessary; prefer real implementations for internal logic.
+
+AVOID redundant tests, excessive mocking, arbitrary delays, and brittle assertions.
+
+NEVER modify production code solely to make tests pass unless correcting an actual defect.
+
 ## Commands
 
 - Use Bun (`bun.lock` is the root lockfile): `bun install`.
