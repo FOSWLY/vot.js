@@ -734,6 +734,13 @@ export default [
     needBypassCSP: true,
   },
   {
+    host: ExtVideoService.edx,
+    url: "https://courses.edx.org/",
+    match: /^courses\.edx\.org$/,
+    selector: ".video-wrapper",
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.wistia,
     url: "https://fast.wistia.net/embed/iframe/",
     match: /^fast.wistia.net$/,
