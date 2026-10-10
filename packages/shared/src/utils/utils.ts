@@ -186,8 +186,12 @@ export function normalizeLang(lang: string) {
 /**
  * Convert media .mp4/.webm link to proxied link with media proxy
  */
-export function proxyMedia(url: URL | string, format: "mp4" | "webm" = "mp4") {
-  const generalUrl = `https://${config.mediaProxy}/v1/proxy/video.${format}?format=base64&force=true`;
+export function proxyMedia(
+  url: URL | string,
+  format: "mp4" | "webm" = "mp4",
+  host: string = config.mediaProxy,
+) {
+  const generalUrl = `https://${host}/v1/proxy/video.${format}?format=base64&force=true`;
   if (!(url instanceof URL)) {
     return `${generalUrl}&url=${btoa(url)}`;
   }

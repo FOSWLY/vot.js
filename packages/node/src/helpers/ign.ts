@@ -26,7 +26,7 @@ export default class IgnHelper extends BaseHelper {
     ) as Ign.ScriptData;
 
     return {
-      url: proxyMedia(contentUrl),
+      url: proxyMedia(contentUrl, "mp4", this.mediaProxy),
       title: name,
       description,
     };
@@ -61,7 +61,7 @@ export default class IgnHelper extends BaseHelper {
     }
 
     return {
-      url: proxyMedia(videoUrl),
+      url: proxyMedia(videoUrl, "mp4", this.mediaProxy),
       duration,
       title,
       description,
@@ -77,7 +77,7 @@ export default class IgnHelper extends BaseHelper {
       is_live: isStream,
     } = JSON.parse(dataContent.replaceAll("&quot;", '"')) as Ign.IcmsData;
     return {
-      url: proxyMedia(videoUrl),
+      url: proxyMedia(videoUrl, "mp4", this.mediaProxy),
       title,
       isStream,
     };

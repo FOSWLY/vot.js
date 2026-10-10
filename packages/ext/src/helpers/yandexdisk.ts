@@ -238,7 +238,11 @@ export default class YandexDiskHelper extends BaseHelper {
       }
 
       const downloadUrl = await this.getDownloadUrl(path, sk);
-      const proxiedUrl = proxyMedia(new URL(downloadUrl));
+      const proxiedUrl = proxyMedia(
+        new URL(downloadUrl),
+        "mp4",
+        this.mediaProxy,
+      );
       return {
         url: `https://yadi.sk${videoId}`,
         video_url: downloadUrl,

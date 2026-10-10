@@ -181,7 +181,7 @@ export default class KodikHelper extends BaseHelper {
       translationHelp: [
         {
           target: "video_file_url",
-          targetUrl: proxyMedia(new URL(videoUrl)),
+          targetUrl: proxyMedia(new URL(videoUrl), "mp4", this.mediaProxy),
         },
       ],
     } as MinimalVideoData;

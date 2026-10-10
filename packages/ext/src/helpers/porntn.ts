@@ -28,7 +28,7 @@ export default class PornTNHelper extends BaseHelper {
       const cdnResponse = await this.fetch(getFileUrl.href, { method: "head" });
       const cdnUrl = new URL(cdnResponse.url);
       Logger.log("PornTN cdn link", cdnUrl.href);
-      const proxiedUrl = proxyMedia(cdnUrl);
+      const proxiedUrl = proxyMedia(cdnUrl, "mp4", this.mediaProxy);
       return {
         url: proxiedUrl,
         title,

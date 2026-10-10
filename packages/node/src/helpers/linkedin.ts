@@ -44,7 +44,7 @@ export default class LinkedinHelper extends BaseHelper {
         : undefined;
 
       return {
-        url: proxyMedia(url),
+        url: proxyMedia(url, "mp4", this.mediaProxy),
         subtitles,
       };
     } catch (err: unknown) {
