@@ -16,7 +16,8 @@ export default class ESPNHelper extends BaseHelper {
     const pathId =
       /^\/video\/(?:clip|iframe\/twitter)\/_\/id\/(\d+)(?:\/[^/]+)?\/?$/.exec(
         url.pathname,
-      )?.[1] ?? /^\/[^/]+\/video\/(\d+)(?:\/[^/]+)?\/?$/.exec(url.pathname)?.[1];
+      )?.[1] ??
+      /^\/[^/]+\/video\/(\d+)(?:\/[^/]+)?\/?$/.exec(url.pathname)?.[1];
     if (pathId) return pathId;
     if (!/^\/video\/(?:clip|iframe\/twitter)\/?$/.test(url.pathname))
       return undefined;

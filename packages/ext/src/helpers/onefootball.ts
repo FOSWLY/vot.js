@@ -6,7 +6,9 @@ const jwMediaIdRe =
   /^https?:\/\/cdn\.jwplayer\.com\/(?:videos|manifests|previews)\/([A-Za-z0-9]{8})(?:-[A-Za-z0-9]+)?\.(?:mp4|m3u8)/;
 const jwPosterRe = /cdn\.jwplayer\.com\/v2\/media\/([A-Za-z0-9]{8})\//;
 
-function collectJwMediaId(value: string | null | undefined): string | undefined {
+function collectJwMediaId(
+  value: string | null | undefined,
+): string | undefined {
   if (!value) return undefined;
   return (jwMediaIdRe.exec(value) ?? jwPosterRe.exec(value))?.[1];
 }

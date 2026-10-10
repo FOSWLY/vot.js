@@ -8,6 +8,15 @@ import { BaseHelper } from "./base";
 const VIDEO_URL_RE = /videoUrl\s*=\s*["'`]([^"'`]+)["'`]/;
 const POST_HASH_RE = /\/learning\/(?:[^/]+\/)*?(\w{3,8})\/[^/?#]+\/?(?:[?#]|$)/;
 
+/**
+ * Local shape of the parsed `sources`/`videoUrl` script payload, so the
+ * helper does not depend on a newer shared type export.
+ */
+type EmbedVideoBlock = {
+  playlistUrl: string;
+  subtitles: EpicGames.VideoCaption[];
+};
+
 export default class EpicGamesHelper extends BaseHelper {
   API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
 
@@ -42,7 +51,7 @@ export default class EpicGamesHelper extends BaseHelper {
     }
   }
 
-  getVideoBlock(): EpicGames.EmbedVideoBlock | undefined {
+  getVideoBlock(): EmbedVideoBlock | undefined {
     const videoUrlRe = VIDEO_URL_RE;
     const script = Array.from(document.body.querySelectorAll("script")).find(
       (s) => videoUrlRe.exec(s.innerHTML),

@@ -32,9 +32,7 @@ export type TweetResultData = {
  * `((id / 1e15) * Math.PI).toString(36)` without `0`s and dots.
  */
 export function getSyndicationToken(videoId: string): string {
-  return ((Number(videoId) / 1e15) * Math.PI)
-    .toString(36)
-    .replace(/[0.]/g, "");
+  return ((Number(videoId) / 1e15) * Math.PI).toString(36).replace(/[0.]/g, "");
 }
 
 /** Unify camelCase and snake_case video fields of the response. */
@@ -79,4 +77,3 @@ export function selectTweetVideo(info: TweetVideoInfo | undefined):
         : undefined,
   };
 }
-
