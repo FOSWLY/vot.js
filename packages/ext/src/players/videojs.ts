@@ -1,17 +1,9 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
 import Logger from "@vot.js/shared/utils/logger";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 import { BaseHelper } from "../helpers/base";
 import type * as VideoJS from "../types/helpers/videojs";
 import { querySelectorDeep } from "../utils/dom";
-import {
-  buildSubtitles,
-  getFiniteDuration,
-  getMediaElementSources,
-  getTrackElements,
-  safeCall,
-  selectSourceUrl,
-  type PlayerTrackSource,
-} from "./utils";
 
 type VideoJSImport = {
   getPlayer?: (idOrEl: string | Element) => unknown;
@@ -28,26 +20,44 @@ type PlayerCandidate = {
   id?: () => string;
 };
 
+type SourceLike = {
+  src?: string | null;
+  type?: string | null;
+};
+
+function isPreferredMedia(source: SourceLike) {
+  const type = source.type?.toLowerCase().split(";")[0].trim();
+  if (type === "video/mp4" || type === "video/webm") {
+    return true;
+  }
+
+  const path = source.src?.split(/[?#]/)[0].toLowerCase();
+  return Boolean(path?.endsWith(".mp4") || path?.endsWith(".webm"));
+}
+
+function selectVideoUrl(candidates: SourceLike[]): string | undefined {
+  const available = candidates.filter(
+    (source): source is SourceLike & { src: string } => Boolean(source.src),
+  );
+
+  return (available.find(isPreferredMedia) ?? available[0])?.src;
+}
+
 /**
  * Shared class for all videojs players
  */
 export default class VideoJSHelper extends BaseHelper {
   SUBTITLE_SOURCE = "videojs";
+  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
   static VIDEOJS_SELECTOR =
     "video.vjs-tech, video[id$='_html5_api'], video[src], video";
 
   static getTechEl(isShadowRoot = false) {
-    // Prefer a Video.js tech element over an unrelated video earlier in the DOM.
-    for (const selector of [
-      "video.vjs-tech, video[id$='_html5_api']",
-      "video[src], video",
-    ]) {
-      const video = isShadowRoot
-        ? querySelectorDeep<HTMLVideoElement>(selector)
-        : document.querySelector<HTMLVideoElement>(selector);
-      if (video) return video;
-    }
-    return null;
+    return isShadowRoot
+      ? querySelectorDeep<HTMLVideoElement>(VideoJSHelper.VIDEOJS_SELECTOR)
+      : document.querySelector<HTMLVideoElement>(
+          VideoJSHelper.VIDEOJS_SELECTOR,
+        );
   }
 
   static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>(
@@ -56,51 +66,30 @@ export default class VideoJSHelper extends BaseHelper {
     const vjs = (window as VideoJSWindow).videojs;
     const techEl = VideoJSHelper.getTechEl(isShadowRoot);
 
-    // Bundled players may not expose window.videojs, but keep the instance on
-    // their element. Reading it never creates a second player instance.
-    const localPlayer = safeCall(
-      () =>
-        techEl?.closest<VideoJS.PlayerElement<T>>(".video-js, video-js")
-          ?.player,
-    );
-    if (
-      localPlayer &&
-      !localPlayer.isDisposed_ &&
-      (typeof localPlayer.currentSources === "function" ||
-        typeof localPlayer.getCache === "function")
-    ) {
-      return localPlayer;
-    }
-
     const derivedPlayerId = techEl?.id?.endsWith("_html5_api")
       ? techEl.id.slice(0, -"_html5_api".length)
       : undefined;
 
     if (vjs?.getPlayer) {
       if (derivedPlayerId) {
-        const p = safeCall(() => vjs.getPlayer?.(derivedPlayerId));
-        if (p && !(p as VideoJS.Player<T>).isDisposed_)
-          return p as VideoJS.Player<T>;
+        const p = vjs.getPlayer(derivedPlayerId);
+        if (p) return p as VideoJS.Player<T>;
       }
 
       if (techEl) {
-        const p = safeCall(() => vjs.getPlayer?.(techEl));
-        if (p && !(p as VideoJS.Player<T>).isDisposed_)
-          return p as VideoJS.Player<T>;
+        const p = vjs.getPlayer(techEl);
+        if (p) return p as VideoJS.Player<T>;
       }
     }
 
     const players: Record<string, unknown> =
-      safeCall(() =>
-        typeof vjs?.getPlayers === "function" ? vjs.getPlayers() : vjs?.players,
-      ) ?? {};
+      (typeof vjs?.getPlayers === "function"
+        ? vjs.getPlayers()
+        : vjs?.players) ?? {};
 
     for (const p of Object.values(players)) {
-      if (!p || (p as VideoJS.Player<T>).isDisposed_) continue;
       const player = p as PlayerCandidate;
-      const el = safeCall(() =>
-        typeof player.el === "function" ? player.el() : null,
-      );
+      const el = typeof player.el === "function" ? player.el() : null;
       const innerVideo: HTMLVideoElement | null =
         el?.querySelector?.("video.vjs-tech, video") ?? null;
 
@@ -129,27 +118,43 @@ export default class VideoJSHelper extends BaseHelper {
         );
       }
 
-      const currentSources = safeCall(() => player?.currentSources?.());
-      const playerSources = currentSources?.length
-        ? currentSources
-        : safeCall(() => player?.getCache?.()?.sources);
-      const currentSource = safeCall(() => player?.currentSource?.());
-      const url = selectSourceUrl([
-        ...(Array.isArray(playerSources) ? playerSources : []),
-        ...(currentSource ? [currentSource] : []),
-        ...getMediaElementSources(techEl),
-      ]);
+      const duration = player?.duration?.() ?? techEl?.duration;
+
+      const candidates: SourceLike[] = [];
+      if (player) {
+        const sources =
+          typeof player.currentSources === "function"
+            ? player.currentSources()
+            : player.getCache?.()?.sources;
+
+        if (Array.isArray(sources)) {
+          candidates.push(...sources);
+        }
+      }
+
+      if (techEl) {
+        candidates.push(
+          { src: techEl.currentSrc },
+          { src: techEl.src },
+          ...Array.from(
+            techEl.querySelectorAll<HTMLSourceElement>("source"),
+          ).map((source) => ({
+            src: source.src,
+            type: source.getAttribute("type"),
+          })),
+          { src: techEl.getAttribute?.("src") },
+        );
+      }
+
+      const url = selectVideoUrl(candidates);
       if (!url) {
         throw new Error(`Failed to find video url for videoID ${videoId}`);
       }
 
       return {
         url,
-        duration: getFiniteDuration(
-          safeCall(() => player?.duration?.()),
-          techEl?.duration,
-        ),
-        subtitles: this.getSubtitles(isShadowRoot),
+        duration,
+        subtitles: this.getSubtitles(),
       };
     } catch (err) {
       Logger.error("Failed to get videojs video data", (err as Error).message);
@@ -157,39 +162,29 @@ export default class VideoJSHelper extends BaseHelper {
     }
   }
 
-  /**
-   * Text tracks can be passed as <track> elements or as player options
-   * (emulated text tracks aren't added to the tech element)
-   */
-  getSubtitles(isShadowRoot = false): VideoDataSubtitle[] {
-    const player = safeCall(() => VideoJSHelper.getPlayer(isShadowRoot));
-    const runtimeTracks: PlayerTrackSource[] = [
-      ...Array.from(safeCall(() => player?.remoteTextTracks?.()) ?? []),
-      ...Array.from(safeCall(() => player?.textTracks?.()) ?? []),
-    ].map((track) => ({
-      src: track.src,
-      lang: track.language,
-      kind: track.kind,
-    }));
-    const remoteElements = Array.from(
-      safeCall(() => player?.remoteTextTrackEls?.()) ?? [],
-    ).map((track) => ({
-      src: track.src,
-      lang: track.srclang || track.track?.language,
-      kind: track.kind,
-    }));
-    return buildSubtitles(
-      [
-        ...getTrackElements(VideoJSHelper.getTechEl(isShadowRoot)),
-        ...remoteElements,
-        ...runtimeTracks,
-        ...(player?.options_?.tracks ?? []).map((track) => ({
-          src: track?.src,
-          lang: track?.srclang,
-          kind: track?.kind,
-        })),
-      ],
-      this.SUBTITLE_SOURCE,
-    );
+  getSubtitles(): VideoDataSubtitle[] {
+    const techEl = VideoJSHelper.getTechEl();
+    const trackEls = techEl
+      ? Array.from(techEl.querySelectorAll<HTMLTrackElement>("track[src]"))
+      : [];
+
+    return trackEls
+      .filter((t) => t.kind !== "metadata")
+      .flatMap((t) => {
+        const src = t.getAttribute("src");
+        if (!src) {
+          return [];
+        }
+
+        const absUrl = new URL(src, window.location.href).toString();
+        return [
+          {
+            language: normalizeLang(t.srclang || ""),
+            source: this.SUBTITLE_SOURCE,
+            format: this.SUBTITLE_FORMAT,
+            url: absUrl,
+          } satisfies VideoDataSubtitle,
+        ];
+      });
   }
 }

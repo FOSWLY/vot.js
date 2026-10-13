@@ -1,22 +1,39 @@
-import PlyrHelper from "../players/plyr";
-import { getFiniteDuration } from "../players/utils";
-import type { MinimalVideoData } from "../types/client";
+import Logger from "@vot.js/shared/utils/logger";
+
 import { BaseHelper } from "./base";
+import type { MinimalVideoData } from "../types/client";
+import PlyrHelper from "../players/plyr";
 
 export default class JOIDatabaseHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const baseData = this.returnBaseData(videoId);
-    const player = new PlyrHelper().getPlayer();
-    if (!baseData || !player) {
-      return baseData;
+    if (!baseData) {
+      return undefined;
     }
 
-    return {
-      ...baseData,
-      duration: getFiniteDuration(player.duration),
-      title: player.config?.title,
-    };
+    try {
+      const plyr = new PlyrHelper();
+      const player = plyr.getPlayer();
+      if (!player) {
+        return baseData;
+      }
+
+      const {
+        duration,
+        config: { title },
+      } = player;
+      return {
+        ...baseData,
+        duration:
+          !Number.isNaN(duration) && duration > 0 ? duration : undefined,
+        title,
+      };
+    } catch {
+      Logger.error(
+        `Failed to extract video data. Using base data for videoId: ${videoId}`,
+      );
+      return baseData;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

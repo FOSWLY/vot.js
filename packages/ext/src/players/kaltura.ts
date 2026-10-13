@@ -1,98 +1,92 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import type { BasePlayer } from "./base";
-import {
-  buildSubtitles,
-  buildVideoData,
-  findMediaElement,
-  getFiniteDuration,
-  getMediaElementSources,
-  getTrackElements,
-  safeCall,
-  selectSourceUrl,
-} from "./utils";
+import { getVideoSrc } from "../utils/dom";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const KalturaPlayer: any;
 }
 
-type KalturaTrack = {
-  url?: string;
-  language?: string;
-};
-
-type KalturaPlayerInstance = {
-  duration?: number;
-  provider?: { env?: { src?: string } };
-  Track?: { TEXT: string };
-  getTracks?: (type: string) => KalturaTrack[];
-};
-
-/**
- * Kaltura Player v7 (https://github.com/kaltura/kaltura-player-js)
- */
 export default class KalturaPlayerHelper implements BasePlayer {
   SUBTITLE_SOURCE = "kaltura";
-  static SELECTOR = ".kaltura-player-container";
+  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
-  getPlayer(): KalturaPlayerInstance | undefined {
+  getPlayer() {
     if (typeof KalturaPlayer === "undefined") {
       return undefined;
     }
-
-    const players: Record<string, KalturaPlayerInstance> | undefined = safeCall(
-      () => KalturaPlayer.getPlayers(),
-    );
-    return players ? Object.values(players)[0] : undefined;
+    const players = KalturaPlayer.getPlayers();
+    if (players && Object.keys(players).length > 0) {
+      return players[Object.keys(players)[0]];
+    }
+    return undefined;
   }
 
-  getMediaElement() {
-    return (
-      findMediaElement(document, `${KalturaPlayerHelper.SELECTOR} video`) ??
-      findMediaElement(document, "video")
-    );
-  }
-
-  getVideoData(videoId: string): MinimalVideoData | undefined {
+  getVideoData(): MinimalVideoData | undefined {
     try {
       const player = this.getPlayer();
       if (!player) {
-        throw new Error("Kaltura Player not found");
+        throw new Error("Kaltura Player not found on page");
       }
 
-      const media = this.getMediaElement();
-      return buildVideoData(
-        videoId,
-        selectSourceUrl([
-          { src: player.provider?.env?.src },
-          ...getMediaElementSources(media),
-        ]),
-        getFiniteDuration(player.duration, media?.duration),
-        this.getSubtitles(),
+      const duration = player.duration ?? undefined;
+
+      // Extract url
+      let url: string | undefined;
+
+      // Look for a direct mp4 or m3u8 source URL on the player object if available
+      // Kaltura v7 might expose the loaded source differently
+      if (player.provider?.env?.src) {
+        url = player.provider.env.src;
+      }
+
+      const videoEl = document.querySelector<HTMLVideoElement>(
+        ".kaltura-player-container video, video",
       );
+
+      url ??= getVideoSrc(videoEl);
+      if (!url) {
+        throw new Error("Failed to find video url");
+      }
+
+      return {
+        url,
+        duration,
+        subtitles: this.getSubtitles(),
+      };
     } catch (err) {
-      console.error("[VOT] KalturaPlayerHelper error:", (err as Error).message);
+      console.error(
+        "[VOT] KalturaPlayerHelper error:",
+        err instanceof Error ? err.message : String(err),
+      );
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const player = this.getPlayer();
-    const textType = player?.Track?.TEXT;
-    const tracks = textType
-      ? safeCall(() => player?.getTracks?.(textType))
-      : undefined;
+    const subtitles: VideoDataSubtitle[] = [];
+    try {
+      const player = this.getPlayer();
+      if (player?.Track && player.getTracks) {
+        const textTracks = player.getTracks(player.Track.TEXT) || [];
+        for (const track of textTracks) {
+          // Track API doesn't always expose URL. If it does:
+          if (track.url) {
+            subtitles.push({
+              source: this.SUBTITLE_SOURCE,
+              format: this.SUBTITLE_FORMAT,
+              language: normalizeLang(track.language || ""),
+              url: new URL(track.url, window.location.href).toString(),
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.error("[VOT] KalturaPlayerHelper getSubtitles error:", err);
+    }
 
-    return buildSubtitles(
-      [
-        ...(Array.isArray(tracks) ? tracks : []).map((track) => ({
-          src: track?.url,
-          lang: track?.language,
-        })),
-        ...getTrackElements(this.getMediaElement()),
-      ],
-      this.SUBTITLE_SOURCE,
-    );
+    return subtitles;
   }
 }

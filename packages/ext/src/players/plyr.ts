@@ -1,86 +1,120 @@
 import type { VideoDataSubtitle } from "@vot.js/core/types/client";
+import { normalizeLang } from "@vot.js/shared/utils/utils";
+
+import type { BasePlayer } from "./base";
 import type { MinimalVideoData } from "../types/client";
 import type * as Plyr from "../types/helpers/plyr";
-import type { BasePlayer } from "./base";
-import {
-  buildSubtitles,
-  buildVideoData,
-  findMediaElement,
-  getFiniteDuration,
-  getMediaElementSources,
-  getTrackElements,
-  isMediaElement,
-  safeCall,
-  selectSourceUrl,
-} from "./utils";
+import { getVideoSrc } from "../utils/dom";
 
-type PlyrWindow = Window & {
-  player?: Plyr.Player;
-};
-
-/**
- * Plyr (https://plyr.io/)
- */
 export default class PlyrHelper implements BasePlayer {
   SUBTITLE_SOURCE = "plyr";
-  static SELECTOR = ".plyr";
+  SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
   getPlayer(): Plyr.Player | undefined {
-    const { player } = window as PlyrWindow;
-    if (isMediaElement(player?.media)) {
-      return player;
+    const customWindow = window as any;
+    if (customWindow.player?.media) {
+      return customWindow.player;
     }
 
-    // Plyr stores its instance on the media element
-    return (this.getMediaElement() as Plyr.PlayerElement | undefined)?.plyr;
-  }
-
-  getMediaElement(player?: Plyr.Player) {
-    return (
-      player?.media ??
-      findMediaElement(document, ".plyr video, .plyr audio") ??
-      findMediaElement(document)
+    const videoEl = document.querySelector<Plyr.PlayerElement>(
+      "video, audio, .plyr video",
     );
+    return videoEl?.plyr || undefined;
   }
 
   getVideoData(videoId: string): MinimalVideoData | undefined {
     try {
       const player = this.getPlayer();
-      const media = this.getMediaElement(player);
-      if (!player && !media) {
+      const videoEl = document.querySelector<HTMLVideoElement>(
+        "video, audio, .plyr video",
+      );
+
+      if (!player && !videoEl) {
         throw new Error("Plyr player or media element not found");
       }
 
-      return buildVideoData(
-        videoId,
-        selectSourceUrl([
-          { src: safeCall(() => player?.source) },
-          ...getMediaElementSources(media),
-        ]),
-        getFiniteDuration(player?.duration, media?.duration),
-        this.getSubtitles(),
-      );
+      const duration = player?.duration ?? videoEl?.duration ?? 0;
+
+      const fileUrl = player?.source || getVideoSrc(videoEl);
+
+      if (!fileUrl) {
+        throw new Error("Failed to find video url");
+      }
+
+      return {
+        url: videoId,
+        duration,
+        translationHelp: [{ target: "video_file_url", targetUrl: fileUrl }],
+      };
     } catch (err) {
-      console.error("[VOT] PlyrHelper error:", (err as Error).message);
+      console.error(
+        "[VOT] PlyrHelper error:",
+        err instanceof Error ? err.message : String(err),
+      );
       return undefined;
     }
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const player = this.getPlayer();
-    return buildSubtitles(
-      [
-        ...getTrackElements(
-          this.getMediaElement(player),
-          player?.elements?.container,
-        ),
-        ...(player?.config?.tracks ?? []).map((track) => ({
-          src: track?.src,
-          lang: track?.srclang || track?.lang,
-          kind: track?.kind,
-        })),
-      ],
-      this.SUBTITLE_SOURCE,
-    );
+    const subtitles: VideoDataSubtitle[] = [];
+    try {
+      const player = this.getPlayer();
+      const videoEl = document.querySelector<HTMLVideoElement>(
+        "video, audio, .plyr video",
+      );
+
+      const rawTracks: Array<{ src: string; lang: string }> = [];
+
+      const searchTargets: HTMLElement[] = [];
+      if (videoEl) searchTargets.push(videoEl);
+      if (player?.elements?.container) {
+        searchTargets.push(player.elements.container as HTMLElement);
+      }
+
+      for (const target of searchTargets) {
+        const tracks = Array.from(
+          target.querySelectorAll("track[src]"),
+        ) as HTMLTrackElement[];
+
+        for (const track of tracks) {
+          const src = track.getAttribute("src");
+          if (src && track.kind !== "metadata") {
+            rawTracks.push({ src, lang: track.srclang || "" });
+          }
+        }
+      }
+
+      if (player?.config?.tracks && Array.isArray(player.config.tracks)) {
+        const configTracks = player.config.tracks;
+        for (const track of configTracks) {
+          if (track?.src && track.kind !== "metadata") {
+            rawTracks.push({
+              src: track.src,
+              lang: track.srclang || track.lang || "",
+            });
+          }
+        }
+      }
+
+      const seenUrls = new Set<string>();
+      for (const { src, lang } of rawTracks) {
+        try {
+          const absUrl = new URL(src, window.location.href).toString();
+          if (!seenUrls.has(absUrl)) {
+            seenUrls.add(absUrl);
+            subtitles.push({
+              source: this.SUBTITLE_SOURCE,
+              format: this.SUBTITLE_FORMAT,
+              language: normalizeLang(lang),
+              url: absUrl,
+            });
+          }
+        } catch {}
+      }
+    } catch (err) {
+      console.error("[VOT] PlyrHelper getSubtitles error:", err);
+    }
+
+    return subtitles;
   }
 }

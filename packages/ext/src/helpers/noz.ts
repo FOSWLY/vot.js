@@ -1,16 +1,7 @@
-import VideoJSHelper from "../players/videojs";
-import type { MinimalVideoData } from "../types/client";
-
-export default class NOZHelper extends VideoJSHelper {
-  SUBTITLE_SOURCE = "noz";
-
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    return this.getVideoDataByPlayer(videoId);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/require-await
+import { NativeDeltaHelper } from "./nativeDelta";
+export default class NOZHelper extends NativeDeltaHelper {
   async getVideoId(url: URL) {
+    if (!/^(?:www\.)?noz\.de$/.test(url.hostname)) return undefined;
     return /\/video\/(\d+)/.exec(url.pathname)?.[1];
   }
 }

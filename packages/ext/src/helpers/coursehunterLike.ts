@@ -3,7 +3,11 @@ import Logger from "@vot.js/shared/utils/logger";
 import { proxyMedia } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
-import type { CoursehunterLikeWindow } from "../types/helpers/coursehunterLike";
+
+type CoursehunterLikeWindow = Window & {
+  course_id?: number;
+  lessons?: Lesson[];
+};
 
 export default class CoursehunterLikeHelper extends BaseHelper {
   API_ORIGIN = this.origin ?? "https://coursehunter.net";
@@ -83,7 +87,7 @@ export default class CoursehunterLikeHelper extends BaseHelper {
       translationHelp: [
         {
           target: "video_file_url",
-          targetUrl: proxyMedia(videoUrl),
+          targetUrl: proxyMedia(videoUrl, "mp4", this.mediaProxy),
         },
       ],
       duration,

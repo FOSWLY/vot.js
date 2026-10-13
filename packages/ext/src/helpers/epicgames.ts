@@ -5,18 +5,6 @@ import { normalizeLang } from "@vot.js/shared/utils/utils";
 import type { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
 
-const VIDEO_URL_RE = /videoUrl\s*=\s*["'`]([^"'`]+)["'`]/;
-const POST_HASH_RE = /\/learning\/(?:[^/]+\/)*?(\w{3,8})\/[^/?#]+\/?(?:[?#]|$)/;
-
-/**
- * Local shape of the parsed `sources`/`videoUrl` script payload, so the
- * helper does not depend on a newer shared type export.
- */
-type EmbedVideoBlock = {
-  playlistUrl: string;
-  subtitles: EpicGames.VideoCaption[];
-};
-
 export default class EpicGamesHelper extends BaseHelper {
   API_ORIGIN = "https://dev.epicgames.com/community/api/learning";
 
@@ -36,23 +24,8 @@ export default class EpicGamesHelper extends BaseHelper {
     }
   }
 
-  async fetchPlaylistUrl(embedId: string) {
-    try {
-      const res = await this.fetch(
-        `https://dev.epicgames.com/community/api/cms/videos/${embedId}/embed.html`,
-      );
-      const content = await res.text();
-      return VIDEO_URL_RE.exec(content)?.[1]?.replace("qsep://", "https://");
-    } catch (err) {
-      Logger.error(
-        `Failed to get playlist url by embed Id ${embedId}, because: ${(err as Error).message}`,
-      );
-      return undefined;
-    }
-  }
-
-  getVideoBlock(): EmbedVideoBlock | undefined {
-    const videoUrlRe = VIDEO_URL_RE;
+  getVideoBlock() {
+    const videoUrlRe = /videoUrl\s?=\s"([^"]+)"?/;
     const script = Array.from(document.body.querySelectorAll("script")).find(
       (s) => videoUrlRe.exec(s.innerHTML),
     );
@@ -86,9 +59,7 @@ export default class EpicGamesHelper extends BaseHelper {
       const subtitlesObj = JSON.parse(
         subtitlesString,
       ) as EpicGames.VideoSources[];
-      const subtitles = subtitlesObj.filter(
-        (sub): sub is EpicGames.VideoCaption => sub.type === "captions",
-      );
+      const subtitles = subtitlesObj.filter((sub) => sub.type === "captions");
 
       return {
         playlistUrl,
@@ -103,31 +74,15 @@ export default class EpicGamesHelper extends BaseHelper {
   }
 
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    // videoId can be `postHash` or `base64IframeLink:postHash`
-    const postHash = videoId.split(":").pop();
-    if (!postHash) {
-      return undefined;
-    }
-
-    const postInfo = await this.getPostInfo(postHash);
+    const courseId = videoId.split(":")?.[1];
+    const postInfo = await this.getPostInfo(courseId);
     if (!postInfo) {
       return undefined;
     }
 
-    let videoBlock = this.getVideoBlock();
+    const videoBlock = this.getVideoBlock();
     if (!videoBlock) {
-      // helper is running outside of the embed iframe (or embed markup changed)
-      const postVideo = postInfo.blocks?.find(
-        (block): block is EpicGames.VideoBlock => block.type === "video",
-      );
-      const playlistUrl = postVideo
-        ? await this.fetchPlaylistUrl(postVideo.video_id)
-        : undefined;
-      if (!playlistUrl) {
-        return undefined;
-      }
-
-      videoBlock = { playlistUrl, subtitles: [] };
+      return undefined;
     }
 
     const { playlistUrl, subtitles: videoSubtitles } = videoBlock;
@@ -148,74 +103,24 @@ export default class EpicGamesHelper extends BaseHelper {
     };
   }
 
-  getPostHashFromUrl(url: string | undefined) {
-    if (!url) {
-      return undefined;
-    }
-
-    try {
-      const { hostname, pathname } = new URL(url);
-      if (hostname !== "dev.epicgames.com") {
-        return undefined;
-      }
-
-      return POST_HASH_RE.exec(pathname)?.[1];
-    } catch {
-      return undefined;
-    }
-  }
-
-  getVideoIdByMessage(timeout = 3000): Promise<string | undefined> {
+  async getVideoId(_url: URL): Promise<string | undefined> {
     return new Promise((resolve) => {
       const origin = "https://dev.epicgames.com";
       const reqId = btoa(window.location.href);
-      const onMessage = (e: MessageEvent) => {
+      window.addEventListener("message", (e) => {
         if (e.origin !== origin) {
-          return;
+          return undefined;
         }
 
-        if (
-          !(
-            typeof e.data === "string" &&
-            e.data.startsWith(`getVideoId:${reqId}:`)
-          )
-        ) {
-          return;
+        if (!(typeof e.data === "string" && e.data.startsWith("getVideoId:"))) {
+          return undefined;
         }
 
         // e.data is getVideoId:base64IframeLink:videoId for support multi frames on page
-        window.removeEventListener("message", onMessage);
-        clearTimeout(timer);
-        resolve(e.data.replace("getVideoId:", ""));
-      };
-      const timer = setTimeout(() => {
-        window.removeEventListener("message", onMessage);
-        resolve(undefined);
-      }, timeout);
-      window.addEventListener("message", onMessage);
+        const videoId = e.data.replace("getVideoId:", "");
+        return resolve(videoId);
+      });
       window.top?.postMessage(`getVideoId:${reqId}`, origin);
     });
-  }
-
-  async getVideoId(url: URL): Promise<string | undefined> {
-    // top-level page (or direct link)
-    const fromUrl = this.getPostHashFromUrl(url.href);
-    if (fromUrl) {
-      return fromUrl;
-    }
-
-    // embed iframe is same-origin with the post page, so we can read it directly
-    let topHref: string | undefined;
-    try {
-      topHref = window.top?.location.href;
-    } catch {
-      topHref = undefined;
-    }
-
-    return (
-      this.getPostHashFromUrl(topHref) ??
-      this.getPostHashFromUrl(document.referrer) ??
-      (await this.getVideoIdByMessage())
-    );
   }
 }

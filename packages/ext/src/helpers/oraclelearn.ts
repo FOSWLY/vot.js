@@ -13,7 +13,7 @@ export default class OracleLearnHelper extends VideoJSHelper {
     }
     const { url, duration, subtitles } = data;
     const baseData = this.returnBaseData(videoId);
-    const videoUrl = proxyMedia(new URL(url));
+    const videoUrl = proxyMedia(new URL(url), "mp4", this.mediaProxy);
     if (!baseData) {
       return {
         url: videoUrl,

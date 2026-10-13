@@ -3,8 +3,3 @@ export type APIResponse = {
   timestamp: number;
   url: string;
 };
-
-export type SignResponse = {
-  token?: string;
-  ex?: number | string;
-};

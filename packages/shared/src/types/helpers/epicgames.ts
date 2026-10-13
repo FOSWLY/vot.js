@@ -38,11 +38,6 @@ export type Post = {
   title: string;
   description: string;
   locale: string; // en-us
-  blocks: (VideoBlock | LinkGroupBlock)[];
+  blocks: [VideoBlock, LinkGroupBlock]; // now useless
   status: "published";
-};
-
-export type EmbedVideoBlock = {
-  playlistUrl: string;
-  subtitles: VideoCaption[];
 };

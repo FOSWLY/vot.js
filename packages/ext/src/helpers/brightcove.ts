@@ -1,10 +1,7 @@
-import BrightcovePlayerHelper from "../players/brightcove";
-import { PlayerSiteHelper } from "./playerSite";
-
-export default class BrightcoveHelper extends PlayerSiteHelper {
-  protected player = new BrightcovePlayerHelper();
-
+import { NativeDeltaHelper } from "./nativeDelta";
+export default class BrightcoveHelper extends NativeDeltaHelper {
   async getVideoId(url: URL): Promise<string | undefined> {
+    if (!/^players\.brightcove\.net$/.test(url.hostname)) return undefined;
     return url.searchParams.get("videoId") || undefined;
   }
 }

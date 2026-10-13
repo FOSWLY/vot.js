@@ -1,5 +1,38 @@
 # AGENTS.md
 
+## Code style
+
+Avoid overusing comments in code. Prefer clear naming, simple structure, and self-explanatory code over comments that merely restate what the code does.
+
+Add comments only when they provide information that is not obvious from the code itself, such as:
+
+- explaining complex or non-obvious logic;
+- documenting important assumptions, constraints, edge cases, or workarounds;
+- explaining why a particular approach was chosen when the reason is not apparent;
+- warning about behavior that could easily be misunderstood or accidentally broken.
+
+Do not add comments for trivial operations, obvious control flow, variable assignments, function calls, or code whose intent is already clear from its names and structure.
+
+Prefer comments that explain **why**, not **what**. If a comment can be removed by making the code clearer, improve the code instead.
+
+## Commits
+
+ALWAYS write commit messages in English. You MUST use the semantic commits format.
+
+NEVER make push or pull requests without ASK an user!
+
+## packages/ext
+
+This package targets modern browsers. Before use new JS features check that it's supported by the Firefox 106 and Chrome 106. You can check it on [caniuse.com](https://caniuse.com/).
+
+## Tests
+
+Mock external dependencies only when necessary; prefer real implementations for internal logic.
+
+AVOID redundant tests, excessive mocking, arbitrary delays, and brittle assertions.
+
+NEVER modify production code solely to make tests pass unless correcting an actual defect.
+
 ## Commands
 
 - Use Bun (`bun.lock` is the root lockfile): `bun install`.

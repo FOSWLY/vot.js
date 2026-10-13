@@ -45,19 +45,19 @@ export default class KodikHelper extends BaseHelper {
       }
 
       const videoInfoContent = allScripts
-        .find((s) => /\b(?:videoInfo|vInfo)\s*=\s*\{\}/.test(s.innerHTML))
+        .find((s) => s.innerHTML.includes(`var videoInfo = {}`))
         ?.textContent?.trim();
       if (!videoInfoContent) {
         throw new VideoHelperError("Failed to find videoInfo content");
       }
 
-      const realVideoType = /(?:videoInfo|vInfo)\.type\s*=\s*'([^']+)'/.exec(
+      const realVideoType = /videoInfo\.type\s+?=\s+?'([^']+)'/.exec(
         videoInfoContent,
       )?.[1] as Kodik.VideoType;
-      const realVideoId = /(?:videoInfo|vInfo)\.id\s*=\s*'([^']+)'/.exec(
+      const realVideoId = /videoInfo\.id\s+?=\s+?'([^']+)'/.exec(
         videoInfoContent,
       )?.[1];
-      const realHash = /(?:videoInfo|vInfo)\.hash\s*=\s*'([^']+)'/.exec(
+      const realHash = /videoInfo\.hash\s+?=\s+?'([^']+)'/.exec(
         videoInfoContent,
       )?.[1];
 
@@ -95,16 +95,13 @@ export default class KodikHelper extends BaseHelper {
       ref_sign,
     } = secureData;
     try {
-      // NOTE: /ftor is IP/geo-filtered by Kodik: from non-CIS / datacenter IPs it
-      // answers 200 with an empty body, so live tests can fail outside the
-      // allowed regions even though the request shape (and vInfo parsing) is correct.
-      const res = await this.fetch(`${this.API_ORIGIN}ftor`, {
+      const res = await this.fetch(`${this.API_ORIGIN}/ftor`, {
         method: "POST",
         headers: {
           "User-Agent": config.userAgent,
           // only to mask request
           Origin: this.API_ORIGIN,
-          Referer: `${this.API_ORIGIN}${videoType}/${id}/${hash}/360p`,
+          Referer: `${this.API_ORIGIN}/${videoType}/${id}/${hash}/360p`,
         },
         body: new URLSearchParams({
           // only to mask request (they don't check for these fields, but validate if they exist)
@@ -184,7 +181,7 @@ export default class KodikHelper extends BaseHelper {
       translationHelp: [
         {
           target: "video_file_url",
-          targetUrl: proxyMedia(new URL(videoUrl)),
+          targetUrl: proxyMedia(new URL(videoUrl), "mp4", this.mediaProxy),
         },
       ],
     } as MinimalVideoData;

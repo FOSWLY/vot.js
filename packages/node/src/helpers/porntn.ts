@@ -36,7 +36,7 @@ export default class PornTNHelper extends BaseHelper {
       url.searchParams.append("rnd", rnd);
       Logger.log(url.href);
       return {
-        url: proxyMedia(url),
+        url: proxyMedia(url, "mp4", this.mediaProxy),
         title,
       };
     } catch (err) {
@@ -50,6 +50,6 @@ export default class PornTNHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    return /\/videos?\/(([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
+    return /\/videos\/(([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
   }
 }

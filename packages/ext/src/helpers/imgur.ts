@@ -1,0 +1,8 @@
+import { NativeDeltaHelper } from "./nativeDelta";
+export default class ImgurHelper extends NativeDeltaHelper {
+  async getVideoId(url: URL) {
+    if (!/^(?:i\.)?imgur\.com$/.test(url.hostname)) return undefined;
+    if (/^\/(?:a|gallery|t|topic|r)\//.test(url.pathname)) return undefined;
+    return /\/(?:[^/]+-)?([a-zA-Z0-9]+)(?:\.\w+)?\/?$/.exec(url.pathname)?.[1];
+  }
+}

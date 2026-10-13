@@ -1,28 +1,73 @@
-import { BaseHelper as CoreBaseHelper } from "@vot.js/core/helpers/base";
+import type { BaseHelperInterface } from "@vot.js/core/types/helpers/base";
+import config from "@vot.js/shared/config";
+import { fetchWithTimeout } from "@vot.js/shared/utils/utils";
+import { FetchFunction } from "@vot.js/core/types/providers/base";
 
+import type { MinimalVideoData } from "../types/client";
 import type { BaseHelperOpts } from "../types/helpers/base";
 import type { ServiceConf, VideoService } from "../types/service";
 
-export { VideoHelperError } from "@vot.js/core/helpers/base";
+export class VideoHelperError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "VideoHelperError";
+  }
+}
 
-/** Extension base: same logic as core, plus DOM/window-derived defaults. */
-export class BaseHelper extends CoreBaseHelper<VideoService, ServiceConf> {
+export class BaseHelper implements BaseHelperInterface<
+  VideoService,
+  ServiceConf
+> {
+  API_ORIGIN = window.location.origin;
+  fetch: FetchFunction;
+  extraInfo: boolean;
+  referer: string;
+  origin: string;
+  service?: ServiceConf;
   video?: HTMLVideoElement;
+  language: string;
+  mediaProxy: string;
 
   constructor({
+    fetchFn = fetchWithTimeout,
+    extraInfo = true,
     referer = document.referrer ?? `${window.location.origin}/`,
     origin = window.location.origin,
+    service,
     video,
-    ...opts
+    language = "en",
+    mediaProxy = config.mediaProxy,
   }: BaseHelperOpts = {}) {
-    super({
-      ...opts,
-      referer,
-      origin: /^(http(s)?):\/\//.test(String(origin))
-        ? origin
-        : window.location.origin,
-    });
-    this.API_ORIGIN = window.location.origin;
+    this.fetch = fetchFn;
+    this.extraInfo = extraInfo;
+    this.referer = referer;
+    this.origin = /^(http(s)?):\/\//.test(String(origin))
+      ? origin
+      : window.location.origin;
+    this.service = service;
     this.video = video;
+    this.language = language;
+    this.mediaProxy = mediaProxy;
+  }
+
+  getVideoData(_videoId: string): Promise<MinimalVideoData | undefined> {
+    return Promise.resolve(undefined);
+  }
+
+  getVideoId(_url: URL): Promise<string | undefined> {
+    return Promise.resolve(undefined);
+  }
+
+  returnBaseData(videoId: string) {
+    if (!this.service) {
+      return undefined;
+    }
+
+    return {
+      url: this.service.url + videoId,
+      videoId,
+      host: this.service.host,
+      duration: undefined,
+    };
   }
 }

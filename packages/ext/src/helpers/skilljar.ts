@@ -8,8 +8,8 @@ export default class SkilljarHelper extends BaseHelper {
     return url.pathname.slice(1);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    return new JWPlayerHelper().getVideoData(videoId);
+    const jwHelper = new JWPlayerHelper();
+    return jwHelper.getVideoData(videoId);
   }
 }

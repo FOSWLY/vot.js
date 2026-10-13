@@ -276,8 +276,7 @@ export default class VimeoHelper extends BaseHelper {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    const normalizedPathname = url.pathname.replace(/\/+$/, "");
-    const embedId = /video\/[^/]+$/.exec(normalizedPathname)?.[0];
+    const embedId = /video\/[^/]+$/.exec(url.pathname)?.[0];
     const appId = url.searchParams.get("app_id");
     if (embedId && appId) {
       return `${embedId}?app_id=${appId}`;
@@ -295,13 +294,13 @@ export default class VimeoHelper extends BaseHelper {
     }
 
     const categoriesVideoId =
-      /channels\/[^/]+\/([^/]+)/.exec(normalizedPathname)?.[1] ??
-      /groups\/[^/]+\/videos\/([^/]+)/.exec(normalizedPathname)?.[1] ??
-      /(showcase|album)\/[^/]+\/video\/([^/]+)/.exec(normalizedPathname)?.[2];
+      /channels\/[^/]+\/([^/]+)/.exec(url.pathname)?.[1] ??
+      /groups\/[^/]+\/videos\/([^/]+)/.exec(url.pathname)?.[1] ??
+      /(showcase|album)\/[^/]+\/video\/([^/]+)/.exec(url.pathname)?.[2];
     if (categoriesVideoId) {
       return categoriesVideoId;
     }
 
-    return /([^/]+\/)?[^/]+$/.exec(normalizedPathname)?.[0];
+    return /([^/]+\/)?[^/]+$/.exec(url.pathname)?.[0];
   }
 }
