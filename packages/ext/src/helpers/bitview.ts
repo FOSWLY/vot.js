@@ -3,7 +3,6 @@ import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
 export default class BitviewHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
       const videoUrl =
@@ -24,7 +23,6 @@ export default class BitviewHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.searchParams.get("v") as string | undefined;
   }

@@ -17,7 +17,6 @@ export default class DouyinHelper extends BaseHelper {
     return player;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(_videoId: string) {
     const xgPlayer = DouyinHelper.getPlayer();
     if (!xgPlayer) {
@@ -48,7 +47,6 @@ export default class DouyinHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const pathId = /video\/([\d]+)/.exec(url.pathname)?.[0];
     if (pathId) {

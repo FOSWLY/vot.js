@@ -8,7 +8,6 @@ export default class BunkrHelper extends BaseHelper {
     return plyrHelper.getVideoData(videoId);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/(?:f|v)\/([^/]+)/.exec(url.pathname)?.[1];
   }

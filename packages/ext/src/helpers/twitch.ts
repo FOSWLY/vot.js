@@ -5,7 +5,6 @@ import { BaseHelper, VideoHelperError } from "./base";
 export default class TwitchHelper extends BaseHelper {
   API_ORIGIN = "https://clips.twitch.tv";
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getClipLink(pathname: string, clipId: string | null) {
     const schema = document.querySelector<HTMLScriptElement>(
       "script[type='application/ld+json']",
@@ -38,7 +37,6 @@ export default class TwitchHelper extends BaseHelper {
     return `${channelName}/clip/${isEmbed ? clipId : clearPathname}`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const title = document.querySelector<HTMLElement>(
       '[data-a-target="stream-title"], [data-test-selector="stream-info-card-component__subtitle"]',

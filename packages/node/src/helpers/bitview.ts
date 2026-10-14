@@ -24,7 +24,6 @@ export default class BitviewHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.searchParams.get("v") as string | undefined;
   }

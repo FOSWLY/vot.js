@@ -5,7 +5,6 @@ import type { MinimalVideoData } from "../types/client";
 export default class LinkedinHelper extends VideoJSHelper {
   SUBTITLE_SOURCE = "linkedin";
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const data = this.getVideoDataByPlayer(videoId);
     if (!data) {
@@ -21,7 +20,6 @@ export default class LinkedinHelper extends VideoJSHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/learning\/(([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
   }

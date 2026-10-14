@@ -3,7 +3,6 @@ import type { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
 
 export default class RtNewsHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const videoEl = document.querySelector(".jw-video, .media__video_noscript");
     if (!videoEl) {
@@ -26,7 +25,6 @@ export default class RtNewsHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.pathname.slice(1);
   }

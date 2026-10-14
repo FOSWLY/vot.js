@@ -67,7 +67,6 @@ export default class CoursehunterLikeHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const courseId = /course\/([^/]+)/.exec(url.pathname)?.[0];
     return courseId ? courseId + url.search : undefined;

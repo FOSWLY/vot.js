@@ -53,7 +53,6 @@ export default class LinkedinHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/learning\/(([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
   }

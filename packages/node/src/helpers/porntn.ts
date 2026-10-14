@@ -48,7 +48,6 @@ export default class PornTNHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/videos\/(([^/]+)\/([^/]+))/.exec(url.pathname)?.[1];
   }

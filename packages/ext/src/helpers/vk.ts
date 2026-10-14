@@ -18,7 +18,6 @@ export default class VKHelper extends BaseHelper {
     return Videoview?.getPlayerObject?.call(undefined);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const player = VKHelper.getPlayer();
     if (!player) {
@@ -65,7 +64,6 @@ export default class VKHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const pathID = /^\/(video|clip)-?\d{8,9}_\d{9}$/.exec(url.pathname);
     if (pathID) {

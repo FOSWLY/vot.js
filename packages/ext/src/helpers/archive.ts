@@ -2,7 +2,6 @@ import type { MinimalVideoData } from "../types/client";
 import { BaseHelper } from "./base";
 
 export default class ArchiveHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const videoId = /(details|embed)\/(.+)/.exec(url.pathname)?.[2];
     if (!videoId) return undefined;

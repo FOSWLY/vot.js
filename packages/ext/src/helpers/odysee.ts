@@ -9,7 +9,6 @@ export default class OdyseeHelper extends BaseHelper {
     return { url };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.pathname.slice(1);
   }
