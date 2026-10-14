@@ -111,6 +111,14 @@ export type StreamingData = {
 
 export type LatencyClass = "MDE_STREAM_OPTIMIZATIONS_RENDERER_LATENCY_NORMAL";
 
+export type ThumbnailItem = {
+  width: number;
+  height: number;
+  url: string;
+};
+
+export type Thumbnail = Record<"thumbnails", ThumbnailItem[]>;
+
 export type VideoDetails = {
   allowRatings: boolean;
   author: string;
@@ -133,6 +141,7 @@ export type VideoDetails = {
   isPrivate: boolean;
   isUnpluggedCorpus: boolean;
   keywords: string;
+  isTvfilmVideo: boolean;
   /**
    * streams only
    */
@@ -142,7 +151,7 @@ export type VideoDetails = {
    * Short description (not translated)
    */
   shortDescription: string;
-  thumbnail: Record<"thumbnails", unknown[]>;
+  thumbnail: Thumbnail;
   /**
    * Title (not translated)
    */
@@ -226,7 +235,7 @@ export type MicroformatRenderer = {
   ownerChannelName: string;
   ownerProfileUrl: string;
   publishDate: string; // iso date format
-  thumbnail: Record<"thumbnails", unknown[]>;
+  thumbnail: Thumbnail;
   /**
    * Localized title
    */
@@ -241,6 +250,21 @@ export type PlayerResponse = {
   microformat: Record<"playerMicroformatRenderer", MicroformatRenderer>;
   streamingData: StreamingData;
   videoDetails: VideoDetails;
+};
+
+export type APIVideoDetails = Omit<
+  VideoDetails,
+  "keywords" | "shortDescription"
+> & {
+  musicVideoType?: MusicVideoType;
+};
+
+export type APIPlayerResponse = {
+  /**
+   * not full typed for YTMusic
+   */
+  microformat: Record<"playerMicroformatRenderer", MicroformatRenderer>;
+  videoDetails: APIVideoDetails;
 };
 
 export interface PlayerCaptionTrack {
@@ -321,6 +345,13 @@ export type PlayerProgressState = {
   offset: number;
   viewerLivestreamJoinMediaTime: number;
 };
+
+export type MusicVideoType =
+  | "MUSIC_VIDEO_TYPE_ATV"
+  | "MUSIC_VIDEO_TYPE_OFFICIAL_SOURCE_MUSIC"
+  | "MUSIC_VIDEO_TYPE_OMV"
+  | "MUSIC_VIDEO_TYPE_UGC"
+  | "MUSIC_VIDEO_TYPE_PODCAST_EPISODE";
 
 export interface PlayerElement extends HTMLDivElement {
   getPlayerResponse(): PlayerResponse;

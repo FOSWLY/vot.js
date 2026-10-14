@@ -1,12 +1,13 @@
-# unreleased
+# 3.1.6
 
 ## Ext
 
 - Added support TikTok feed
 - Added support get subtitles for TikTok
 - Added support Kinopoisk trailers (`https://www.kinopoisk.ru/`)
+- Added YouTube API player response types
 - Fixed PreserveTube helper for some cases
-- Refactored repeated video source retrieval using `getVideoSrc` utility function
+- Refactored repeated video source retrieval logic to use `getVideoSrc` utility function
 
 ## Shared
 
