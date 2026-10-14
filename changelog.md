@@ -6,6 +6,7 @@
 - Added support get subtitles for TikTok
 - Added support Kinopoisk trailers (`https://www.kinopoisk.ru/`)
 - Added YouTube API player response types
+- Added option to set media proxy host (#144)
 - Fixed PreserveTube helper for some cases
 - Refactored repeated video source retrieval logic to use `getVideoSrc` utility function
 
