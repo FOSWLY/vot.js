@@ -1,4 +1,4 @@
-import { BaseHelper, VideoHelperError } from "./base";
+import { BaseHelper } from "./base";
 export default class SnapchatSpotlightHelper extends BaseHelper {
   async getVideoId(url: URL) {
     if (!/^(?:www\.)?snapchat\.com$/.test(url.hostname)) return undefined;

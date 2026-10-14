@@ -1,4 +1,4 @@
-import { BaseHelper, VideoHelperError } from "./base";
+import { BaseHelper } from "./base";
 export default class WSJHelper extends BaseHelper {
   async getVideoId(url: URL) {
     if (!/^(?:www\.)?(?:wsj|barrons)\.com$/.test(url.hostname))

@@ -1,4 +1,4 @@
-import { BaseHelper, VideoHelperError } from "./base";
+import { BaseHelper } from "./base";
 export default class ZhihuHelper extends BaseHelper {
   async getVideoId(url: URL) {
     if (!/^(?:www\.)?zhihu\.com$/.test(url.hostname)) return undefined;

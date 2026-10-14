@@ -1,4 +1,4 @@
-import { BaseHelper, VideoHelperError } from "./base";
+import { BaseHelper } from "./base";
 export default class PinterestHelper extends BaseHelper {
   async getVideoId(url: URL) {
     if (

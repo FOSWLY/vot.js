@@ -1,12 +1,16 @@
 import { NativeDeltaHelper } from "./nativeDelta";
-const huyaUrlPattern =
-  /^https?:\/\/(?:www\.)?huya\.com\/video\/play\/(?<id>\d+)\.html(?=$|[\/?#])/;
-export function parseHuyaVideoId(url: string): string | undefined {
-  const id = huyaUrlPattern.exec(url)?.groups?.id;
-  return id;
-}
+
 export default class HuyaHelper extends NativeDeltaHelper {
   async getVideoId(url: URL): Promise<string | undefined> {
-    return parseHuyaVideoId(url.href);
+    if (
+      !/^https?:$/.test(url.protocol) ||
+      url.username ||
+      url.password ||
+      url.port ||
+      !/^(?:www\.)?huya\.com$/.test(url.hostname)
+    )
+      return undefined;
+    return /^\/video\/play\/(?<id>\d+)\.html(?=$|[/?#])/.exec(url.pathname)
+      ?.groups?.id;
   }
 }

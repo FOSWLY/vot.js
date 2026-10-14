@@ -1,13 +1,17 @@
-import { BaseHelper, VideoHelperError } from "./base";
-const huyaUrlPattern =
-  /^https?:\/\/(?:www\.)?huya\.com\/video\/play\/(?<id>\d+)\.html(?=$|[\/?#])/;
-export function parseHuyaVideoId(url: string): string | undefined {
-  const id = huyaUrlPattern.exec(url)?.groups?.id;
-  return id;
-}
+import { BaseHelper } from "./base";
+
 export default class HuyaHelper extends BaseHelper {
   async getVideoId(url: URL): Promise<string | undefined> {
-    return parseHuyaVideoId(url.href);
+    if (
+      !/^https?:$/.test(url.protocol) ||
+      url.username ||
+      url.password ||
+      url.port ||
+      !/^(?:www\.)?huya\.com$/.test(url.hostname)
+    )
+      return undefined;
+    return /^\/video\/play\/(?<id>\d+)\.html(?=$|[/?#])/.exec(url.pathname)
+      ?.groups?.id;
   }
   async getVideoData(videoId: string) {
     if (!this.service) return undefined;

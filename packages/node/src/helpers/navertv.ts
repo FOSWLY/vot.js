@@ -1,4 +1,4 @@
-import { BaseHelper, VideoHelperError } from "./base";
+import { BaseHelper } from "./base";
 export default class NaverTVHelper extends BaseHelper {
   async getVideoId(url: URL): Promise<string | undefined> {
     if (

@@ -66,6 +66,28 @@ import ZDFHelper from "./zdf";
 import WistiaHelper from "./wistia";
 import JOIDatabaseHelper from "./joidatabase";
 
+import AbcNewsHelper from "./abcnews";
+import BfmTvHelper from "./bfmtv";
+import DailyMailHelper from "./dailymail";
+import VideoPressHelper from "./videopress";
+import VidliiHelper from "./vidlii";
+import CBSNewsHelper from "./cbsnews";
+import NYTimesHelper from "./nytimes";
+import WashingtonPostHelper from "./washingtonpost";
+import WSJHelper from "./wsj";
+import AcFunHelper from "./acfun";
+import GettrHelper from "./gettr";
+import HuyaHelper from "./huya";
+import MedalTvHelper from "./medaltv";
+import RedgifsHelper from "./redgifs";
+import PinterestHelper from "./pinterest";
+import NaverTVHelper from "./navertv";
+import CHZZKHelper from "./chzzk";
+import ImgurHelper from "./imgur";
+import ZhihuHelper from "./zhihu";
+import SnapchatSpotlightHelper from "./snapchat";
+import StreamableHelper from "./streamable";
+
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as ArchiveHelper from "./archive";
 export * as BannedVideoHelper from "./bannedvideo";
@@ -130,8 +152,29 @@ export * as ZDFHelper from "./zdf";
 export * as WistiaHelper from "./wistia";
 export * as JOIDatabaseHelper from "./joidatabase";
 
+export * as AbcNewsHelper from "./abcnews";
+export * as BfmTvHelper from "./bfmtv";
+export * as DailyMailHelper from "./dailymail";
+export * as VideoPressHelper from "./videopress";
+export * as VidliiHelper from "./vidlii";
+export * as CBSNewsHelper from "./cbsnews";
+export * as NYTimesHelper from "./nytimes";
+export * as WashingtonPostHelper from "./washingtonpost";
+export * as WSJHelper from "./wsj";
+export * as AcFunHelper from "./acfun";
+export * as GettrHelper from "./gettr";
+export * as HuyaHelper from "./huya";
+export * as MedalTvHelper from "./medaltv";
+export * as RedgifsHelper from "./redgifs";
+export * as PinterestHelper from "./pinterest";
+export * as NaverTVHelper from "./navertv";
+export * as CHZZKHelper from "./chzzk";
+export * as ImgurHelper from "./imgur";
+export * as ZhihuHelper from "./zhihu";
+export * as SnapchatSpotlightHelper from "./snapchat";
+export * as StreamableHelper from "./streamable";
+
 export const availableHelpers = {
-  // Additive migrated helpers.
   [CoreVideoService.abcnews]: AbcNewsHelper,
   [CoreVideoService.bfmtv]: BfmTvHelper,
   [CoreVideoService.dailymail]: DailyMailHelper,
@@ -240,47 +283,3 @@ export default class VideoHelper {
     return new availableHelpers[service](this.helpersData);
   }
 }
-
-// Additive delta exports.
-import AbcNewsHelper from "./abcnews";
-export * as AbcNewsHelper from "./abcnews";
-import BfmTvHelper from "./bfmtv";
-export * as BfmTvHelper from "./bfmtv";
-import DailyMailHelper from "./dailymail";
-export * as DailyMailHelper from "./dailymail";
-import VideoPressHelper from "./videopress";
-export * as VideoPressHelper from "./videopress";
-import VidliiHelper from "./vidlii";
-export * as VidliiHelper from "./vidlii";
-import CBSNewsHelper from "./cbsnews";
-export * as CBSNewsHelper from "./cbsnews";
-import NYTimesHelper from "./nytimes";
-export * as NYTimesHelper from "./nytimes";
-import WashingtonPostHelper from "./washingtonpost";
-export * as WashingtonPostHelper from "./washingtonpost";
-import WSJHelper from "./wsj";
-export * as WSJHelper from "./wsj";
-import AcFunHelper from "./acfun";
-export * as AcFunHelper from "./acfun";
-import GettrHelper from "./gettr";
-export * as GettrHelper from "./gettr";
-import HuyaHelper from "./huya";
-export * as HuyaHelper from "./huya";
-import MedalTvHelper from "./medaltv";
-export * as MedalTvHelper from "./medaltv";
-import RedgifsHelper from "./redgifs";
-export * as RedgifsHelper from "./redgifs";
-import PinterestHelper from "./pinterest";
-export * as PinterestHelper from "./pinterest";
-import NaverTVHelper from "./navertv";
-export * as NaverTVHelper from "./navertv";
-import CHZZKHelper from "./chzzk";
-export * as CHZZKHelper from "./chzzk";
-import ImgurHelper from "./imgur";
-export * as ImgurHelper from "./imgur";
-import ZhihuHelper from "./zhihu";
-export * as ZhihuHelper from "./zhihu";
-import SnapchatSpotlightHelper from "./snapchat";
-export * as SnapchatSpotlightHelper from "./snapchat";
-import StreamableHelper from "./streamable";
-export * as StreamableHelper from "./streamable";

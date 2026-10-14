@@ -24,6 +24,12 @@ const sharedSelectors = {
   videoJsUniversal:
     "[id^='vjs_video_']:not([id*='_html5_api']):not(video), video-js:not([id*='_html5_api']), .video-js:not(video):not([id*='_html5_api']), .vjs-player:not([id*='_html5_api']), [data-vjs-player]:not([id*='_html5_api'])",
   vkVideoPlayer: ".videoplayer_media, vk-video-player",
+
+  documentRoot: "html",
+  plyrWrapper: ".plyr__video-wrapper",
+  videoJsParent: ".video-js-parent",
+  videoJsContainer: ".vjs-video-container",
+  nativeVideo: "video",
 } as const;
 
 export default [
@@ -60,7 +66,7 @@ export default [
     match: (url: URL) =>
       /^(www.)?youtube(-nocookie|kids)?.com$/.test(url.host) &&
       url.pathname.startsWith("/embed/"),
-    selector: "html",
+    selector: sharedSelectors.documentRoot,
     needExtraData: true,
   },
   {
@@ -68,7 +74,7 @@ export default [
     url: "https://youtu.be/",
     match: (url) => /^music\.youtube\.com$/.test(url.host),
     selector: "#song-video",
-    eventSelector: "#player",
+    eventSelector: sharedSelectors.idPlayer,
     needExtraData: true,
   },
   {
@@ -226,7 +232,7 @@ export default [
     host: CoreVideoService.joidatabase,
     url: "https://www.the-joi-database.com/api/stream/",
     match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
-    selector: ".plyr__video-wrapper",
+    selector: sharedSelectors.plyrWrapper,
     needExtraData: true,
   },
   {
@@ -384,7 +390,7 @@ export default [
     host: CoreVideoService.googledrive,
     url: "https://drive.google.com/file/d/",
     match: /^youtube.googleapis.com$/,
-    selector: "html",
+    selector: sharedSelectors.documentRoot,
   },
   {
     host: CoreVideoService.bannedvideo,
@@ -502,7 +508,7 @@ export default [
     host: CoreVideoService.odysee,
     url: "stub",
     match: /^odysee.com$/,
-    selector: ".video-js-parent",
+    selector: sharedSelectors.videoJsParent,
     needExtraData: true,
   },
   {
@@ -664,7 +670,7 @@ export default [
     match:
       /^bunkr\.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
-    selector: ".plyr__video-wrapper",
+    selector: sharedSelectors.plyrWrapper,
   },
   {
     host: CoreVideoService.kinopoisk,
@@ -771,7 +777,7 @@ export default [
       /^\/(?:video\/[^/]+\/video-|embed\/video\/)\d+(?:\.html$|\/|$)/.test(
         url.pathname,
       ),
-    selector: ".vjs-video-container",
+    selector: sharedSelectors.videoJsContainer,
     needExtraData: true,
   },
   {
@@ -814,7 +820,7 @@ export default [
           url.pathname.includes("/video/")) ||
         (url.hostname === "graphics8.nytimes.com" &&
           url.searchParams.has("videoId")))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -828,7 +834,7 @@ export default [
         /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/.test(
           url.pathname,
         ))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -839,7 +845,7 @@ export default [
       ((url: URL) =>
         /(?:www.)?(?:wsj|barrons).com$/.test(url.hostname) &&
         /\/video\/(?:[^/]+\/)+[a-fA-F0-9-]{36}/.test(url.pathname))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -875,7 +881,7 @@ export default [
     match: (url: URL) =>
       /^(?:www\.)?medal\.tv$/.test(url.hostname) &&
       /^\/games\/[^/?#&]+\/clips\/[^/?#&]+/.test(url.pathname),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -900,7 +906,7 @@ export default [
         url.host.includes("pinterest.") && url.pathname.startsWith("/pin/"))(
         url,
       ),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -923,7 +929,7 @@ export default [
       ((url: URL) =>
         url.hostname === "chzzk.naver.com" &&
         url.pathname.startsWith("/video/"))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -934,7 +940,7 @@ export default [
       ((url: URL) =>
         /(?:i.)?imgur.com$/.test(url.hostname) &&
         !/^\/(?:a|gallery|t|topic|r)\//.test(url.pathname))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -945,7 +951,7 @@ export default [
       ((url: URL) =>
         /(?:www.)?zhihu.com$/.test(url.hostname) &&
         url.pathname.startsWith("/zvideo/"))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {
@@ -967,7 +973,7 @@ export default [
       ((url: URL) =>
         url.hostname === "streamable.com" &&
         /^\/(?:[es]\/)?\w+\/?$/.test(url.pathname))(url),
-    selector: "video",
+    selector: sharedSelectors.nativeVideo,
     needExtraData: true,
   },
   {

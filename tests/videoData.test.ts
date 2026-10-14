@@ -1181,3 +1181,435 @@ describe("joidatabase", () => {
     expect(data?.title).toBe("Test joi video");
   });
 });
+
+const sharedHelperCases = [
+  {
+    service: "abcnews",
+    url: "https://abcnews.go.com/US/video/example-story-123456",
+    id: "123456",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "acfun",
+    url: "https://www.acfun.cn/v/ac123_4",
+    id: "123_4",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "bfmtv",
+    url: "https://www.bfmtv.com/news/story_VN-123456789012.html",
+    id: "www.bfmtv.com/news/story_VN-123456789012.html",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "cbsnews",
+    url: "https://www.cbsnews.com/video/example-story",
+    id: "example-story",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "chzzk",
+    url: "https://chzzk.naver.com/video/12345",
+    id: "12345",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "dailymail",
+    url: "https://www.dailymail.co.uk/embed/video/12345.html",
+    id: "12345",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "gettr",
+    url: "https://gettr.com/post/p123abc",
+    id: "p123abc",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "huya",
+    url: "https://www.huya.com/video/play/12345.html",
+    id: "12345",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "imgur",
+    url: "https://imgur.com/Ab12Cd3",
+    id: "Ab12Cd3",
+    node: true,
+    negativeMatches: true,
+  },
+  {
+    service: "medaltv",
+    url: "https://medal.tv/games/example/clips/clipABC",
+    id: "games/example/clips/clipABC",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "navertv",
+    url: "https://m.naver.com/shorts/?seedMediaId=example#fragment",
+    id: "https://m.naver.com/shorts/?seedMediaId=example",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "nytimes",
+    url: "https://www.nytimes.com/video/world/12345/example.html",
+    id: "12345",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "pinterest",
+    url: "https://www.pinterest.com/pin/123456789",
+    id: "123456789",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "redgifs",
+    url: "https://www.redgifs.com/watch/FancyTiger",
+    id: "fancytiger",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "snapchat",
+    url: "https://www.snapchat.com/spotlight/abc123",
+    id: "abc123",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "streamable",
+    url: "https://streamable.com/abc123",
+    id: "abc123",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "videopress",
+    url: "https://videopress.com/embed/Ab12Cd34",
+    id: "Ab12Cd34",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "vidlii",
+    url: "https://www.vidlii.com/watch?v=Ab1_Cd2-Ef3",
+    id: "Ab1_Cd2-Ef3",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "washingtonpost",
+    url: "https://www.washingtonpost.com/video/c/video/12345678-abcd-1234-abcd-123456789abc",
+    id: "12345678-abcd-1234-abcd-123456789abc",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "wsj",
+    url: "https://www.wsj.com/video/news/story/12345678-ABCD-1234-ABCD-123456789ABC",
+    id: "12345678-ABCD-1234-ABCD-123456789ABC",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "zhihu",
+    url: "https://www.zhihu.com/zvideo/12345",
+    id: "12345",
+    node: true,
+    negativeMatches: false,
+  },
+  {
+    service: "beacon",
+    url: "https://beacon.tv/content/episode-1",
+    id: "episode-1",
+    node: false,
+    negativeMatches: true,
+  },
+  {
+    service: "brightcove",
+    url: "https://players.brightcove.net/123/default_default/index.html?videoId=12345",
+    id: "12345",
+    node: false,
+    negativeMatches: false,
+  },
+  {
+    service: "craftsy",
+    url: "https://www.craftsy.com/class/example-class/",
+    id: "example-class",
+    node: false,
+    negativeMatches: true,
+  },
+  {
+    service: "espn",
+    url: "https://www.espn.com/video/clip/_/id/12345",
+    id: "12345",
+    node: false,
+    negativeMatches: false,
+  },
+  {
+    service: "jwplatform",
+    url: "https://content.jwplatform.com/players/Ab12Cd34-Ef56Gh78.html",
+    id: "Ab12Cd34",
+    node: false,
+    negativeMatches: false,
+  },
+  {
+    service: "noz",
+    url: "https://www.noz.de/video/12345",
+    id: "12345",
+    node: false,
+    negativeMatches: true,
+  },
+  {
+    service: "nzherald",
+    url: "https://www.nzherald.co.nz/news/story/ABC123/",
+    id: "ABC123",
+    node: false,
+    negativeMatches: false,
+  },
+  {
+    service: "onefootball",
+    url: "https://onefootball.com/en/video/example-12345",
+    id: "12345",
+    node: false,
+    negativeMatches: false,
+  },
+  {
+    service: "spiegel",
+    url: "https://www.spiegel.de/video/example-12345.html",
+    id: "12345",
+    node: false,
+    negativeMatches: false,
+  },
+  {
+    service: "vidly",
+    url: "https://vid.ly/abc123",
+    id: "abc123",
+    node: false,
+    negativeMatches: true,
+  },
+] as const;
+
+const offlineHelperFetch: FetchFunction = async () => {
+  throw new Error("Network access is forbidden in shared-helper offline tests");
+};
+
+async function withOfflineBrowser<T>(href: string, run: () => Promise<T>) {
+  const savedWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const savedDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: { location: new URL(href) },
+  });
+  Object.defineProperty(globalThis, "document", {
+    configurable: true,
+    value: {
+      referrer: "",
+      title: "Offline fixture",
+      querySelectorAll: () => [],
+    },
+  });
+  try {
+    return await run();
+  } finally {
+    if (savedWindow) Object.defineProperty(globalThis, "window", savedWindow);
+    else Reflect.deleteProperty(globalThis, "window");
+    if (savedDocument)
+      Object.defineProperty(globalThis, "document", savedDocument);
+    else Reflect.deleteProperty(globalThis, "document");
+  }
+}
+
+describe("shared-helper offline", () => {
+  for (const fixture of sharedHelperCases) {
+    if (fixture.node) {
+      test(`${fixture.service}: node positive ID and service`, async () => {
+        const { availableHelpers } =
+          await import("../packages/node/src/helpers");
+        const { getService } =
+          await import("../packages/node/src/utils/videoData");
+        const Helper =
+          availableHelpers[fixture.service as keyof typeof availableHelpers];
+        const helper = new Helper({ fetchFn: offlineHelperFetch });
+        expect(await helper.getVideoId(new URL(fixture.url))).toBe(fixture.id);
+        expect(
+          (getService(fixture.url) || undefined)?.host === fixture.service,
+        ).toBe(true);
+      });
+      test(`${fixture.service}: node negative ID and service`, async () => {
+        const { availableHelpers } =
+          await import("../packages/node/src/helpers");
+        const { getService } =
+          await import("../packages/node/src/utils/videoData");
+        const Helper =
+          availableHelpers[fixture.service as keyof typeof availableHelpers];
+        const href = new URL("/", fixture.url).href;
+        const helper = new Helper({ fetchFn: offlineHelperFetch });
+        expect(await helper.getVideoId(new URL(href))).toBeUndefined();
+        expect((getService(href) || undefined)?.host === fixture.service).toBe(
+          fixture.negativeMatches,
+        );
+      });
+    }
+    test(`${fixture.service}: ext positive ID and service`, async () => {
+      await withOfflineBrowser(fixture.url, async () => {
+        const { availableHelpers } =
+          await import("../packages/ext/src/helpers");
+        const { getService } =
+          await import("../packages/ext/src/utils/videoData");
+        const Helper =
+          availableHelpers[fixture.service as keyof typeof availableHelpers];
+        const helper = new Helper({ fetchFn: offlineHelperFetch });
+        expect(await helper.getVideoId(new URL(fixture.url))).toBe(fixture.id);
+        expect(
+          getService().some((service) => service.host === fixture.service),
+        ).toBe(true);
+      });
+    });
+    test(`${fixture.service}: ext negative ID and service`, async () => {
+      const href = new URL("/", fixture.url).href;
+      await withOfflineBrowser(href, async () => {
+        const { availableHelpers } =
+          await import("../packages/ext/src/helpers");
+        const { getService } =
+          await import("../packages/ext/src/utils/videoData");
+        const Helper =
+          availableHelpers[fixture.service as keyof typeof availableHelpers];
+        const helper = new Helper({ fetchFn: offlineHelperFetch });
+        expect(await helper.getVideoId(new URL(href))).toBeUndefined();
+        expect(
+          getService().some((service) => service.host === fixture.service),
+        ).toBe(fixture.negativeMatches);
+      });
+    });
+  }
+});
+
+// Full-URL donor patterns reject credentials, non-default ports and non-HTTP URLs.
+describe("shared-helper offline authority", () => {
+  for (const fixture of sharedHelperCases.filter((entry) =>
+    ["acfun", "gettr", "huya", "medaltv", "redgifs", "videopress"].includes(
+      entry.service,
+    ),
+  )) {
+    test(`${fixture.service}: node and ext retain authority restrictions`, async () => {
+      await withOfflineBrowser(fixture.url, async () => {
+        const node = await import("../packages/node/src/helpers");
+        const ext = await import("../packages/ext/src/helpers");
+        const NodeHelper =
+          node.availableHelpers[
+            fixture.service as keyof typeof node.availableHelpers
+          ];
+        const ExtHelper =
+          ext.availableHelpers[
+            fixture.service as keyof typeof ext.availableHelpers
+          ];
+        for (const Helper of [NodeHelper, ExtHelper]) {
+          const helper = new Helper({ fetchFn: offlineHelperFetch });
+          for (const restriction of ["credentials", "port", "protocol"]) {
+            const url = new URL(fixture.url);
+            if (restriction === "credentials") url.username = "example";
+            if (restriction === "port") url.port = "8443";
+            if (restriction === "protocol") url.protocol = "ftp:";
+            expect(await helper.getVideoId(url)).toBeUndefined();
+          }
+        }
+      });
+    });
+  }
+});
+
+const video = (source: string, protectedMedia = false) =>
+  ({
+    id: "offline_html5_api",
+    mediaKeys: protectedMedia ? {} : null,
+    currentSrc: source,
+    duration: 42,
+    getAttribute: () => null,
+    querySelectorAll: () => [],
+  }) as unknown as HTMLVideoElement;
+
+describe("shared-helper offline native media", () => {
+  test("accepts public HTTP media without requesting it", async () => {
+    await withOfflineBrowser("https://beacon.tv/content/example", async () => {
+      const { NativeDeltaHelper } =
+        await import("../packages/ext/src/helpers/nativeDelta");
+      const helper = new NativeDeltaHelper({
+        video: video("https://media.example/video.mp4"),
+        fetchFn: offlineHelperFetch,
+      });
+      expect(await helper.getVideoData("example")).toMatchObject({
+        url: "https://media.example/video.mp4",
+        duration: 42,
+        isStream: false,
+      });
+    });
+  });
+
+  for (const [label, source, protectedMedia] of [
+    ["DRM", "https://media.example/video.mp4", true],
+    ["blob-only", "blob:https://beacon.tv/offline", false],
+    ["non-HTTP", "data:video/mp4;base64,AAAA", false],
+  ] as const) {
+    test(`rejects ${label} media`, async () => {
+      await withOfflineBrowser(
+        "https://beacon.tv/content/example",
+        async () => {
+          const { NativeDeltaHelper } =
+            await import("../packages/ext/src/helpers/nativeDelta");
+          const helper = new NativeDeltaHelper({
+            video: video(source, protectedMedia),
+            fetchFn: offlineHelperFetch,
+          });
+          await expect(helper.getVideoData("example")).rejects.toThrow();
+        },
+      );
+    });
+  }
+
+  test("rejects missing or ambiguous native players", async () => {
+    await withOfflineBrowser("https://beacon.tv/content/example", async () => {
+      const { NativeDeltaHelper } =
+        await import("../packages/ext/src/helpers/nativeDelta");
+      const helper = new NativeDeltaHelper({ fetchFn: offlineHelperFetch });
+      await expect(helper.getVideoData("example")).rejects.toThrow(
+        "unavailable or ambiguous",
+      );
+    });
+  });
+
+  test("rejects protected public player API sources", async () => {
+    await withOfflineBrowser("https://beacon.tv/content/example", async () => {
+      Object.assign(window, {
+        videojs: {
+          getPlayer: () => ({
+            currentSources: () => [
+              { src: "https://media.example/video.mp4", keySystems: {} },
+            ],
+          }),
+        },
+      });
+      const { NativeDeltaHelper } =
+        await import("../packages/ext/src/helpers/nativeDelta");
+      const helper = new NativeDeltaHelper({
+        video: video("https://media.example/video.mp4"),
+        fetchFn: offlineHelperFetch,
+      });
+      await expect(helper.getVideoData("example")).rejects.toThrow(
+        "Protected player source",
+      );
+    });
+  });
+});

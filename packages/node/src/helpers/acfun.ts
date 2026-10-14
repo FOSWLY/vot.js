@@ -1,12 +1,15 @@
-import { BaseHelper, VideoHelperError } from "./base";
-const acfunUrlPattern =
-  /^https?:\/\/www\.acfun\.cn\/v\/ac(?<id>[_\d]+)(?=$|[\/?#])/;
-export function parseAcFunVideoId(url: string): string | undefined {
-  const id = acfunUrlPattern.exec(url)?.groups?.id;
-  return id;
-}
+import { BaseHelper } from "./base";
+
 export default class AcFunHelper extends BaseHelper {
   async getVideoId(url: URL): Promise<string | undefined> {
-    return parseAcFunVideoId(url.href);
+    if (
+      !/^https?:$/.test(url.protocol) ||
+      url.username ||
+      url.password ||
+      url.port ||
+      url.hostname !== "www.acfun.cn"
+    )
+      return undefined;
+    return /^\/v\/ac(?<id>[_\d]+)(?=$|[/?#])/.exec(url.pathname)?.groups?.id;
   }
 }
