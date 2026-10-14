@@ -24,12 +24,6 @@ const sharedSelectors = {
   videoJsUniversal:
     "[id^='vjs_video_']:not([id*='_html5_api']):not(video), video-js:not([id*='_html5_api']), .video-js:not(video):not([id*='_html5_api']), .vjs-player:not([id*='_html5_api']), [data-vjs-player]:not([id*='_html5_api'])",
   vkVideoPlayer: ".videoplayer_media, vk-video-player",
-
-  documentRoot: "html",
-  plyrWrapper: ".plyr__video-wrapper",
-  videoJsParent: ".video-js-parent",
-  videoJsContainer: ".vjs-video-container",
-  nativeVideo: "video",
 } as const;
 
 export default [
@@ -66,7 +60,7 @@ export default [
     match: (url: URL) =>
       /^(www.)?youtube(-nocookie|kids)?.com$/.test(url.host) &&
       url.pathname.startsWith("/embed/"),
-    selector: sharedSelectors.documentRoot,
+    selector: "html",
     needExtraData: true,
   },
   {
@@ -74,7 +68,7 @@ export default [
     url: "https://youtu.be/",
     match: (url) => /^music\.youtube\.com$/.test(url.host),
     selector: "#song-video",
-    eventSelector: sharedSelectors.idPlayer,
+    eventSelector: "#player",
     needExtraData: true,
   },
   {
@@ -232,7 +226,7 @@ export default [
     host: CoreVideoService.joidatabase,
     url: "https://www.the-joi-database.com/api/stream/",
     match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
-    selector: sharedSelectors.plyrWrapper,
+    selector: ".plyr__video-wrapper",
     needExtraData: true,
   },
   {
@@ -390,7 +384,7 @@ export default [
     host: CoreVideoService.googledrive,
     url: "https://drive.google.com/file/d/",
     match: /^youtube.googleapis.com$/,
-    selector: sharedSelectors.documentRoot,
+    selector: "html",
   },
   {
     host: CoreVideoService.bannedvideo,
@@ -508,7 +502,7 @@ export default [
     host: CoreVideoService.odysee,
     url: "stub",
     match: /^odysee.com$/,
-    selector: sharedSelectors.videoJsParent,
+    selector: ".video-js-parent",
     needExtraData: true,
   },
   {
@@ -670,7 +664,7 @@ export default [
     match:
       /^bunkr\.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
-    selector: sharedSelectors.plyrWrapper,
+    selector: ".plyr__video-wrapper",
   },
   {
     host: CoreVideoService.kinopoisk,
@@ -746,344 +740,246 @@ export default [
     match: /^fast.wistia.net$/,
     selector: ".w-video-wrapper",
   },
-  // Additive service registrations.
   {
     host: CoreVideoService.abcnews,
+    needBypassCSP: true,
     url: "https://abcnews.go.com/video/embed?id=",
-    match: (url: URL) =>
-      (url.hostname === "abcnews.go.com" &&
-        (/^\/(?:[^/]+\/)*video\/[\da-z-]+-\d+(?:\/|$)/.test(url.pathname) ||
-          (/^\/video\/(?:embed|itemfeed)$/.test(url.pathname) &&
-            /^\d+$/.test(url.searchParams.get("id") ?? "")))) ||
-      (url.hostname === "fivethirtyeight.abcnews.go.com" &&
-        /^\/video\/embed\/\d+\/\d+(?:\/|$)/.test(url.pathname)),
-    selector: ".SingleVideo",
-    needExtraData: true,
+    match:
+      /^(?:(?:www\.)?abcnews\.(?:com|go\.com)|fivethirtyeight\.abcnews\.go\.com)$/,
+    selector: "#hivePlayer",
+    rawResult: true,
   },
   {
     host: CoreVideoService.bfmtv,
+    needBypassCSP: true,
     url: "https://",
-    match: (url: URL) =>
-      /^(?:www\.|rmc\.)?bfmtv\.com$/.test(url.hostname) &&
-      /^\/(?:[^/]+\/)*[^/?&#]+_V[A-Z]-\d{12}\.html/.test(url.pathname),
+    match: /^(?:www\.|rmc\.)?bfmtv\.com$/,
     selector: ".bitmovin-player-container",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.dailymail,
+    needBypassCSP: true,
     url: "https://www.dailymail.co.uk/embed/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?dailymail\.co\.uk$/.test(url.hostname) &&
-      /^\/(?:video\/[^/]+\/video-|embed\/video\/)\d+(?:\.html$|\/|$)/.test(
-        url.pathname,
-      ),
-    selector: sharedSelectors.videoJsContainer,
-    needExtraData: true,
+    match: /^(?:www\.)?dailymail\.co\.uk$/,
+    selector: ".vjs-video-container",
+    rawResult: true,
   },
   {
     host: CoreVideoService.videopress,
+    needBypassCSP: true,
     url: "https://videopress.com/embed/",
-    match: (url: URL) =>
-      /^video(?:\.word)?press\.com$/.test(url.hostname) &&
-      /^\/embed\/[\da-zA-Z]{8}\/?$/.test(url.pathname),
+    match: /^video(?:\.word)?press\.com$/,
     selector: "#video",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.vidlii,
+    needBypassCSP: true,
     url: "https://www.vidlii.com/watch?v=",
-    match: (url: URL) =>
-      /^(?:www\.)?vidlii\.com$/.test(url.hostname) &&
-      /^\/(?:watch|embed)$/.test(url.pathname) &&
-      /^[\w-]{11}$/.test(url.searchParams.get("v") ?? ""),
+    match: /^(?:www\.)?vidlii\.com$/,
     selector: ".vlPlayer",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.cbsnews,
+    needBypassCSP: true,
     url: "https://www.cbsnews.com/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?cbsnews\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?cbsnews.com$/.test(url.hostname) &&
-        /\/(?:news|video)\/[\w-]+/.test(url.pathname))(url),
+    match: /^(?:www\.)?cbsnews\.com$/,
     selector: 'div[aria-label="media-player"]',
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.nytimes,
+    needBypassCSP: true,
     url: "https://www.nytimes.com/video/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?nytimes\.com$|^graphics8\.nytimes\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        (url.host.includes("nytimes.com") &&
-          url.pathname.includes("/video/")) ||
-        (url.hostname === "graphics8.nytimes.com" &&
-          url.searchParams.has("videoId")))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
-  },
-  {
-    host: CoreVideoService.washingtonpost,
-    url: "https://www.washingtonpost.com/video/c/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?washingtonpost\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.host.includes("washingtonpost.com") &&
-        /\/(?:video|posttv)\//.test(url.pathname) &&
-        /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/.test(
-          url.pathname,
-        ))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^(?:(?:www\.)?nytimes\.com|graphics8\.nytimes\.com)$/,
+    selector: "video",
+    rawResult: true,
   },
   {
     host: CoreVideoService.wsj,
+    needBypassCSP: true,
     url: "https://www.wsj.com/video/x/",
-    match: (url: URL) =>
-      /^(?:www\.)?(?:wsj|barrons)\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?(?:wsj|barrons).com$/.test(url.hostname) &&
-        /\/video\/(?:[^/]+\/)+[a-fA-F0-9-]{36}/.test(url.pathname))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^(?:www\.)?(?:wsj|barrons)\.com$/,
+    selector: "#video-player",
+    rawResult: true,
   },
   {
     host: CoreVideoService.acfun,
+    needBypassCSP: true,
     url: "https://www.acfun.cn/v/ac",
-    match: (url: URL) =>
-      url.hostname === "www.acfun.cn" &&
-      /^\/v\/ac[_\d]+(?:\/|$)/.test(url.pathname),
+    match: /^(?:www\.)?acfun\.cn$/,
     selector: "#ACPlayer",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.gettr,
+    needBypassCSP: true,
     url: "https://gettr.com/post/",
-    match: (url: URL) =>
-      /^(?:www\.)?gettr\.com$/.test(url.hostname) &&
-      /^\/post\/[a-z0-9]+\/?$/.test(url.pathname),
+    match: /^(?:www\.)?gettr\.com$/,
     selector: ".videoPlayerRoot",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.huya,
+    needBypassCSP: true,
     url: "https://www.huya.com/video/play/",
-    match: (url: URL) =>
-      /^(?:www\.)?huya\.com$/.test(url.hostname) &&
-      /^\/video\/play\/\d+\.html(?:\/|$)/.test(url.pathname),
+    match: /^(?:www\.)?huya\.com$/,
     selector: ".vplayer-wrap",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.medaltv,
+    needBypassCSP: true,
     url: "https://medal.tv/",
-    match: (url: URL) =>
-      /^(?:www\.)?medal\.tv$/.test(url.hostname) &&
-      /^\/games\/[^/?#&]+\/clips\/[^/?#&]+/.test(url.pathname),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^(?:www\.)?medal\.tv$/,
+    selector: "video",
+    rawResult: true,
   },
   {
     host: CoreVideoService.redgifs,
+    needBypassCSP: true,
     url: "https://www.redgifs.com/watch/",
-    match: (url: URL) =>
-      (/^(?:www\.)?redgifs\.com$/.test(url.hostname) &&
-        /^\/(?:watch|ifr)\/[^-/?#.]+(?:[-/.]|$)/.test(url.pathname)) ||
-      (url.hostname === "thumbs2.redgifs.com" &&
-        /^\/[^-/?#.]+(?:[-/.]|$)/.test(url.pathname)),
+    match: /^(?:www\.|thumbs2\.)?redgifs\.com$/,
     selector: ".Player",
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.pinterest,
+    needBypassCSP: true,
     url: "https://www.pinterest.com/pin/",
-    match: (url: URL) =>
-      /^(?:www\.)?pinterest\.(?:com|co\.uk|de|fr|es|it|ca|com\.au)$/.test(
-        url.hostname,
-      ) &&
-      ((url: URL) =>
-        url.host.includes("pinterest.") && url.pathname.startsWith("/pin/"))(
-        url,
-      ),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^(?:www\.)?pinterest\.(?:com|co\.uk|de|fr|es|it|ca|com\.au)$/,
+    selector: "video",
+    rawResult: true,
   },
   {
     host: CoreVideoService.navertv,
+    needBypassCSP: true,
     url: "https://m.naver.com/shorts/",
-    match: (url: URL) =>
-      /^m\.naver\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "m.naver.com" && url.pathname.startsWith("/shorts/"))(
-        url,
-      ),
+    match: /^(?:m|tv)\.naver\.com$/,
     selector: 'div[class*="section_player"]',
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.chzzk,
+    needBypassCSP: true,
     url: "https://chzzk.naver.com/video/",
-    match: (url: URL) =>
-      /^chzzk\.naver\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "chzzk.naver.com" &&
-        url.pathname.startsWith("/video/"))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^chzzk\.naver\.com$/,
+    selector: "video",
+    rawResult: true,
   },
   {
     host: CoreVideoService.imgur,
+    needBypassCSP: true,
     url: "https://imgur.com/",
-    match: (url: URL) =>
-      /^(?:i\.)?imgur\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:i.)?imgur.com$/.test(url.hostname) &&
-        !/^\/(?:a|gallery|t|topic|r)\//.test(url.pathname))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^(?:i\.)?imgur\.com$/,
+    selector: "div.PostVideo-video-wrapper",
+    rawResult: true,
   },
   {
     host: CoreVideoService.zhihu,
+    needBypassCSP: true,
     url: "https://www.zhihu.com/zvideo/",
-    match: (url: URL) =>
-      /^(?:www\.)?zhihu\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?zhihu.com$/.test(url.hostname) &&
-        url.pathname.startsWith("/zvideo/"))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^(?:www\.)?zhihu\.com$/,
+    selector: "video",
+    rawResult: true,
   },
   {
     host: CoreVideoService.snapchat,
+    needBypassCSP: true,
     url: "https://www.snapchat.com/spotlight/",
-    match: (url: URL) =>
-      /^(?:www\.)?snapchat\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?snapchat.com$/.test(url.hostname) &&
-        url.pathname.startsWith("/spotlight/"))(url),
+    match: /^(?:www\.)?snapchat\.com$/,
     selector: 'video[data-testid="playerContentVideo"]',
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.streamable,
+    needBypassCSP: true,
     url: "https://streamable.com/",
-    match: (url: URL) =>
-      /^streamable\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "streamable.com" &&
-        /^\/(?:[es]\/)?\w+\/?$/.test(url.pathname))(url),
-    selector: sharedSelectors.nativeVideo,
-    needExtraData: true,
+    match: /^streamable\.com$/,
+    selector: "video",
+    rawResult: true,
   },
   {
-    host: ExtVideoService.beacon,
+    host: CoreVideoService.beacon,
+    needBypassCSP: true,
     url: "https://beacon.tv/content/",
-    match: (url: URL) => /^(?:www\.)?beacon\.tv$/.test(url.hostname) && true,
+    match: /^(?:www\.)?beacon\.tv$/,
     selector: sharedSelectors.jwPlayer,
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.brightcove,
+    host: CoreVideoService.brightcove,
+    needBypassCSP: true,
     url: "https://players.brightcove.net/",
-    match: (url: URL) =>
-      /^players\.brightcove\.net$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "players.brightcove.net" &&
-        /^\/\d+\/[^/]+_[^/]+\/index.html$/.test(url.pathname) &&
-        Boolean(url.searchParams.get("videoId")))(url),
+    match: /^players\.brightcove\.net$/,
     selector: sharedSelectors.videoJsUniversal,
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.craftsy,
+    host: CoreVideoService.craftsy,
+    needBypassCSP: true,
     url: "https://www.craftsy.com/class/",
-    match: (url: URL) => /^(?:www\.)?craftsy\.com$/.test(url.hostname) && true,
+    match: /^(?:www\.)?craftsy\.com$/,
     selector: sharedSelectors.videoJsUniversal,
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.espn,
+    host: CoreVideoService.espn,
+    needBypassCSP: true,
     url: "https://www.espn.com/video/clip/_/id/",
-    match: (url: URL) =>
-      /^(?:www\.)?espn\.com$|^(?:[a-z0-9-]+\.)*espn\.go\.com$/.test(
-        url.hostname,
-      ) &&
-      ((url: URL) =>
-        /^(?:(?:www.)?espn.com|(?:[a-z0-9-]+.)*espn.go.com)$/.test(
-          url.hostname,
-        ) &&
-        (/^\/video\/(?:clip|iframe\/twitter)\/_\/id\/\d+(?:\/[^/]+)?\/?$|^\/[^/]+\/video\/\d+(?:\/[^/]+)?\/?$/.test(
-          url.pathname,
-        ) ||
-          (/^\/video\/(?:clip|iframe\/twitter)\/?$/.test(url.pathname) &&
-            /^\d+$/.test(url.searchParams.get("id") ?? ""))))(url),
+    match: /^(?:(?:www\.)?espn\.com|(?:[a-z0-9-]+\.)*espn\.go\.com)$/,
     selector: "#hivePlayer1",
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.jwplatform,
+    host: CoreVideoService.jwplatform,
+    needBypassCSP: true,
     url: "https://cdn.jwplayer.com/players/",
-    match: (url: URL) =>
-      /^(?:content\.jwplatform|cdn\.jwplayer)\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /^(?:content.jwplatform|cdn.jwplayer).com$/.test(url.hostname) &&
-        /^\/players\/[A-Za-z0-9]{8}(?:-[A-Za-z0-9]{8})?.html$/.test(
-          url.pathname,
-        ))(url),
+    match: /^(?:content\.jwplatform|cdn\.jwplayer)\.com$/,
     selector: sharedSelectors.jwPlayer,
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.noz,
+    host: CoreVideoService.noz,
+    needBypassCSP: true,
     url: "https://www.noz.de/video/",
-    match: (url: URL) => /^(?:www\.)?noz\.de$/.test(url.hostname) && true,
+    match: /^(?:www\.)?noz\.de$/,
     selector: sharedSelectors.videoJsUniversal,
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.nzherald,
+    host: CoreVideoService.nzherald,
+    needBypassCSP: true,
     url: "https://www.nzherald.co.nz/",
-    match: (url: URL) =>
-      /^(?:www\.)?nzherald\.co\.nz$/.test(url.hostname) &&
-      ((url: URL) =>
-        /^(www.)?nzherald.co.nz$/.test(url.hostname) &&
-        /\/[A-Z0-9]+\/?$/.test(url.pathname))(url),
+    match: /^(?:www\.)?nzherald\.co\.nz$/,
     selector: sharedSelectors.videoJsUniversal,
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.onefootball,
+    host: CoreVideoService.onefootball,
+    needBypassCSP: true,
     url: "https://onefootball.com/",
-    match: (url: URL) =>
-      /^(?:www\.)?onefootball\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /^(?:www.)?onefootball.com$/.test(url.hostname) &&
-        /^\/(?:ru|en|zh|ko|ar|fr|it|es|de|ja)\/video\/[^/]+-\d+\/?$/.test(
-          url.pathname,
-        ))(url),
+    match: /^(?:www\.)?onefootball\.com$/,
     selector: 'div[aria-label="Video Player"]',
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.spiegel,
+    host: CoreVideoService.spiegel,
+    needBypassCSP: true,
     url: "https://www.spiegel.de/",
-    match: (url: URL) =>
-      /^(?:www\.)?spiegel\.de$/.test(url.hostname) &&
-      ((url: URL) =>
-        /^(?:www.)?spiegel.de$/.test(url.hostname) &&
-        /^\/(?:[^/]+\/)+[^/]*-(?:[0-9]+|[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})(?:-embed|-iframe)?(?:\.html)?$/.test(
-          url.pathname,
-        ))(url),
+    match: /^(?:www\.)?spiegel\.de$/,
     selector: '.jwplayer, [data-component="JWPlayer"]',
-    needExtraData: true,
+    rawResult: true,
   },
   {
-    host: ExtVideoService.vidly,
+    host: CoreVideoService.vidly,
+    needBypassCSP: true,
     url: "https://vid.ly/",
-    match: (url: URL) => /^(?:s\.)?vid\.ly$/.test(url.hostname) && true,
+    match: /^(?:s\.)?vid\.ly$/,
     selector: sharedSelectors.jwPlayer,
-    needExtraData: true,
+    rawResult: true,
   },
   {
     host: CoreVideoService.custom,

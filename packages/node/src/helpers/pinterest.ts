@@ -1,12 +1,8 @@
 import { BaseHelper } from "./base";
+
 export default class PinterestHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    if (
-      !/^(?:www\.)?pinterest\.(?:com|co\.uk|de|fr|es|it|ca|com\.au)$/.test(
-        url.hostname,
-      )
-    )
-      return undefined;
-    return /\/pin\/(?:[\w-]+--)?(\d+)/.exec(url.pathname)?.[1];
+    return url.href;
   }
 }

@@ -1,7 +1,8 @@
-import { NativeDeltaHelper } from "./nativeDelta";
-export default class SnapchatSpotlightHelper extends NativeDeltaHelper {
+import { BaseHelper } from "./base";
+
+export default class SnapchatSpotlightHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    if (!/^(?:www\.)?snapchat\.com$/.test(url.hostname)) return undefined;
-    return /\/spotlight\/(\w+)/.exec(url.pathname)?.[1];
+    return url.href;
   }
 }

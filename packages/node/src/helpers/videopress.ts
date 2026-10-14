@@ -1,15 +1,8 @@
 import { BaseHelper } from "./base";
 
 export default class VideoPressHelper extends BaseHelper {
-  async getVideoId(url: URL): Promise<string | undefined> {
-    if (
-      !/^https?:$/.test(url.protocol) ||
-      url.username ||
-      url.password ||
-      url.port ||
-      !/^video(?:\.word)?press\.com$/.test(url.hostname)
-    )
-      return undefined;
-    return /^\/embed\/(?<id>[\da-zA-Z]{8})\/?$/.exec(url.pathname)?.groups?.id;
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoId(url: URL) {
+    return url.href;
   }
 }

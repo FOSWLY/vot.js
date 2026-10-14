@@ -88,7 +88,6 @@ import VideoPressHelper from "./videopress";
 import VidliiHelper from "./vidlii";
 import CBSNewsHelper from "./cbsnews";
 import NYTimesHelper from "./nytimes";
-import WashingtonPostHelper from "./washingtonpost";
 import WSJHelper from "./wsj";
 import AcFunHelper from "./acfun";
 import GettrHelper from "./gettr";
@@ -198,7 +197,6 @@ export * as VideoPressHelper from "./videopress";
 export * as VidliiHelper from "./vidlii";
 export * as CBSNewsHelper from "./cbsnews";
 export * as NYTimesHelper from "./nytimes";
-export * as WashingtonPostHelper from "./washingtonpost";
 export * as WSJHelper from "./wsj";
 export * as AcFunHelper from "./acfun";
 export * as GettrHelper from "./gettr";
@@ -231,7 +229,6 @@ export const availableHelpers = {
   [CoreVideoService.vidlii]: VidliiHelper,
   [CoreVideoService.cbsnews]: CBSNewsHelper,
   [CoreVideoService.nytimes]: NYTimesHelper,
-  [CoreVideoService.washingtonpost]: WashingtonPostHelper,
   [CoreVideoService.wsj]: WSJHelper,
   [CoreVideoService.acfun]: AcFunHelper,
   [CoreVideoService.gettr]: GettrHelper,
@@ -245,16 +242,16 @@ export const availableHelpers = {
   [CoreVideoService.zhihu]: ZhihuHelper,
   [CoreVideoService.snapchat]: SnapchatSpotlightHelper,
   [CoreVideoService.streamable]: StreamableHelper,
-  [ExtVideoService.beacon]: BeaconHelper,
-  [ExtVideoService.brightcove]: BrightcoveHelper,
-  [ExtVideoService.craftsy]: CraftsyHelper,
-  [ExtVideoService.espn]: ESPNHelper,
-  [ExtVideoService.jwplatform]: JWPlatformHelper,
-  [ExtVideoService.noz]: NOZHelper,
-  [ExtVideoService.nzherald]: NZHeraldHelper,
-  [ExtVideoService.onefootball]: OneFootballHelper,
-  [ExtVideoService.spiegel]: SpiegelHelper,
-  [ExtVideoService.vidly]: VidlyHelper,
+  [CoreVideoService.beacon]: BeaconHelper,
+  [CoreVideoService.brightcove]: BrightcoveHelper,
+  [CoreVideoService.craftsy]: CraftsyHelper,
+  [CoreVideoService.espn]: ESPNHelper,
+  [CoreVideoService.jwplatform]: JWPlatformHelper,
+  [CoreVideoService.noz]: NOZHelper,
+  [CoreVideoService.nzherald]: NZHeraldHelper,
+  [CoreVideoService.onefootball]: OneFootballHelper,
+  [CoreVideoService.spiegel]: SpiegelHelper,
+  [CoreVideoService.vidly]: VidlyHelper,
   [CoreVideoService.mailru]: MailRuHelper,
   [CoreVideoService.weverse]: WeverseHelper,
   [CoreVideoService.weibo]: WeiboHelper,

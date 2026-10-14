@@ -19,17 +19,6 @@ export enum ExtVideoService {
   mediafile = "mediafile",
   skilljar = "skilljar",
   dropout = "dropout",
-  // Additive legacy service delta.
-  beacon = "beacon",
-  brightcove = "brightcove",
-  craftsy = "craftsy",
-  espn = "espn",
-  jwplatform = "jwplatform",
-  noz = "noz",
-  nzherald = "nzherald",
-  onefootball = "onefootball",
-  spiegel = "spiegel",
-  vidly = "vidly",
 }
 
 export const VideoService = {

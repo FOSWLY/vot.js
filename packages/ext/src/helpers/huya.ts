@@ -1,16 +1,8 @@
-import { NativeDeltaHelper } from "./nativeDelta";
+import { BaseHelper } from "./base";
 
-export default class HuyaHelper extends NativeDeltaHelper {
-  async getVideoId(url: URL): Promise<string | undefined> {
-    if (
-      !/^https?:$/.test(url.protocol) ||
-      url.username ||
-      url.password ||
-      url.port ||
-      !/^(?:www\.)?huya\.com$/.test(url.hostname)
-    )
-      return undefined;
-    return /^\/video\/play\/(?<id>\d+)\.html(?=$|[/?#])/.exec(url.pathname)
-      ?.groups?.id;
+export default class HuyaHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoId(url: URL) {
+    return url.href;
   }
 }

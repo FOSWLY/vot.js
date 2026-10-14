@@ -432,197 +432,186 @@ export default [
     match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
     needExtraData: true,
   },
-  // Additive service registrations.
   {
     host: CoreVideoService.abcnews,
     url: "https://abcnews.go.com/video/embed?id=",
-    match: (url: URL) =>
-      (url.hostname === "abcnews.go.com" &&
-        (/^\/(?:[^/]+\/)*video\/[\da-z-]+-\d+(?:\/|$)/.test(url.pathname) ||
-          (/^\/video\/(?:embed|itemfeed)$/.test(url.pathname) &&
-            /^\d+$/.test(url.searchParams.get("id") ?? "")))) ||
-      (url.hostname === "fivethirtyeight.abcnews.go.com" &&
-        /^\/video\/embed\/\d+\/\d+(?:\/|$)/.test(url.pathname)),
+    match:
+      /^(?:(?:www\.)?abcnews\.(?:com|go\.com)|fivethirtyeight\.abcnews\.go\.com)$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.bfmtv,
     url: "https://",
-    match: (url: URL) =>
-      /^(?:www\.|rmc\.)?bfmtv\.com$/.test(url.hostname) &&
-      /^\/(?:[^/]+\/)*[^/?&#]+_V[A-Z]-\d{12}\.html/.test(url.pathname),
+    match: /^(?:www\.|rmc\.)?bfmtv\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.dailymail,
     url: "https://www.dailymail.co.uk/embed/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?dailymail\.co\.uk$/.test(url.hostname) &&
-      /^\/(?:video\/[^/]+\/video-|embed\/video\/)\d+(?:\.html$|\/|$)/.test(
-        url.pathname,
-      ),
-    needExtraData: true,
+    match: /^(?:www\.)?dailymail\.co\.uk$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.videopress,
     url: "https://videopress.com/embed/",
-    match: (url: URL) =>
-      /^video(?:\.word)?press\.com$/.test(url.hostname) &&
-      /^\/embed\/[\da-zA-Z]{8}\/?$/.test(url.pathname),
+    match: /^video(?:\.word)?press\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.vidlii,
     url: "https://www.vidlii.com/watch?v=",
-    match: (url: URL) =>
-      /^(?:www\.)?vidlii\.com$/.test(url.hostname) &&
-      /^\/(?:watch|embed)$/.test(url.pathname) &&
-      /^[\w-]{11}$/.test(url.searchParams.get("v") ?? ""),
+    match: /^(?:www\.)?vidlii\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.cbsnews,
     url: "https://www.cbsnews.com/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?cbsnews\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?cbsnews.com$/.test(url.hostname) &&
-        /\/(?:news|video)\/[\w-]+/.test(url.pathname))(url),
+    match: /^(?:www\.)?cbsnews\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.nytimes,
     url: "https://www.nytimes.com/video/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?nytimes\.com$|^graphics8\.nytimes\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        (url.host.includes("nytimes.com") &&
-          url.pathname.includes("/video/")) ||
-        (url.hostname === "graphics8.nytimes.com" &&
-          url.searchParams.has("videoId")))(url),
-  },
-  {
-    host: CoreVideoService.washingtonpost,
-    url: "https://www.washingtonpost.com/video/c/video/",
-    match: (url: URL) =>
-      /^(?:www\.)?washingtonpost\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.host.includes("washingtonpost.com") &&
-        /\/(?:video|posttv)\//.test(url.pathname) &&
-        /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/.test(
-          url.pathname,
-        ))(url),
+    match: /^(?:(?:www\.)?nytimes\.com|graphics8\.nytimes\.com)$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.wsj,
     url: "https://www.wsj.com/video/x/",
-    match: (url: URL) =>
-      /^(?:www\.)?(?:wsj|barrons)\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?(?:wsj|barrons).com$/.test(url.hostname) &&
-        /\/video\/(?:[^/]+\/)+[a-fA-F0-9-]{36}/.test(url.pathname))(url),
+    match: /^(?:www\.)?(?:wsj|barrons)\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.acfun,
     url: "https://www.acfun.cn/v/ac",
-    match: (url: URL) =>
-      url.hostname === "www.acfun.cn" &&
-      /^\/v\/ac[_\d]+(?:\/|$)/.test(url.pathname),
+    match: /^(?:www\.)?acfun\.cn$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.gettr,
     url: "https://gettr.com/post/",
-    match: (url: URL) =>
-      /^(?:www\.)?gettr\.com$/.test(url.hostname) &&
-      /^\/post\/[a-z0-9]+\/?$/.test(url.pathname),
+    match: /^(?:www\.)?gettr\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.huya,
     url: "https://www.huya.com/video/play/",
-    match: (url: URL) =>
-      /^(?:www\.)?huya\.com$/.test(url.hostname) &&
-      /^\/video\/play\/\d+\.html(?:\/|$)/.test(url.pathname),
-    needExtraData: true,
+    match: /^(?:www\.)?huya\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.medaltv,
     url: "https://medal.tv/",
-    match: (url: URL) =>
-      /^(?:www\.)?medal\.tv$/.test(url.hostname) &&
-      /^\/games\/[^/?#&]+\/clips\/[^/?#&]+/.test(url.pathname),
+    match: /^(?:www\.)?medal\.tv$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.redgifs,
     url: "https://www.redgifs.com/watch/",
-    match: (url: URL) =>
-      (/^(?:www\.)?redgifs\.com$/.test(url.hostname) &&
-        /^\/(?:watch|ifr)\/[^-/?#.]+(?:[-/.]|$)/.test(url.pathname)) ||
-      (url.hostname === "thumbs2.redgifs.com" &&
-        /^\/[^-/?#.]+(?:[-/.]|$)/.test(url.pathname)),
+    match: /^(?:www\.|thumbs2\.)?redgifs\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.pinterest,
     url: "https://www.pinterest.com/pin/",
-    match: (url: URL) =>
-      /^(?:www\.)?pinterest\.(?:com|co\.uk|de|fr|es|it|ca|com\.au)$/.test(
-        url.hostname,
-      ) &&
-      ((url: URL) =>
-        url.host.includes("pinterest.") && url.pathname.startsWith("/pin/"))(
-        url,
-      ),
+    match: /^(?:www\.)?pinterest\.(?:com|co\.uk|de|fr|es|it|ca|com\.au)$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.navertv,
     url: "https://m.naver.com/shorts/",
-    match: (url: URL) =>
-      /^m\.naver\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "m.naver.com" && url.pathname.startsWith("/shorts/"))(
-        url,
-      ),
+    match: /^(?:m|tv)\.naver\.com$/,
     rawResult: true,
   },
   {
     host: CoreVideoService.chzzk,
     url: "https://chzzk.naver.com/video/",
-    match: (url: URL) =>
-      /^chzzk\.naver\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "chzzk.naver.com" &&
-        url.pathname.startsWith("/video/"))(url),
+    match: /^chzzk\.naver\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.imgur,
     url: "https://imgur.com/",
-    match: (url: URL) =>
-      /^(?:i\.)?imgur\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:i.)?imgur.com$/.test(url.hostname) &&
-        !/^\/(?:a|gallery|t|topic|r)\//.test(url.pathname))(url),
+    match: /^(?:i\.)?imgur\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.zhihu,
     url: "https://www.zhihu.com/zvideo/",
-    match: (url: URL) =>
-      /^(?:www\.)?zhihu\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?zhihu.com$/.test(url.hostname) &&
-        url.pathname.startsWith("/zvideo/"))(url),
+    match: /^(?:www\.)?zhihu\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.snapchat,
     url: "https://www.snapchat.com/spotlight/",
-    match: (url: URL) =>
-      /^(?:www\.)?snapchat\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        /(?:www.)?snapchat.com$/.test(url.hostname) &&
-        url.pathname.startsWith("/spotlight/"))(url),
+    match: /^(?:www\.)?snapchat\.com$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.streamable,
     url: "https://streamable.com/",
-    match: (url: URL) =>
-      /^streamable\.com$/.test(url.hostname) &&
-      ((url: URL) =>
-        url.hostname === "streamable.com" &&
-        /^\/(?:[es]\/)?\w+\/?$/.test(url.pathname))(url),
-    needExtraData: true,
+    match: /^streamable\.com$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.beacon,
+    url: "https://beacon.tv/content/",
+    match: /^(?:www\.)?beacon\.tv$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.brightcove,
+    url: "https://players.brightcove.net/",
+    match: /^players\.brightcove\.net$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.craftsy,
+    url: "https://www.craftsy.com/class/",
+    match: /^(?:www\.)?craftsy\.com$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.espn,
+    url: "https://www.espn.com/video/clip/_/id/",
+    match: /^(?:(?:www\.)?espn\.com|(?:[a-z0-9-]+\.)*espn\.go\.com)$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.jwplatform,
+    url: "https://cdn.jwplayer.com/players/",
+    match: /^(?:content\.jwplatform|cdn\.jwplayer)\.com$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.noz,
+    url: "https://www.noz.de/video/",
+    match: /^(?:www\.)?noz\.de$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.nzherald,
+    url: "https://www.nzherald.co.nz/",
+    match: /^(?:www\.)?nzherald\.co\.nz$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.onefootball,
+    url: "https://onefootball.com/",
+    match: /^(?:www\.)?onefootball\.com$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.spiegel,
+    url: "https://www.spiegel.de/",
+    match: /^(?:www\.)?spiegel\.de$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.vidly,
+    url: "https://vid.ly/",
+    match: /^(?:s\.)?vid\.ly$/,
+    rawResult: true,
   },
   {
     host: CoreVideoService.custom,

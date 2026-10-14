@@ -1,7 +1,8 @@
-import { NativeDeltaHelper } from "./nativeDelta";
-export default class OneFootballHelper extends NativeDeltaHelper {
-  async getVideoId(url: URL): Promise<string | undefined> {
-    if (!/^(?:www\.)?onefootball\.com$/.test(url.hostname)) return undefined;
-    return /^\/[a-z]{2}\/video\/[^/]+-(\d+)\/?$/.exec(url.pathname)?.[1];
+import { BaseHelper } from "./base";
+
+export default class OneFootballHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoId(url: URL) {
+    return url.href;
   }
 }

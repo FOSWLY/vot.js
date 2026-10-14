@@ -1,15 +1,8 @@
 import { BaseHelper } from "./base";
 
 export default class GettrHelper extends BaseHelper {
-  async getVideoId(url: URL): Promise<string | undefined> {
-    if (
-      !/^https?:$/.test(url.protocol) ||
-      url.username ||
-      url.password ||
-      url.port ||
-      !/^(?:www\.)?gettr\.com$/.test(url.hostname)
-    )
-      return undefined;
-    return /^\/post\/(?<id>[a-z0-9]+)\/?$/.exec(url.pathname)?.groups?.id;
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoId(url: URL) {
+    return url.href;
   }
 }

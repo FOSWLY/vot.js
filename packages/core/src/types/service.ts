@@ -75,7 +75,6 @@ export enum VideoService {
   kinopoisk = "kinopoisk",
   telegram = "telegram",
   wistia = "wistia",
-  // Additive legacy service delta.
   abcnews = "abcnews",
   bfmtv = "bfmtv",
   dailymail = "dailymail",
@@ -83,7 +82,6 @@ export enum VideoService {
   vidlii = "vidlii",
   cbsnews = "cbsnews",
   nytimes = "nytimes",
-  washingtonpost = "washingtonpost",
   wsj = "wsj",
   acfun = "acfun",
   gettr = "gettr",
@@ -97,6 +95,16 @@ export enum VideoService {
   zhihu = "zhihu",
   snapchat = "snapchat",
   streamable = "streamable",
+  beacon = "beacon",
+  brightcove = "brightcove",
+  craftsy = "craftsy",
+  espn = "espn",
+  jwplatform = "jwplatform",
+  noz = "noz",
+  nzherald = "nzherald",
+  onefootball = "onefootball",
+  spiegel = "spiegel",
+  vidly = "vidly",
 }
 
 /**

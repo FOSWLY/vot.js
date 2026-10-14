@@ -1,7 +1,8 @@
-import { NativeDeltaHelper } from "./nativeDelta";
-export default class StreamableHelper extends NativeDeltaHelper {
+import { BaseHelper } from "./base";
+
+export default class StreamableHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
-    if (!/^streamable\.com$/.test(url.hostname)) return undefined;
-    return /^\/(?:[es]\/)?(\w+)\/?$/.exec(url.pathname)?.[1];
+    return url.href;
   }
 }

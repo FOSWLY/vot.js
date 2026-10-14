@@ -1,7 +1,8 @@
-import { NativeDeltaHelper } from "./nativeDelta";
-export default class NZHeraldHelper extends NativeDeltaHelper {
-  async getVideoId(url: URL): Promise<string | undefined> {
-    if (!/^(?:www\.)?nzherald\.co\.nz$/.test(url.hostname)) return undefined;
-    return /\/([A-Z0-9]+)\/?$/.exec(url.pathname)?.[1];
+import { BaseHelper } from "./base";
+
+export default class NZHeraldHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoId(url: URL) {
+    return url.href;
   }
 }

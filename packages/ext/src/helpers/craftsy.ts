@@ -1,7 +1,8 @@
-import { NativeDeltaHelper } from "./nativeDelta";
-export default class CraftsyHelper extends NativeDeltaHelper {
-  async getVideoId(url: URL): Promise<string | undefined> {
-    if (!/^(?:www\.)?craftsy\.com$/.test(url.hostname)) return undefined;
-    return /\/class\/([\w-]+)/.exec(url.pathname)?.[1];
+import { BaseHelper } from "./base";
+
+export default class CraftsyHelper extends BaseHelper {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getVideoId(url: URL) {
+    return url.href;
   }
 }
