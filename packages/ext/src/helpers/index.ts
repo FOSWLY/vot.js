@@ -21,6 +21,7 @@ import DeeplearningAIHelper from "./deeplearningai";
 import DouyinHelper from "./douyin";
 import DropoutHelper from "./dropout";
 import DzenHelper from "./dzen";
+import EdxHelper from "./edx";
 import EggheadHelper from "./egghead";
 import EpicGamesHelper from "./epicgames";
 import EpornerHelper from "./eporner";
@@ -100,6 +101,7 @@ export * as DeeplearningAIHelper from "./deeplearningai";
 export * as DouyinHelper from "./douyin";
 export * as DropoutHelper from "./dropout";
 export * as DzenHelper from "./dzen";
+export * as EdxHelper from "./edx";
 export * as EggheadHelper from "./egghead";
 export * as EpicGamesHelper from "./epicgames";
 export * as EpornerHelper from "./eporner";
@@ -240,6 +242,7 @@ export const availableHelpers = {
   [ExtVideoService.mediafile]: MediafileHelper,
   [ExtVideoService.skilljar]: SkilljarHelper,
   [ExtVideoService.dropout]: DropoutHelper,
+  [ExtVideoService.edx]: EdxHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;
