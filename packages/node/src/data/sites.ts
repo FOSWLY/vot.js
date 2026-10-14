@@ -446,12 +446,6 @@ export default [
     rawResult: true,
   },
   {
-    host: CoreVideoService.dailymail,
-    url: "https://www.dailymail.co.uk/embed/video/",
-    match: /^(?:www\.)?dailymail\.co\.uk$/,
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.videopress,
     url: "https://videopress.com/embed/",
     match: /^video(?:\.word)?press\.com$/,
@@ -520,19 +514,16 @@ export default [
   {
     host: CoreVideoService.navertv,
     url: "https://m.naver.com/shorts/",
-    match: /^(?:m|tv)\.naver\.com$/,
+    match: (url) =>
+      (url.hostname === "m.naver.com" && /^\/shorts\/?$/.test(url.pathname)) ||
+      (url.hostname === "tv.naver.com" &&
+        /^\/(?:v|embed)\/\d+/.test(url.pathname)),
     rawResult: true,
   },
   {
     host: CoreVideoService.chzzk,
     url: "https://chzzk.naver.com/video/",
     match: /^chzzk\.naver\.com$/,
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.imgur,
-    url: "https://imgur.com/",
-    match: /^(?:i\.)?imgur\.com$/,
     rawResult: true,
   },
   {
@@ -572,21 +563,9 @@ export default [
     rawResult: true,
   },
   {
-    host: CoreVideoService.espn,
-    url: "https://www.espn.com/video/clip/_/id/",
-    match: /^(?:(?:www\.)?espn\.com|(?:[a-z0-9-]+\.)*espn\.go\.com)$/,
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.jwplatform,
     url: "https://cdn.jwplayer.com/players/",
     match: /^(?:content\.jwplatform|cdn\.jwplayer)\.com$/,
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.noz,
-    url: "https://www.noz.de/video/",
-    match: /^(?:www\.)?noz\.de$/,
     rawResult: true,
   },
   {

@@ -68,7 +68,6 @@ import JOIDatabaseHelper from "./joidatabase";
 
 import AbcNewsHelper from "./abcnews";
 import BfmTvHelper from "./bfmtv";
-import DailyMailHelper from "./dailymail";
 import VideoPressHelper from "./videopress";
 import VidliiHelper from "./vidlii";
 import CBSNewsHelper from "./cbsnews";
@@ -82,16 +81,13 @@ import RedgifsHelper from "./redgifs";
 import PinterestHelper from "./pinterest";
 import NaverTVHelper from "./navertv";
 import CHZZKHelper from "./chzzk";
-import ImgurHelper from "./imgur";
 import ZhihuHelper from "./zhihu";
 import SnapchatSpotlightHelper from "./snapchat";
 import StreamableHelper from "./streamable";
 import BeaconHelper from "./beacon";
 import BrightcoveHelper from "./brightcove";
 import CraftsyHelper from "./craftsy";
-import ESPNHelper from "./espn";
 import JWPlatformHelper from "./jwplatform";
-import NOZHelper from "./noz";
 import NZHeraldHelper from "./nzherald";
 import OneFootballHelper from "./onefootball";
 import SpiegelHelper from "./spiegel";
@@ -163,7 +159,6 @@ export * as JOIDatabaseHelper from "./joidatabase";
 
 export * as AbcNewsHelper from "./abcnews";
 export * as BfmTvHelper from "./bfmtv";
-export * as DailyMailHelper from "./dailymail";
 export * as VideoPressHelper from "./videopress";
 export * as VidliiHelper from "./vidlii";
 export * as CBSNewsHelper from "./cbsnews";
@@ -177,16 +172,13 @@ export * as RedgifsHelper from "./redgifs";
 export * as PinterestHelper from "./pinterest";
 export * as NaverTVHelper from "./navertv";
 export * as CHZZKHelper from "./chzzk";
-export * as ImgurHelper from "./imgur";
 export * as ZhihuHelper from "./zhihu";
 export * as SnapchatSpotlightHelper from "./snapchat";
 export * as StreamableHelper from "./streamable";
 export * as BeaconHelper from "./beacon";
 export * as BrightcoveHelper from "./brightcove";
 export * as CraftsyHelper from "./craftsy";
-export * as ESPNHelper from "./espn";
 export * as JWPlatformHelper from "./jwplatform";
-export * as NOZHelper from "./noz";
 export * as NZHeraldHelper from "./nzherald";
 export * as OneFootballHelper from "./onefootball";
 export * as SpiegelHelper from "./spiegel";
@@ -195,7 +187,6 @@ export * as VidlyHelper from "./vidly";
 export const availableHelpers = {
   [CoreVideoService.abcnews]: AbcNewsHelper,
   [CoreVideoService.bfmtv]: BfmTvHelper,
-  [CoreVideoService.dailymail]: DailyMailHelper,
   [CoreVideoService.videopress]: VideoPressHelper,
   [CoreVideoService.vidlii]: VidliiHelper,
   [CoreVideoService.cbsnews]: CBSNewsHelper,
@@ -209,16 +200,13 @@ export const availableHelpers = {
   [CoreVideoService.pinterest]: PinterestHelper,
   [CoreVideoService.navertv]: NaverTVHelper,
   [CoreVideoService.chzzk]: CHZZKHelper,
-  [CoreVideoService.imgur]: ImgurHelper,
   [CoreVideoService.zhihu]: ZhihuHelper,
   [CoreVideoService.snapchat]: SnapchatSpotlightHelper,
   [CoreVideoService.streamable]: StreamableHelper,
   [CoreVideoService.beacon]: BeaconHelper,
   [CoreVideoService.brightcove]: BrightcoveHelper,
   [CoreVideoService.craftsy]: CraftsyHelper,
-  [CoreVideoService.espn]: ESPNHelper,
   [CoreVideoService.jwplatform]: JWPlatformHelper,
-  [CoreVideoService.noz]: NOZHelper,
   [CoreVideoService.nzherald]: NZHeraldHelper,
   [CoreVideoService.onefootball]: OneFootballHelper,
   [CoreVideoService.spiegel]: SpiegelHelper,

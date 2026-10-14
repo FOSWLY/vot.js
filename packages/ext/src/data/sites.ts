@@ -20,6 +20,8 @@ const sharedSelectors = {
   idPlayer: "#player",
   jwPlayer: ".jwplayer, .jw-media",
   player: ".player",
+  divPlayer: "div.player",
+  plyrVideoWrapper: ".plyr__video-wrapper",
   shakaPlayer: '.shaka-video-container, [id^="shaka-video-container-"]',
   videoJsUniversal:
     "[id^='vjs_video_']:not([id*='_html5_api']):not(video), video-js:not([id*='_html5_api']), .video-js:not(video):not([id*='_html5_api']), .vjs-player:not([id*='_html5_api']), [data-vjs-player]:not([id*='_html5_api'])",
@@ -68,7 +70,7 @@ export default [
     url: "https://youtu.be/",
     match: (url) => /^music\.youtube\.com$/.test(url.host),
     selector: "#song-video",
-    eventSelector: "#player",
+    eventSelector: sharedSelectors.idPlayer,
     needExtraData: true,
   },
   {
@@ -226,7 +228,7 @@ export default [
     host: CoreVideoService.joidatabase,
     url: "https://www.the-joi-database.com/api/stream/",
     match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
-    selector: ".plyr__video-wrapper",
+    selector: sharedSelectors.plyrVideoWrapper,
     needExtraData: true,
   },
   {
@@ -664,7 +666,7 @@ export default [
     match:
       /^bunkr\.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
-    selector: ".plyr__video-wrapper",
+    selector: sharedSelectors.plyrVideoWrapper,
   },
   {
     host: CoreVideoService.kinopoisk,
@@ -746,7 +748,8 @@ export default [
     url: "https://abcnews.go.com/video/embed?id=",
     match:
       /^(?:(?:www\.)?abcnews\.(?:com|go\.com)|fivethirtyeight\.abcnews\.go\.com)$/,
-    selector: "#hivePlayer",
+    selector: ".SingleVideo",
+    shadowRoot: true,
     rawResult: true,
   },
   {
@@ -755,14 +758,6 @@ export default [
     url: "https://",
     match: /^(?:www\.|rmc\.)?bfmtv\.com$/,
     selector: ".bitmovin-player-container",
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.dailymail,
-    needBypassCSP: true,
-    url: "https://www.dailymail.co.uk/embed/video/",
-    match: /^(?:www\.)?dailymail\.co\.uk$/,
-    selector: ".vjs-video-container",
     rawResult: true,
   },
   {
@@ -786,7 +781,7 @@ export default [
     needBypassCSP: true,
     url: "https://www.cbsnews.com/video/",
     match: /^(?:www\.)?cbsnews\.com$/,
-    selector: 'div[aria-label="media-player"]',
+    selector: sharedSelectors.divPlayer,
     rawResult: true,
   },
   {
@@ -794,7 +789,8 @@ export default [
     needBypassCSP: true,
     url: "https://www.nytimes.com/video/video/",
     match: /^(?:(?:www\.)?nytimes\.com|graphics8\.nytimes\.com)$/,
-    selector: "video",
+    selector: 'video[data-testid="betamax-video"]',
+    shadowRoot: true,
     rawResult: true,
   },
   {
@@ -834,7 +830,7 @@ export default [
     needBypassCSP: true,
     url: "https://medal.tv/",
     match: /^(?:www\.)?medal\.tv$/,
-    selector: "video",
+    selector: 'video[data-testid^="video-"][data-testid$="-player"]',
     rawResult: true,
   },
   {
@@ -857,8 +853,11 @@ export default [
     host: CoreVideoService.navertv,
     needBypassCSP: true,
     url: "https://m.naver.com/shorts/",
-    match: /^(?:m|tv)\.naver\.com$/,
-    selector: 'div[class*="section_player"]',
+    match: (url) =>
+      (url.hostname === "m.naver.com" && /^\/shorts\/?$/.test(url.pathname)) ||
+      (url.hostname === "tv.naver.com" &&
+        /^\/(?:v|embed)\/\d+/.test(url.pathname)),
+    selector: "video",
     rawResult: true,
   },
   {
@@ -866,15 +865,7 @@ export default [
     needBypassCSP: true,
     url: "https://chzzk.naver.com/video/",
     match: /^chzzk\.naver\.com$/,
-    selector: "video",
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.imgur,
-    needBypassCSP: true,
-    url: "https://imgur.com/",
-    match: /^(?:i\.)?imgur\.com$/,
-    selector: "div.PostVideo-video-wrapper",
+    selector: 'div[id^="wpc-"] video',
     rawResult: true,
   },
   {
@@ -882,7 +873,7 @@ export default [
     needBypassCSP: true,
     url: "https://www.zhihu.com/zvideo/",
     match: /^(?:www\.)?zhihu\.com$/,
-    selector: "video",
+    selector: "div.ZVideo-video > div",
     rawResult: true,
   },
   {
@@ -898,7 +889,7 @@ export default [
     needBypassCSP: true,
     url: "https://streamable.com/",
     match: /^streamable\.com$/,
-    selector: "video",
+    selector: 'video[data-id^="player-"]',
     rawResult: true,
   },
   {
@@ -907,7 +898,7 @@ export default [
     url: "https://beacon.tv/content/",
     match: /^(?:www\.)?beacon\.tv$/,
     selector: sharedSelectors.jwPlayer,
-    rawResult: true,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.brightcove,
@@ -926,27 +917,11 @@ export default [
     rawResult: true,
   },
   {
-    host: CoreVideoService.espn,
-    needBypassCSP: true,
-    url: "https://www.espn.com/video/clip/_/id/",
-    match: /^(?:(?:www\.)?espn\.com|(?:[a-z0-9-]+\.)*espn\.go\.com)$/,
-    selector: "#hivePlayer1",
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.jwplatform,
     needBypassCSP: true,
     url: "https://cdn.jwplayer.com/players/",
     match: /^(?:content\.jwplatform|cdn\.jwplayer)\.com$/,
     selector: sharedSelectors.jwPlayer,
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.noz,
-    needBypassCSP: true,
-    url: "https://www.noz.de/video/",
-    match: /^(?:www\.)?noz\.de$/,
-    selector: sharedSelectors.videoJsUniversal,
     rawResult: true,
   },
   {
