@@ -39,7 +39,7 @@ export default class DouyinHelper extends BaseHelper {
     }
 
     return {
-      url: proxyMedia(source.src),
+      url: proxyMedia(source.src, "mp4", this.mediaProxy),
       duration,
       isStream,
       ...(availableLangs.includes(lang as RequestLang)
