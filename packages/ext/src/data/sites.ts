@@ -20,7 +20,6 @@ const sharedSelectors = {
   idPlayer: "#player",
   jwPlayer: ".jwplayer, .jw-media",
   player: ".player",
-  divPlayer: "div.player",
   plyrVideoWrapper: ".plyr__video-wrapper",
   shakaPlayer: '.shaka-video-container, [id^="shaka-video-container-"]',
   videoJsUniversal:
@@ -750,7 +749,7 @@ export default [
       /^(?:(?:www\.)?abcnews\.(?:com|go\.com)|fivethirtyeight\.abcnews\.go\.com)$/,
     selector: ".SingleVideo",
     shadowRoot: true,
-    rawResult: true,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.bfmtv,
@@ -781,7 +780,7 @@ export default [
     needBypassCSP: true,
     url: "https://www.cbsnews.com/video/",
     match: /^(?:www\.)?cbsnews\.com$/,
-    selector: sharedSelectors.divPlayer,
+    selector: 'div.player, [data-role="aviaPlayerContainer"]',
     rawResult: true,
   },
   {
@@ -789,8 +788,7 @@ export default [
     needBypassCSP: true,
     url: "https://www.nytimes.com/video/video/",
     match: /^(?:(?:www\.)?nytimes\.com|graphics8\.nytimes\.com)$/,
-    selector: 'video[data-testid="betamax-video"]',
-    shadowRoot: true,
+    selector: '[data-testid="betamax-player"]',
     rawResult: true,
   },
   {
@@ -830,7 +828,7 @@ export default [
     needBypassCSP: true,
     url: "https://medal.tv/",
     match: /^(?:www\.)?medal\.tv$/,
-    selector: 'video[data-testid^="video-"][data-testid$="-player"]',
+    selector: '[id$="-player-player"]',
     rawResult: true,
   },
   {
@@ -857,7 +855,7 @@ export default [
       (url.hostname === "m.naver.com" && /^\/shorts\/?$/.test(url.pathname)) ||
       (url.hostname === "tv.naver.com" &&
         /^\/(?:v|embed)\/\d+/.test(url.pathname)),
-    selector: "video",
+    selector: ".webplayer-internal-source-wrapper",
     rawResult: true,
   },
   {
@@ -865,7 +863,7 @@ export default [
     needBypassCSP: true,
     url: "https://chzzk.naver.com/video/",
     match: /^chzzk\.naver\.com$/,
-    selector: 'div[id^="wpc-"] video',
+    selector: ".webplayer-internal-source-wrapper",
     rawResult: true,
   },
   {
@@ -881,7 +879,7 @@ export default [
     needBypassCSP: true,
     url: "https://www.snapchat.com/spotlight/",
     match: /^(?:www\.)?snapchat\.com$/,
-    selector: 'video[data-testid="playerContentVideo"]',
+    selector: '[class*="SpotlightWebPlayer_spotlightPlayerMediaContainer"]',
     rawResult: true,
   },
   {
