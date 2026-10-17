@@ -274,7 +274,6 @@ export default class VimeoHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const embedId = /video\/[^/]+$/.exec(url.pathname)?.[0];
     const appId = url.searchParams.get("app_id");

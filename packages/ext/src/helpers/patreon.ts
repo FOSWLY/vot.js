@@ -42,7 +42,6 @@ export default class PatreonHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const fullPostId = /posts\/([^/]+)/.exec(url.pathname)?.[1];
     if (!fullPostId) {

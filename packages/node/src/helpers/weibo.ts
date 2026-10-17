@@ -6,7 +6,6 @@ const weiboHostRe = /^(?:www\.)?weibo\.com$/;
 const weiboLoginPathRe = /^\/newlogin\/?$/;
 
 export default class WeiboHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL): Promise<string | undefined> {
     if (url.hostname === "video.weibo.com") {
       const fid = url.searchParams.get("fid");

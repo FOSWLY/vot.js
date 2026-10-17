@@ -81,6 +81,33 @@ import YoutubeHelper from "./youtube";
 import ZDFHelper from "./zdf";
 import WistiaHelper from "./wistia";
 
+import AbcNewsHelper from "./abcnews";
+import BfmTvHelper from "./bfmtv";
+import VideoPressHelper from "./videopress";
+import VidliiHelper from "./vidlii";
+import CBSNewsHelper from "./cbsnews";
+import NYTimesHelper from "./nytimes";
+import WSJHelper from "./wsj";
+import AcFunHelper from "./acfun";
+import GettrHelper from "./gettr";
+import HuyaHelper from "./huya";
+import MedalTvHelper from "./medaltv";
+import RedgifsHelper from "./redgifs";
+import PinterestHelper from "./pinterest";
+import NaverTVHelper from "./navertv";
+import CHZZKHelper from "./chzzk";
+import ZhihuHelper from "./zhihu";
+import SnapchatSpotlightHelper from "./snapchat";
+import StreamableHelper from "./streamable";
+import BeaconHelper from "./beacon";
+import BrightcoveHelper from "./brightcove";
+import CraftsyHelper from "./craftsy";
+import JWPlatformHelper from "./jwplatform";
+import NZHeraldHelper from "./nzherald";
+import OneFootballHelper from "./onefootball";
+import SpiegelHelper from "./spiegel";
+import VidlyHelper from "./vidly";
+
 export * as VideoJSHelper from "../players/videojs";
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as ArchiveHelper from "./archive";
@@ -159,7 +186,60 @@ export * as YoutubeHelper from "./youtube";
 export * as ZDFHelper from "./zdf";
 export * as WistiaHelper from "./wistia";
 
+export * as AbcNewsHelper from "./abcnews";
+export * as BfmTvHelper from "./bfmtv";
+export * as VideoPressHelper from "./videopress";
+export * as VidliiHelper from "./vidlii";
+export * as CBSNewsHelper from "./cbsnews";
+export * as NYTimesHelper from "./nytimes";
+export * as WSJHelper from "./wsj";
+export * as AcFunHelper from "./acfun";
+export * as GettrHelper from "./gettr";
+export * as HuyaHelper from "./huya";
+export * as MedalTvHelper from "./medaltv";
+export * as RedgifsHelper from "./redgifs";
+export * as PinterestHelper from "./pinterest";
+export * as NaverTVHelper from "./navertv";
+export * as CHZZKHelper from "./chzzk";
+export * as ZhihuHelper from "./zhihu";
+export * as SnapchatSpotlightHelper from "./snapchat";
+export * as StreamableHelper from "./streamable";
+export * as BeaconHelper from "./beacon";
+export * as BrightcoveHelper from "./brightcove";
+export * as CraftsyHelper from "./craftsy";
+export * as JWPlatformHelper from "./jwplatform";
+export * as NZHeraldHelper from "./nzherald";
+export * as OneFootballHelper from "./onefootball";
+export * as SpiegelHelper from "./spiegel";
+export * as VidlyHelper from "./vidly";
+
 export const availableHelpers = {
+  [CoreVideoService.abcnews]: AbcNewsHelper,
+  [CoreVideoService.bfmtv]: BfmTvHelper,
+  [CoreVideoService.videopress]: VideoPressHelper,
+  [CoreVideoService.vidlii]: VidliiHelper,
+  [CoreVideoService.cbsnews]: CBSNewsHelper,
+  [CoreVideoService.nytimes]: NYTimesHelper,
+  [CoreVideoService.wsj]: WSJHelper,
+  [CoreVideoService.acfun]: AcFunHelper,
+  [CoreVideoService.gettr]: GettrHelper,
+  [CoreVideoService.huya]: HuyaHelper,
+  [CoreVideoService.medaltv]: MedalTvHelper,
+  [CoreVideoService.redgifs]: RedgifsHelper,
+  [CoreVideoService.pinterest]: PinterestHelper,
+  [CoreVideoService.navertv]: NaverTVHelper,
+  [CoreVideoService.chzzk]: CHZZKHelper,
+  [CoreVideoService.zhihu]: ZhihuHelper,
+  [CoreVideoService.snapchat]: SnapchatSpotlightHelper,
+  [CoreVideoService.streamable]: StreamableHelper,
+  [CoreVideoService.beacon]: BeaconHelper,
+  [CoreVideoService.brightcove]: BrightcoveHelper,
+  [CoreVideoService.craftsy]: CraftsyHelper,
+  [CoreVideoService.jwplatform]: JWPlatformHelper,
+  [CoreVideoService.nzherald]: NZHeraldHelper,
+  [CoreVideoService.onefootball]: OneFootballHelper,
+  [CoreVideoService.spiegel]: SpiegelHelper,
+  [CoreVideoService.vidly]: VidlyHelper,
   [CoreVideoService.mailru]: MailRuHelper,
   [CoreVideoService.weverse]: WeverseHelper,
   [CoreVideoService.weibo]: WeiboHelper,

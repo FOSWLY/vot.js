@@ -65,7 +65,6 @@ export default class IgnHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string) {
     if (document.getElementById("__NEXT_DATA__")) {
       return this.getVideoDataByNext(videoId);
@@ -74,7 +73,6 @@ export default class IgnHelper extends BaseHelper {
     return this.getVideoDataBySource(videoId);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return (
       /([^/]+)\/([\d]+)\/video\/([^/]+)/.exec(url.pathname)?.[0] ??

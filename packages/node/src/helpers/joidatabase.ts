@@ -46,7 +46,6 @@ export default class JOIDatabaseHelper extends BaseHelper {
     return duration > 0 ? duration : undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/(?:watch|embed)\/([0-9a-f]+)\/?$/.exec(url.pathname)?.[1];
   }

@@ -269,7 +269,6 @@ export default class YoutubeHelper extends BaseHelper {
     return autoCaption ? normalizeLang(autoCaption.languageCode) : undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const { title: localizedTitle } = YoutubeHelper.getPlayerData() ?? {};
     const {
@@ -299,7 +298,6 @@ export default class YoutubeHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     if (url.searchParams.has("enablejsapi")) {
       const videoUrl = YoutubeHelper.getPlayer()?.getVideoUrl();

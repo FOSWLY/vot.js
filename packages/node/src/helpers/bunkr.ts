@@ -49,7 +49,6 @@ export default class BunkrHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/f\/([^/]+)/.exec(url.pathname)?.[1];
   }

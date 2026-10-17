@@ -68,7 +68,6 @@ export default class YoutubeHelper extends BaseHelper {
     return pathId || undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return YoutubeHelper.extractVideoId(url);
   }

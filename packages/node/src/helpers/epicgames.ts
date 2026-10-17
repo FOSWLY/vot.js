@@ -64,7 +64,6 @@ export default class EpicGamesHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/(\w{3,5})\/[^/]+$/.exec(url.pathname)?.[1];
   }

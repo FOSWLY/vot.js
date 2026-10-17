@@ -188,7 +188,6 @@ export default class WeverseHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /([^/]+)\/(live|media)\/([^/]+)/.exec(url.pathname)?.[3];
   }
