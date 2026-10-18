@@ -285,8 +285,9 @@ export default [
     url: "https://facebook.com/",
     match: (url: URL) =>
       url.host.includes("facebook.com") && url.pathname.includes("/videos/"),
-    selector: 'div[role="main"] div[data-pagelet$="video" i]',
+    selector: 'div[role="main"] div[data-pagelet$="video" i] > div',
     needBypassCSP: true,
+    needExtraData: true,
   },
   {
     additionalData: "reels",
