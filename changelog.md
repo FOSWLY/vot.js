@@ -1,3 +1,10 @@
+# 3.1.7
+
+## Ext
+
+- Fixed xHamster
+- Added get subtitles for xHamster
+
 # 3.1.6
 
 ## Ext

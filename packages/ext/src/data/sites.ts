@@ -203,6 +203,7 @@ export default [
         url.host,
       ) && /\/(?:videos\/[^/]+-[\dA-Za-z]+)\/?$/.test(url.pathname),
     selector: "#player-container",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.spankbang,
