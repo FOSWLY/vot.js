@@ -4,10 +4,9 @@ import type { RequestLang } from "@vot.js/shared/types/data";
 import type * as Coursera from "@vot.js/shared/types/helpers/coursera";
 import Logger from "@vot.js/shared/utils/logger";
 import { normalizeLang } from "@vot.js/shared/utils/utils";
-import VideoJSHelper from "../players/videojs";
+import VideoJSHelper, { getPlayer } from "../players/videojs";
 import type { MinimalVideoData } from "../types/client";
 import type * as CourseraPlayer from "../types/helpers/coursera";
-import type * as VideoJS from "../types/helpers/videojs";
 
 export default class CourseraHelper extends VideoJSHelper {
   API_ORIGIN = "https://www.coursera.org/api";
@@ -73,7 +72,7 @@ export default class CourseraHelper extends VideoJSHelper {
   }
 
   getCourseId(): string | undefined {
-    const player = CourseraHelper.getPlayer();
+    const player = getPlayer<CourseraPlayer.PlayerOptions>();
     if (player?.options_?.courseId) {
       return player.options_.courseId;
     }
@@ -91,19 +90,13 @@ export default class CourseraHelper extends VideoJSHelper {
       ?.courseId;
   }
 
-  static getPlayer<
-    T extends VideoJS.PlayerOptions = CourseraPlayer.PlayerOptions,
-  >(): VideoJS.Player<T> | undefined {
-    return VideoJSHelper.getPlayer<T>();
-  }
-
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const data = this.getVideoDataByPlayer(videoId);
     if (!data) {
       return undefined;
     }
 
-    const player = CourseraHelper.getPlayer();
+    const player = getPlayer<CourseraPlayer.PlayerOptions>();
     const options = player?.options_;
 
     if (!data.subtitles?.length && options?.tracks) {
