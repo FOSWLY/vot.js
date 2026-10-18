@@ -4,8 +4,10 @@
 
 - [!] Moved static `getPlayer` and `getTechEl` from `VideoJSHelper` to global functions
 - [!] Removed static `getPlayer` from `CourseraHelper`, use `getPlayer<CourseraPlayer.PlayerOptions>()` instead
+- Added `getVideoDataByPlayer` in `FlowplayerHelper`, also added minimal types for player
 - Fixed SpankBang
 - Fixed xHamster
+- Fixed rule34video
 - Added get subtitles for xHamster
 
 # 3.1.6

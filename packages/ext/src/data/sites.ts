@@ -223,6 +223,7 @@ export default [
       /^(www\.)?rule34video\.com$/.test(url.host) &&
       /\/videos?\/\d+/.test(url.pathname),
     selector: sharedSelectors.flowplayer,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.joidatabase,
