@@ -214,6 +214,7 @@ export default [
         url.pathname,
       ),
     selector: "#main_video_player",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.rule34video,

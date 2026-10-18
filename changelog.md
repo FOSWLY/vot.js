@@ -1,7 +1,10 @@
-# 3.1.7
+# 3.2.0
 
 ## Ext
 
+- [!] Moved static `getPlayer` and `getTechEl` from `VideoJSHelper` to global functions
+- [!] Removed static `getPlayer` from `CourseraHelper`, use `getPlayer<CourseraPlayer.PlayerOptions>()` instead
+- Fixed SpankBang
 - Fixed xHamster
 - Added get subtitles for xHamster
 
