@@ -26,3 +26,32 @@ All described issues are tested and valid for `@vot.js/ext`
 - Kick
 - Apple developer
 - Epic Games
+- Coursehunterlike
+- Sap
+- Udemy
+- Datacamp
+- Coursera
+- Watchpornto
+- Jove
+- Linkedin
+- Dzen
+- Bunnystream
+- Cloudflarestream
+- Loom
+- Artstation
+- Rtnews
+- Noodlemagazine
+- Bitview
+- Kickstarter
+- Thisvid
+- Ign
+- Bunkr
+- Imdb
+- Telegram
+- Oraclelearn
+- Deeplearningai
+- Netacad
+- Mediafile
+- Skilljar
+- Dropout
+- Wistia
