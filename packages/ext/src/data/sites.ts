@@ -433,7 +433,7 @@ export default [
     host: CoreVideoService.egghead,
     url: "https://egghead.io/",
     match: /^egghead.io$/,
-    selector: ".cueplayer-react-video-holder",
+    selector: null,
   },
   {
     host: CoreVideoService.youku,

@@ -9,6 +9,7 @@ All described issues are tested and valid for `@vot.js/ext`
 - Facebook (reels)
 - TikTok / Douyin
 - OK
+- Youku
 
 ### Degraded performance (part of translations return errors):
 
@@ -19,3 +20,9 @@ All described issues are tested and valid for `@vot.js/ext`
 
 - Yandex Disk
 - Trovo
+- Kodik
+- Patreon
+- Reddit
+- Kick
+- Apple developer
+- Epic Games
