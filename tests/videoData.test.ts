@@ -872,6 +872,12 @@ test("odysee", async () => {
   expect(normalized).toStartWith("https://player.odycdn.com/");
 });
 
+test("archive", async () => {
+  const expected =
+    "https://archive.org/details/CrCap/Pokemon+Advanced+Generation/%5BRAW%5D+Pokemon+Advanced+Generation+%5B480p%5D/%5BRAW%5D+Pokemon+Advanced+Generation+-+01+%5B480p%5D.mkv";
+  expect(await normalize(expected)).toStartWith(expected);
+});
+
 describe("coursehunterLike", () => {
   test("coursehunter", async () => {
     const normalized = await normalize(

@@ -12,6 +12,7 @@
   - Facebook (videos)
   - Eporner
   - Banned.video (without getVideoData. Also, now we request translation with embed url instead of base url)
+  - Archive.org
 - Added support Eporner embed. Also, now we request translation with embed url instead of base url
 - Removed `madmaxworld.tv` from banned.video mirrors
 - Fixed Egghead selector
@@ -22,6 +23,7 @@
 
 - Added support Eporner embed. Also, now we request translation with embed url instead of base url
 - Fixed Banned.video (without getVideoData). Also, now we request translation with embed url instead of base url
+- Updated Archive.org getVideoId logic
 - Removed `madmaxworld.tv` from banned.video mirrors
 
 # 3.1.6
