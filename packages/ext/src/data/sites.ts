@@ -393,10 +393,9 @@ export default [
   },
   {
     host: CoreVideoService.bannedvideo,
-    url: "https://madmaxworld.tv/watch?id=",
-    match: /^(www.)?banned.video|madmaxworld.tv$/,
+    url: "https://banned.video/embed/",
+    match: /^(www.)?banned.video$/,
     selector: sharedSelectors.videoJsUniversal,
-    needExtraData: true,
   },
   {
     host: CoreVideoService.weverse,

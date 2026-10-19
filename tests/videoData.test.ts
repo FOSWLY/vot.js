@@ -687,18 +687,16 @@ test("googledrive", async () => {
 });
 
 describe("banned.video", () => {
-  const expected = "download.assets.video";
+  const expected = "https://banned.video/embed/vdvcwfn";
   test("normal", async () => {
     expect(
-      await normalize("https://banned.video/watch?id=65c66d0b0d63da299ea7d975"),
-    ).toInclude(expected);
-  });
-  test("madmaxworld", async () => {
-    expect(
       await normalize(
-        "https://madmaxworld.tv/watch?id=65c66d0b0d63da299ea7d975",
+        "https://banned.video/v/vdvcwfn-unseen-newly-discovered-footage-in-archives-of-ufo-over-mt-carmel-church.html",
       ),
     ).toInclude(expected);
+  });
+  test("embed", async () => {
+    expect(await normalize(expected)).toInclude(expected);
   });
 });
 

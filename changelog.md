@@ -11,13 +11,17 @@
   - rule34video
   - Facebook (videos)
   - Eporner
+  - Banned.video (without getVideoData. Also, now we request translation with embed url instead of base url)
 - Added support Eporner embed. Also, now we request translation with embed url instead of base url
+- Removed `madmaxworld.tv` from banned.video mirrors
 - Updated Facebook video selector that caused button to go out of bounds
 - Added get subtitles for xHamster
 
 ## Node
 
 - Added support Eporner embed. Also, now we request translation with embed url instead of base url
+- Fixed Banned.video (without getVideoData). Also, now we request translation with embed url instead of base url
+- Removed `madmaxworld.tv` from banned.video mirrors
 
 # 3.1.6
 

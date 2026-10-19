@@ -224,9 +224,8 @@ export default [
 
   {
     host: CoreVideoService.bannedvideo,
-    url: "https://madmaxworld.tv/watch?id=", // madmaxworld.tv for bypass cloudflare UAM on /watch page
-    match: /^(www.)?banned.video|madmaxworld.tv$/,
-    needExtraData: true,
+    url: "https://banned.video/embed/",
+    match: /^(www.)?banned.video$/,
   },
   {
     host: CoreVideoService.weverse,
