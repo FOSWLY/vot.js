@@ -186,7 +186,7 @@ export default [
   },
   {
     host: CoreVideoService.eporner,
-    url: "https://www.eporner.com/",
+    url: "https://www.eporner.com/embed/",
     match: /^(www.)?eporner.com$/,
   },
   {

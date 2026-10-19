@@ -10,8 +10,14 @@
   - xHamster
   - rule34video
   - Facebook (videos)
+  - Eporner
+- Added support Eporner embed. Also, now we request translation with embed url instead of base url
 - Updated Facebook video selector that caused button to go out of bounds
 - Added get subtitles for xHamster
+
+## Node
+
+- Added support Eporner embed. Also, now we request translation with embed url instead of base url
 
 # 3.1.6
 

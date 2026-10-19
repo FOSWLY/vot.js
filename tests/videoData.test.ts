@@ -537,10 +537,19 @@ describe("bitchute", () => {
   });
 });
 
-test("eporner", async () => {
-  const expected =
-    "https://www.eporner.com/video-XXXXXXXXX/isdfsd-dfjsdfjsdf-dsfsdf-dsfsda-dsad-ddsd";
-  expect(await normalize(expected)).toEqual(expected);
+describe("eporner", async () => {
+  const expected = "https://www.eporner.com/embed/XXXXXXXXXXX";
+
+  test("normal", async () => {
+    expect(
+      await normalize(
+        "https://www.eporner.com/video-XXXXXXXXX/isdfsd-dfjsdfjsdf-dsfsdf-dsfsda-dsad-ddsd",
+      ),
+    ).toEqual(expected);
+  });
+  test("embed", async () => {
+    expect(await normalize(expected)).toEqual(expected);
+  });
 });
 
 describe("peertube", () => {
