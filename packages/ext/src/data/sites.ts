@@ -69,7 +69,7 @@ export default [
     url: "https://youtu.be/",
     match: (url) => /^music\.youtube\.com$/.test(url.host),
     selector: "#song-video",
-    eventSelector: sharedSelectors.idPlayer,
+    eventSelector: "#player",
     needExtraData: true,
   },
   {
@@ -204,6 +204,7 @@ export default [
         url.host,
       ) && /\/(?:videos\/[^/]+-[\dA-Za-z]+)\/?$/.test(url.pathname),
     selector: "#player-container",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.spankbang,
@@ -214,6 +215,7 @@ export default [
         url.pathname,
       ),
     selector: "#main_video_player",
+    needExtraData: true,
   },
   {
     host: CoreVideoService.rule34video,
@@ -222,12 +224,13 @@ export default [
       /^(www\.)?rule34video\.com$/.test(url.host) &&
       /\/videos?\/\d+/.test(url.pathname),
     selector: sharedSelectors.flowplayer,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.joidatabase,
     url: "https://www.the-joi-database.com/api/stream/",
     match: [/^s1\.the-joi-database\.com$/, /^(www\.)?the-joi-database\.com$/],
-    selector: sharedSelectors.plyrVideoWrapper,
+    selector: ".plyr__video-wrapper",
     needExtraData: true,
   },
   {
@@ -283,8 +286,9 @@ export default [
     url: "https://facebook.com/",
     match: (url: URL) =>
       url.host.includes("facebook.com") && url.pathname.includes("/videos/"),
-    selector: 'div[role="main"] div[data-pagelet$="video" i]',
+    selector: 'div[role="main"] div[data-pagelet$="video" i] > div',
     needBypassCSP: true,
+    needExtraData: true,
   },
   {
     additionalData: "reels",
@@ -342,9 +346,10 @@ export default [
   },
   {
     host: CoreVideoService.eporner,
-    url: "https://www.eporner.com/",
+    url: "https://www.eporner.com/embed/",
     match: /^(www.)?eporner.com$/,
     selector: sharedSelectors.videoJsUniversal,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.peertube,
@@ -389,10 +394,18 @@ export default [
   },
   {
     host: CoreVideoService.bannedvideo,
-    url: "https://madmaxworld.tv/watch?id=",
-    match: /^(www.)?banned.video|madmaxworld.tv$/,
+    url: "https://banned.video/embed/",
+    match: (url: URL) =>
+      /^(?:www\.)?banned\.video$/.test(url.hostname) &&
+      /^\/(?:embed|v)\//.test(url.pathname),
     selector: sharedSelectors.videoJsUniversal,
+  },
+  {
+    host: CoreVideoService.bannedvideo,
+    url: "https://madmaxworld.tv/watch?id=",
+    match: /^(?:www\.)?(?:banned\.video|madmaxworld\.tv)$/,
     needExtraData: true,
+    selector: sharedSelectors.videoJsUniversal,
   },
   {
     host: CoreVideoService.weverse,
@@ -430,7 +443,7 @@ export default [
     host: CoreVideoService.egghead,
     url: "https://egghead.io/",
     match: /^egghead.io$/,
-    selector: ".cueplayer-react-video-holder",
+    selector: null,
   },
   {
     host: CoreVideoService.youku,
@@ -665,7 +678,7 @@ export default [
     match:
       /^bunkr\.(site|black|cat|media|red|site|ws|org|s[kiu]|c[ir]|fi|p[hks]|ru|la|is|to|a[cx])$/,
     needExtraData: true,
-    selector: sharedSelectors.plyrVideoWrapper,
+    selector: ".plyr__video-wrapper",
   },
   {
     host: CoreVideoService.kinopoisk,
@@ -952,6 +965,20 @@ export default [
     url: "https://vid.ly/",
     match: /^(?:s\.)?vid\.ly$/,
     selector: sharedSelectors.jwPlayer,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.cnn,
+    url: "stub",
+    match: /^(?:www\.|edition\.)?cnn\.com$/,
+    selector: ".fave-player-container",
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.bluesky,
+    url: "stub",
+    match: /^bsky\.app$/,
+    selector: "figure",
     rawResult: true,
   },
   {

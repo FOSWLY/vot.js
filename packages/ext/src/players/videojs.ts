@@ -5,6 +5,9 @@ import { BaseHelper } from "../helpers/base";
 import type * as VideoJS from "../types/helpers/videojs";
 import { querySelectorDeep } from "../utils/dom";
 
+export const VIDEOJS_SELECTOR =
+  "video.vjs-tech, video[id$='_html5_api'], video[src], video";
+
 type VideoJSImport = {
   getPlayer?: (idOrEl: string | Element) => unknown;
   getPlayers?: () => Record<string, unknown>;
@@ -43,75 +46,90 @@ function selectVideoUrl(candidates: SourceLike[]): string | undefined {
   return (available.find(isPreferredMedia) ?? available[0])?.src;
 }
 
+export const getTechEl = (
+  isShadowRoot = false,
+  selector = VIDEOJS_SELECTOR,
+) => {
+  return isShadowRoot
+    ? querySelectorDeep<HTMLVideoElement>(selector)
+    : document.querySelector<HTMLVideoElement>(selector);
+};
+
+export const getPlayer = <
+  T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions,
+>(
+  isShadowRoot = false,
+): VideoJS.Player<T> | undefined => {
+  const vjs = (window as VideoJSWindow).videojs;
+  const techEl = getTechEl(isShadowRoot);
+
+  const derivedPlayerId = techEl?.id?.endsWith("_html5_api")
+    ? techEl.id.slice(0, -"_html5_api".length)
+    : undefined;
+
+  if (vjs?.getPlayer) {
+    if (derivedPlayerId) {
+      const p = vjs.getPlayer(derivedPlayerId);
+      if (p) return p as VideoJS.Player<T>;
+    }
+
+    if (techEl) {
+      const p = vjs.getPlayer(techEl);
+      if (p) return p as VideoJS.Player<T>;
+    }
+  }
+
+  const players: Record<string, unknown> =
+    (typeof vjs?.getPlayers === "function" ? vjs.getPlayers() : vjs?.players) ??
+    {};
+
+  for (const p of Object.values(players)) {
+    const player = p as PlayerCandidate;
+    const el = typeof player.el === "function" ? player.el() : null;
+    const innerVideo: HTMLVideoElement | null =
+      el?.querySelector?.("video.vjs-tech, video") ?? null;
+
+    if (innerVideo && techEl && innerVideo === techEl) {
+      return p as VideoJS.Player<T>;
+    }
+    if (
+      derivedPlayerId &&
+      typeof player.id === "function" &&
+      player.id() === derivedPlayerId
+    ) {
+      return p as VideoJS.Player<T>;
+    }
+  }
+
+  return undefined;
+};
+
 /**
  * Shared class for all videojs players
  */
 export default class VideoJSHelper extends BaseHelper {
   SUBTITLE_SOURCE = "videojs";
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
-  static VIDEOJS_SELECTOR =
-    "video.vjs-tech, video[id$='_html5_api'], video[src], video";
+  TECH_EL_SELECTOR = VIDEOJS_SELECTOR;
+  static VIDEOJS_SELECTOR = VIDEOJS_SELECTOR;
 
-  static getTechEl(isShadowRoot = false) {
-    return isShadowRoot
-      ? querySelectorDeep<HTMLVideoElement>(VideoJSHelper.VIDEOJS_SELECTOR)
-      : document.querySelector<HTMLVideoElement>(
-          VideoJSHelper.VIDEOJS_SELECTOR,
-        );
+  static getTechEl(
+    isShadowRoot = false,
+    selector = VideoJSHelper.VIDEOJS_SELECTOR,
+  ) {
+    return getTechEl(isShadowRoot, selector);
   }
 
   static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>(
     isShadowRoot = false,
   ): VideoJS.Player<T> | undefined {
-    const vjs = (window as VideoJSWindow).videojs;
-    const techEl = VideoJSHelper.getTechEl(isShadowRoot);
-
-    const derivedPlayerId = techEl?.id?.endsWith("_html5_api")
-      ? techEl.id.slice(0, -"_html5_api".length)
-      : undefined;
-
-    if (vjs?.getPlayer) {
-      if (derivedPlayerId) {
-        const p = vjs.getPlayer(derivedPlayerId);
-        if (p) return p as VideoJS.Player<T>;
-      }
-
-      if (techEl) {
-        const p = vjs.getPlayer(techEl);
-        if (p) return p as VideoJS.Player<T>;
-      }
-    }
-
-    const players: Record<string, unknown> =
-      (typeof vjs?.getPlayers === "function"
-        ? vjs.getPlayers()
-        : vjs?.players) ?? {};
-
-    for (const p of Object.values(players)) {
-      const player = p as PlayerCandidate;
-      const el = typeof player.el === "function" ? player.el() : null;
-      const innerVideo: HTMLVideoElement | null =
-        el?.querySelector?.("video.vjs-tech, video") ?? null;
-
-      if (innerVideo && techEl && innerVideo === techEl) {
-        return p as VideoJS.Player<T>;
-      }
-      if (
-        derivedPlayerId &&
-        typeof player.id === "function" &&
-        player.id() === derivedPlayerId
-      ) {
-        return p as VideoJS.Player<T>;
-      }
-    }
-
-    return undefined;
+    return getPlayer<T>(isShadowRoot);
   }
 
   getVideoDataByPlayer(videoId: string, isShadowRoot = false) {
     try {
-      const player = VideoJSHelper.getPlayer(isShadowRoot);
-      const techEl = VideoJSHelper.getTechEl(isShadowRoot);
+      const player = getPlayer(isShadowRoot);
+      const techEl = getTechEl(isShadowRoot, this.TECH_EL_SELECTOR);
       if (!player && !techEl) {
         throw new Error(
           `Video player/video element not found, videoId ${videoId}`,
@@ -163,7 +181,7 @@ export default class VideoJSHelper extends BaseHelper {
   }
 
   getSubtitles(): VideoDataSubtitle[] {
-    const techEl = VideoJSHelper.getTechEl();
+    const techEl = getTechEl();
     const trackEls = techEl
       ? Array.from(techEl.querySelectorAll<HTMLTrackElement>("track[src]"))
       : [];

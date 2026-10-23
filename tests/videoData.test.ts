@@ -537,10 +537,19 @@ describe("bitchute", () => {
   });
 });
 
-test("eporner", async () => {
-  const expected =
-    "https://www.eporner.com/video-XXXXXXXXX/isdfsd-dfjsdfjsdf-dsfsdf-dsfsda-dsad-ddsd";
-  expect(await normalize(expected)).toEqual(expected);
+describe("eporner", async () => {
+  const expected = "https://www.eporner.com/embed/XXXXXXXXXXX";
+
+  test("normal", async () => {
+    expect(
+      await normalize(
+        "https://www.eporner.com/video-XXXXXXXXX/isdfsd-dfjsdfjsdf-dsfsdf-dsfsda-dsad-ddsd",
+      ),
+    ).toEqual(expected);
+  });
+  test("embed", async () => {
+    expect(await normalize(expected)).toEqual(expected);
+  });
 });
 
 describe("peertube", () => {
@@ -678,18 +687,16 @@ test("googledrive", async () => {
 });
 
 describe("banned.video", () => {
-  const expected = "download.assets.video";
+  const expected = "https://banned.video/embed/vdvcwfn";
   test("normal", async () => {
     expect(
-      await normalize("https://banned.video/watch?id=65c66d0b0d63da299ea7d975"),
-    ).toInclude(expected);
-  });
-  test("madmaxworld", async () => {
-    expect(
       await normalize(
-        "https://madmaxworld.tv/watch?id=65c66d0b0d63da299ea7d975",
+        "https://banned.video/v/vdvcwfn-unseen-newly-discovered-footage-in-archives-of-ufo-over-mt-carmel-church.html",
       ),
     ).toInclude(expected);
+  });
+  test("embed", async () => {
+    expect(await normalize(expected)).toInclude(expected);
   });
 });
 
@@ -768,6 +775,17 @@ describe("custom", () => {
     const expected = "https://s3.toil.cc/vot/output444.webm";
     expect(await normalize(expected)).toEqual(expected);
   });
+});
+
+test("cnn", async () => {
+  const expected =
+    "https://edition.cnn.com/2024/06/27/politics/biden-trump-debate-takeaways/index.html";
+  expect(await normalize(expected)).toEqual(expected);
+});
+
+test("bluesky", async () => {
+  const expected = "https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v";
+  expect(await normalize(expected)).toEqual(expected);
 });
 
 describe("kodik", () => {
@@ -863,6 +881,12 @@ test("odysee", async () => {
     "https://odysee.com/@fort_boyard:b/%C3%89mission-du-mercredi-14-ao%C3%BBt-2024-en-replay---Fort-Boyard---toujours-plus-fort-!:5",
   );
   expect(normalized).toStartWith("https://player.odycdn.com/");
+});
+
+test("archive", async () => {
+  const expected =
+    "https://archive.org/details/CrCap/Pokemon+Advanced+Generation/%5BRAW%5D+Pokemon+Advanced+Generation+%5B480p%5D/%5BRAW%5D+Pokemon+Advanced+Generation+-+01+%5B480p%5D.mkv";
+  expect(await normalize(expected)).toStartWith(expected);
 });
 
 describe("coursehunterLike", () => {

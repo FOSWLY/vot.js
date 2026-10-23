@@ -186,7 +186,7 @@ export default [
   },
   {
     host: CoreVideoService.eporner,
-    url: "https://www.eporner.com/",
+    url: "https://www.eporner.com/embed/",
     match: /^(www.)?eporner.com$/,
   },
   {
@@ -224,8 +224,15 @@ export default [
 
   {
     host: CoreVideoService.bannedvideo,
-    url: "https://madmaxworld.tv/watch?id=", // madmaxworld.tv for bypass cloudflare UAM on /watch page
-    match: /^(www.)?banned.video|madmaxworld.tv$/,
+    url: "https://banned.video/embed/",
+    match: (url: URL) =>
+      /^(?:www\.)?banned\.video$/.test(url.hostname) &&
+      /^\/(?:embed|v)\//.test(url.pathname),
+  },
+  {
+    host: CoreVideoService.bannedvideo,
+    url: "https://madmaxworld.tv/watch?id=",
+    match: /^(?:www\.)?(?:banned\.video|madmaxworld\.tv)$/,
     needExtraData: true,
   },
   {
@@ -590,6 +597,18 @@ export default [
     host: CoreVideoService.vidly,
     url: "https://vid.ly/",
     match: /^(?:s\.)?vid\.ly$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.cnn,
+    url: "stub",
+    match: /^(?:www\.|edition\.)?cnn\.com$/,
+    rawResult: true,
+  },
+  {
+    host: CoreVideoService.bluesky,
+    url: "stub",
+    match: /^bsky\.app$/,
     rawResult: true,
   },
   {

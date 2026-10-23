@@ -101,6 +101,8 @@ export enum VideoService {
   onefootball = "onefootball",
   spiegel = "spiegel",
   vidly = "vidly",
+  cnn = "cnn",
+  bluesky = "bluesky",
 }
 
 /**

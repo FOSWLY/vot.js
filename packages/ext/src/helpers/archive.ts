@@ -1,36 +1,34 @@
-import type { MinimalVideoData } from "../types/client";
+import { proxyMedia } from "@vot.js/shared/utils/utils";
+
 import { BaseHelper } from "./base";
+import type { MinimalVideoData } from "../types/client";
 
 export default class ArchiveHelper extends BaseHelper {
-  async getVideoId(url: URL) {
-    const videoId = /(details|embed)\/(.+)/.exec(url.pathname)?.[2];
-    if (!videoId) return undefined;
-
-    return videoId.replace(/\/$/, "") || undefined;
-  }
-
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
-    if (!videoId) return undefined;
+    const baseData: MinimalVideoData | undefined = this.returnBaseData(videoId);
+    if (!baseData) {
+      return undefined;
+    }
 
     const transformedPath = videoId
       .replace(/\+/g, "%20")
       .replace(/\.[^.]+$/, ".mp4");
 
     const downloadUrl = `https://archive.org/download/${transformedPath}`;
+    baseData.translationHelp = [
+      {
+        target: "video_file_url",
+        targetUrl: proxyMedia(downloadUrl, "mp4", this.mediaProxy),
+      },
+    ];
 
-    const VideoData: MinimalVideoData & {
-      video_url: string;
-    } = {
-      url: videoId,
-      video_url: downloadUrl,
-      translationHelp: [
-        {
-          target: "video_file_url",
-          targetUrl: downloadUrl,
-        },
-      ],
-    };
+    return baseData;
+  }
 
-    return VideoData;
+  async getVideoId(url: URL) {
+    return (
+      /(?:details|embed)\/(.+)/.exec(url.pathname)?.[1]?.replace(/\/$/, "") ||
+      undefined
+    );
   }
 }

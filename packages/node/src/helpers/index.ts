@@ -92,6 +92,8 @@ import NZHeraldHelper from "./nzherald";
 import OneFootballHelper from "./onefootball";
 import SpiegelHelper from "./spiegel";
 import VidlyHelper from "./vidly";
+import CNNHelper from "./cnn";
+import BlueskyHelper from "./bluesky";
 
 export * as AppleDeveloperHelper from "./appledeveloper";
 export * as ArchiveHelper from "./archive";
@@ -183,6 +185,8 @@ export * as NZHeraldHelper from "./nzherald";
 export * as OneFootballHelper from "./onefootball";
 export * as SpiegelHelper from "./spiegel";
 export * as VidlyHelper from "./vidly";
+export * as CNNHelper from "./cnn";
+export * as BlueskyHelper from "./bluesky";
 
 export const availableHelpers = {
   [CoreVideoService.abcnews]: AbcNewsHelper,
@@ -211,6 +215,8 @@ export const availableHelpers = {
   [CoreVideoService.onefootball]: OneFootballHelper,
   [CoreVideoService.spiegel]: SpiegelHelper,
   [CoreVideoService.vidly]: VidlyHelper,
+  [CoreVideoService.cnn]: CNNHelper,
+  [CoreVideoService.bluesky]: BlueskyHelper,
   [CoreVideoService.mailru]: MailRuHelper,
   [CoreVideoService.weverse]: WeverseHelper,
   [CoreVideoService.weibo]: WeiboHelper,

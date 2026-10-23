@@ -34,7 +34,15 @@ export default class BannedVideoHelper extends BaseHelper {
         },
       });
 
-      return (await res.json()) as BannedVideo.GetVideoResponse;
+      if (!res.ok) {
+        return false;
+      }
+      const result = (await res.json()) as BannedVideo.GetVideoResponse;
+      const videoUrl = result?.data?.getVideo?.videoUrl;
+      if (typeof videoUrl !== "string" || !/^https?:\/\//i.test(videoUrl)) {
+        return false;
+      }
+      return result;
     } catch (err: unknown) {
       console.error(
         `Failed to get bannedvideo video info by videoId: ${videoId}.`,
@@ -63,6 +71,10 @@ export default class BannedVideoHelper extends BaseHelper {
   }
 
   async getVideoId(url: URL) {
-    return url.searchParams.get("id") ?? undefined;
+    const queryId = url.searchParams.get("id");
+    if (queryId && /^[a-zA-Z0-9_-]+$/.test(queryId)) {
+      return queryId;
+    }
+    return /\/(?:embed\/|v\/)([a-zA-Z0-9]+)/.exec(url.pathname)?.[1];
   }
 }

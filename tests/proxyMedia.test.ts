@@ -17,12 +17,12 @@ describe("proxyMedia", () => {
     expect(proxied).toStartWith(
       "https://proxy.example.org:8443/v1/proxy/video.webm?",
     );
-    expect(proxied).toEndWith(`&url=${btoa(url)}`);
+    expect(new URL(proxied).searchParams.get("url")).toBe(btoa(url));
   });
 
   test("adds origin and referer for URL instances", () => {
     const proxied = proxyMedia(new URL(url), "mp4", "proxy.example.org");
-    expect(proxied).toContain(`&url=${btoa(url)}`);
+    expect(new URL(proxied).searchParams.get("url")).toBe(btoa(url));
     expect(proxied).toContain("&origin=https://example.com");
     expect(proxied).toContain("&referer=https://example.com");
   });
