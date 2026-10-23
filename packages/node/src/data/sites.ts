@@ -225,15 +225,7 @@ export default [
   {
     host: CoreVideoService.bannedvideo,
     url: "https://banned.video/embed/",
-    match: (url: URL) =>
-      /^(?:www\.)?banned\.video$/.test(url.hostname) &&
-      /^\/(?:embed|v)\//.test(url.pathname),
-  },
-  {
-    host: CoreVideoService.bannedvideo,
-    url: "https://madmaxworld.tv/watch?id=",
-    match: /^(?:www\.)?(?:banned\.video|madmaxworld\.tv)$/,
-    needExtraData: true,
+    match: /^(www.)?banned.video$/,
   },
   {
     host: CoreVideoService.weverse,

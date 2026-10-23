@@ -111,20 +111,6 @@ export default class VideoJSHelper extends BaseHelper {
   SUBTITLE_SOURCE = "videojs";
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
   TECH_EL_SELECTOR = VIDEOJS_SELECTOR;
-  static VIDEOJS_SELECTOR = VIDEOJS_SELECTOR;
-
-  static getTechEl(
-    isShadowRoot = false,
-    selector = VideoJSHelper.VIDEOJS_SELECTOR,
-  ) {
-    return getTechEl(isShadowRoot, selector);
-  }
-
-  static getPlayer<T extends VideoJS.PlayerOptions = VideoJS.PlayerOptions>(
-    isShadowRoot = false,
-  ): VideoJS.Player<T> | undefined {
-    return getPlayer<T>(isShadowRoot);
-  }
 
   getVideoDataByPlayer(videoId: string, isShadowRoot = false) {
     try {

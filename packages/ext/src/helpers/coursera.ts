@@ -7,15 +7,8 @@ import { normalizeLang } from "@vot.js/shared/utils/utils";
 import VideoJSHelper, { getPlayer } from "../players/videojs";
 import type { MinimalVideoData } from "../types/client";
 import type * as CourseraPlayer from "../types/helpers/coursera";
-import type * as VideoJS from "../types/helpers/videojs";
 
 export default class CourseraHelper extends VideoJSHelper {
-  static getPlayer<
-    T extends VideoJS.PlayerOptions = CourseraPlayer.PlayerOptions,
-  >(isShadowRoot = false): VideoJS.Player<T> | undefined {
-    return VideoJSHelper.getPlayer<T>(isShadowRoot);
-  }
-
   API_ORIGIN = "https://www.coursera.org/api";
   SUBTITLE_SOURCE = "coursera";
 
