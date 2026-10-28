@@ -89,7 +89,6 @@ export enum VideoService {
   chzzk = "chzzk",
   zhihu = "zhihu",
   snapchat = "snapchat",
-  streamable = "streamable",
   beacon = "beacon",
   brightcove = "brightcove",
   craftsy = "craftsy",

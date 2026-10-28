@@ -853,14 +853,6 @@ export default [
     rawResult: true,
   },
   {
-    host: CoreVideoService.streamable,
-    needBypassCSP: true,
-    url: "https://streamable.com/",
-    match: /^streamable\.com$/,
-    selector: 'div.player, [id^="player-"][id$="-wrapper"]',
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.beacon,
     url: "https://beacon.tv/content/",
     match: /^(?:www\.)?beacon\.tv$/,

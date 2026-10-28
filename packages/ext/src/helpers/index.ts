@@ -95,7 +95,6 @@ import NaverTVHelper from "./navertv";
 import CHZZKHelper from "./chzzk";
 import ZhihuHelper from "./zhihu";
 import SnapchatSpotlightHelper from "./snapchat";
-import StreamableHelper from "./streamable";
 import BeaconHelper from "./beacon";
 import BrightcoveHelper from "./brightcove";
 import CraftsyHelper from "./craftsy";
@@ -197,7 +196,6 @@ export * as NaverTVHelper from "./navertv";
 export * as CHZZKHelper from "./chzzk";
 export * as ZhihuHelper from "./zhihu";
 export * as SnapchatSpotlightHelper from "./snapchat";
-export * as StreamableHelper from "./streamable";
 export * as BeaconHelper from "./beacon";
 export * as BrightcoveHelper from "./brightcove";
 export * as CraftsyHelper from "./craftsy";
@@ -222,7 +220,6 @@ export const availableHelpers = {
   [CoreVideoService.chzzk]: CHZZKHelper,
   [CoreVideoService.zhihu]: ZhihuHelper,
   [CoreVideoService.snapchat]: SnapchatSpotlightHelper,
-  [CoreVideoService.streamable]: StreamableHelper,
   [CoreVideoService.beacon]: BeaconHelper,
   [CoreVideoService.brightcove]: BrightcoveHelper,
   [CoreVideoService.craftsy]: CraftsyHelper,

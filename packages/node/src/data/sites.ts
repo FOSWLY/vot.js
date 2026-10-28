@@ -519,12 +519,6 @@ export default [
     rawResult: true,
   },
   {
-    host: CoreVideoService.streamable,
-    url: "https://streamable.com/",
-    match: /^streamable\.com$/,
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.beacon,
     url: "https://beacon.tv/content/",
     match: /^(?:www\.)?beacon\.tv$/,
