@@ -294,7 +294,6 @@ export default class DropoutHelper extends VimeoHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /videos\/([^/?#]+)/.exec(url.pathname)?.[1] ?? url.pathname;
   }

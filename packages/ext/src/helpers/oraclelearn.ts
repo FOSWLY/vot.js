@@ -5,7 +5,6 @@ import type { MinimalVideoData } from "../types/client";
 export default class OracleLearnHelper extends VideoJSHelper {
   SUBTITLE_SOURCE = "oraclelearn";
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const data = this.getVideoDataByPlayer(videoId);
     if (!data) {
@@ -35,7 +34,6 @@ export default class OracleLearnHelper extends VideoJSHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return /\/ou\/course\/(([^/]+)\/(\d+)\/(\d+))/.exec(url.pathname)?.[1];
   }

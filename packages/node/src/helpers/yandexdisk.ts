@@ -185,7 +185,6 @@ export default class YandexDiskHelper extends BaseHelper {
     return await this.getDiskVideoData(videoId);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const fileId = /\/i\/([^/]+)/.exec(url.pathname)?.[0];
     if (fileId) {

@@ -5,7 +5,6 @@ import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
 export default class KickstarterHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     try {
       const videoEl = document.querySelector<HTMLVideoElement>(
@@ -50,7 +49,6 @@ export default class KickstarterHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.pathname.slice(1);
   }

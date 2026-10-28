@@ -9,7 +9,7 @@ declare global {
 }
 
 interface JWPlayerSource {
-  type: string;
+  type?: string;
   file: string;
   height?: number;
   width?: number;
@@ -17,6 +17,7 @@ interface JWPlayerSource {
   bitrate?: number;
   default?: boolean;
   mimeType?: string;
+  drm?: Record<string, unknown>;
 }
 
 interface JWPlayerTrack {
@@ -32,7 +33,23 @@ interface JWPlayerPlaylistItem {
   file?: string;
   sources?: JWPlayerSource[];
   allSources?: JWPlayerSource[];
+  drm?: Record<string, unknown>;
   tracks?: JWPlayerTrack[];
+}
+
+function isVideoFile(source: JWPlayerSource): boolean {
+  const mimeType = source.mimeType || source.type;
+  const type =
+    typeof mimeType === "string"
+      ? mimeType.toLowerCase().split(";")[0].trim()
+      : "";
+  return (
+    type === "mp4" ||
+    type === "video/mp4" ||
+    type === "webm" ||
+    type === "video/webm" ||
+    /\.(?:mp4|webm)$/i.test(new URL(source.file).pathname)
+  );
 }
 
 export default class JWPlayerHelper implements BasePlayer {
@@ -40,15 +57,23 @@ export default class JWPlayerHelper implements BasePlayer {
   SUBTITLE_FORMAT: VideoDataSubtitle["format"] = "vtt";
 
   getHeight(source: JWPlayerSource): number {
-    if (typeof source.height === "number" && source.height > 0) {
+    if (
+      typeof source.height === "number" &&
+      Number.isFinite(source.height) &&
+      source.height > 0
+    ) {
       return source.height;
     }
-    const match = source.label?.match(/^(\d+)/);
+    const label = typeof source.label === "string" ? source.label : "";
+    const match =
+      label.match(/\d+\s*x\s*(\d+)/i) ??
+      label.match(/(\d+)p\b/i) ??
+      label.match(/^(\d+)/);
     return match ? Number.parseInt(match[1], 10) : 0;
   }
 
   getPlayer() {
-    if (typeof jwplayer === "undefined") {
+    if (typeof jwplayer !== "function") {
       return undefined;
     }
 
@@ -56,14 +81,23 @@ export default class JWPlayerHelper implements BasePlayer {
     if (playerEl?.id) {
       try {
         const player = jwplayer(playerEl.id);
-        if (player && typeof player.getPlaylistItem === "function") {
+        if (
+          player &&
+          (typeof player.getPlaylistItem === "function" ||
+            typeof player.getPlaylist === "function")
+        ) {
           return player;
         }
       } catch {}
     }
 
     try {
-      return jwplayer();
+      const player = jwplayer();
+      return player &&
+        (typeof player.getPlaylistItem === "function" ||
+          typeof player.getPlaylist === "function")
+        ? player
+        : undefined;
     } catch {
       return undefined;
     }
@@ -76,9 +110,10 @@ export default class JWPlayerHelper implements BasePlayer {
         throw new Error("JW Player instance not ready or not found");
       }
 
-      let item = player.getPlaylistItem
-        ? (player.getPlaylistItem() as JWPlayerPlaylistItem | null)
-        : null;
+      let item =
+        typeof player.getPlaylistItem === "function"
+          ? (player.getPlaylistItem() as JWPlayerPlaylistItem | null)
+          : null;
 
       if (!item && typeof player.getPlaylist === "function") {
         const playlist = player.getPlaylist();
@@ -94,50 +129,63 @@ export default class JWPlayerHelper implements BasePlayer {
       if (!item) {
         throw new Error("No playlist item found");
       }
+      if (item.drm && Object.keys(item.drm).length > 0) {
+        throw new Error("DRM-protected playlist item");
+      }
 
       let duration = 0;
       if (typeof player.getDuration === "function") {
         duration = player.getDuration();
       }
       if (
-        (typeof duration !== "number" || duration <= 0) &&
+        (!Number.isFinite(duration) || duration <= 0) &&
         typeof item.duration === "number"
       ) {
         duration = item.duration;
       }
-
-      const sources: JWPlayerSource[] = [];
-      if (Array.isArray(item.allSources)) {
-        sources.push(...item.allSources);
+      if (!Number.isFinite(duration) || duration <= 0) {
+        duration = 0;
       }
-      if (Array.isArray(item.sources)) {
-        for (const s of item.sources) {
-          if (
-            s?.file &&
-            !sources.some((existing) => existing.file === s.file)
-          ) {
-            sources.push(s);
+
+      const sources: JWPlayerSource[] = [
+        ...(Array.isArray(item.allSources) ? item.allSources : []),
+        ...(Array.isArray(item.sources) ? item.sources : []),
+        ...(typeof item.file === "string" ? [{ file: item.file }] : []),
+      ];
+      const seenUrls = new Set<string>();
+      const protectedUrls = new Set<string>();
+      let validSources: JWPlayerSource[] = [];
+      for (const source of sources) {
+        if (!source || typeof source.file !== "string" || !source.file.trim()) {
+          continue;
+        }
+        try {
+          const url = new URL(source.file, window.location.href);
+          if (source.drm && Object.keys(source.drm).length > 0) {
+            protectedUrls.add(url.href);
+            continue;
           }
-        }
+          if (
+            (url.protocol !== "http:" && url.protocol !== "https:") ||
+            seenUrls.has(url.href)
+          ) {
+            continue;
+          }
+          seenUrls.add(url.href);
+          validSources.push({ ...source, file: url.href });
+        } catch {}
       }
 
-      const validSources = sources.filter(
-        (s) => s && typeof s.file === "string" && s.file.length > 0,
+      validSources = validSources.filter(
+        (source) => !protectedUrls.has(source.file),
       );
-
       if (validSources.length === 0) {
-        if (typeof item.file === "string" && item.file.length > 0) {
-          validSources.push({
-            file: item.file,
-            type: "",
-            label: "default",
-          });
-        } else {
-          throw new Error("No valid sources found");
-        }
+        throw new Error("No valid sources found");
       }
 
       validSources.sort((a, b) => {
+        const filePreference = Number(isVideoFile(b)) - Number(isVideoFile(a));
+        if (filePreference) return filePreference;
         const heightA = this.getHeight(a);
         const heightB = this.getHeight(b);
         if (heightA === 0 && heightB > 0) return 1;
@@ -155,11 +203,8 @@ export default class JWPlayerHelper implements BasePlayer {
         ],
         subtitles: this.getSubtitles(),
       };
-    } catch (err) {
-      console.error(
-        "[VOT] JWPlayerHelper error:",
-        err instanceof Error ? err.message : String(err),
-      );
+    } catch {
+      console.error("[VOT] JWPlayerHelper error: Failed to read player data");
       return undefined;
     }
   }
@@ -172,9 +217,10 @@ export default class JWPlayerHelper implements BasePlayer {
         return subtitles;
       }
 
-      let item = player.getPlaylistItem
-        ? (player.getPlaylistItem() as JWPlayerPlaylistItem | null)
-        : null;
+      let item =
+        typeof player.getPlaylistItem === "function"
+          ? (player.getPlaylistItem() as JWPlayerPlaylistItem | null)
+          : null;
       if (!item && typeof player.getPlaylist === "function") {
         const playlist = player.getPlaylist();
         const index =
@@ -229,8 +275,10 @@ export default class JWPlayerHelper implements BasePlayer {
           }
         }
       }
-    } catch (err) {
-      console.error("[VOT] JWPlayerHelper getSubtitles error:", err);
+    } catch {
+      console.error(
+        "[VOT] JWPlayerHelper getSubtitles error: Failed to read tracks",
+      );
     }
 
     return subtitles;

@@ -12,7 +12,6 @@ type CoursehunterLikeWindow = Window & {
 export default class CoursehunterLikeHelper extends BaseHelper {
   API_ORIGIN = this.origin ?? "https://coursehunter.net";
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getCourseId() {
     const courseId = (window as CoursehunterLikeWindow).course_id;
     if (courseId !== undefined) {
@@ -97,7 +96,6 @@ export default class CoursehunterLikeHelper extends BaseHelper {
     return VideoData;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return url.href;
   }

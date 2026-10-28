@@ -94,7 +94,6 @@ export default class ArtstationHelper extends BaseHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL): Promise<string | undefined> {
     return /courses\/(\w{3,5})\/([^/]+)\/chapters\/(\w{3,5})/.exec(
       url.pathname,

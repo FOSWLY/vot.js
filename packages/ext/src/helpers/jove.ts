@@ -4,7 +4,6 @@ import type { MinimalVideoData } from "../types/client";
 import { BaseHelper, VideoHelperError } from "./base";
 
 export default class JoveHelper extends BaseHelper {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     const match = /^\/(?:[a-z]{2}\/)?v\/(\d+)\/([^/?#]+)/i.exec(url.pathname);
     return match ? `v/${match[1]}/${match[2]}` : undefined;

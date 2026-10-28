@@ -777,6 +777,11 @@ describe("custom", () => {
   });
 });
 
+test("bluesky", async () => {
+  const expected = "https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v";
+  expect(await normalize(expected)).toEqual(expected);
+});
+
 describe("kodik", () => {
   test("seria", async () => {
     expect(

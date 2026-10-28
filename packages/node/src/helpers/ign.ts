@@ -108,7 +108,6 @@ export default class IgnHelper extends BaseHelper {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return (
       /([^/]+)\/([\d]+)\/video\/([^/]+)/.exec(url.pathname)?.[0] ??

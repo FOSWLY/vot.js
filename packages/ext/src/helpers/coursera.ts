@@ -165,7 +165,6 @@ export default class CourseraHelper extends VideoJSHelper {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(url: URL) {
     return (
       CourseraHelper.LEARN_ITEM_RE.exec(url.pathname)?.[0] ??
