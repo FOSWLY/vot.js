@@ -432,13 +432,6 @@ export default [
     needExtraData: true,
   },
   {
-    host: CoreVideoService.abcnews,
-    url: "https://abcnews.go.com/video/embed?id=",
-    match:
-      /^(?:(?:www\.)?abcnews\.(?:com|go\.com)|fivethirtyeight\.abcnews\.go\.com)$/,
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.bfmtv,
     url: "https://",
     match: /^(?:www\.|rmc\.)?bfmtv\.com$/,
@@ -454,12 +447,6 @@ export default [
     host: CoreVideoService.vidlii,
     url: "https://www.vidlii.com/watch?v=",
     match: /^(?:www\.)?vidlii\.com$/,
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.cbsnews,
-    url: "https://www.cbsnews.com/video/",
-    match: /^(?:www\.)?cbsnews\.com$/,
     rawResult: true,
   },
   {
@@ -502,12 +489,6 @@ export default [
     host: CoreVideoService.redgifs,
     url: "https://www.redgifs.com/watch/",
     match: /^(?:www\.|thumbs2\.)?redgifs\.com$/,
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.pinterest,
-    url: "https://www.pinterest.com/pin/",
-    match: /^(?:www\.)?pinterest\.(?:com|co\.uk|de|fr|es|it|ca|com\.au)$/,
     rawResult: true,
   },
   {
@@ -580,21 +561,9 @@ export default [
     rawResult: true,
   },
   {
-    host: CoreVideoService.spiegel,
-    url: "https://www.spiegel.de/",
-    match: /^(?:www\.)?spiegel\.de$/,
-    rawResult: true,
-  },
-  {
     host: CoreVideoService.vidly,
     url: "https://vid.ly/",
     match: /^(?:s\.)?vid\.ly$/,
-    rawResult: true,
-  },
-  {
-    host: CoreVideoService.cnn,
-    url: "stub",
-    match: /^(?:www\.|edition\.)?cnn\.com$/,
     rawResult: true,
   },
   {

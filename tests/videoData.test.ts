@@ -777,12 +777,6 @@ describe("custom", () => {
   });
 });
 
-test("cnn", async () => {
-  const expected =
-    "https://edition.cnn.com/2024/06/27/politics/biden-trump-debate-takeaways/index.html";
-  expect(await normalize(expected)).toEqual(expected);
-});
-
 test("bluesky", async () => {
   const expected = "https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v";
   expect(await normalize(expected)).toEqual(expected);
