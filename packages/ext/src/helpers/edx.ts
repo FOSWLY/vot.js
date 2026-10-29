@@ -5,7 +5,6 @@ import type * as Edx from "../types/helpers/edx";
 import { BaseHelper, VideoHelperError } from "./base";
 
 const VIDEO_BLOCK_SELECTOR = '.xblock[data-block-type="video"]';
-const DIRECT_HOST = "edx-video.net";
 
 function parseMp4Url(source: string) {
   try {
@@ -18,15 +17,9 @@ function parseMp4Url(source: string) {
 
 export default class EdxHelper extends BaseHelper {
   private getSourceUrl(sources: string[] = []) {
-    for (const source of sources) {
-      const url = parseMp4Url(source);
-      if (!url) {
-        continue;
-      }
-
-      return url.hostname === DIRECT_HOST
-        ? source
-        : proxyMedia(url, "mp4", this.mediaProxy);
+    const url = sources.map(parseMp4Url).find(Boolean);
+    if (url) {
+      return proxyMedia(url, "mp4", this.mediaProxy);
     }
 
     throw new VideoHelperError("Failed to find video source");
