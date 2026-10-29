@@ -7,62 +7,31 @@ import { BaseHelper, VideoHelperError } from "./base";
 const VIDEO_BLOCK_SELECTOR = '.xblock[data-block-type="video"]';
 const DIRECT_HOST = "edx-video.net";
 
-function getPathname(url: string) {
+function parseMp4Url(source: string) {
   try {
-    return new URL(url).pathname.toLowerCase();
+    const url = new URL(source);
+    return url.pathname.toLowerCase().endsWith(".mp4") ? url : undefined;
   } catch {
     return undefined;
   }
 }
 
-function hasExtension(url: string, extension: string) {
-  return Boolean(getPathname(url)?.endsWith(extension));
-}
-
-function getYoutubeId(streams?: string) {
-  for (const pair of String(streams ?? "").split(",")) {
-    const [speed, id] = pair.trim().split(":");
-    if (id && Number.parseFloat(speed) === 1) {
-      return id;
-    }
-  }
-
-  return undefined;
-}
-
-function getSourceUrl(metadata: Edx.VideoMetadata) {
-  const sources = (metadata.sources ?? []).filter(
-    (source) => getPathname(source) !== undefined,
-  );
-  const playable = sources.filter((source) => !hasExtension(source, ".m3u8"));
-  const source =
-    playable.find((item) => hasExtension(item, ".mp4")) ??
-    playable.find((item) => hasExtension(item, ".webm")) ??
-    playable[0];
-  if (source) {
-    const url = new URL(source);
-    if (url.hostname === DIRECT_HOST) {
-      return source;
-    }
-
-    return hasExtension(source, ".webm")
-      ? proxyMedia(url, "webm")
-      : proxyMedia(url);
-  }
-
-  const youtubeId = getYoutubeId(metadata.streams);
-  if (youtubeId) {
-    return `https://youtu.be/${youtubeId}`;
-  }
-
-  if (sources.length) {
-    throw new VideoHelperError("HLS-only edX videos are not supported");
-  }
-
-  throw new VideoHelperError("Failed to find video source");
-}
-
 export default class EdxHelper extends BaseHelper {
+  private getSourceUrl(sources: string[] = []) {
+    for (const source of sources) {
+      const url = parseMp4Url(source);
+      if (!url) {
+        continue;
+      }
+
+      return url.hostname === DIRECT_HOST
+        ? source
+        : proxyMedia(url, "mp4", this.mediaProxy);
+    }
+
+    throw new VideoHelperError("Failed to find video source");
+  }
+
   private getVideoBlock() {
     if (this.video) {
       return this.video.closest<HTMLElement>(VIDEO_BLOCK_SELECTOR) ?? undefined;
@@ -90,13 +59,11 @@ export default class EdxHelper extends BaseHelper {
     return courseId && playerId ? `${courseId}:${playerId}` : undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoId(_url: URL) {
     const block = this.getVideoBlock();
     return block ? this.getBlockId(block) : undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getVideoData(videoId: string): Promise<MinimalVideoData | undefined> {
     const block = Array.from(
       document.querySelectorAll<HTMLElement>(VIDEO_BLOCK_SELECTOR),
@@ -119,7 +86,7 @@ export default class EdxHelper extends BaseHelper {
       return undefined;
     }
 
-    const url = getSourceUrl(metadata);
+    const url = this.getSourceUrl(metadata.sources);
     const { duration } = metadata;
     return typeof duration === "number" &&
       Number.isFinite(duration) &&
