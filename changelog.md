@@ -1,3 +1,50 @@
+# 3.2.1
+
+## Ext
+
+- Added support Edx (`edx.org`, thx @AlexGromer in #143)
+- Added shared `plyrVideoWrapper` selector
+- Improved `JWPlayerHelper`
+
+## Ext & Node
+
+- Added support for new sites:
+  - AcFun (`https://www.acfun.cn/`)
+  - Beacon (`https://beacon.tv/`)
+  - Bluesky (`https://bsky.app/`)
+  - BFMTV / RMC BFM (`https://www.bfmtv.com/`)
+  - Brightcove (`https://players.brightcove.net/`)
+  - CHZZK (`https://chzzk.naver.com/`)
+  - Craftsy (`https://www.craftsy.com/`)
+  - Gettr (`https://gettr.com/`)
+  - Huya (`https://www.huya.com/`)
+  - JW Platform (`https://content.jwplatform.com/`, `https://cdn.jwplayer.com/`)
+  - Medal.tv (`https://medal.tv/`)
+  - Naver TV (`https://m.naver.com/shorts/`, `https://tv.naver.com/`)
+  - NYTimes (`https://www.nytimes.com/`, `https://graphics8.nytimes.com/`)
+  - NZ Herald (`https://www.nzherald.co.nz/`)
+  - OneFootball (`https://onefootball.com/`)
+  - RedGifs (`https://www.redgifs.com/`)
+  - Snapchat Spotlight (`https://www.snapchat.com/spotlight/`)
+  - Vidlii (`https://www.vidlii.com/`)
+  - Vidly (`https://vid.ly/`)
+  - VideoPress (`https://videopress.com/`, `https://video.wordpress.com/`)
+  - WSJ / Barron's (`https://www.wsj.com/`)
+  - Zhihu (`https://www.zhihu.com/zvideo/`)
+- Removed stale `// eslint-disable-next-line @typescript-eslint/require-await` comments
+
+## Shared
+
+- Added `CardResponse` type for Naver TV
+- Added `VideoInfo` type for VideoPress
+- Bump `componentVersion` value
+- Bump `sec-ch-ua` secure headers to chromium 152
+- Bump `userAgent` header
+
+## Workspace
+
+- Bump depends
+
 # 3.2.0
 
 ## Ext
