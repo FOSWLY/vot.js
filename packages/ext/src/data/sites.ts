@@ -317,12 +317,14 @@ export default [
     url: "https://www.bilibili.com/",
     match: /^(www|m|player).bilibili.com$/,
     selector: sharedSelectors.bilibiliPlayer,
+    needExtraData: true,
   },
   {
     host: CoreVideoService.bilibili,
     url: "https://www.bilibili.tv/",
     match: /^(?:www\.|m\.)?bilibili\.tv$/,
     selector: sharedSelectors.bilibiliPlayer,
+    needExtraData: true,
   },
   // Добавляет лишние видео в обработчик
   {

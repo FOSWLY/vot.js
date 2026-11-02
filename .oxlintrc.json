@@ -12,7 +12,9 @@
     "no-underscore-dangle": "off",
     // We support chrome and firefox since 106.
     // `Array#toReversed` works from chrome 110 and firefox 115
-    "no-array-reverse": "off"
+    "no-array-reverse": "off",
+    // `Array#toSorted` works from chrome 110 and firefox 115
+    "unicorn/no-array-sort": "off"
   },
   "ignorePatterns": [
     "**/dist",

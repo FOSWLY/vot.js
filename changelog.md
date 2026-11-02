@@ -1,3 +1,9 @@
+# 3.2.2
+
+## Ext
+
+- Added `translationHelp` for some cases in Bilibili
+
 # 3.2.1
 
 ## Ext
