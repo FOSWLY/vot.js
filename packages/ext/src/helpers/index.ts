@@ -69,6 +69,7 @@ import TrovoHelper from "./trovo";
 import TwitchHelper from "./twitch";
 import TwitterHelper from "./twitter";
 import UdemyHelper from "./udemy";
+import UpdraftHelper from "./updraft";
 import VimeoHelper from "./vimeo";
 import VKHelper from "./vk";
 import WatchPornToHelper from "./watchpornto";
@@ -171,6 +172,7 @@ export * as TrovoHelper from "./trovo";
 export * as TwitchHelper from "./twitch";
 export * as TwitterHelper from "./twitter";
 export * as UdemyHelper from "./udemy";
+export * as UpdraftHelper from "./updraft";
 export * as VimeoHelper from "./vimeo";
 export * as VKHelper from "./vk";
 export * as WatchPornToHelper from "./watchpornto";
@@ -311,6 +313,7 @@ export const availableHelpers = {
   [ExtVideoService.skilljar]: SkilljarHelper,
   [ExtVideoService.dropout]: DropoutHelper,
   [ExtVideoService.edx]: EdxHelper,
+  [ExtVideoService.updraft]: UpdraftHelper,
 };
 
 export type AvailableVideoHelpers = typeof availableHelpers;

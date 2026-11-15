@@ -748,6 +748,13 @@ export default [
     needExtraData: true,
   },
   {
+    host: ExtVideoService.updraft,
+    url: "https://updraft.cyfrin.io/courses/",
+    match: /^updraft\.cyfrin\.io$/,
+    selector: "media-controller",
+    needExtraData: true,
+  },
+  {
     host: CoreVideoService.wistia,
     url: "https://fast.wistia.net/embed/iframe/",
     match: /^fast.wistia.net$/,
