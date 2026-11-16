@@ -1,3 +1,11 @@
+# 3.2.3
+
+## Shared
+
+- Bump `componentVersion` value
+- Bump `sec-ch-ua` secure headers to chromium 154
+- Bump `userAgent` header
+
 # 3.2.2
 
 ## Ext
