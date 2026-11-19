@@ -377,7 +377,7 @@ export default [
     url: "https://yadi.sk/",
     match:
       /^disk.yandex.(ru|kz|com(\.(am|ge|tr))?|by|az|co\.il|ee|lt|lv|md|net|tj|tm|uz)$/,
-    selector: ".video-player__player > div:nth-child(1)",
+    selector: "yaplayertag > div:nth-child(1)",
     needBypassCSP: true,
     needExtraData: true,
   },

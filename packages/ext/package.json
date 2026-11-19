@@ -1,6 +1,6 @@
 {
   "name": "@vot.js/ext",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "package for web extensions",
   "keywords": [
     "api",

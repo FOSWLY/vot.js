@@ -1,3 +1,13 @@
+# 3.2.4
+
+## Ext
+
+- Fixed Yandex Disk selector
+
+## Shared
+
+- Bump `componentVersion` value
+
 # 3.2.3
 
 ## Shared
