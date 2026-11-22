@@ -378,6 +378,7 @@ export default [
     match:
       /^disk.yandex.(ru|kz|com(\.(am|ge|tr))?|by|az|co\.il|ee|lt|lv|md|net|tj|tm|uz)$/,
     selector: "yaplayertag > div:nth-child(1)",
+    eventSelector: 'div[data-player-skin="true"]',
     needBypassCSP: true,
     needExtraData: true,
   },
